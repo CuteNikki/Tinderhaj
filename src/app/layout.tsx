@@ -3,6 +3,9 @@ import { Geist, Geist_Mono } from 'next/font/google';
 
 import { ThemeProvider } from '@/components/theme/provider';
 
+import { Footer } from '@/components/navigation/footer';
+import { Navbar } from '@/components/navigation/navbar';
+
 import './globals.css';
 
 const geistSans = Geist({
@@ -17,7 +20,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: 'Tinderhaj - Home',
-  description: 'A dating app like Tinder for IKEA Blahaj.',
+  description: 'A dating app like Tinder for Blåhaj.',
 };
 
 export default function RootLayout({
@@ -29,7 +32,11 @@ export default function RootLayout({
     <html lang='en' suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
-          {children}
+          <div className='min-h-screen bg-background grid grid-rows-[auto,1fr,auto]'>
+            <Navbar />
+            {children}
+            <Footer />
+          </div>
         </ThemeProvider>
       </body>
     </html>
