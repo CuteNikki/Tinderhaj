@@ -32,7 +32,7 @@ export default function RootLayout({
     <html lang='en' suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
-          <div className='min-h-screen bg-background grid grid-rows-[auto,1fr,auto]'>
+          <div className='grid min-h-screen grid-rows-[auto,1fr,auto] bg-background'>
             <Navbar />
             {children}
             <Footer />
