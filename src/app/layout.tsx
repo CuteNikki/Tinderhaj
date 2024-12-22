@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Tinderhaj - Home',
+  title: 'Tinderhaj',
   description: 'A dating app like Tinder for Blåhaj.',
 };
 
