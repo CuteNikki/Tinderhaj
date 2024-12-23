@@ -11,7 +11,7 @@ export function Hero() {
         <div className='flex flex-col items-center justify-center gap-16 md:flex-row'>
           <div className='flex flex-col items-center text-center md:items-start md:text-start'>
             <span className='mb-2 text-pretty text-3xl font-bold'>Find Your Perfect Blåhaj Match</span>
-            <p className='mb-4 text-pretty text-xl text-muted-foreground'>The world&apos;s first dating site exclusively for IKEA Blåhaj!</p>
+            <p className='mb-4 text-pretty text-xl text-muted-foreground'>The world&apos;s first dating site exclusively for Blåhaj!</p>
             <Button size='lg' className='w-fit'>
               Dive In Now
               <ArrowRight />
