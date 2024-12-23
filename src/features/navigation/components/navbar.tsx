@@ -8,7 +8,7 @@ export function Navbar() {
     <header className='bg-primary py-4 text-primary-foreground'>
       <div className='container mx-auto flex items-center justify-between px-4'>
         <Link href='/' className='flex items-center gap-2'>
-          <Image src={logo.src} alt={logo.alt} unoptimized width={48} height={48} />
+          <Image src={logo.src} alt={logo.alt} unoptimized width={48} height={25} />
           <span className='font-bold'>{logo.name}</span>
         </Link>
         <nav>
