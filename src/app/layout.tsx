@@ -1,11 +1,11 @@
 import { Geist, Geist_Mono } from 'next/font/google';
 
-import { ThemeProvider } from '@/components/theme/provider';
+import { ThemeProvider } from '@/features/theme/providers/theme';
 
-import { Footer } from '@/components/navigation/footer';
-import { Navbar } from '@/components/navigation/navbar';
+import { Footer } from '@/features/navigation/components/footer';
+import { Navbar } from '@/features/navigation/components/navbar';
 
-import { allMetadata } from '@/constants/texts';
+import { defaultData } from '@/constants/metadata';
 
 import './globals.css';
 
@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-export const metadata = allMetadata.default;
+export const metadata = defaultData;
 
 export default function RootLayout({
   children,

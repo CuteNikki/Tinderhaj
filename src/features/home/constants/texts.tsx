@@ -1,20 +1,4 @@
 import { HeartIcon, UsersIcon, WavesIcon } from 'lucide-react';
-import { Metadata } from 'next';
-
-export const allMetadata = {
-  default: {
-    title: 'Tinderhaj',
-    description: 'A dating app like Tinder for Blåhaj.',
-  } satisfies Metadata,
-  home: {
-    title: 'Tinderhaj - Home',
-    description: 'A dating app like Tinder for Blåhaj.',
-  } satisfies Metadata,
-  notFound: {
-    title: 'Tinderhaj - 404',
-    description: "Oops! You've swum too far! Looks like this page got lost in the deep sea.",
-  } satisfies Metadata,
-};
 
 export const features = {
   title: 'Why Choose Tinderhaj?',
@@ -43,8 +27,12 @@ export const signUp = {
   action: 'Sign Up',
 };
 
-export const notFound = {
-  title: 'Blåhaj not found...',
-  description: "Oops! You've swum too far! Looks like this page got lost in the deep sea.",
-  action: 'Swim back Home',
+export const hero = {
+  title: 'Find Your Perfect Blåhaj Match',
+  description: "The world's first dating site exclusively for Blåhaj!",
+  action: 'Dive In Now',
+  image: {
+    src: '/blahaj_couple.webp',
+    alt: 'Blåhaj Couple',
+  },
 };

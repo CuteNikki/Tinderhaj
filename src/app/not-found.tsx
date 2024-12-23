@@ -1,9 +1,13 @@
-import { NotFound } from '@/components/pages/not-found';
+import { Hero } from '@/features/not-found/components/hero';
 
-import { allMetadata } from '@/constants/texts';
+import { notFoundData } from '@/constants/metadata';
 
-export const metadata = allMetadata.notFound;
+export const metadata = notFoundData;
 
 export default function Page() {
-  return <NotFound />;
+  return (
+    <main>
+      <Hero />
+    </main>
+  );
 }

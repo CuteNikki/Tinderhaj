@@ -1,9 +1,17 @@
-import { HomePage } from '@/components/pages/home';
+import { Features } from '@/features/home/components/features';
+import { Hero } from '@/features/home/components/hero';
+import { SignUp } from '@/features/home/components/sign-up';
 
-import { allMetadata } from '@/constants/texts';
+import { homeData } from '@/constants/metadata';
 
-export const metadata = allMetadata.home;
+export const metadata = homeData;
 
 export default function Home() {
-  return <HomePage />;
+  return (
+    <main>
+      <Hero />
+      <Features />
+      <SignUp />
+    </main>
+  );
 }

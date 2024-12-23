@@ -2,7 +2,7 @@ import { ArrowRight } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 
-import { signUp } from '@/constants/texts';
+import { signUp } from '@/features/home/constants/texts';
 
 export function SignUp() {
   return (
