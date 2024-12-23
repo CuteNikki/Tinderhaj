@@ -4,17 +4,17 @@ export const features = {
   title: 'Why Choose Tinderhaj?',
   cards: [
     {
-      icon: <Image src='/blahajHeart.webp' alt='Blåhaj Heart' width={48} height={48} />,
+      icon: <Image src='/blahajHeart.webp' alt='Blåhaj Heart' unoptimized width={48} height={48} />,
       title: 'Exclusive Blåhaj Community',
       description: 'Connect with fellow Blåhaj lovers from around the world.',
     },
     {
-      icon: <Image src='/blahajThink.webp' alt='Blåhaj Think' width={48} height={48} />,
+      icon: <Image src='/blahajThink.webp' alt='Blåhaj Think' unoptimized width={48} height={48} />,
       title: 'Shark-Friendly Interface',
       description: 'Our site is designed with Blåhaj in mind, making navigation a breeze.',
     },
     {
-      icon: <Image src='/blahajHug.webp' alt='Blåhaj Hug' width={48} height={48} />,
+      icon: <Image src='/blahajHug.webp' alt='Blåhaj Hug' unoptimized width={48} height={48} />,
       title: 'Group Swims',
       description: 'Organize Blåhaj meetups and group activities with your matches.',
     },

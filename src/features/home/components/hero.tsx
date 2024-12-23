@@ -20,7 +20,7 @@ export function Hero() {
             </Button>
           </div>
           <div className='w-fit'>
-            <Image src={hero.image.src} alt={hero.image.alt} width={400} height={400} className='mx-auto mb-4 rounded-lg' />
+            <Image src={hero.image.src} alt={hero.image.alt} unoptimized width={400} height={400} className='mx-auto mb-4 rounded-lg' />
           </div>
         </div>
       </div>
