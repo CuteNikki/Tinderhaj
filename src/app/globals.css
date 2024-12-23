@@ -70,6 +70,6 @@ body {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply overscroll-contain bg-primary text-foreground;
   }
 }
