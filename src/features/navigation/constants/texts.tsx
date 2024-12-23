@@ -1,7 +1,7 @@
 export const logo = {
   name: 'Tinderhaj',
-  src: '/tinderhaj.gif',
-  alt: 'Logo',
+  src: '/blahajSpinSmall.gif',
+  alt: 'Blåhaj spinning',
 };
 
 export const copyright = `© ${new Date().getFullYear()} Tinderhaj. All rights reserved.`;
