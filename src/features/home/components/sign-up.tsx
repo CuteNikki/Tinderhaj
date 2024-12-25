@@ -1,8 +1,11 @@
+import Link from 'next/link';
+
 import { ArrowRight } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 
-import { signUp } from '@/features/home/constants/texts';
+import { links } from '@/constants/links';
+import { signUp } from '@/constants/texts/home';
 
 export function SignUp() {
   return (
@@ -10,9 +13,11 @@ export function SignUp() {
       <div className='container mx-auto flex flex-col items-center px-4 text-center'>
         <h3 className='mb-4 text-3xl font-bold'>{signUp.title}</h3>
         <p className='mb-8 text-muted-foreground'>{signUp.description}</p>
-        <Button variant='default' size='lg'>
-          {signUp.action}
-          <ArrowRight />
+        <Button variant='default' size='lg' asChild>
+          <Link href={links.signUp}>
+            {signUp.action}
+            <ArrowRight />
+          </Link>
         </Button>
       </div>
     </section>

@@ -1,10 +1,12 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { ArrowRight } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 
-import { hero } from '@/features/home/constants/texts';
+import { links } from '@/constants/links';
+import { hero } from '@/constants/texts/home';
 
 export function Hero() {
   return (
@@ -14,9 +16,11 @@ export function Hero() {
           <div className='flex flex-col items-center text-center md:items-start md:text-start'>
             <span className='mb-2 text-pretty text-3xl font-bold'>{hero.title}</span>
             <p className='mb-4 text-pretty text-xl text-muted-foreground'>{hero.description}</p>
-            <Button size='lg' className='w-fit'>
-              {hero.action}
-              <ArrowRight />
+            <Button size='lg' className='w-fit' asChild>
+              <Link href={links.diveIn}>
+                {hero.action}
+                <ArrowRight />
+              </Link>
             </Button>
           </div>
           <div className='w-fit'>

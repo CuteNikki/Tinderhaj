@@ -1,7 +1,11 @@
-import { Button } from '@/components/ui/button';
-import { copyright, disclaimer, madeBy, source } from '@/features/navigation/constants/texts';
-import { ThemeSwitch } from '@/features/theme/components/switch';
 import Link from 'next/link';
+
+import { ThemeSwitch } from '@/features/theme/components/switch';
+
+import { Button } from '@/components/ui/button';
+
+import { links } from '@/constants/links';
+import { copyright, disclaimer, madeBy, source } from '@/constants/texts/navigation';
 
 export function Footer() {
   return (
@@ -12,7 +16,7 @@ export function Footer() {
           <p className='mt-2'>{disclaimer}</p>
           <span className='mt-2 flex flex-row items-center'>
             <p>{madeBy.text.split(madeBy.replace)[0]}</p>
-            <Link href={madeBy.url} className='ml-1 underline'>
+            <Link href={links.creator} className='ml-1 underline'>
               {madeBy.replace}
             </Link>
             <p>{madeBy.text.split(madeBy.replace)[1]}</p>
@@ -20,7 +24,7 @@ export function Footer() {
         </div>
         <div className='flex flex-row items-center gap-2'>
           <Button asChild variant='secondary' size='sm'>
-            <Link href={source.url}>
+            <Link href={links.source}>
               <source.icon />
               {source.text}
             </Link>

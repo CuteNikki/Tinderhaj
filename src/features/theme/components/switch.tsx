@@ -6,7 +6,7 @@ import { useTheme } from 'next-themes';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
-import { theme } from '@/features/theme/constants/texts';
+import { theme } from '@/constants/texts/theme';
 
 export function ThemeSwitch() {
   const { setTheme } = useTheme();

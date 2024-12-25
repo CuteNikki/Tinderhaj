@@ -10,11 +10,9 @@ export const copyright = `© ${new Date().getFullYear()} Tinderhaj. All rights r
 export const madeBy = {
   text: 'Made with love by Nikki.',
   replace: 'Nikki',
-  url: 'https://github.com/cutenikki',
 };
 export const disclaimer = 'Blåhaj is a trademark of IKEA. Tinderhaj is not affiliated with IKEA.';
 export const source = {
   text: 'Source',
   icon: GithubIcon,
-  url: 'https://github.com/cutenikki/tinderhaj',
 };

@@ -1,13 +1,14 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { logo } from '@/features/navigation/constants/texts';
+import { links } from '@/constants/links';
+import { logo } from '@/constants/texts/navigation';
 
 export function Navbar() {
   return (
     <header className='bg-primary py-4 text-primary-foreground'>
       <div className='container mx-auto flex items-center justify-between px-4'>
-        <Link href='/' className='flex items-center gap-2'>
+        <Link href={links.home} className='flex items-center gap-2'>
           <Image src={logo.src} alt={logo.alt} unoptimized width={48} height={25} />
           <span className='font-bold'>{logo.name}</span>
         </Link>

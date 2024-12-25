@@ -1,6 +1,6 @@
 import { FeatureCard } from '@/features/home/components/feature-card';
 
-import { features } from '@/features/home/constants/texts';
+import { features } from '@/constants/texts/home';
 
 export function Features() {
   return (
