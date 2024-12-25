@@ -1,8 +1,8 @@
 import { Hero } from '@/features/under-construction/components/hero';
 
-import { notFoundData } from '@/constants/metadata';
+import { constructionData } from '@/constants/metadata';
 
-export const metadata = notFoundData;
+export const metadata = constructionData;
 
 export default function Page() {
   return (
