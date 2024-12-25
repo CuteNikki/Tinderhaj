@@ -50,7 +50,7 @@ export const notFoundData: Metadata = {
 
 export const constructionData: Metadata = {
   title: 'Tinderhaj - Construction',
-  description: 'Oops! This page is still under construction. Please come back later!',
+  description: 'Oops! This feature is still under construction. Please come back later!',
   openGraph: {
     url: 'https://tinderhaj.com',
     images: [
