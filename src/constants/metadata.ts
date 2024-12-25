@@ -8,9 +8,9 @@ export const defaultData: Metadata = {
     images: [
       {
         url: 'https://tinderhaj.com/opengraph-image.gif',
-        width: 96,
-        height: 96,
         alt: 'Tinderhaj',
+        width: 382,
+        height: 201,
       },
     ],
   },
@@ -24,9 +24,9 @@ export const homeData: Metadata = {
     images: [
       {
         url: 'https://tinderhaj.com/opengraph-image.gif',
-        width: 96,
-        height: 96,
         alt: 'Tinderhaj',
+        width: 382,
+        height: 201,
       },
     ],
   },
@@ -40,9 +40,9 @@ export const notFoundData: Metadata = {
     images: [
       {
         url: 'https://tinderhaj.com/opengraph-image.gif',
-        width: 96,
-        height: 96,
         alt: 'Tinderhaj',
+        width: 382,
+        height: 201,
       },
     ],
   },
@@ -50,15 +50,15 @@ export const notFoundData: Metadata = {
 
 export const constructionData: Metadata = {
   title: 'Tinderhaj - Construction',
-  description: 'Oops! This feature is still under construction. Please come back later!',
+  description: 'Oops! This feature is still under construction. Please check back later!',
   openGraph: {
     url: 'https://tinderhaj.com',
     images: [
       {
         url: 'https://tinderhaj.com/opengraph-image.gif',
-        width: 96,
-        height: 96,
         alt: 'Tinderhaj',
+        width: 382,
+        height: 201,
       },
     ],
   },

@@ -4,6 +4,6 @@ export const construction = {
   action: 'Swim back Home',
   image: {
     src: '/blahajConstruction.webp',
-    alt: 'Blahaj Construction',
+    alt: 'Blåhaj Construction',
   },
 };
