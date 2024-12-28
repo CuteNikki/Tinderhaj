@@ -79,3 +79,19 @@ export const signUpData: Metadata = {
     ],
   },
 };
+
+export const signInData: Metadata = {
+  title: 'Tinderhaj - Sign In',
+  description: 'Sign in to find your perfect Blåhaj match!',
+  openGraph: {
+    url: 'https://tinderhaj.com',
+    images: [
+      {
+        url: 'https://tinderhaj.com/opengraph-image.gif',
+        alt: 'Tinderhaj',
+        width: 382,
+        height: 201,
+      },
+    ],
+  },
+};
