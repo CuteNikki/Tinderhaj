@@ -4,7 +4,7 @@ import { constructionData } from '@/constants/metadata';
 
 export const metadata = constructionData;
 
-export default function Page() {
+export default function ConstructionPage() {
   return (
     <main>
       <Hero />

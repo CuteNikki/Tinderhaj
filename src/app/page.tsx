@@ -6,7 +6,7 @@ import { homeData } from '@/constants/metadata';
 
 export const metadata = homeData;
 
-export default function Home() {
+export default function HomePage() {
   return (
     <main>
       <Hero />

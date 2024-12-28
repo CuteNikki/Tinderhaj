@@ -4,7 +4,7 @@ import { notFoundData } from '@/constants/metadata';
 
 export const metadata = notFoundData;
 
-export default function Page() {
+export default function NotFoundPage() {
   return (
     <main>
       <Hero />
