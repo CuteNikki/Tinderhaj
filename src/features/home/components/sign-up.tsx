@@ -14,7 +14,7 @@ export function SignUp() {
         <h3 className='mb-4 text-3xl font-bold'>{signUp.title}</h3>
         <p className='mb-8 text-muted-foreground'>{signUp.description}</p>
         <Button variant='default' size='lg' asChild>
-          <Link href={links.signUp}>
+          <Link href={links.diveIn}>
             {signUp.action}
             <ArrowRight />
           </Link>
