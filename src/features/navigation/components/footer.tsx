@@ -16,7 +16,7 @@ export function Footer() {
           <p className='mt-2'>{disclaimer}</p>
           <span className='mt-2 flex flex-row items-center'>
             <p>{madeBy.text.split(madeBy.replace)[0]}</p>
-            <Link href={links.creator} className='ml-1 underline'>
+            <Link href={madeBy.url} className='ml-1 underline'>
               {madeBy.replace}
             </Link>
             <p>{madeBy.text.split(madeBy.replace)[1]}</p>
