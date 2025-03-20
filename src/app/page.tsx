@@ -20,9 +20,13 @@ import Link from 'next/link';
 export default function Home() {
   return (
     <>
-      <div className='grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20'>
-        <main className='row-start-2 flex flex-col items-center gap-[32px] sm:items-start'>
-          <Image className='dark:invert' src='/next.svg' alt='Next.js logo' width={180} height={38} priority />
+      <div className='grid min-h-screen items-center justify-items-center gap-16 p-8 pb-20 sm:p-20'>
+        <main className='row-start-2 flex flex-col items-center gap-8 sm:items-start'>
+          {/* <video autoPlay loop muted playsInline width={382} height={201} preload='auto'>
+            <source src='/blahajSpinSmall.mp4' type='video/mp4' />
+            Your browser does not support the video tag.
+          </video> */}
+          <Image unoptimized loading='eager' src='/blahajSpinSmall.gif' alt='Blahaj spin' width={382} height={201} />
 
           <TypographyList className='list-decimal'>
             <li>
@@ -34,7 +38,7 @@ export default function Home() {
           <div className='flex flex-col items-center gap-4 sm:flex-row'>
             <Button asChild>
               <Link href='https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app'>
-                <Image className='dark:invert' src='/vercel.svg' alt='Vercel logomark' width={20} height={20} />
+                <Image src='/blahaj.webp' alt='Blahaj' width={32} height={32} />
                 Deploy Now
               </Link>
             </Button>
@@ -49,21 +53,21 @@ export default function Home() {
             className='flex items-center gap-2 underline-offset-4 hover:underline'
             href='https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app'
           >
-            <Image aria-hidden src='/file.svg' alt='File icon' width={16} height={16} />
+            <Image unoptimized aria-hidden src='/blahajHug.webp' alt='Blahaj hug Blahaj' width={32} height={32} />
             Learn
           </Link>
           <Link
             className='flex items-center gap-2 underline-offset-4 hover:underline'
             href='https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app'
           >
-            <Image aria-hidden src='/window.svg' alt='Window icon' width={16} height={16} />
+            <Image unoptimized aria-hidden src='/blahajHeart.webp' alt='Blahaj Heart' width={32} height={32} />
             Examples
           </Link>
           <Link
             className='flex items-center gap-2 underline-offset-4 hover:underline'
             href='https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app'
           >
-            <Image aria-hidden src='/globe.svg' alt='Globe icon' width={16} height={16} />
+            <Image unoptimized aria-hidden src='/blahajThink.webp' alt='Blahaj Think' width={32} height={32} />
             Go to nextjs.org →
           </Link>
         </footer>
