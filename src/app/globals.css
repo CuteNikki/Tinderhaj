@@ -1,75 +1,26 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
 
 body {
+  background: var(--background);
+  color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
-}
-
-@layer base {
-  @layer base {
-    :root {
-      --background: 229 36% 98%;
-      --foreground: 229 54% 0%;
-      --muted: 229 24% 92%;
-      --muted-foreground: 229 11% 35%;
-      --popover: 229 36% 98%;
-      --popover-foreground: 229 54% 0%;
-      --card: 229 36% 97%;
-      --card-foreground: 0 0% 0%;
-      --border: 229 14% 88%;
-      --input: 229 14% 88%;
-      --primary: 229 100% 63%;
-      --primary-foreground: 0 0% 100%;
-      --secondary: 229 6% 89%;
-      --secondary-foreground: 229 6% 29%;
-      --accent: 229 12% 90%;
-      --accent-foreground: 229 12% 19%;
-      --destructive: 360 73.33% 53.85%;
-      --destructive-foreground: 0 0% 100%;
-      --ring: 229 100% 63%;
-      --chart-1: 229 100% 63%;
-      --chart-2: 229 6% 89%;
-      --chart-3: 229 12% 79%;
-      --chart-4: 229 6% 92%;
-      --chart-5: 229 103% 63%;
-      --radius: 0.5rem;
-    }
-
-    .dark {
-      --background: 229 44.3% 6.93%;
-      --foreground: 229 15% 97%;
-      --muted: 229 24% 8%;
-      --muted-foreground: 229 11% 65%;
-      --popover: 229 31.03% 9.98%;
-      --popover-foreground: 229 15% 97%;
-      --card: 229 45.22% 10.59%;
-      --card-foreground: 229 15% 98%;
-      --border: 229 14% 15%;
-      --input: 229 22.58% 36.4%;
-      --primary: 229 100% 63%;
-      --primary-foreground: 0 0% 100%;
-      --secondary: 229 12% 15%;
-      --secondary-foreground: 229 12% 75%;
-      --accent: 229 23.24% 26.21%;
-      --accent-foreground: 229 21% 81%;
-      --destructive: 360 57.14% 53.33%;
-      --destructive-foreground: 0 0% 100%;
-      --ring: 229 100% 63%;
-      --chart-1: 229 100% 63%;
-      --chart-2: 229 15.74% 30.57%;
-      --chart-3: 229 21% 21%;
-      --chart-4: 229 20.63% 15.3%;
-      --chart-5: 229 56.89% 66.1%;
-    }
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply overscroll-contain bg-primary text-foreground;
-  }
 }
