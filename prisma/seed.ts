@@ -126,6 +126,8 @@ const seedData: Prisma.UserCreateInput[] = [
 ];
 
 (async () => {
+  await prisma.user.deleteMany();
+
   for (const data of seedData) {
     await prisma.user.upsert({
       where: { username: data.username },
