@@ -4,9 +4,8 @@ import { z } from 'zod';
 
 import { QUERIES } from '@/lib/queries';
 
-import { TypographyLead, TypographyMuted, TypographyP } from '@/components/typography';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Skeleton } from '@/components/ui/skeleton';
+import { TypographyLead } from '@/components/typography';
+import { UserCard, UserCardSkeleton } from '@/components/user-card';
 import { UserFilter } from '@/components/user-filter';
 import { UserDiscoveryPagination, UserDiscoveryPaginationSkeleton } from '@/components/user-pagination';
 
@@ -18,9 +17,9 @@ const searchParamsSchema = z.object({
 
 export async function UserDiscovery({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const { page, take, query } = searchParamsSchema.parse(await searchParams);
-  const { users, count } = await (query?.length ? QUERIES.filterUsers(query, page, take) : QUERIES.getUsers(page, take));
+  const { users, totalUsers } = await (query?.length ? QUERIES.filterUsers(query, page, take) : QUERIES.getUsers(page, take));
 
-  const totalPages = Math.ceil(count / take);
+  const totalPages = Math.ceil(totalUsers / take);
 
   if (totalPages !== 0 && page > totalPages) {
     redirect(`?query=${query}&page=${totalPages < 1 ? 1 : totalPages}&take=${take}`);
@@ -29,33 +28,21 @@ export async function UserDiscovery({ searchParams }: { searchParams: Promise<Se
   return (
     <>
       <UserFilter page={page} take={take} query={query} />
-      <ul className='flex flex-col gap-2'>
+      <div className='flex max-w-5xl flex-wrap justify-center gap-2'>
         {users.length ? (
-          users.map((user, index) => (
-            <li className='flex flex-col' key={`user-${index}-${user.id}`}>
-              <div className='flex items-start gap-2'>
-                <Avatar className='h-12 w-12'>
-                  <AvatarImage alt='Avatar' src={user.avatar_url} />
-                  <AvatarFallback>{user.display_name.charAt(0)}</AvatarFallback>
-                </Avatar>
-                <div className='flex flex-col'>
-                  <div className='flex flex-row items-center gap-2'>
-                    <TypographyP>{user.display_name}</TypographyP>
-                    <TypographyMuted>@{user.username}</TypographyMuted>
-                  </div>
-                  <div className='flex flex-row items-center gap-2'>
-                    <TypographyMuted>{user.pronouns}</TypographyMuted>
-                    <TypographyMuted>{new Date().getFullYear() - user.birthday.getFullYear()} y/o</TypographyMuted>
-                  </div>
-                </div>
-              </div>
-            </li>
-          ))
+          users.map((user, index) => <UserCard user={user} key={`user-${index}-${user.id}`} />)
         ) : (
           <TypographyLead>No search result!</TypographyLead>
         )}
-      </ul>
-      <UserDiscoveryPagination take={take} count={count} page={page} query={query} totalPages={totalPages === 0 ? 1 : totalPages} />
+      </div>
+      <UserDiscoveryPagination
+        displayedUsers={users.length}
+        take={take}
+        totalUsers={totalUsers}
+        page={page}
+        query={query}
+        totalPages={totalPages === 0 ? 1 : totalPages}
+      />
     </>
   );
 }
@@ -66,25 +53,11 @@ export async function UserDiscoverySkeleton({ searchParams }: { searchParams: Pr
   return (
     <>
       <UserFilter take={take} query={query} disabled />
-      <ul className='flex flex-col gap-2'>
+      <div className='flex max-w-5xl flex-wrap justify-center gap-2'>
         {Array.from({ length: take }).map((_, index) => (
-          <li className='flex flex-col' key={`skeleton-user-${index}`}>
-            <div className='flex items-start gap-2'>
-              <Skeleton className='h-12 w-12 rounded-full' style={{ animationDelay: index * -200 + 'ms' }} />
-              <div className='flex flex-col'>
-                <div className='flex flex-row items-center gap-2'>
-                  <Skeleton className='h-7 w-16' style={{ animationDelay: index * -200 + 'ms' }} />
-                  <Skeleton className='h-5 w-12' style={{ animationDelay: index * -300 + 'ms' }} />
-                </div>
-                <div className='flex flex-row items-center gap-2'>
-                  <Skeleton className='h-5 w-14' style={{ animationDelay: index * -300 + 'ms' }} />
-                  <Skeleton className='h-5 w-12' style={{ animationDelay: index * -400 + 'ms' }} />
-                </div>
-              </div>
-            </div>
-          </li>
+          <UserCardSkeleton key={`user-${index}-skeleton`} />
         ))}
-      </ul>
+      </div>
       <UserDiscoveryPaginationSkeleton take={take} />
     </>
   );
