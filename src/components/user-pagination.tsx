@@ -2,22 +2,24 @@ import { TypographySmall } from '@/components/typography';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 
 export function UserDiscoveryPagination({
+  displayedUsers,
+  totalUsers,
+  totalPages,
   take,
-  count,
   page,
   query,
-  totalPages,
 }: {
+  displayedUsers: number;
+  totalPages: number;
+  totalUsers: number;
   take: number;
-  count: number;
   page: number;
   query: string;
-  totalPages: number;
 }) {
   return (
     <div className='flex flex-col items-center gap-4 p-4 text-center text-balance'>
       <TypographySmall>
-        Showing {count < take ? count : take} of {count} users (page {page} of {totalPages})
+        Showing {displayedUsers} of {totalUsers} users (page {page} of {totalPages})
       </TypographySmall>
       <Pagination>
         <PaginationContent>
