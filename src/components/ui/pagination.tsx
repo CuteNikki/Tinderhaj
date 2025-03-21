@@ -3,7 +3,6 @@ import * as React from 'react';
 
 import { Button, buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import Link from 'next/link';
 
 function Pagination({ className, ...props }: React.ComponentProps<'nav'>) {
   return <nav role='navigation' aria-label='pagination' data-slot='pagination' className={cn('mx-auto flex w-full justify-center', className)} {...props} />;
@@ -24,8 +23,7 @@ type PaginationLinkProps = {
 
 function PaginationLink({ className, isActive, size = 'icon', ...props }: PaginationLinkProps) {
   return (
-    <Link
-      href={props.href!}
+    <a
       aria-current={isActive ? 'page' : undefined}
       data-slot='pagination-link'
       data-active={isActive}

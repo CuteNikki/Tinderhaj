@@ -1,18 +1,16 @@
-import { QUERIES } from '@/lib/queries';
+import { SearchParams } from 'next/dist/server/request/search-params';
 
-export default async function Users() {
-  const users = await QUERIES.getUsers();
+import { TypographyH3 } from '@/components/typography';
+import { UserDiscovery, UserDiscoverySkeleton } from '@/components/user-discovery';
+import { Suspense } from 'react';
 
+export default function UsersPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
   return (
-    <div>
-      <h1>Users</h1>
-      <ul>
-        {users.map((user) => (
-          <li key={user.id}>
-            {user.display_name} (@{user.username})
-          </li>
-        ))}
-      </ul>
+    <div className='flex flex-col items-center gap-4 p-4'>
+      <TypographyH3>Users</TypographyH3>
+      <Suspense fallback={<UserDiscoverySkeleton searchParams={searchParams} />}>
+        <UserDiscovery searchParams={searchParams} />
+      </Suspense>
     </div>
   );
 }
