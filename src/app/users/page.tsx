@@ -15,9 +15,9 @@ export default function UsersPage({ searchParams }: { searchParams: Promise<Sear
         </Button>
         <TypographyH1>Users</TypographyH1>
       </div>
-        <Suspense fallback={<UserDiscoverySkeleton searchParams={searchParams} />}>
-          <UserDiscovery searchParams={searchParams} />
-        </Suspense>
+      <Suspense fallback={<UserDiscoverySkeleton searchParams={searchParams} />}>
+        <UserDiscovery searchParams={searchParams} />
+      </Suspense>
     </div>
   );
 }
