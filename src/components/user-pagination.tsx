@@ -58,28 +58,31 @@ export function UserDiscoveryPagination({
   );
 }
 
-export function UserDiscoveryPaginationSkeleton() {
+export function UserDiscoveryPaginationSkeleton({ take }: { take: number }) {
   return (
-    <Pagination>
-      <PaginationContent>
-        <PaginationItem>
-          <PaginationPrevious href='#' />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href='#'>?</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href='#' isActive>
-            ?
-          </PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href='#'>?</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationNext href='#' />
-        </PaginationItem>
-      </PaginationContent>
-    </Pagination>
+    <div className='flex flex-col items-center gap-4 p-4 text-center text-balance'>
+      <TypographySmall className='flex items-center gap-2'>Showing {take} of ? users (page ? of ?)</TypographySmall>
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious href='#' />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href='#'>?</PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href='#' isActive>
+              ?
+            </PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href='#'>?</PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationNext href='#' />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
+    </div>
   );
 }

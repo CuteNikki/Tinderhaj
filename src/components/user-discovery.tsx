@@ -1,14 +1,14 @@
 import { SearchParams } from 'next/dist/server/request/search-params';
+import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
 import { QUERIES } from '@/lib/queries';
 
-import { TypographyLead, TypographyMuted, TypographyP, TypographySmall } from '@/components/typography';
+import { TypographyLead, TypographyMuted, TypographyP } from '@/components/typography';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { UserFilter } from '@/components/user-filter';
 import { UserDiscoveryPagination, UserDiscoveryPaginationSkeleton } from '@/components/user-pagination';
-import { redirect } from 'next/navigation';
 
 const searchParamsSchema = z.object({
   query: z.preprocess((val) => val, z.string().optional().default('')),
@@ -28,7 +28,7 @@ export async function UserDiscovery({ searchParams }: { searchParams: Promise<Se
 
   return (
     <>
-      <UserFilter take={take} query={query} />
+      <UserFilter page={page} take={take} query={query} />
       <ul className='flex flex-col gap-2'>
         {users.length ? (
           users.map((user, index) => (
@@ -83,17 +83,9 @@ export async function UserDiscoverySkeleton({ searchParams }: { searchParams: Pr
               </div>
             </div>
           </li>
-          // <li className='flex items-center gap-2' key={`user-${index}`}>
-          //   <Skeleton className='h-8 w-8 rounded-full' style={{ animationDelay: index * -200 + 'ms' }} />
-          //   <Skeleton className='h-6 w-24' style={{ animationDelay: index * -200 + 'ms' }} />
-          //   <Skeleton className='h-5 w-12' style={{ animationDelay: index * -100 + 'ms' }} />
-          // </li>
         ))}
       </ul>
-      <div className='flex flex-col items-center gap-4 p-4 text-center text-balance'>
-        <TypographySmall className='flex items-center'>Showing {take} of ? users (page ? of ?)</TypographySmall>
-        <UserDiscoveryPaginationSkeleton />
-      </div>
+      <UserDiscoveryPaginationSkeleton take={take} />
     </>
   );
 }
