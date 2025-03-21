@@ -55,7 +55,7 @@ export async function UserDiscovery({ searchParams }: { searchParams: Promise<Se
           <TypographyLead>No search result!</TypographyLead>
         )}
       </ul>
-      <UserDiscoveryPagination take={take} count={count} page={page} query={query} totalPages={totalPages} />
+      <UserDiscoveryPagination take={take} count={count} page={page} query={query} totalPages={totalPages === 0 ? 1 : totalPages} />
     </>
   );
 }
