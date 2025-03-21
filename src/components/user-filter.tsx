@@ -24,7 +24,7 @@ export function UserFilter({ page = 1, take, query, disabled }: { page?: number;
           window.location.href = `?query=${query}&page=${page}&take=${value}`;
         }}
       >
-        <SelectTrigger>{take}</SelectTrigger>
+        <SelectTrigger aria-label='Select number of items per page'>{take}</SelectTrigger>
         <SelectContent>
           <SelectItem value='5'>5</SelectItem>
           <SelectItem value='10'>10</SelectItem>
@@ -33,7 +33,7 @@ export function UserFilter({ page = 1, take, query, disabled }: { page?: number;
           <SelectItem value='25'>25</SelectItem>
         </SelectContent>
       </Select>
-      <Button type='submit' variant='outline' size='icon' disabled={disabled}>
+      <Button aria-label='Submit search' type='submit' variant='outline' size='icon' disabled={disabled}>
         <SearchIcon />
       </Button>
     </form>

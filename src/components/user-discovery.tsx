@@ -35,7 +35,7 @@ export async function UserDiscovery({ searchParams }: { searchParams: Promise<Se
             <li className='flex flex-col' key={`user-${index}-${user.id}`}>
               <div className='flex items-start gap-2'>
                 <Avatar className='h-12 w-12'>
-                  <AvatarImage src={user.avatar_url} />
+                  <AvatarImage alt='Avatar' src={user.avatar_url} />
                   <AvatarFallback>{user.display_name.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div className='flex flex-col'>
