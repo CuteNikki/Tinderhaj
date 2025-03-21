@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/u
 export function UserFilter({ page = 1, take, query, disabled }: { page?: number; take: number; query: string; disabled?: boolean }) {
   return (
     <form
+      name='user-filter'
       className='flex gap-2'
       onSubmit={(e) => {
         e.preventDefault();
