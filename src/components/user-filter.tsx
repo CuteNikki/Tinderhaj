@@ -19,6 +19,7 @@ export function UserFilter({ page = 1, take, query, disabled }: { page?: number;
     >
       <Input type='search' name='query' placeholder='Search' defaultValue={query} disabled={disabled} className='max-w-60' />
       <Select
+        name='take'
         disabled={disabled}
         defaultValue={take.toString()}
         onValueChange={(value) => {
