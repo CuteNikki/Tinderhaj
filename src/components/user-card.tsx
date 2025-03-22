@@ -32,7 +32,7 @@ export function UserCard({ user }: { user: User }) {
   };
 
   return (
-    <Card className='w-64 overflow-hidden'>
+    <Card className='w-64 overflow-hidden py-0'>
       <div className='h-20 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500' />
       <CardContent className='pt-0 pb-4'>
         <div className='-mt-16 flex flex-col items-center'>
@@ -62,7 +62,7 @@ export function UserCard({ user }: { user: User }) {
 
 export function UserCardSkeleton() {
   return (
-    <Card className='w-64 overflow-hidden'>
+    <Card className='w-64 overflow-hidden py-0'>
       <Skeleton className='h-20 rounded-none' />
       <CardContent className='pt-0 pb-4'>
         <div className='-mt-16 flex flex-col items-center'>
