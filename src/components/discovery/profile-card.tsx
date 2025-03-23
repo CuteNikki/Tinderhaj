@@ -1,4 +1,4 @@
-import { User } from '@prisma/client';
+import { Profile } from '@prisma/client';
 import Image from 'next/image';
 
 import { Cake, MapPin } from 'lucide-react';
@@ -25,7 +25,7 @@ function calculateAge(dob: Date) {
   return age;
 }
 
-export function ProfileCard({ profile, children, className }: { profile: User; children?: React.ReactNode; className?: string }) {
+export function ProfileCard({ profile, children, className }: { profile: Profile; children?: React.ReactNode; className?: string }) {
   return (
     <Card className={cn('w-72 overflow-hidden py-0', className)}>
       <Image unoptimized priority src={profile.bannerUrl} width={1144} height={572} alt='Banner' className='w-full' />

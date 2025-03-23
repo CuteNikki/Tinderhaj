@@ -2,8 +2,8 @@ import { QUERIES } from '@/lib/queries';
 
 import { TypographyMuted } from '@/components/typography';
 
-export async function UserCount() {
-  const userCount = await QUERIES.getUserCount();
+export async function ProfileCount() {
+  const profileCount = await QUERIES.getProfileCount();
 
   return (
     <TypographyMuted className='text-sm'>
@@ -11,7 +11,7 @@ export async function UserCount() {
       {new Intl.NumberFormat(navigator.language, {
         notation: 'compact',
         compactDisplay: 'short',
-      }).format(userCount)}
+      }).format(profileCount)}
       + users
     </TypographyMuted>
   );

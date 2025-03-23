@@ -17,9 +17,9 @@ const searchParamsSchema = z.object({
 
 export async function Discovery({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const { p: page, t: take, q: query } = searchParamsSchema.parse(await searchParams);
-  const { users, totalUsers } = await (query?.length ? QUERIES.filterUsers(query, page, take) : QUERIES.getUsers(page, take));
+  const { profiles, totalProfiles } = await (query?.length ? QUERIES.getProfilesWithQuery(query, page, take) : QUERIES.getProfiles(page, take));
 
-  const totalPages = Math.ceil(totalUsers / take);
+  const totalPages = Math.ceil(totalProfiles / take);
 
   if (totalPages !== 0 && page > totalPages) {
     redirect(`?query=${query}&page=${totalPages < 1 ? 1 : totalPages}&take=${take}`);
@@ -28,8 +28,8 @@ export async function Discovery({ searchParams }: { searchParams: Promise<Search
   return (
     <>
       <ProfileFilter page={page} query={query} take={take} />
-      {totalUsers ? <ProfileList users={users} /> : <NoResults />}
-      <ProfilePagination displayedUsers={users.length} totalUsers={totalUsers} totalPages={totalPages} take={take} page={page} query={query} />
+      {totalProfiles ? <ProfileList profiles={profiles} /> : <NoResults />}
+      <ProfilePagination displayedUsers={profiles.length} totalUsers={totalProfiles} totalPages={totalPages} take={take} page={page} query={query} />
     </>
   );
 }

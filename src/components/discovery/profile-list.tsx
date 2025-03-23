@@ -1,13 +1,13 @@
-import { User } from '@prisma/client';
+import { Profile } from '@prisma/client';
 
 import { ProfileCard, ProfileCardSkeleton } from '@/components/discovery/profile-card';
 
-export async function ProfileList({ users }: { users: User[] }) {
+export async function ProfileList({ profiles }: { profiles: Profile[] }) {
   return (
     <section className='from-background to-muted w-full bg-gradient-to-b py-8 md:py-12'>
       <div className='container mx-auto px-4 md:px-6'>
-        <div className='flex gap-6 flex-wrap justify-center'>
-          {users.map((profile) => (
+        <div className='flex flex-wrap justify-center gap-6'>
+          {profiles.map((profile) => (
             <ProfileCard key={profile.id} profile={profile} />
           ))}
         </div>

@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 import { ArrowRight, Search, Shield, Zap } from 'lucide-react';
 
-import { UserCount } from '@/components/home/user-count';
+import { ProfileCount } from '@/components/home/profile-count';
 import { TypographyH1, TypographyMuted } from '@/components/typography';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -38,7 +38,7 @@ export function Hero() {
               <div className='flex items-center gap-2'>
                 <Shield className='h-5 w-5' />
                 <Suspense fallback={<TypographyMuted className='text-sm'>Loading...</TypographyMuted>}>
-                  <UserCount />
+                  <ProfileCount />
                 </Suspense>
               </div>
               <div className='flex items-center gap-2'>

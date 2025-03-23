@@ -5,12 +5,12 @@ import { Prisma } from '@prisma/client';
 import prisma from '@/lib/prisma';
 
 export const QUERIES = {
-  getUserCount: async () => {
-    return await prisma.user.count();
+  getProfileCount: async () => {
+    return await prisma.profile.count();
   },
 
-  filterUsers: async (query: string, page: number, take: number) => {
-    const where: Prisma.UserWhereInput = {
+  getProfilesWithQuery: async (query: string, page: number, take: number) => {
+    const where: Prisma.ProfileWhereInput = {
       OR: [
         { username: { contains: query, mode: 'insensitive' } },
         { displayName: { contains: query, mode: 'insensitive' } },
@@ -19,10 +19,13 @@ export const QUERIES = {
         { interests: { has: query } },
       ],
     };
-    return { users: await prisma.user.findMany({ skip: (page - 1) * take, take: take, where: where }), totalUsers: await prisma.user.count({ where }) };
+    return {
+      profiles: await prisma.profile.findMany({ skip: (page - 1) * take, take: take, where: where }),
+      totalProfiles: await prisma.profile.count({ where }),
+    };
   },
 
-  getUsers: async (page: number, take: number) => {
-    return { users: await prisma.user.findMany({ skip: (page - 1) * take, take: take }), totalUsers: await prisma.user.count() };
+  getProfiles: async (page: number, take: number) => {
+    return { profiles: await prisma.profile.findMany({ skip: (page - 1) * take, take: take }), totalProfiles: await prisma.profile.count() };
   },
 };

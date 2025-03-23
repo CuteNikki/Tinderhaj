@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 // Recommended banner size: 1144x572 2:1
 // Recommended avatar size: 512x512 1:1
 
-const seedData: Prisma.UserCreateInput[] = [
+const seedData: Prisma.ProfileCreateInput[] = [
   {
     username: 'ocean_swimmer',
     displayName: 'Blue Blahaj',
@@ -108,10 +108,10 @@ const seedData: Prisma.UserCreateInput[] = [
 ];
 
 (async () => {
-  await prisma.user.deleteMany();
+  await prisma.profile.deleteMany();
 
   for (const data of seedData) {
-    await prisma.user.upsert({
+    await prisma.profile.upsert({
       where: { username: data.username },
       update: data,
       create: data,
