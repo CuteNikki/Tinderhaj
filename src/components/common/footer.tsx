@@ -56,7 +56,7 @@ export async function Footer() {
         <div className='mb-12 grid grid-cols-1 gap-8 md:grid-cols-4'>
           <div className='space-y-4'>
             <div className='flex items-center gap-2'>
-              <Image unoptimized priority src='/blahaj.webp' alt='Tinderhaj' className='h-6 w-6' width={48} height={48} />
+              <Image unoptimized priority src='/blahaj.webp' alt='Logo' className='h-6 w-6' width={48} height={48} />
               <TypographyLarge className='font-bold'>Tinderhaj</TypographyLarge>
             </div>
             <TypographyMuted className='pr-8 text-sm'>{`The world's first dating site exclusively for IKEA's Blahaj plush sharks.`}</TypographyMuted>
@@ -93,10 +93,14 @@ export async function Footer() {
         </div>
 
         <div className='border-t pt-8'>
-          <div className='flex flex-col items-center text-center justify-between gap-4 md:flex-row'>
+          <div className='flex flex-col items-center justify-between gap-4 text-center md:flex-row'>
             <TypographyP className='text-sm'>© {new Date().getFullYear()} Tinderhaj. All rights reserved.</TypographyP>
-            <TypographyMuted className='text-sm'>Blåhaj is a trademark of IKEA.<br />Tinderhaj is not affiliated with IKEA or Tinder.</TypographyMuted>
-            <div className='flex items-center gap-4 lg:gap-4 md:gap-2'>
+            <TypographyMuted className='text-sm'>
+              Blåhaj is a trademark of IKEA.
+              <br />
+              Tinderhaj is not affiliated with IKEA or Tinder.
+            </TypographyMuted>
+            <div className='flex items-center gap-4 md:gap-2 lg:gap-4'>
               {legal.map((item) => (
                 <Link
                   key={`footer-legal-${item.name}`}
