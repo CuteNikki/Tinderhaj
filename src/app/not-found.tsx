@@ -1,0 +1,61 @@
+import Image from 'next/image';
+import Link from 'next/link';
+
+import { ArrowRight, Search } from 'lucide-react';
+
+import { Footer } from '@/components/common/footer';
+import { Navbar } from '@/components/common/navbar';
+import { TypographyH1, TypographyMuted } from '@/components/typography';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+
+export default function Home() {
+  return (
+    <div className='flex min-h-screen flex-col'>
+      <Navbar />
+
+      <main className='flex-1'>
+        <section id='hero' className='bg-muted w-full py-24'>
+          <div className='container mx-auto px-4 md:px-8'>
+            <div className='flex flex-col items-center justify-evenly gap-8 sm:flex-row md:gap-24'>
+              <div className='flex flex-col gap-4'>
+                <Badge variant='secondary'>404</Badge>
+                <TypographyH1 className='text-3xl sm:text-4xl lg:text-5xl'>Blahaj not found</TypographyH1>
+                <TypographyMuted className='max-w-md text-balance'>
+                  {"Oops! You've swum too far or it looks like this page got lost in the deep sea."}
+                </TypographyMuted>
+                <div className='flex flex-col gap-4 sm:flex-row'>
+                  <Button asChild>
+                    <Link href='/'>
+                      Swim Home
+                      <ArrowRight className='h-4 w-4' />
+                    </Link>
+                  </Button>
+                  <Button asChild variant='secondary'>
+                    <Link href='/discovery'>
+                      View Discovery
+                      <Search className='h-4 w-4' />
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+              <div className='w-fit'>
+                <Image
+                  unoptimized
+                  priority
+                  src='https://placehold.co/560x560/webp?text=Blahaj'
+                  width={280}
+                  height={280}
+                  alt='Blahaj plush shark with heart'
+                  className='rounded-xl object-cover'
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <Footer />
+    </div>
+  );
+}

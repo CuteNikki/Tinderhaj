@@ -1,7 +1,7 @@
 import { TypographySmall } from '@/components/typography';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 
-export function UserDiscoveryPagination({
+export function ProfilePagination({
   displayedUsers,
   totalUsers,
   totalPages,
@@ -17,42 +17,42 @@ export function UserDiscoveryPagination({
   query: string;
 }) {
   return (
-    <div className='flex flex-col items-center gap-4 p-4 text-center text-balance'>
+    <div className='bg-muted flex flex-col items-center gap-4 p-4 text-center text-balance'>
       <TypographySmall>
         Showing {displayedUsers} of {totalUsers} users (page {page} of {totalPages})
       </TypographySmall>
       <Pagination>
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious href={page === 1 ? '#' : `?query=${query}&page=${page - 1}&take=${take}`} />
+            <PaginationPrevious href={page === 1 ? '#top' : `?q=${query}&p=${page - 1}&t=${take}`} />
           </PaginationItem>
           {totalPages > 2 && page === totalPages && (
             <PaginationItem>
-              <PaginationLink href={`?query=${query}&page=${page - 2}&take=${take}`}>{page - 2}</PaginationLink>
+              <PaginationLink href={`?q=${query}&p=${page - 2}&t=${take}`}>{page - 2}</PaginationLink>
             </PaginationItem>
           )}
           {page > 1 && (
             <PaginationItem>
-              <PaginationLink href={`?query=${query}&page=${page - 1}&take=${take}`}>{page - 1}</PaginationLink>
+              <PaginationLink href={`?q=${query}&p=${page - 1}&t=${take}`}>{page - 1}</PaginationLink>
             </PaginationItem>
           )}
           <PaginationItem>
-            <PaginationLink href={`?query=${query}&page=${page}&take=${take}`} isActive>
+            <PaginationLink href={`?q=${query}&p=${page}&t=${take}`} isActive>
               {page}
             </PaginationLink>
           </PaginationItem>
           {page < totalPages && (
             <PaginationItem>
-              <PaginationLink href={`?query=${query}&page=${page + 1}&take=${take}`}>{page + 1}</PaginationLink>
+              <PaginationLink href={`?q=${query}&p=${page + 1}&t=${take}`}>{page + 1}</PaginationLink>
             </PaginationItem>
           )}
           {totalPages > 2 && page === 1 && (
             <PaginationItem>
-              <PaginationLink href={`?query=${query}&page=3&take=${take}`}>3</PaginationLink>
+              <PaginationLink href={`?q=${query}&p=3&t=${take}`}>3</PaginationLink>
             </PaginationItem>
           )}
           <PaginationItem>
-            <PaginationNext href={page === totalPages ? '#' : `?query=${query}&page=${page + 1}&take=${take}`} />
+            <PaginationNext href={page === totalPages ? '#top' : `?q=${query}&p=${page + 1}&t=${take}`} />
           </PaginationItem>
         </PaginationContent>
       </Pagination>
@@ -60,28 +60,28 @@ export function UserDiscoveryPagination({
   );
 }
 
-export function UserDiscoveryPaginationSkeleton({ take }: { take: number }) {
+export function ProfilePaginationSkeleton() {
   return (
-    <div className='flex flex-col items-center gap-4 p-4 text-center text-balance'>
-      <TypographySmall className='flex items-center gap-2'>Showing {take} of ? users (page ? of ?)</TypographySmall>
+    <div className='bg-muted flex flex-col items-center gap-4 p-4 text-center text-balance'>
+      <TypographySmall className='flex items-center gap-2'>Showing ? of ? users (page ? of ?)</TypographySmall>
       <Pagination>
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious href='#' />
+            <PaginationPrevious href='#top' />
           </PaginationItem>
           <PaginationItem>
-            <PaginationLink href='#'>?</PaginationLink>
+            <PaginationLink href='#top'>?</PaginationLink>
           </PaginationItem>
           <PaginationItem>
-            <PaginationLink href='#' isActive>
+            <PaginationLink href='#top' isActive>
               ?
             </PaginationLink>
           </PaginationItem>
           <PaginationItem>
-            <PaginationLink href='#'>?</PaginationLink>
+            <PaginationLink href='#top'>?</PaginationLink>
           </PaginationItem>
           <PaginationItem>
-            <PaginationNext href='#' />
+            <PaginationNext href='#top' />
           </PaginationItem>
         </PaginationContent>
       </Pagination>
