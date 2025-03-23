@@ -93,10 +93,10 @@ export async function Footer() {
         </div>
 
         <div className='border-t pt-8'>
-          <div className='flex flex-col items-center justify-between gap-4 md:flex-row'>
+          <div className='flex flex-col items-center text-center justify-between gap-4 md:flex-row'>
             <TypographyP className='text-sm'>© {new Date().getFullYear()} Tinderhaj. All rights reserved.</TypographyP>
-            <TypographyMuted className='text-sm'>Not affiliated with IKEA or Tinder.</TypographyMuted>
-            <div className='flex items-center gap-4'>
+            <TypographyMuted className='text-sm'>Blåhaj is a trademark of IKEA.<br />Tinderhaj is not affiliated with IKEA or Tinder.</TypographyMuted>
+            <div className='flex items-center gap-4 lg:gap-4 md:gap-2'>
               {legal.map((item) => (
                 <Link
                   key={`footer-legal-${item.name}`}
