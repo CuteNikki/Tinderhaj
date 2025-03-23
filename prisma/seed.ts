@@ -2,12 +2,15 @@ import { Prisma, PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+// Recommended banner size: 1144x572 2:1
+// Recommended avatar size: 512x512 1:1
+
 const seedData: Prisma.UserCreateInput[] = [
   {
     username: 'ocean_swimmer',
     displayName: 'Blue Blahaj',
     avatarUrl: 'https://placehold.co/512x512/webp?text=OS',
-    bannerUrl: 'https://placehold.co/1024x512/webp?text=Blue+Blahaj',
+    bannerUrl: 'https://placehold.co/1144x572/webp?text=Blue+Blahaj',
     birthday: new Date('2023-01-01'),
     pronouns: 'they/them',
     location: 'IKEA Shelf 3',
@@ -18,7 +21,7 @@ const seedData: Prisma.UserCreateInput[] = [
     username: 'tooth_fairy',
     displayName: 'Sharky',
     avatarUrl: 'https://placehold.co/512x512/webp?text=TF',
-    bannerUrl: 'https://placehold.co/1024x512/webp?text=Sharky',
+    bannerUrl: 'https://placehold.co/1144x572/webp?text=Sharky',
     birthday: new Date('2024-01-01'),
     pronouns: 'he/him',
     location: 'Bedroom Corner',
@@ -29,7 +32,7 @@ const seedData: Prisma.UserCreateInput[] = [
     username: 'bubble_trouble',
     displayName: 'Bubbles',
     avatarUrl: 'https://placehold.co/512x512/webp?text=BT',
-    bannerUrl: 'https://placehold.co/1024x512/webp?text=Bubbles',
+    bannerUrl: 'https://placehold.co/1144x572/webp?text=Bubbles',
     birthday: new Date('2022-01-01'),
     pronouns: 'she/her',
     location: 'Living Room Couch',
@@ -40,7 +43,7 @@ const seedData: Prisma.UserCreateInput[] = [
     username: 'fin_tastic',
     displayName: 'Finley',
     avatarUrl: 'https://placehold.co/512x512/webp?text=FT',
-    bannerUrl: 'https://placehold.co/1024x512/webp?text=Finley',
+    bannerUrl: 'https://placehold.co/1144x572/webp?text=Finley',
     birthday: new Date('2023-01-01'),
     pronouns: 'he/they',
     location: 'Backpack Ready',
@@ -51,7 +54,7 @@ const seedData: Prisma.UserCreateInput[] = [
     username: 'coral_reef',
     displayName: 'Coral',
     avatarUrl: 'https://placehold.co/512x512/webp?text=CR',
-    bannerUrl: 'https://placehold.co/1024x512/webp?text=Coral',
+    bannerUrl: 'https://placehold.co/1144x572/webp?text=Coral',
     birthday: new Date('2024-01-01'),
     pronouns: 'she/they',
     location: 'Craft Room',
@@ -62,7 +65,7 @@ const seedData: Prisma.UserCreateInput[] = [
     username: 'captain_of_cuddles',
     displayName: 'Captain Blue',
     avatarUrl: 'https://placehold.co/512x512/webp?text=CB',
-    bannerUrl: 'https://placehold.co/1024x512/webp?text=Captain+Blue',
+    bannerUrl: 'https://placehold.co/1144x572/webp?text=Captain+Blue',
     birthday: new Date('2020-01-01'),
     pronouns: 'he/him',
     location: 'Study Room',
@@ -73,7 +76,7 @@ const seedData: Prisma.UserCreateInput[] = [
     username: 'barnacle_buddy',
     displayName: 'Barnacle Buddy',
     avatarUrl: 'https://placehold.co/512x512/webp?text=BB',
-    bannerUrl: 'https://placehold.co/1024x512/webp?text=Barnacle+Buddy',
+    bannerUrl: 'https://placehold.co/1144x572/webp?text=Barnacle+Buddy',
     birthday: new Date('2021-01-01'),
     pronouns: 'they/them',
     location: 'Under the Sea',
@@ -84,7 +87,7 @@ const seedData: Prisma.UserCreateInput[] = [
     username: 'splash_attack',
     displayName: 'Splash',
     avatarUrl: 'https://placehold.co/512x512/webp?text=SA',
-    bannerUrl: 'https://placehold.co/1024x512/webp?text=Splash',
+    bannerUrl: 'https://placehold.co/1144x572/webp?text=Splash',
     birthday: new Date('2024-01-01'),
     pronouns: 'they/them',
     location: 'Playroom',
@@ -95,7 +98,7 @@ const seedData: Prisma.UserCreateInput[] = [
     username: 'misty_waters',
     displayName: 'Misty',
     avatarUrl: 'https://placehold.co/512x512/webp?text=MW',
-    bannerUrl: 'https://placehold.co/1024x512/webp?text=Misty',
+    bannerUrl: 'https://placehold.co/1144x572/webp?text=Misty',
     birthday: new Date('2023-01-01'),
     pronouns: 'she/her',
     location: 'Window Sill',
