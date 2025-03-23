@@ -9,16 +9,20 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(cuid(2))
-  username String @unique
+  id String @id @default(cuid(2))
 
-  display_name String
-  avatar_url   String
+  username    String @unique
+  displayName String
 
-  pronouns    String
-  description String
-  birthday    DateTime
+  avatarUrl String
+  bannerUrl String
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  birthday  DateTime
+  pronouns  String
+  location  String
+  interests String[]
+  bio       String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
