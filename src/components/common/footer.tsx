@@ -27,18 +27,18 @@ export async function Footer() {
     {
       name: 'Resources',
       items: [
-        { name: 'Community', href: '#hero' },
-        // { name: 'Blog', href: '#hero' },
-        // { name: 'Support', href: '#hero' },
-        // { name: 'Status', href: '#hero' },
+        { name: 'Community', href: '/#top' },
+        // { name: 'Blog', href: '/#top' },
+        // { name: 'Support', href: '/#top' },
+        // { name: 'Status', href: '/#top' },
       ],
     },
     {
       name: 'Company',
       items: [
-        { name: 'About', href: '#hero' },
-        { name: 'Contact', href: '#hero' },
-        // { name: 'Careers', href: '#hero' },
+        { name: 'About', href: '/#top' },
+        { name: 'Contact', href: '/#top' },
+        // { name: 'Careers', href: '/#top' },
       ],
     },
   ];
