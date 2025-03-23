@@ -76,7 +76,7 @@ export async function Footer() {
 
           {links.map((link) => (
             <div key={`footer-link-${link.name}`} className='space-y-4'>
-              <h3 className='font-medium'>{link.name}</h3>
+              <TypographyLarge>{link.name}</TypographyLarge>
               <nav className='flex flex-col space-y-2 text-sm'>
                 {link.items.map((item) => (
                   <Link
