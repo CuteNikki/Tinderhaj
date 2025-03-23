@@ -24,7 +24,7 @@ export function Hero() {
             <TypographyMuted className='max-w-md text-balance'>{"The world's first dating site exclusively for IKEA's Blahaj plush sharks."}</TypographyMuted>
             <div className='flex flex-col gap-4 sm:flex-row'>
               <Button>
-                Sign up
+                Sign Up
                 <ArrowRight className='h-4 w-4' />
               </Button>
               <Button asChild variant='secondary'>

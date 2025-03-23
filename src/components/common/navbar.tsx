@@ -38,9 +38,9 @@ export function Navbar() {
         <div className='ml-auto hidden items-center gap-2 md:flex'>
           <ThemeButton />
           <Button variant='ghost' size='sm'>
-            Log in
+            Log In
           </Button>
-          <Button size='sm'>Sign up</Button>
+          <Button size='sm'>Sign Up</Button>
         </div>
         <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
           <SheetTrigger asChild className='ml-auto md:hidden'>
@@ -49,31 +49,31 @@ export function Navbar() {
               <span className='sr-only'>Toggle menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side='right' className='w-[80%] sm:w-[350px]'>
+          <SheetContent side='right' className='w-[80%] justify-between sm:w-[350px]'>
             <SheetHeader>
               <SheetTitle className='mb-6 flex items-center gap-2'>
                 <Heart className='text-primary h-6 w-6' />
                 <span className='text-lg font-bold'>Tinderhaj</span>
               </SheetTitle>
-              <nav className='flex flex-col gap-4'>
-                {links.map((link) => (
-                  <Link
-                    key={`sheet-link-${link.href}-${link.text}`}
-                    href={link.href}
-                    className='text-foreground/60 hover:text-foreground/80 transition-colors'
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {link.text}
-                  </Link>
-                ))}
-              </nav>
             </SheetHeader>
+            <nav className='flex flex-col gap-4 p-6'>
+              {links.map((link) => (
+                <Link
+                  key={`sheet-link-${link.href}-${link.text}`}
+                  href={link.href}
+                  className='text-foreground/60 hover:text-foreground/80 transition-colors'
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {link.text}
+                </Link>
+              ))}
+            </nav>
             <SheetFooter className='mt-6 flex flex-col gap-2'>
               <Button variant='outline' className='w-full' onClick={() => setIsMenuOpen(false)}>
-                Log in
+                Log In
               </Button>
               <Button className='w-full' onClick={() => setIsMenuOpen(false)}>
-                Sign up
+                Sign Up
               </Button>
             </SheetFooter>
           </SheetContent>
