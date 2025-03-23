@@ -43,7 +43,7 @@ export default function Home() {
                 <Image
                   unoptimized
                   priority
-                  src='https://placehold.co/560x560/webp?text=Blahaj'
+                  src='/blahajSpin.gif'
                   width={280}
                   height={280}
                   alt='Blahaj plush shark with heart'

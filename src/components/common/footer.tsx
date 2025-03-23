@@ -1,7 +1,8 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { connection } from 'next/server';
 
-import { Github, Heart, Linkedin, Twitter } from 'lucide-react';
+import { Github, Linkedin, Twitter } from 'lucide-react';
 
 import { TypographyLarge, TypographyMuted, TypographyP } from '@/components/typography';
 
@@ -55,7 +56,7 @@ export async function Footer() {
         <div className='mb-12 grid grid-cols-1 gap-8 md:grid-cols-4'>
           <div className='space-y-4'>
             <div className='flex items-center gap-2'>
-              <Heart className='text-primary h-6 w-6' />
+              <Image unoptimized priority src='/blahaj.webp' alt='Tinderhaj' className='h-6 w-6' width={48} height={48} />
               <TypographyLarge className='font-bold'>Tinderhaj</TypographyLarge>
             </div>
             <TypographyMuted className='pr-8 text-sm'>{`The world's first dating site exclusively for IKEA's Blahaj plush sharks.`}</TypographyMuted>

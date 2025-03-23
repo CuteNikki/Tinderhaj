@@ -1,4 +1,4 @@
-import { MessageCircle, Search, Users } from 'lucide-react';
+import Image from 'next/image';
 
 import { TypographyH2, TypographyH4, TypographyMuted } from '@/components/typography';
 import { Card, CardContent } from '@/components/ui/card';
@@ -17,7 +17,7 @@ export function Features() {
           <Card>
             <CardContent>
               <div className='flex flex-col items-center space-y-2 text-center'>
-                <Search className='text-primary h-10 w-10' />
+                <Image unoptimized priority src='/blahajThink.webp' alt='Group Swims' className='h-10 w-10' width={80} height={80} />
                 <TypographyH4>Smart Matching</TypographyH4>
                 <TypographyMuted className='text-pretty'>Our algorithm finds the perfect match based on color, size, and squishiness.</TypographyMuted>
               </div>
@@ -26,16 +26,16 @@ export function Features() {
           <Card>
             <CardContent>
               <div className='flex flex-col items-center space-y-2 text-center'>
-                <MessageCircle className='text-primary h-10 w-10' />
-                <TypographyH4>Shark Chat</TypographyH4>
-                <TypographyMuted className='text-pretty'>Communicate with other Blahajs using our intuitive messaging system.</TypographyMuted>
+                <Image unoptimized priority src='/blahajHeart.webp' alt='Group Swims' className='h-10 w-10' width={80} height={80} />
+                <TypographyH4>Exclusive Community</TypographyH4>
+                <TypographyMuted className='text-pretty'>Connect with fellow Blahaj lovers from around the world.</TypographyMuted>
               </div>
             </CardContent>
           </Card>
           <Card>
             <CardContent>
               <div className='flex flex-col items-center space-y-2 text-center'>
-                <Users className='text-primary h-10 w-10' />
+                <Image unoptimized priority src='/blahajHug.webp' alt='Group Swims' className='h-10 w-10' width={80} height={80} />
                 <TypographyH4>Group Swims</TypographyH4>
                 <TypographyMuted className='text-pretty'>Organize group activities with other Blahajs in your area.</TypographyMuted>
               </div>
