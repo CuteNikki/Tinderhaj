@@ -6,6 +6,7 @@ CREATE TABLE "Profile" (
     "avatarUrl" TEXT NOT NULL,
     "bannerUrl" TEXT NOT NULL,
     "birthday" TIMESTAMP(3) NOT NULL,
+    "size" DOUBLE PRECISION NOT NULL,
     "pronouns" TEXT NOT NULL,
     "location" TEXT NOT NULL,
     "interests" TEXT[],

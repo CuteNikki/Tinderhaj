@@ -18,6 +18,7 @@ model Profile {
   bannerUrl String
 
   birthday  DateTime
+  size      Float
   pronouns  String
   location  String
   interests String[]
