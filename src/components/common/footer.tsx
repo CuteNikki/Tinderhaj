@@ -59,7 +59,7 @@ export async function Footer() {
               <Image unoptimized priority src='/blahaj.webp' alt='Logo' className='h-6 w-6' width={48} height={48} />
               <TypographyLarge className='font-bold'>Tinderhaj</TypographyLarge>
             </div>
-            <TypographyMuted className='pr-8 text-sm'>{`The world's first dating site exclusively for IKEA's Blahaj plush sharks.`}</TypographyMuted>
+            <TypographyMuted className='pr-2 text-sm text-balance'>{`The world's first dating site exclusively for IKEA's Blahaj plush sharks.`}</TypographyMuted>
             <div className='flex space-x-4'>
               {socials.map((social) => (
                 <Link
