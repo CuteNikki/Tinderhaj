@@ -28,7 +28,11 @@ export function Navbar() {
         </Link>
         <nav className='hidden flex-1 items-center gap-4 text-sm font-medium md:flex lg:gap-6'>
           {links.map((link) => (
-            <Link key={`nav-link-${link.href}-${link.text}`} href={link.href} className='hover:text-foreground/80 text-foreground/60 transition-colors'>
+            <Link
+              key={`nav-link-${link.href}-${link.text}`}
+              href={link.href}
+              className='text-muted-foreground hover:text-foreground transition-colors duration-150'
+            >
               {link.text}
             </Link>
           ))}
@@ -60,7 +64,7 @@ export function Navbar() {
             <nav className='flex flex-col items-center gap-4 p-6 text-center'>
               {links.map((link) => (
                 <SheetClose asChild key={`sheet-link-${link.href}-${link.text}`}>
-                  <Link href={link.href} className='hover:text-foreground/80 text-foreground/60 transition-colors'>
+                  <Link href={link.href} className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
                     {link.text}
                   </Link>
                 </SheetClose>
