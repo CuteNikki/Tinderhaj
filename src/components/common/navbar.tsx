@@ -1,10 +1,10 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 
 import { Menu } from 'lucide-react';
 
+import { Logo } from '@/components/common/logo';
 import { ThemeButton } from '@/components/common/theme-button';
 import { TypographyLarge } from '@/components/typography';
 import { Button } from '@/components/ui/button';
@@ -23,7 +23,7 @@ export function Navbar() {
     <header className='bg-background/95 supports-[backdrop-filter]:bg-background/60 border-background sticky top-0 z-50 w-full border-b backdrop-blur'>
       <div className='container mx-auto flex h-16 items-center gap-2 px-4 md:px-8 lg:gap-6'>
         <Link href='#top' className='mr-4 flex items-center gap-2'>
-          <Image unoptimized priority src='/blahaj.webp' alt='Logo' className='h-6 w-6' width={48} height={48} />
+          <Logo className='h-6 w-6' />
           <TypographyLarge className='font-bold'>Tinderhaj</TypographyLarge>
         </Link>
         <nav className='hidden flex-1 items-center gap-4 text-sm font-medium md:flex lg:gap-6'>
@@ -56,7 +56,7 @@ export function Navbar() {
           <SheetContent side='right' className='w-[80%] justify-between sm:w-[350px]'>
             <SheetHeader>
               <SheetTitle className='flex items-center justify-center gap-2'>
-                <Image unoptimized priority src='/blahaj.webp' alt='Logo' className='h-6 w-6' width={48} height={48} />
+                <Logo className='h-6 w-6' />
                 <span className='text-lg font-bold'>Tinderhaj</span>
               </SheetTitle>
               <SheetDescription className='text-center text-balance'>The best place to find your perfect match</SheetDescription>
