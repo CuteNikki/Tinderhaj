@@ -15,14 +15,16 @@ export default function Home() {
       <Navbar />
 
       <main className='flex-1'>
-        <section id='hero' className='bg-muted w-full py-24'>
+        <section id='hero' className='bg-muted w-full py-12 sm:py-24 lg:py-32'>
           <div className='container mx-auto px-4 md:px-8'>
-            <div className='flex flex-col items-center justify-evenly gap-8 sm:flex-row md:gap-24'>
-              <div className='flex flex-col gap-4'>
+            <div className='flex flex-col items-center justify-evenly gap-4 sm:flex-row md:gap-8'>
+              <div className='flex flex-col items-center gap-4 text-center sm:items-start sm:text-left'>
                 <Badge variant='secondary'>404</Badge>
                 <TypographyH1 className='text-3xl sm:text-4xl lg:text-5xl'>Blahaj not found</TypographyH1>
                 <TypographyMuted className='max-w-md text-balance'>
-                  {"Oops! You've swum too far or it looks like this page got lost in the deep sea."}
+                  {"Oops! Looks like you've swum too far."}
+                  <br />
+                  ...or we lost this page in the deep sea.
                 </TypographyMuted>
                 <div className='flex flex-col gap-4 sm:flex-row'>
                   <Button asChild>
@@ -39,16 +41,8 @@ export default function Home() {
                   </Button>
                 </div>
               </div>
-              <div className='w-fit'>
-                <Image
-                  unoptimized
-                  priority
-                  src='/blahajSpin.gif'
-                  width={280}
-                  height={280}
-                  alt='Blahaj plush shark with heart'
-                  className='rounded-xl object-cover'
-                />
+              <div className='animate-float w-fit'>
+                <Image unoptimized priority src='/blahajSpin.gif' width={280} height={280} alt='Blahaj plush' className='rounded-xl object-cover' />
               </div>
             </div>
           </div>
