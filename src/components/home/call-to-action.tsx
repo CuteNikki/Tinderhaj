@@ -15,7 +15,7 @@ export function CallToAction() {
               <br />
               Your shark soulmate is just a swipe away.
             </TypographyMuted>
-            <div className='mx-auto flex flex-col justify-center gap-2 pt-4 min-[400px]:flex-row'>
+            <div className='mx-auto flex flex-col items-center justify-center gap-2 pt-4 sm:flex-row'>
               <Button asChild>
                 <Link href='#top'>Create Your Profile</Link>
               </Button>
