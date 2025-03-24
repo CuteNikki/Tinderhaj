@@ -14,7 +14,7 @@ export function Navbar() {
   const links = [
     { href: '/#top', text: 'Home' },
     { href: '/#features', text: 'Features' },
-    { href: '/#how-it-works', text: 'Flow' },
+    { href: '/#flow', text: 'Flow' },
     { href: '/#testimonials', text: 'Testimonials' },
     { href: '/discovery#top', text: 'Discovery' },
   ];

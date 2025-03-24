@@ -1,8 +1,8 @@
 import { TypographyH2, TypographyH4, TypographyMuted } from '@/components/typography';
 
-export function HowItWorks() {
+export function Flow() {
   return (
-    <section id='how-it-works' className='bg-muted w-full py-12 md:py-24'>
+    <section id='flow' className='bg-muted w-full py-24'>
       <div className='container mx-auto px-4 md:px-6'>
         <div className='flex flex-col items-center justify-center space-y-4 text-center'>
           <div className='space-y-2'>
