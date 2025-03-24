@@ -28,18 +28,19 @@ function calculateAge(dob: Date) {
 export function ProfileCard({ profile, children, className }: { profile: Profile; children?: React.ReactNode; className?: string }) {
   return (
     <Card className={cn('w-72 overflow-hidden py-0', className)}>
-      <Image unoptimized priority src={profile.bannerUrl} width={1144} height={572} alt='Banner' className='w-full' />
+      <Image unoptimized priority draggable={false} width={1144} height={572} src={profile.bannerUrl} alt='Banner' className='w-full select-none' />
 
       <CardContent className='py-6'>
         <div className='border-background bg-muted relative -mt-16 mb-4 flex h-24 w-24 items-center justify-center rounded-full border-4'>
           <Image
             unoptimized
             priority
-            src={profile.avatarUrl}
+            draggable={false}
             width={256}
             height={256}
+            src={profile.avatarUrl}
             alt={`${profile.displayName}'s profile picture`}
-            className='rounded-full object-cover'
+            className='rounded-full object-cover select-none'
           />
         </div>
 

@@ -17,7 +17,16 @@ export function Features() {
           <Card className='max-w-96'>
             <CardContent>
               <div className='flex flex-col items-center space-y-2 text-center'>
-                <Image unoptimized priority src='/blahajThink.webp' alt='Group Swims' className='h-10 w-10' width={80} height={80} />
+                <Image
+                  unoptimized
+                  priority
+                  draggable={false}
+                  width={80}
+                  height={80}
+                  src='/blahajThink.webp'
+                  alt='Group Swims'
+                  className='h-10 w-10 select-none'
+                />
                 <TypographyH4>Smart Matching</TypographyH4>
                 <TypographyMuted className='text-balance'>Our algorithm finds the perfect match based on color, size, and squishiness.</TypographyMuted>
               </div>
@@ -26,7 +35,16 @@ export function Features() {
           <Card className='max-w-96'>
             <CardContent>
               <div className='flex flex-col items-center space-y-2 text-center'>
-                <Image unoptimized priority src='/blahajHeart.webp' alt='Group Swims' className='h-10 w-10' width={80} height={80} />
+                <Image
+                  unoptimized
+                  priority
+                  draggable={false}
+                  width={80}
+                  height={80}
+                  src='/blahajHeart.webp'
+                  alt='Group Swims'
+                  className='h-10 w-10 select-none'
+                />
                 <TypographyH4>Exclusive Community</TypographyH4>
                 <TypographyMuted className='text-balance'>Connect with fellow Blahaj lovers from around the world.</TypographyMuted>
               </div>
@@ -35,7 +53,16 @@ export function Features() {
           <Card className='max-w-96'>
             <CardContent>
               <div className='flex flex-col items-center space-y-2 text-center'>
-                <Image unoptimized priority src='/blahajHug.webp' alt='Group Swims' className='h-10 w-10' width={80} height={80} />
+                <Image
+                  unoptimized
+                  priority
+                  draggable={false}
+                  width={80}
+                  height={80}
+                  src='/blahajHug.webp'
+                  alt='Group Swims'
+                  className='h-10 w-10 select-none'
+                />
                 <TypographyH4>Group Swims</TypographyH4>
                 <TypographyMuted className='text-balance'>Organize group activities with other Blahajs in your area.</TypographyMuted>
               </div>

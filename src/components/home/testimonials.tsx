@@ -77,11 +77,12 @@ export function Testimonials() {
                     <Image
                       unoptimized
                       priority
-                      src={testimonial.avatarUrl}
+                      draggable={false}
                       width={80}
                       height={80}
+                      src={testimonial.avatarUrl}
                       alt={`${testimonial.displayName}'s profile picture`}
-                      className='h-12 w-12 rounded-full object-cover'
+                      className='h-12 w-12 rounded-full object-cover select-none'
                     />
                     <div>
                       <TypographyP className='font-bold'>{testimonial.displayName}</TypographyP>
