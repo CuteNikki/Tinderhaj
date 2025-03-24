@@ -57,12 +57,12 @@ export function Demo() {
         <div className='flex flex-col items-center justify-center space-y-4 text-center'>
           <div className='space-y-2'>
             <TypographyH2>Find Your Match</TypographyH2>
-            <TypographyMuted className='text-pretty'>Our intuitive swipe interface makes finding your perfect Blahaj simple and fun.</TypographyMuted>
+            <TypographyMuted className='text-balance px-4'>Our intuitive swipe interface makes finding your perfect Blahaj simple and fun.</TypographyMuted>
           </div>
         </div>
         <div className='relative flex items-center justify-center pt-12'>
           {/* Left card */}
-          <ProfileCard className='-z-10 -mr-14 hidden lg:block' profile={demoProfiles[1]} />
+          <ProfileCard className='-z-10 -mr-14 hidden lg:block -rotate-6' profile={demoProfiles[1]} />
           {/* Center card */}
           <ProfileCard className='z-0' profile={demoProfiles[0]}>
             <CardFooter className='flex flex-row items-center justify-center gap-6 pb-4'>
@@ -77,7 +77,7 @@ export function Demo() {
             </CardFooter>
           </ProfileCard>
           {/* Right card */}
-          <ProfileCard className='-z-10 -ml-14 hidden sm:block' profile={demoProfiles[2]} />
+          <ProfileCard className='-z-10 -ml-14 hidden sm:block rotate-6' profile={demoProfiles[2]} />
         </div>
       </div>
     </section>
