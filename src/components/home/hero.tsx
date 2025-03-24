@@ -1,13 +1,13 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { Suspense } from 'react';
 
 import { ArrowRight, Search, Shield, Zap } from 'lucide-react';
 
-import { ProfileCount } from '@/components/home/profile-count';
+import { ProfileCount, ProfileCountSkeleton } from '@/components/home/profile-count';
 import { TypographyH1, TypographyMuted } from '@/components/typography';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Suspense } from 'react';
 
 export function Hero() {
   return (
@@ -37,7 +37,7 @@ export function Hero() {
             <div className='flex flex-col items-center gap-2 pt-4 sm:flex-row sm:gap-6'>
               <div className='flex items-center gap-2'>
                 <Shield className='h-5 w-5' />
-                <Suspense fallback={<TypographyMuted className='text-sm'>Loading...</TypographyMuted>}>
+                <Suspense fallback={<ProfileCountSkeleton />}>
                   <ProfileCount />
                 </Suspense>
               </div>

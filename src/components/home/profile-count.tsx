@@ -16,3 +16,7 @@ export async function ProfileCount() {
     </TypographyMuted>
   );
 }
+
+export function ProfileCountSkeleton() {
+  return <TypographyMuted className='text-sm'>Trusted by ??? users</TypographyMuted>;
+}
