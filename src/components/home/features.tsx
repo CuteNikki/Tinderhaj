@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 
 export function Features() {
   return (
-    <section id='features' className='w-full py-12 md:py-24'>
+    <section id='features' className='w-full py-24'>
       <div className='container mx-auto px-4 md:px-6'>
         <div className='flex flex-col items-center justify-center space-y-4 text-center'>
           <div className='space-y-2'>

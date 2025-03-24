@@ -7,7 +7,7 @@ import { CardFooter } from '@/components/ui/card';
 
 export function Demo() {
   return (
-    <section id='demo' className='w-full py-12 md:py-24'>
+    <section id='demo' className='w-full py-24'>
       <div className='container mx-auto flex flex-col items-center justify-center px-4 md:px-6'>
         <div className='flex flex-col items-center justify-center space-y-4 text-center'>
           <div className='space-y-2'>

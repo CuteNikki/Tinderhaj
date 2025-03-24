@@ -11,7 +11,7 @@ import { Suspense } from 'react';
 
 export function Hero() {
   return (
-    <section id='hero' className='bg-muted w-full py-12 md:py-24 lg:py-32'>
+    <section id='hero' className='bg-muted w-full py-24 lg:py-32'>
       <div className='container mx-auto px-4 md:px-8'>
         <div className='flex flex-col items-center justify-evenly gap-8 sm:flex-row md:gap-24'>
           <div className='flex flex-col gap-4'>
