@@ -35,7 +35,7 @@ export function ProfileCard({ profile, children, className }: { profile: Profile
           <Image
             unoptimized
             priority
-            src={`https://placehold.co/192x192/webp?text=${profile.displayName.charAt(0)}`}
+            src={profile.avatarUrl}
             width={256}
             height={256}
             alt={`${profile.displayName}'s profile picture`}
