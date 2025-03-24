@@ -8,7 +8,7 @@ import { Menu } from 'lucide-react';
 import { ThemeButton } from '@/components/common/theme-button';
 import { TypographyLarge } from '@/components/typography';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
 export function Navbar() {
   const links = [
@@ -51,12 +51,13 @@ export function Navbar() {
           </SheetTrigger>
           <SheetContent side='right' className='w-[80%] justify-between sm:w-[350px]'>
             <SheetHeader>
-              <SheetTitle className='mb-6 flex items-center gap-2'>
+              <SheetTitle className='flex items-center justify-center gap-2'>
                 <Image unoptimized priority src='/blahaj.webp' alt='Logo' className='h-6 w-6' width={48} height={48} />
                 <span className='text-lg font-bold'>Tinderhaj</span>
               </SheetTitle>
+              <SheetDescription className='text-center text-balance'>The best place to find your perfect match</SheetDescription>
             </SheetHeader>
-            <nav className='flex flex-col gap-4 p-6'>
+            <nav className='flex flex-col items-center gap-4 p-6 text-center'>
               {links.map((link) => (
                 <SheetClose asChild key={`sheet-link-${link.href}-${link.text}`}>
                   <Link href={link.href} className='hover:text-foreground/80 text-foreground/60 transition-colors'>
