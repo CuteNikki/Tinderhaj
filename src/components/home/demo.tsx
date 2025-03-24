@@ -57,27 +57,30 @@ export function Demo() {
         <div className='flex flex-col items-center justify-center space-y-4 text-center'>
           <div className='space-y-2'>
             <TypographyH2>Find Your Match</TypographyH2>
-            <TypographyMuted className='text-balance px-4'>Our intuitive swipe interface makes finding your perfect Blahaj simple and fun.</TypographyMuted>
+            <TypographyMuted className='px-4 text-balance'>Our intuitive swipe interface makes finding your perfect Blahaj simple and fun.</TypographyMuted>
           </div>
         </div>
         <div className='relative flex items-center justify-center pt-12'>
           {/* Left card */}
-          <ProfileCard className='-z-10 -mr-14 hidden lg:block -rotate-6' profile={demoProfiles[1]} />
+          <ProfileCard className='-z-10 -mr-14 hidden -rotate-6 lg:block' profile={demoProfiles[1]} />
           {/* Center card */}
-          <ProfileCard className='z-0' profile={demoProfiles[0]}>
+          <ProfileCard
+            className='group z-0 transition-transform group-hover/dislike:-rotate-6 group-hover/like:rotate-6 hover:scale-110 hover:-rotate-2'
+            profile={demoProfiles[0]}
+          >
             <CardFooter className='flex flex-row items-center justify-center gap-6 pb-4'>
-              <Button size='icon' variant='outline' className='h-12 w-12 rounded-full'>
+              <Button size='icon' variant='outline' className='group/dislike h-12 w-12 rounded-full'>
                 <X className='h-6 w-6' />
                 <span className='sr-only'>Dislike</span>
               </Button>
-              <Button size='icon' className='h-12 w-12 rounded-full'>
+              <Button size='icon' className='group/like h-12 w-12 rounded-full'>
                 <Heart className='h-6 w-6' />
                 <span className='sr-only'>Like</span>
               </Button>
             </CardFooter>
           </ProfileCard>
           {/* Right card */}
-          <ProfileCard className='-z-10 -ml-14 hidden sm:block rotate-6' profile={demoProfiles[2]} />
+          <ProfileCard className='-z-10 -ml-14 hidden rotate-6 sm:block' profile={demoProfiles[2]} />
         </div>
       </div>
     </section>
