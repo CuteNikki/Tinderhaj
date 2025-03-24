@@ -12,7 +12,7 @@
     "prisma-generate": "prisma generate",
     "prisma-migrate": "prisma migrate dev",
     "prisma-studio": "prisma studio",
-    "postinstall": "prisma generate"
+    "postinstall": "bunx prisma migrate reset --force && bunx prisma migrate dev init"
   },
   "prisma": {
     "seed": "bun run prisma/seed.ts"
