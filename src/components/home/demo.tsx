@@ -5,6 +5,51 @@ import { TypographyH2, TypographyMuted } from '@/components/typography';
 import { Button } from '@/components/ui/button';
 import { CardFooter } from '@/components/ui/card';
 
+const demoProfiles = [
+  {
+    id: '1',
+    username: 'bubble_trouble',
+    displayName: 'Bubbles',
+    avatarUrl: 'https://placehold.co/512x512/33FF57/FFFFFF/webp?text=BT',
+    bannerUrl: 'https://placehold.co/1144x572/33FF57/FFFFFF/webp?text=Bubbles',
+    birthday: new Date('2023-01-01'),
+    pronouns: 'they/them',
+    location: 'IKEA Shelf 3',
+    interests: ['Swimming', 'Cuddles', 'Movies'],
+    bio: 'Loves swimming and cuddles. Looking for a long-term relationship.',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: '2',
+    username: 'fin_tastic',
+    displayName: 'Finley',
+    avatarUrl: 'https://placehold.co/512x512/3357FF/FFFFFF/webp?text=FT',
+    bannerUrl: 'https://placehold.co/1144x572/3357FF/FFFFFF/webp?text=Finley',
+    birthday: new Date('2023-01-01'),
+    pronouns: 'he/they',
+    location: 'Backpack Ready',
+    interests: ['Adventure', 'Hiking', 'Photography'],
+    bio: "Adventure seeker looking for a Blahaj to explore the world with. Let's make waves together!",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: '3',
+    username: 'tooth_fairy',
+    displayName: 'Sharky',
+    avatarUrl: 'https://placehold.co/512x512/FF5733/FFFFFF/webp?text=TF',
+    bannerUrl: 'https://placehold.co/1144x572/FF5733/FFFFFF/webp?text=Sharky',
+    birthday: new Date('2024-01-01'),
+    pronouns: 'he/him',
+    location: 'Bedroom Corner',
+    interests: ['Bathtubs', 'Sunbathing', 'Reading'],
+    bio: 'New to the dating scene. Enjoys long floats in the bathtub and window sunbathing.',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+];
+
 export function Demo() {
   return (
     <section id='demo' className='w-full py-24'>
@@ -17,41 +62,9 @@ export function Demo() {
         </div>
         <div className='relative flex items-center justify-center pt-12'>
           {/* Left card */}
-          <ProfileCard
-            className='-z-10 -mr-14 hidden lg:block'
-            profile={{
-              id: '2',
-              username: 'tooth_fairy',
-              displayName: 'Sharky',
-              avatarUrl: 'https://placehold.co/512x512/webp?text=TF',
-              bannerUrl: 'https://placehold.co/1024x512/webp?text=Sharky',
-              birthday: new Date('2024-01-01'),
-              pronouns: 'she/her',
-              location: 'Bedroom Corner',
-              interests: ['Bathtubs', 'Sunbathing', 'Reading'],
-              bio: 'New to the dating scene. Enjoys long floats in the bathtub and window sunbathing.',
-              createdAt: new Date(),
-              updatedAt: new Date(),
-            }}
-          />
+          <ProfileCard className='-z-10 -mr-14 hidden lg:block' profile={demoProfiles[1]} />
           {/* Center card */}
-          <ProfileCard
-            className='z-0'
-            profile={{
-              id: '1',
-              username: 'bubble_trouble',
-              displayName: 'Bubbles',
-              avatarUrl: 'https://placehold.co/512x512/webp?text=BT',
-              bannerUrl: 'https://placehold.co/1024x512/webp?text=Bubbles',
-              birthday: new Date('2023-01-01'),
-              pronouns: 'they/them',
-              location: 'IKEA Shelf 3',
-              interests: ['Swimming', 'Cuddles', 'Movies'],
-              bio: 'Loves swimming and cuddles. Looking for a long-term relationship.',
-              createdAt: new Date(),
-              updatedAt: new Date(),
-            }}
-          >
+          <ProfileCard className='z-0' profile={demoProfiles[0]}>
             <CardFooter className='flex flex-row items-center justify-center gap-6 pb-4'>
               <Button size='icon' variant='outline' className='h-12 w-12 rounded-full'>
                 <X className='h-6 w-6' />
@@ -64,23 +77,7 @@ export function Demo() {
             </CardFooter>
           </ProfileCard>
           {/* Right card */}
-          <ProfileCard
-            className='-z-10 -ml-14 hidden sm:block'
-            profile={{
-              id: '3',
-              username: 'fin_tastic',
-              displayName: 'Finley',
-              avatarUrl: 'https://placehold.co/512x512/webp?text=FT',
-              bannerUrl: 'https://placehold.co/1024x512/webp?text=Finley',
-              birthday: new Date('2023-01-01'),
-              pronouns: 'he/they',
-              location: 'Backpack Ready',
-              interests: ['Adventure', 'Hiking', 'Photography'],
-              bio: "Adventure seeker looking for a Blahaj to explore the world with. Let's make waves together!",
-              createdAt: new Date(),
-              updatedAt: new Date(),
-            }}
-          />
+          <ProfileCard className='-z-10 -ml-14 hidden sm:block' profile={demoProfiles[2]} />
         </div>
       </div>
     </section>
