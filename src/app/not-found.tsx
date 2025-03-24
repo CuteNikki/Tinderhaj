@@ -3,11 +3,15 @@ import Link from 'next/link';
 
 import { ArrowRight, Search } from 'lucide-react';
 
+import { notFoundMetadata } from '@/constants/metadata';
+
 import { Footer } from '@/components/common/footer';
 import { Navbar } from '@/components/common/navbar';
 import { TypographyH1, TypographyMuted } from '@/components/typography';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+
+export const metadata = notFoundMetadata;
 
 export default function Home() {
   return (

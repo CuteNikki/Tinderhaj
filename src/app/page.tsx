@@ -1,11 +1,15 @@
+import { homeMetadata } from '@/constants/metadata';
+
 import { Footer } from '@/components/common/footer';
 import { Navbar } from '@/components/common/navbar';
 import { CallToAction } from '@/components/home/call-to-action';
 import { Demo } from '@/components/home/demo';
 import { Features } from '@/components/home/features';
-import { Hero } from '@/components/home/hero';
 import { Flow } from '@/components/home/flow';
+import { Hero } from '@/components/home/hero';
 import { Testimonials } from '@/components/home/testimonials';
+
+export const metadata = homeMetadata;
 
 export default function Home() {
   return (

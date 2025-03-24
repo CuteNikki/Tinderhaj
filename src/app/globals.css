@@ -114,11 +114,7 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50 scroll-smooth font-sans;
-  }
-
-  body {
-    @apply bg-background text-foreground overflow-y-scroll;
+    @apply border-border outline-ring/50 scroll-smooth;
   }
 
   /* Animations */
