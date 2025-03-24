@@ -66,8 +66,8 @@ export function ProfileCard({ profile, children, className }: { profile: Profile
           <p className='text-sm'>{profile.bio}</p>
 
           <div className='flex flex-wrap gap-1 pt-2'>
-            {profile.interests.map((interest, i) => (
-              <Badge key={i} variant='secondary' className='text-xs'>
+            {profile.interests.map((interest, index) => (
+              <Badge key={`profile-card-interest-${index}-${profile.id}`} variant='secondary' className='text-xs'>
                 {interest}
               </Badge>
             ))}
@@ -82,7 +82,7 @@ export function ProfileCard({ profile, children, className }: { profile: Profile
 export function ProfileCardSkeleton() {
   return (
     <Card className='w-72 overflow-hidden py-0'>
-      <Skeleton className='w-full rounded-none h-[143px]' />
+      <Skeleton className='h-[143px] w-full rounded-none' />
 
       <CardContent className='py-6'>
         <div className='border-background bg-muted relative -mt-16 mb-4 flex h-24 w-24 items-center justify-center rounded-full border-4'>
@@ -109,8 +109,8 @@ export function ProfileCardSkeleton() {
           <Skeleton className='h-15 w-full' />
 
           <div className='flex flex-wrap gap-1 pt-2'>
-            {Array.from({ length: 3 }).map((interest, i) => (
-              <Skeleton key={i} className='h-5.5 w-12' />
+            {Array.from({ length: 3 }).map((_, index) => (
+              <Skeleton key={`profile-card-interest-skeleton-${index}`} className='h-5.5 w-12' />
             ))}
           </div>
         </div>

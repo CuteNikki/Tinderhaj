@@ -2,13 +2,13 @@ import { Profile } from '@prisma/client';
 
 import { ProfileCard, ProfileCardSkeleton } from '@/components/discovery/profile-card';
 
-export async function ProfileList({ profiles }: { profiles: Profile[] }) {
+export function ProfileList({ profiles }: { profiles: Profile[] }) {
   return (
     <section className='from-background to-muted w-full bg-gradient-to-b py-8 md:py-12'>
       <div className='container mx-auto px-4 md:px-6'>
         <div className='flex flex-wrap justify-center gap-6'>
-          {profiles.map((profile) => (
-            <ProfileCard key={profile.id} profile={profile} />
+          {profiles.map((profile, index) => (
+            <ProfileCard key={`profile-card-${index}-${profile.id}`} profile={profile} />
           ))}
         </div>
       </div>
@@ -22,7 +22,7 @@ export function ProfileListSkeleton() {
       <div className='container mx-auto px-4 md:px-6'>
         <div className='flex flex-wrap justify-center gap-6'>
           {[...Array(8)].map((_, index) => (
-            <ProfileCardSkeleton key={`profile-skeleton-${index}`} />
+            <ProfileCardSkeleton key={`profile-card-skeleton-${index}`} />
           ))}
         </div>
       </div>

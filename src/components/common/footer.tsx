@@ -61,9 +61,9 @@ export async function Footer() {
             </div>
             <TypographyMuted className='pr-2 text-sm text-balance'>{`The world's first dating site exclusively for IKEA's Blahaj plush sharks.`}</TypographyMuted>
             <div className='flex space-x-4'>
-              {socials.map((social) => (
+              {socials.map((social, index) => (
                 <Link
-                  key={`footer-social-${social.href}-${social.label}`}
+                  key={`footer-social-${index}-${social.href}-${social.label}`}
                   href={social.href}
                   className='text-muted-foreground hover:text-primary transition-colors duration-150'
                 >
@@ -74,13 +74,13 @@ export async function Footer() {
             </div>
           </div>
 
-          {links.map((link) => (
-            <div key={`footer-link-${link.name}`} className='space-y-4'>
+          {links.map((link, index) => (
+            <div key={`footer-link-${index}-${link.name}`} className='space-y-4'>
               <TypographyLarge>{link.name}</TypographyLarge>
               <nav className='flex flex-col space-y-2 text-sm'>
-                {link.items.map((item) => (
+                {link.items.map((item, index) => (
                   <Link
-                    key={`footer-link-${item.name}`}
+                    key={`footer-link-${index}-${item.href}-${item.name}`}
                     href={item.href}
                     className='text-muted-foreground hover:text-foreground transition-colors duration-150'
                   >
