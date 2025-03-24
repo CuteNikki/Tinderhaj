@@ -5,7 +5,7 @@ import { Menu } from 'lucide-react';
 import { auth, signOut } from '@/lib/auth';
 
 import { Logo } from '@/components/common/logo';
-import { ThemeMenu } from '@/components/common/theme-menu';
+import { ThemeButton, ThemeMenu } from '@/components/common/theme-menu';
 import { TypographyLarge } from '@/components/typography';
 import { Button } from '@/components/ui/button';
 import {
@@ -73,6 +73,7 @@ export async function Navbar() {
               </DropdownMenu>
             ) : (
               <div className='hidden items-center gap-2 md:flex'>
+                <ThemeButton />
                 <Button asChild size='sm'>
                   <Link href='sign-in'>Sign In</Link>
                 </Button>
@@ -103,7 +104,7 @@ export async function Navbar() {
                   </SheetClose>
                 ))}
               </nav>
-              <SheetFooter className='mt-6 flex flex-col items-center gap-2'>
+              <SheetFooter className='mt-6'>
                 {session?.user ? (
                   <></>
                 ) : (
