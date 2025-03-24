@@ -1,16 +1,24 @@
-'use client';
-
 import Link from 'next/link';
 
 import { Menu } from 'lucide-react';
 
+import { auth, signOut } from '@/lib/auth';
+
 import { Logo } from '@/components/common/logo';
-import { ThemeButton } from '@/components/common/theme-button';
+import { ThemeMenu } from '@/components/common/theme-menu';
 import { TypographyLarge } from '@/components/typography';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
-export function Navbar() {
+export async function Navbar() {
   const links = [
     { href: '/#top', text: 'Home' },
     { href: '/#features', text: 'Features' },
@@ -18,6 +26,8 @@ export function Navbar() {
     { href: '/#testimonials', text: 'Testimonials' },
     { href: '/discovery#top', text: 'Discovery' },
   ];
+
+  const session = await auth();
 
   return (
     <header className='bg-background/95 supports-[backdrop-filter]:bg-background/60 border-background sticky top-0 z-50 w-full border-b backdrop-blur'>
@@ -37,51 +47,76 @@ export function Navbar() {
             </Link>
           ))}
         </nav>
-        <div className='ml-auto'>
-          <ThemeButton />
-        </div>
-        <div className='hidden items-center gap-2 md:flex'>
-          <Button variant='ghost' size='sm'>
-            Log In
-          </Button>
-          <Button size='sm'>Sign Up</Button>
-        </div>
-        <Sheet>
-          <SheetTrigger asChild className='md:hidden'>
-            <Button variant='ghost' size='icon'>
-              <Menu className='h-5 w-5' />
-              <span className='sr-only'>Toggle menu</span>
-            </Button>
-          </SheetTrigger>
-          <SheetContent side='right' className='w-[80%] justify-between sm:w-[350px]'>
-            <SheetHeader>
-              <SheetTitle className='flex items-center justify-center gap-2'>
-                <Logo className='h-6 w-6' />
-                <span className='text-lg font-bold'>Tinderhaj</span>
-              </SheetTitle>
-              <SheetDescription className='text-center text-balance'>The best place to find your perfect match</SheetDescription>
-            </SheetHeader>
-            <nav className='flex flex-col items-center gap-4 p-6 text-center'>
-              {links.map((link, index) => (
-                <SheetClose asChild key={`nav-link-sheet-${index}-${link.href}-${link.text}`}>
-                  <Link href={link.href} className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
-                    {link.text}
-                  </Link>
-                </SheetClose>
-              ))}
-            </nav>
-            <SheetFooter className='mt-6 flex flex-col gap-2'>
-              <SheetClose asChild>
-                <Button variant='outline' className='w-full'>
-                  Log In
+        <div className='ml-auto flex items-center gap-2 sm:gap-4'>
+          <div>
+            {session?.user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant='ghost'>Account</Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>Hello, {session.user.name}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <ThemeMenu />
+                  <DropdownMenuSeparator />
+                  <form
+                    action={async () => {
+                      'use server';
+                      await signOut({ redirectTo: '/' });
+                    }}
+                  >
+                    <DropdownMenuItem className='text-destructive'>
+                      <button>Sign Out</button>
+                    </DropdownMenuItem>
+                  </form>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <div className='hidden items-center gap-2 md:flex'>
+                <Button asChild size='sm'>
+                  <Link href='sign-in'>Sign In</Link>
                 </Button>
-              </SheetClose>
-              <SheetClose asChild>
-                <Button className='w-full'>Sign Up</Button>
-              </SheetClose>
-            </SheetFooter>
-          </SheetContent>
-        </Sheet>
+              </div>
+            )}
+          </div>
+          <Sheet>
+            <SheetTrigger asChild className='md:hidden'>
+              <Button variant='outline' size='icon'>
+                <Menu className='h-5 w-5' />
+                <span className='sr-only'>Toggle menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side='right' className='w-[80%] justify-between sm:w-[350px]'>
+              <SheetHeader>
+                <SheetTitle className='flex items-center justify-center gap-2'>
+                  <Logo className='h-6 w-6' />
+                  <span className='text-lg font-bold'>Tinderhaj</span>
+                </SheetTitle>
+                <SheetDescription className='text-center text-balance'>The best place to find your perfect match</SheetDescription>
+              </SheetHeader>
+              <nav className='flex flex-col items-center gap-4 p-6 text-center'>
+                {links.map((link, index) => (
+                  <SheetClose asChild key={`nav-link-sheet-${index}-${link.href}-${link.text}`}>
+                    <Link href={link.href} className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
+                      {link.text}
+                    </Link>
+                  </SheetClose>
+                ))}
+              </nav>
+              <SheetFooter className='mt-6 flex flex-col items-center gap-2'>
+                {session?.user ? (
+                  <></>
+                ) : (
+                  <SheetClose asChild>
+                    <Button asChild size='sm'>
+                      <Link href='sign-in'>Sign In</Link>
+                    </Button>
+                  </SheetClose>
+                )}
+              </SheetFooter>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
     </header>
   );

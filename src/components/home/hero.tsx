@@ -23,9 +23,11 @@ export function Hero() {
             </TypographyH1>
             <TypographyMuted className='max-w-md text-balance'>{"The world's first dating site exclusively for IKEA's Blåhaj plush sharks."}</TypographyMuted>
             <div className='flex flex-col gap-4 sm:flex-row'>
-              <Button>
-                Sign Up
-                <ArrowRight className='h-4 w-4' />
+              <Button asChild>
+                <Link href='/sign-in'>
+                  Sign In
+                  <ArrowRight className='h-4 w-4' />
+                </Link>
               </Button>
               <Button asChild variant='secondary'>
                 <Link href='/discovery'>

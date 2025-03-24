@@ -63,3 +63,19 @@ export const notFoundMetadata: Metadata = {
     ],
   },
 };
+
+export const signInMetadata: Metadata = {
+  title: 'Tinderhaj - Sign In',
+  description: `Sign in to the world's first dating site exclusively for IKEA's Blåhaj plush sharks.`,
+  openGraph: {
+    url: 'https://tinderhaj.com/sign-in',
+    images: [
+      {
+        url: 'https://tinderhaj.com/blahaj.webp',
+        alt: 'Blåhaj',
+        width: 128,
+        height: 128,
+      },
+    ],
+  },
+};
