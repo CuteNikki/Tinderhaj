@@ -30,7 +30,7 @@ const demoProfiles = [
     pronouns: 'he/they',
     location: 'Backpack Ready',
     interests: ['Adventure', 'Hiking', 'Photography'],
-    bio: "Adventure seeker looking for a Blahaj to explore the world with. Let's make waves together!",
+    bio: "Adventure seeker looking for a Blåhaj to explore the world with. Let's make waves together!",
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -57,7 +57,7 @@ export function Demo() {
         <div className='flex flex-col items-center justify-center space-y-4 text-center'>
           <div className='space-y-2'>
             <TypographyH2>Find Your Match</TypographyH2>
-            <TypographyMuted className='px-4 text-balance'>Our intuitive swipe interface makes finding your perfect Blahaj simple and fun.</TypographyMuted>
+            <TypographyMuted className='px-4 text-balance'>Our intuitive swipe interface makes finding your perfect Blåhaj simple and fun.</TypographyMuted>
           </div>
         </div>
         <div className='relative flex items-center justify-center pt-12'>

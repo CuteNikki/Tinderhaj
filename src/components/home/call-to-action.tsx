@@ -11,7 +11,7 @@ export function CallToAction() {
           <div className='space-y-2'>
             <TypographyH2>Ready to Dive In?</TypographyH2>
             <TypographyMuted className='text-pretty'>
-              Join thousands of Blahajs already finding their perfect match.
+              Join thousands of Blåhaj already finding their perfect match.
               <br />
               Your shark soulmate is just a swipe away.
             </TypographyMuted>

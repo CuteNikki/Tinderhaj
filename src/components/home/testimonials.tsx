@@ -26,7 +26,7 @@ const demoTestimonials = [
     displayName: 'Sharky',
     avatarUrl: 'https://placehold.co/512x512/FF5733/FFFFFF/webp?text=TF',
     createdAt: new Date('2025-03-01'),
-    text: "I never thought I'd find another Blahaj who loves floating in bathtubs as much as I do. Thanks, Tinderhaj!",
+    text: "I never thought I'd find another Blåhaj who loves floating in bathtubs as much as I do. Thanks, Tinderhaj!",
   },
 ];
 
@@ -64,7 +64,7 @@ export function Testimonials() {
             <TypographyMuted>
               {"Don't just take our word for it –"}
               <br />
-              hear from our satisfied Blahajs.
+              hear from our satisfied Blåhaj.
             </TypographyMuted>
           </div>
         </div>

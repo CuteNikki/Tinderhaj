@@ -64,7 +64,7 @@ export function Features() {
                   className='h-10 w-10 select-none'
                 />
                 <TypographyH4>Group Swims</TypographyH4>
-                <TypographyMuted className='text-balance'>Organize group activities with other Blahajs in your area.</TypographyMuted>
+                <TypographyMuted className='text-balance'>Organize group activities with other Blåhaj in your area.</TypographyMuted>
               </div>
             </CardContent>
           </Card>

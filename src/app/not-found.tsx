@@ -24,7 +24,7 @@ export default function Home() {
             <div className='flex flex-col items-center justify-evenly gap-4 sm:flex-row md:gap-8'>
               <div className='flex flex-col items-center gap-4 text-center sm:items-start sm:text-left'>
                 <Badge variant='secondary'>404</Badge>
-                <TypographyH1 className='text-3xl sm:text-4xl lg:text-5xl'>Blahaj not found</TypographyH1>
+                <TypographyH1 className='text-3xl sm:text-4xl lg:text-5xl'>Blåhaj not found</TypographyH1>
                 <TypographyMuted className='max-w-md text-balance'>
                   {"Oops! Looks like you've swum too far."}
                   <br />
@@ -53,7 +53,7 @@ export default function Home() {
                   width={280}
                   height={280}
                   src='/blahajSpin.gif'
-                  alt='Blahaj plush'
+                  alt='Blåhaj plush'
                   className='w-70y h-70 rounded-xl object-cover select-none'
                 />
               </div>

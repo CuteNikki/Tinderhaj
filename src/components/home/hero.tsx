@@ -19,9 +19,9 @@ export function Hero() {
             <TypographyH1 className='text-3xl sm:text-4xl lg:text-5xl'>
               Find Your Perfect
               <br />
-              Blahaj Match
+              Blåhaj Match
             </TypographyH1>
-            <TypographyMuted className='max-w-md text-balance'>{"The world's first dating site exclusively for IKEA's Blahaj plush sharks."}</TypographyMuted>
+            <TypographyMuted className='max-w-md text-balance'>{"The world's first dating site exclusively for IKEA's Blåhaj plush sharks."}</TypographyMuted>
             <div className='flex flex-col gap-4 sm:flex-row'>
               <Button>
                 Sign Up
@@ -55,7 +55,7 @@ export function Hero() {
               width={280}
               height={280}
               src='/blahajSmall.webp'
-              alt='Blahaj Plush'
+              alt='Blåhaj Plush'
               className='h-70 w-70 rounded-xl object-cover select-none'
             />
           </div>

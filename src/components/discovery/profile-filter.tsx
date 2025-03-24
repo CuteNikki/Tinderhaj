@@ -13,7 +13,7 @@ export function ProfileFilter({ take, page, query, disabled }: { take?: number; 
       <div className='container mx-auto px-4 md:px-6'>
         <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-evenly'>
           <div>
-            <TypographyH2>Discover Blahajs</TypographyH2>
+            <TypographyH2>Discover Blåhaj</TypographyH2>
             <TypographyMuted>Find your perfect plush match!</TypographyMuted>
           </div>
           <form

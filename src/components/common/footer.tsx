@@ -59,7 +59,7 @@ export async function Footer() {
               <Logo className='h-6 w-6' />
               <TypographyLarge className='font-bold'>Tinderhaj</TypographyLarge>
             </div>
-            <TypographyMuted className='pr-2 text-sm text-balance'>{`The world's first dating site exclusively for IKEA's Blahaj plush sharks.`}</TypographyMuted>
+            <TypographyMuted className='pr-2 text-sm text-balance'>{`The world's first dating site exclusively for IKEA's Blåhaj plush sharks.`}</TypographyMuted>
             <div className='flex space-x-4'>
               {socials.map((social, index) => (
                 <Link

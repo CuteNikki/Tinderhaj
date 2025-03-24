@@ -26,7 +26,7 @@ const seedData: Prisma.ProfileCreateInput[] = [
     pronouns: 'he/they',
     location: 'Backpack Ready',
     interests: ['Adventure', 'Hiking', 'Photography'],
-    bio: "Adventure seeker looking for a Blahaj to explore the world with. Let's make waves together!",
+    bio: "Adventure seeker looking for a Blåhaj to explore the world with. Let's make waves together!",
   },
   {
     username: 'tooth_fairy',
@@ -41,9 +41,9 @@ const seedData: Prisma.ProfileCreateInput[] = [
   },
   {
     username: 'ocean_swimmer',
-    displayName: 'Blue Blahaj',
+    displayName: 'Blue Blåhaj',
     avatarUrl: 'https://placehold.co/512x512/5733FF/FFFFFF/webp?text=OS',
-    bannerUrl: 'https://placehold.co/1144x572/5733FF/FFFFFF/webp?text=Blue+Blahaj',
+    bannerUrl: 'https://placehold.co/1144x572/5733FF/FFFFFF/webp?text=Blue+Blåhaj',
     birthday: new Date('2022-01-01'),
     pronouns: 'she/her',
     location: 'Living Room Couch',
