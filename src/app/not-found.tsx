@@ -42,7 +42,7 @@ export default function Home() {
                 </div>
               </div>
               <div className='animate-float w-fit'>
-                <Image unoptimized priority src='/blahajSpin.gif' width={280} height={280} alt='Blahaj plush' className='rounded-xl object-cover' />
+                <Image unoptimized priority src='/blahajSpin.gif' width={560} height={560} alt='Blahaj plush' className='h-70 w-70 rounded-xl object-cover' />
               </div>
             </div>
           </div>

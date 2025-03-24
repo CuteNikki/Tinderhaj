@@ -48,7 +48,7 @@ export function Hero() {
             </div>
           </div>
           <div className='animate-float w-fit'>
-            <Image unoptimized priority src='/blahaj.png' width={280} height={280} alt='Blahaj Plush' className='rounded-xl object-cover' />
+            <Image unoptimized priority src='/blahaj.png' width={560} height={560} alt='Blahaj Plush' className='h-70 w-70 rounded-xl object-cover' />
           </div>
         </div>
       </div>
