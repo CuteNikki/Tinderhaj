@@ -15,10 +15,10 @@ export function Demo() {
             <TypographyMuted className='text-pretty'>Our intuitive swipe interface makes finding your perfect Blahaj simple and fun.</TypographyMuted>
           </div>
         </div>
-        <div className='relative pt-12'>
+        <div className='relative flex items-center justify-center pt-12'>
           {/* Left card */}
           <ProfileCard
-            className='absolute top-0 -left-60 -z-10 mt-24 hidden lg:block'
+            className='-z-10 -mr-14 hidden lg:block'
             profile={{
               id: '2',
               username: 'tooth_fairy',
@@ -65,7 +65,7 @@ export function Demo() {
           </ProfileCard>
           {/* Right card */}
           <ProfileCard
-            className='absolute top-0 -right-60 -z-10 mt-24 hidden lg:block'
+            className='-z-10 -ml-14 hidden sm:block'
             profile={{
               id: '3',
               username: 'fin_tastic',
