@@ -2,18 +2,15 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
 
-import { Heart, Menu } from 'lucide-react';
+import { Menu } from 'lucide-react';
 
 import { ThemeButton } from '@/components/common/theme-button';
 import { TypographyLarge } from '@/components/typography';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
 export function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   const links = [
     { href: '/#top', text: 'Home' },
     { href: '/#features', text: 'Features' },
@@ -36,15 +33,17 @@ export function Navbar() {
             </Link>
           ))}
         </nav>
-        <div className='ml-auto hidden items-center gap-2 md:flex'>
+        <div className='ml-auto'>
           <ThemeButton />
+        </div>
+        <div className='hidden items-center gap-2 md:flex'>
           <Button variant='ghost' size='sm'>
             Log In
           </Button>
           <Button size='sm'>Sign Up</Button>
         </div>
-        <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
-          <SheetTrigger asChild className='ml-auto md:hidden'>
+        <Sheet>
+          <SheetTrigger asChild className='md:hidden'>
             <Button variant='ghost' size='icon'>
               <Menu className='h-5 w-5' />
               <span className='sr-only'>Toggle menu</span>
@@ -53,29 +52,28 @@ export function Navbar() {
           <SheetContent side='right' className='w-[80%] justify-between sm:w-[350px]'>
             <SheetHeader>
               <SheetTitle className='mb-6 flex items-center gap-2'>
-                <Heart className='text-primary h-6 w-6' />
+                <Image unoptimized priority src='/blahaj.webp' alt='Logo' className='h-6 w-6' width={48} height={48} />
                 <span className='text-lg font-bold'>Tinderhaj</span>
               </SheetTitle>
             </SheetHeader>
             <nav className='flex flex-col gap-4 p-6'>
               {links.map((link) => (
-                <Link
-                  key={`sheet-link-${link.href}-${link.text}`}
-                  href={link.href}
-                  className='text-foreground/60 hover:text-foreground/80 transition-colors'
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {link.text}
-                </Link>
+                <SheetClose asChild key={`sheet-link-${link.href}-${link.text}`}>
+                  <Link href={link.href} className='hover:text-foreground/80 text-foreground/60 transition-colors'>
+                    {link.text}
+                  </Link>
+                </SheetClose>
               ))}
             </nav>
             <SheetFooter className='mt-6 flex flex-col gap-2'>
-              <Button variant='outline' className='w-full' onClick={() => setIsMenuOpen(false)}>
-                Log In
-              </Button>
-              <Button className='w-full' onClick={() => setIsMenuOpen(false)}>
-                Sign Up
-              </Button>
+              <SheetClose asChild>
+                <Button variant='outline' className='w-full'>
+                  Log In
+                </Button>
+              </SheetClose>
+              <SheetClose asChild>
+                <Button className='w-full'>Sign Up</Button>
+              </SheetClose>
             </SheetFooter>
           </SheetContent>
         </Sheet>
