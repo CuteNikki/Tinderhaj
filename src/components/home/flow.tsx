@@ -10,7 +10,7 @@ export function Flow() {
             <TypographyMuted className='px-4 text-balance'>Finding your perfect Blahaj match is as easy as 1-2-3.</TypographyMuted>
           </div>
         </div>
-        <div className='mx-auto grid max-w-5xl items-center gap-6 pt-12 md:grid-cols-3'>
+        <div className='mx-auto grid max-w-5xl gap-6 pt-12 md:grid-cols-3'>
           <div className='flex flex-col items-center space-y-2 text-center'>
             <div className='bg-primary text-primary-foreground flex h-12 w-12 items-center justify-center rounded-full text-xl'>1</div>
             <TypographyH4>Create Profile</TypographyH4>
