@@ -55,10 +55,10 @@ export const notFoundMetadata: Metadata = {
     url: 'https://tinderhaj.com/404',
     images: [
       {
-        url: 'https://tinderhaj.com/blahaj.webp',
-        alt: 'Blåhaj',
-        width: 128,
-        height: 128,
+        url: 'https://tinderhaj.com/blahajSpinSmall.gif',
+        alt: 'Blåhaj Spin',
+        width: 382,
+        height: 201,
       },
     ],
   },
