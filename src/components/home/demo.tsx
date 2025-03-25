@@ -65,9 +65,12 @@ export function Demo() {
         </div>
         <div className='relative flex items-center justify-center pt-12'>
           {/* Left card */}
-          <ProfileCard className='-z-10 -mr-14 hidden -rotate-6 lg:block' profile={demoProfiles[1]} />
+          <ProfileCard
+            className='z-0 -mr-14 hidden -rotate-6 transition-transform hover:z-20 hover:scale-110 hover:rotate-2 lg:block'
+            profile={demoProfiles[1]}
+          />
           {/* Center card */}
-          <ProfileCard className='z-0 transition-transform sm:hover:scale-110 sm:hover:-rotate-2' profile={demoProfiles[0]}>
+          <ProfileCard className='z-10 transition-transform sm:-rotate-2 sm:hover:scale-110 sm:hover:rotate-0' profile={demoProfiles[0]}>
             <CardFooter className='flex flex-row items-center justify-center gap-6 pb-4'>
               <Button size='icon' variant='outline' className='h-12 w-12 rounded-full'>
                 <X className='h-6 w-6' />
@@ -80,7 +83,10 @@ export function Demo() {
             </CardFooter>
           </ProfileCard>
           {/* Right card */}
-          <ProfileCard className='-z-10 -ml-14 hidden rotate-6 sm:block' profile={demoProfiles[2]} />
+          <ProfileCard
+            className='z-0 -ml-14 hidden rotate-6 transition-transform hover:z-20 hover:scale-110 hover:rotate-2 sm:block'
+            profile={demoProfiles[2]}
+          />
         </div>
       </div>
     </section>
