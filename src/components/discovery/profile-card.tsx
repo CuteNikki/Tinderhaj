@@ -1,7 +1,7 @@
 import { Profile } from '@prisma/client';
 import Image from 'next/image';
 
-import { Cake, MapPin, PencilRuler } from 'lucide-react';
+import { Cake, MapPin, Ruler } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
@@ -58,7 +58,7 @@ export function ProfileCard({ profile, children, className }: { profile: Profile
               {calculateAge(profile.birthday)}yo
             </Badge>
             <Badge variant='outline'>
-              <PencilRuler /> {profile.size}cm
+              <Ruler /> {profile.size}cm
             </Badge>
           </div>
           <div className='flex items-center gap-1'>
