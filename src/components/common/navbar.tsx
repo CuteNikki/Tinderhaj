@@ -2,21 +2,11 @@ import Link from 'next/link';
 
 import { Menu } from 'lucide-react';
 
-import { auth, signOut } from '@/lib/auth';
-
 import { Logo } from '@/components/common/logo';
-import { ThemeButton, ThemeMenu } from '@/components/common/theme-menu';
+import { ThemeButton } from '@/components/common/theme-menu';
 import { TypographyLarge } from '@/components/typography';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
 export async function Navbar() {
   const links = [
@@ -26,8 +16,6 @@ export async function Navbar() {
     { href: '/#testimonials', text: 'Testimonials' },
     { href: '/discovery#top', text: 'Discovery' },
   ];
-
-  const session = await auth();
 
   return (
     <header className='bg-background/95 supports-[backdrop-filter]:bg-background/60 border-background sticky top-0 z-50 w-full border-b backdrop-blur'>
@@ -48,38 +36,7 @@ export async function Navbar() {
           ))}
         </nav>
         <div className='ml-auto flex items-center gap-2 sm:gap-4'>
-          <div>
-            {session?.user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant='ghost'>Account</Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuLabel>Hello, {session.user.name}</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <ThemeMenu />
-                  <DropdownMenuSeparator />
-                  <form
-                    action={async () => {
-                      'use server';
-                      await signOut({ redirectTo: '/' });
-                    }}
-                  >
-                    <DropdownMenuItem className='text-destructive'>
-                      <button>Sign Out</button>
-                    </DropdownMenuItem>
-                  </form>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <div className='hidden items-center gap-2 md:flex'>
-                <ThemeButton />
-                <Button asChild size='sm'>
-                  <Link href='sign-in'>Sign In</Link>
-                </Button>
-              </div>
-            )}
-          </div>
+          <ThemeButton />
           <Sheet>
             <SheetTrigger asChild className='md:hidden'>
               <Button variant='outline' size='icon'>
@@ -87,7 +44,7 @@ export async function Navbar() {
                 <span className='sr-only'>Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side='right' className='w-[80%] justify-between sm:w-[350px]'>
+            <SheetContent side='right' className='w-[80%] justify-center sm:w-[350px]'>
               <SheetHeader>
                 <SheetTitle className='flex items-center justify-center gap-2'>
                   <Logo className='h-6 w-6' />
@@ -104,17 +61,6 @@ export async function Navbar() {
                   </SheetClose>
                 ))}
               </nav>
-              <SheetFooter className='mt-6'>
-                {session?.user ? (
-                  <></>
-                ) : (
-                  <SheetClose asChild>
-                    <Button asChild size='sm'>
-                      <Link href='sign-in'>Sign In</Link>
-                    </Button>
-                  </SheetClose>
-                )}
-              </SheetFooter>
             </SheetContent>
           </Sheet>
         </div>
