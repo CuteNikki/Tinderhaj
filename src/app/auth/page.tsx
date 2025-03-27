@@ -1,5 +1,5 @@
 import { auth, signIn, signOut } from '@/lib/auth';
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 
 import { TypographyH1, TypographyInlineCode, TypographyLarge, TypographyMuted, TypographyP } from '@/components/typography';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
