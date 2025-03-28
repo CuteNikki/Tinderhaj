@@ -17,7 +17,7 @@ export function CallToAction() {
             </TypographyMuted>
             <div className='mx-auto flex flex-col items-center justify-center gap-2 pt-4 sm:flex-row'>
               <Button asChild>
-                <Link href='#top'>Create Your Profile</Link>
+                <Link href='/sign-up'>Create Your Profile</Link>
               </Button>
               <Button asChild variant='secondary'>
                 <Link href='/discovery'>Browse Discovery</Link>
