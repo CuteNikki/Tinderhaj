@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { updateProfile } from '@/lib/actions';
 import { updateProfileSchema } from '@/lib/schemas';
 
-import { TypographyP } from '@/components/typography';
+import { TypographyMuted } from '@/components/typography';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -130,11 +130,11 @@ export function ProfileForm({ profile }: { profile: z.infer<typeof updateProfile
           )}
         /> */}
         <div className='flex flex-col items-center justify-between gap-4 text-pretty sm:flex-row sm:gap-8'>
-          <TypographyP>
+          <TypographyMuted className='text-sm'>
             Updating your profile will <span className='underline'>remove your verification</span> status.
             <br />
             Any changes will need to be approved by an admin.
-          </TypographyP>
+          </TypographyMuted>
           <Button type='submit'>Save Changes</Button>
         </div>
       </form>
