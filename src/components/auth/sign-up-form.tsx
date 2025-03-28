@@ -10,6 +10,7 @@ import { signUp } from '@/lib/actions';
 import { signUpSchema } from '@/lib/schemas';
 
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 
@@ -34,54 +35,65 @@ export function SignUpForm() {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
-        <FormField
-          control={form.control}
-          name='username'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input type='text' {...field} required />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='email'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input type='email' {...field} required />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='password'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input type='password' {...field} required />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className='flex justify-end gap-4'>
-          <Button asChild variant='link'>
-            <Link href='/sign-in'>Sign In</Link>
-          </Button>
-          <Button type='submit'>Sign Up</Button>
-        </div>
-      </form>
-    </Form>
+    <Card className='gap-6'>
+      <CardHeader className='text-center'>
+        <CardTitle className='pt-2 text-xl font-bold'>Welcome to Tinderhaj</CardTitle>
+        <CardDescription className='text-pretty'>Enter your details below to create an account</CardDescription>
+      </CardHeader>
+      <CardContent className='text-center'>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+            <FormField
+              control={form.control}
+              name='username'
+              render={({ field }) => (
+                <FormItem className='text-start'>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input type='text' {...field} required />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='email'
+              render={({ field }) => (
+                <FormItem className='text-start'>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input type='email' {...field} required />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='password'
+              render={({ field }) => (
+                <FormItem className='text-start'>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input type='password' {...field} required />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type='submit' className='w-full'>
+              Sign Up
+            </Button>
+            <span className='text-sm'>
+              {'Already have an account? '}
+              <Link href='/sign-in' className='underline'>
+                Sign In
+              </Link>
+            </span>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 }
