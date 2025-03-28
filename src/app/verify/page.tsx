@@ -25,7 +25,7 @@ export default async function DashboardPage() {
         <section id='hero' className='bg-muted flex min-h-[53vh] w-full py-12'>
           <div className='container mx-auto flex items-center justify-center px-4 md:px-8'>
             {unverifiedProfiles.length === 0 ? (
-              <div className='flex flex-col items-center gap-4'>
+              <div className='flex flex-col items-center gap-4 text-center'>
                 <TypographyH2>No unverified profiles</TypographyH2>
                 <TypographyMuted>All profiles are verified.</TypographyMuted>
               </div>
