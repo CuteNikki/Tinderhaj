@@ -4,10 +4,14 @@ import { ProfileCard } from '@/components/discovery/profile-card';
 import { TypographyH2, TypographyMuted } from '@/components/typography';
 import { Button } from '@/components/ui/button';
 import { CardFooter } from '@/components/ui/card';
+import { Profile } from '@prisma/client';
 
-const demoProfiles = [
+const demoProfiles: Profile[] = [
   {
     id: '1',
+    email: 'bubble_trouble@tinderhaj.com',
+    password: 'some_secret123',
+    salt: '',
     username: 'bubble_trouble',
     displayName: 'Bubbles',
     avatarUrl: 'https://placehold.co/512x512/33FF57/FFFFFF/webp?text=BT',
@@ -20,9 +24,13 @@ const demoProfiles = [
     bio: 'Loves swimming and cuddles. Looking for a long-term relationship.',
     createdAt: new Date(),
     updatedAt: new Date(),
+    isVerified: true,
   },
   {
     id: '2',
+    email: 'fin_tastic@tinderhaj.com',
+    password: 'some_secret123',
+    salt: '',
     username: 'fin_tastic',
     displayName: 'Finley',
     avatarUrl: 'https://placehold.co/512x512/3357FF/FFFFFF/webp?text=FT',
@@ -35,9 +43,13 @@ const demoProfiles = [
     bio: "Adventure seeker looking for a Blåhaj to explore the world with. Let's make waves together!",
     createdAt: new Date(),
     updatedAt: new Date(),
+    isVerified: true,
   },
   {
     id: '3',
+    email: 'tooth_fairy@tinderhaj.com',
+    password: 'some_secret123',
+    salt: '',
     username: 'tooth_fairy',
     displayName: 'Sharky',
     avatarUrl: 'https://placehold.co/512x512/FF5733/FFFFFF/webp?text=TF',
@@ -50,6 +62,7 @@ const demoProfiles = [
     bio: 'New to the dating scene. Enjoys long floats in the bathtub and window sunbathing.',
     createdAt: new Date(),
     updatedAt: new Date(),
+    isVerified: true,
   },
 ];
 
