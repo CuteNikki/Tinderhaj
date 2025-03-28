@@ -86,6 +86,10 @@ export async function signUp(unsafeData: z.infer<typeof signUpSchema>) {
 }
 
 function _getCurrentUser(options: { includeProfile: true; redirectIfNotFound: true }): Promise<{ sessionId: string; profileId: string; Profile: Profile }>;
+function _getCurrentUser(options: {
+  includeProfile: true;
+  redirectIfNotFound: false;
+}): Promise<{ sessionId: string; profileId: string; Profile: Profile } | null>;
 function _getCurrentUser(options: { includeProfile: true }): Promise<{ sessionId: string; profileId: string; Profile: Profile } | null>;
 function _getCurrentUser(options: { redirectIfNotFound: true }): Promise<{ sessionId: string; profileId: string }>;
 function _getCurrentUser(options: { redirectIfFound: true }): Promise<{ sessionId: string; profileId: string }>;
