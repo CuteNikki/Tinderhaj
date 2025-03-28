@@ -25,6 +25,7 @@ const demoProfiles: Profile[] = [
     createdAt: new Date(),
     updatedAt: new Date(),
     isVerified: true,
+    canVerify: false,
   },
   {
     id: '2',
@@ -44,6 +45,7 @@ const demoProfiles: Profile[] = [
     createdAt: new Date(),
     updatedAt: new Date(),
     isVerified: true,
+    canVerify: false,
   },
   {
     id: '3',
@@ -63,6 +65,7 @@ const demoProfiles: Profile[] = [
     createdAt: new Date(),
     updatedAt: new Date(),
     isVerified: true,
+    canVerify: false,
   },
 ];
 
