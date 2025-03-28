@@ -27,7 +27,8 @@ model Profile {
   interests String[]
   bio       String
 
-  isVerified Boolean @default(false)
+  canVerify  Boolean? @default(false)
+  isVerified Boolean  @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

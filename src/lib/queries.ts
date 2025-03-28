@@ -31,4 +31,8 @@ export const QUERIES = {
       totalProfiles: await prisma.profile.count({ where: { isVerified: true } }),
     };
   },
+
+  getUnverifiedProfiles: async () => {
+    return prisma.profile.findMany({ where: { isVerified: false } });
+  },
 };

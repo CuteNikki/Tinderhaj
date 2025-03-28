@@ -94,6 +94,7 @@ function _getCurrentUser(options: { includeProfile: true }): Promise<{ sessionId
 function _getCurrentUser(options: { redirectIfNotFound: true }): Promise<{ sessionId: string; profileId: string }>;
 function _getCurrentUser(options: { redirectIfFound: true }): Promise<{ sessionId: string; profileId: string }>;
 function _getCurrentUser(options: { redirectIfNotFound: true }): Promise<{ sessionId: string; profileId: string } | null>;
+function _getCurrentUser(): Promise<{ sessionId: string; profileId: string } | null>;
 async function _getCurrentUser({ includeProfile = false, redirectIfNotFound = false, redirectIfFound = false } = {}) {
   const session = await getUserSession({ includeProfile });
 
@@ -144,4 +145,32 @@ export async function deleteProfile() {
   await prisma.profile.delete({
     where: { id: session.profileId },
   });
+}
+
+export async function verifyProfile(profileId: string) {
+  const session = await getCurrentUser({ includeProfile: true, redirectIfNotFound: true });
+
+  if (!session?.Profile?.canVerify) return false;
+
+  await prisma.profile.update({
+    where: { id: profileId },
+    data: { isVerified: true },
+  });
+
+  revalidatePath('/dashboard');
+  return true;
+}
+
+export async function resetProfile(profileId: string) {
+  const session = await getCurrentUser({ includeProfile: true, redirectIfNotFound: true });
+
+  if (!session?.Profile?.canVerify) return false;
+
+  await prisma.profile.update({
+    where: { id: profileId },
+    data: { isVerified: false, bio: 'reset', interests: [], location: 'reset', pronouns: 'reset', size: 0, birthday: new Date() },
+  });
+
+  revalidatePath('/dashboard');
+  return true;
 }

@@ -1,7 +1,18 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { ArrowUpDownIcon, BadgeCheckIcon, HomeIcon, Menu, MenuIcon, MessageCircleIcon, PresentationIcon, SearchIcon, UserRoundIcon } from 'lucide-react';
+import {
+  ArrowUpDownIcon,
+  BadgeCheckIcon,
+  CheckIcon,
+  HomeIcon,
+  Menu,
+  MenuIcon,
+  MessageCircleIcon,
+  PresentationIcon,
+  SearchIcon,
+  UserRoundIcon,
+} from 'lucide-react';
 
 import { getCurrentUser } from '@/lib/actions';
 
@@ -84,6 +95,14 @@ export async function Navbar() {
                   <DropdownMenuSeparator />
                   <LogOutDropdownMenuItem />
                   <DropdownMenuSeparator />
+                  {session?.Profile?.canVerify && (
+                    <Link href='/verify#top'>
+                      <DropdownMenuItem>
+                        <CheckIcon />
+                        Verify
+                      </DropdownMenuItem>
+                    </Link>
+                  )}
                   <Link href='/profile#top'>
                     <DropdownMenuItem>
                       <UserRoundIcon />
@@ -155,13 +174,21 @@ export async function Navbar() {
               )}
               <nav className='flex flex-col items-center gap-4 p-6 text-center'>
                 <Separator />
+                {session?.Profile?.canVerify && (
+                  <SheetClose className='flex items-center gap-2' asChild>
+                    <Link href='/verify#top' className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
+                      <CheckIcon className='h-4 w-4' />
+                      Verify
+                    </Link>
+                  </SheetClose>
+                )}
                 {session?.Profile && (
-                    <SheetClose className='flex items-center gap-2' asChild>
-                      <Link href='/profile' className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
-                        <UserRoundIcon className='h-4 w-4' />
-                        Profile
-                      </Link>
-                    </SheetClose>
+                  <SheetClose className='flex items-center gap-2' asChild>
+                    <Link href='/profile' className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
+                      <UserRoundIcon className='h-4 w-4' />
+                      Profile
+                    </Link>
+                  </SheetClose>
                 )}
                 <SheetClose className='flex items-center gap-2' asChild>
                   <Link href='/discovery#top' className='text-muted-foreground hover:text-foreground transition-colors duration-150'>

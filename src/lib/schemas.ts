@@ -64,6 +64,9 @@ export const sessionWithProfileSchema = sessionSchema.extend({
     interests: z.array(z.string()),
     bio: z.string(),
     isVerified: z.boolean(),
+    canVerify: z.boolean(),
+    createdAt: z.date(),
+    updatedAt: z.date(),
   }),
 });
 
