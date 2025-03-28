@@ -2,9 +2,10 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
-import { /*oAuthSignIn,*/ updateProfile } from '@/lib/actions';
+import { updateProfile } from '@/lib/actions';
 import { updateProfileSchema } from '@/lib/schemas';
 
 import { TypographyP } from '@/components/typography';
@@ -23,7 +24,7 @@ export function ProfileForm({ profile }: { profile: z.infer<typeof updateProfile
     const error = await updateProfile(data);
 
     if (error) {
-      // @todo: toast.error(error.message, { duration: 5000, position: 'top-center' });
+      toast.error(error.message, { duration: 5000, position: 'top-center' });
     }
   }
 

@@ -3,9 +3,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
-import { /*oAuthSignIn,*/ signUp } from '@/lib/actions';
+import { signUp } from '@/lib/actions';
 import { signUpSchema } from '@/lib/schemas';
 
 import { Button } from '@/components/ui/button';
@@ -26,7 +27,7 @@ export function SignUpForm() {
     const error = await signUp(data);
 
     if (!error.field) {
-      // @todo: toast.error(error.message, { duration: 5000, position: 'top-center' });
+      toast.error(error.message, { duration: 5000, position: 'top-center' });
     } else {
       form.setError(error.field as 'username' | 'email' | 'password', { message: error.message });
     }
