@@ -10,7 +10,11 @@ datasource db {
 model Profile {
   id String @id @default(cuid(2))
 
-  username    String @unique
+  username String @unique
+  email    String @unique
+  password String
+  salt     String
+
   displayName String
 
   avatarUrl String
@@ -23,6 +27,16 @@ model Profile {
   interests String[]
   bio       String
 
+  isVerified Boolean @default(false)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  Session Session[]
+}
+
+model Session {
+  sessionId String   @id
+  profileId String
+  Profile   Profile? @relation(fields: [profileId], references: [id])
 }

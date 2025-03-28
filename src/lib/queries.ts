@@ -17,6 +17,7 @@ export const QUERIES = {
         { location: { contains: query, mode: 'insensitive' } },
         { interests: { has: query } },
       ],
+      isVerified: true,
     };
     return {
       profiles: await prisma.profile.findMany({ skip: (page - 1) * take, take: take, where: where }),
@@ -25,6 +26,9 @@ export const QUERIES = {
   },
 
   getProfiles: async (page: number, take: number) => {
-    return { profiles: await prisma.profile.findMany({ skip: (page - 1) * take, take: take }), totalProfiles: await prisma.profile.count() };
+    return {
+      profiles: await prisma.profile.findMany({ skip: (page - 1) * take, take: take, where: { isVerified: true } }),
+      totalProfiles: await prisma.profile.count({ where: { isVerified: true } }),
+    };
   },
 };
