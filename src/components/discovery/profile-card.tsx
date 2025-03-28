@@ -47,12 +47,14 @@ export function ProfileCard({ profile, children, className }: { profile: Profile
 
         <div className='space-y-2'>
           <div>
-            <TypographyH4 className='text-xl font-bold'>{profile.displayName}</TypographyH4>
+            <TypographyH4 className='truncate text-xl font-bold'>{profile.displayName}</TypographyH4>
             <TypographyMuted className='text-sm'>@{profile.username}</TypographyMuted>
           </div>
 
           <div className='flex items-center gap-1'>
-            <Badge variant='outline'>{profile.pronouns}</Badge>
+            <Badge variant='outline'>
+              <span className='truncate max-w-16'>{profile.pronouns}</span>
+            </Badge>
             <Badge variant='outline'>
               <Cake />
               {calculateAge(profile.birthday)}yo
@@ -63,11 +65,12 @@ export function ProfileCard({ profile, children, className }: { profile: Profile
           </div>
           <div className='flex items-center gap-1'>
             <Badge variant='outline'>
-              <MapPin /> {profile.location}
+              <MapPin />
+              <span className='max-w-28 truncate'>{profile.location}</span>
             </Badge>
           </div>
 
-          <p className='text-sm'>{profile.bio}</p>
+          <p className='truncate text-sm whitespace-pre-line'>{profile.bio}</p>
 
           <div className='flex flex-wrap gap-1 pt-2'>
             {profile.interests.map((interest, index) => (
