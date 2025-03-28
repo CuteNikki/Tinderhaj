@@ -25,6 +25,8 @@ export function ProfileForm({ profile }: { profile: z.infer<typeof updateProfile
 
     if (error) {
       toast.error(error.message, { duration: 5000, position: 'top-center' });
+    } else {
+      toast.success('Profile updated successfully!', { duration: 5000, position: 'top-center' });
     }
   }
 
@@ -80,7 +82,7 @@ export function ProfileForm({ profile }: { profile: z.infer<typeof updateProfile
           name='size'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Size</FormLabel>
+              <FormLabel>Size (in cm)</FormLabel>
               <FormControl>
                 <Input type='number' {...field} onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)} />
               </FormControl>
@@ -127,11 +129,13 @@ export function ProfileForm({ profile }: { profile: z.infer<typeof updateProfile
             </FormItem>
           )}
         /> */}
-        <div className='flex items-center justify-between gap-4 text-balance'>
+        <div className='flex flex-col items-center justify-between gap-4 text-pretty sm:flex-row sm:gap-8'>
           <TypographyP>
-            Updating your profile will <span className='underline'>remove your verification</span> status. Any changes will need to be approved by an admin.
+            Updating your profile will <span className='underline'>remove your verification</span> status.
+            <br />
+            Any changes will need to be approved by an admin.
           </TypographyP>
-          <Button type='submit'>Save</Button>
+          <Button type='submit'>Save Changes</Button>
         </div>
       </form>
     </Form>
