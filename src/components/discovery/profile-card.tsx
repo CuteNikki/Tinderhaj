@@ -26,7 +26,16 @@ function calculateAge(dob: Date) {
   return age;
 }
 
-export function ProfileCard({ profile, children, className }: { profile: Profile & { Account: Account }; children?: React.ReactNode; className?: string, fitHeight?: boolean }) {
+export function ProfileCard({
+  profile,
+  children,
+  className,
+}: {
+  profile: Profile & { Account: Account };
+  children?: React.ReactNode;
+  className?: string;
+  fitHeight?: boolean;
+}) {
   return (
     <Card className={cn('w-72 overflow-hidden py-0', className)}>
       <Image unoptimized priority draggable={false} width={1144} height={572} src={profile.bannerUrl} alt='Banner' className='w-full select-none' />
@@ -66,7 +75,7 @@ export function ProfileCard({ profile, children, className }: { profile: Profile
           <div className='flex items-center gap-1'>
             <Badge variant='outline'>
               <MapPin />
-              <span className='max-w-28 truncate'>{profile.location}</span>
+              <span className='max-w-44 truncate'>{profile.location}</span>
             </Badge>
           </div>
 
