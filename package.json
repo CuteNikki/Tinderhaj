@@ -11,7 +11,8 @@
     "prisma-seed": "bunx prisma db seed",
     "prisma-generate": "prisma generate",
     "prisma-migrate": "prisma migrate dev",
-    "prisma-studio": "prisma studio"
+    "prisma-studio": "prisma studio",
+    "postinstall": "prisma generate"
   },
   "prisma": {
     "seed": "bun run prisma/seed.ts"
