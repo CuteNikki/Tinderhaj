@@ -136,6 +136,13 @@ export async function createProfile(unsafeData: z.infer<typeof createProfileSche
 
   const session = await getCurrentUser({ includeAccount: true, redirectIfNotFound: true });
 
+  const profileCount = await getCurrentProfileCount();
+
+  // Temporary MAX_PROFILES limit = 5
+  if (profileCount >= 5) {
+    return { message: `You have reached the maximum number of profiles (5)!` };
+  }
+
   await prisma.profile.create({
     data: {
       ...data,
