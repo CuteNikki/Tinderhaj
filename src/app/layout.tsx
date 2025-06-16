@@ -1,11 +1,9 @@
 import { Geist, Geist_Mono } from 'next/font/google';
 
-import { ThemeProvider } from '@/features/theme/providers/theme';
+import { layoutMetadata } from '@/constants/metadata';
 
-import { Footer } from '@/features/navigation/components/footer';
-import { Navbar } from '@/features/navigation/components/navbar';
-
-import { defaultData } from '@/constants/metadata';
+import { Toaster } from '@/components/ui/sonner';
+import { ThemeProvider } from '@/providers/theme';
 
 import './globals.css';
 
@@ -19,7 +17,7 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-export const metadata = defaultData;
+export const metadata = layoutMetadata;
 
 export default function RootLayout({
   children,
@@ -28,13 +26,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en' suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} bg-background text-foreground overflow-y-scroll font-sans antialiased`}>
+        <div id='top' />
+        <Toaster richColors />
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
-          <div className='grid min-h-screen grid-rows-[auto,1fr,auto] bg-background'>
-            <Navbar />
-            {children}
-            <Footer />
-          </div>
+          {children}
         </ThemeProvider>
       </body>
     </html>

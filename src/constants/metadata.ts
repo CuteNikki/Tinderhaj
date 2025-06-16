@@ -1,30 +1,62 @@
 import { Metadata } from 'next';
 
-export const defaultData: Metadata = {
+export const layoutMetadata: Metadata = {
   title: 'Tinderhaj',
-  description: 'A dating app like Tinder for Blåhaj.',
+  description: `The world's first dating site exclusively for IKEA's Blåhaj plush sharks.`,
   openGraph: {
     url: 'https://tinderhaj.com',
     images: [
       {
-        url: 'https://tinderhaj.com/opengraph-image.gif',
-        alt: 'Tinderhaj',
-        width: 382,
-        height: 201,
+        url: 'https://tinderhaj.com/blahaj.webp',
+        alt: 'Blåhaj',
+        width: 128,
+        height: 128,
       },
     ],
   },
 };
 
-export const homeData: Metadata = {
+export const homeMetadata: Metadata = {
   title: 'Tinderhaj - Home',
-  description: 'A dating app like Tinder for Blåhaj.',
+  description: `Welcome to the world's first dating site exclusively for IKEA's Blåhaj plush sharks.`,
   openGraph: {
     url: 'https://tinderhaj.com',
     images: [
       {
-        url: 'https://tinderhaj.com/opengraph-image.gif',
-        alt: 'Tinderhaj',
+        url: 'https://tinderhaj.com/blahaj.webp',
+        alt: 'Blåhaj',
+        width: 128,
+        height: 128,
+      },
+    ],
+  },
+};
+
+export const discoveryMetadata: Metadata = {
+  title: 'Tinderhaj - Discovery',
+  description: `Discover your perfect match among IKEA's Blåhaj plush sharks.`,
+  openGraph: {
+    url: 'https://tinderhaj.com/about',
+    images: [
+      {
+        url: 'https://tinderhaj.com/blahaj.webp',
+        alt: 'Blåhaj',
+        width: 128,
+        height: 128,
+      },
+    ],
+  },
+};
+
+export const notFoundMetadata: Metadata = {
+  title: 'Tinderhaj - Not Found',
+  description: `Oops! Looks like you've swum too far. Or we lost this page in the deep sea.`,
+  openGraph: {
+    url: 'https://tinderhaj.com/404',
+    images: [
+      {
+        url: 'https://tinderhaj.com/blahajSpinSmall.gif',
+        alt: 'Blåhaj Spin',
         width: 382,
         height: 201,
       },
@@ -32,65 +64,17 @@ export const homeData: Metadata = {
   },
 };
 
-export const notFoundData: Metadata = {
-  title: 'Tinderhaj - 404',
-  description: "Oops! You've swum too far! Looks like this page got lost in the deep sea.",
-  openGraph: {
-    url: 'https://tinderhaj.com',
-    images: [
-      {
-        url: 'https://tinderhaj.com/opengraph-image.gif',
-        alt: 'Tinderhaj',
-        width: 382,
-        height: 201,
-      },
-    ],
-  },
-};
-
-export const constructionData: Metadata = {
-  title: 'Tinderhaj - Construction',
-  description: 'Oops! This feature is still under construction. Please check back later!',
-  openGraph: {
-    url: 'https://tinderhaj.com',
-    images: [
-      {
-        url: 'https://tinderhaj.com/opengraph-image.gif',
-        alt: 'Tinderhaj',
-        width: 382,
-        height: 201,
-      },
-    ],
-  },
-};
-
-export const signUpData: Metadata = {
-  title: 'Tinderhaj - Sign Up',
-  description: 'Sign up to find your perfect Blåhaj match!',
-  openGraph: {
-    url: 'https://tinderhaj.com',
-    images: [
-      {
-        url: 'https://tinderhaj.com/opengraph-image.gif',
-        alt: 'Tinderhaj',
-        width: 382,
-        height: 201,
-      },
-    ],
-  },
-};
-
-export const signInData: Metadata = {
+export const signInMetadata: Metadata = {
   title: 'Tinderhaj - Sign In',
-  description: 'Sign in to find your perfect Blåhaj match!',
+  description: `Sign in to the world's first dating site exclusively for IKEA's Blåhaj plush sharks.`,
   openGraph: {
-    url: 'https://tinderhaj.com',
+    url: 'https://tinderhaj.com/sign-in',
     images: [
       {
-        url: 'https://tinderhaj.com/opengraph-image.gif',
-        alt: 'Tinderhaj',
-        width: 382,
-        height: 201,
+        url: 'https://tinderhaj.com/blahaj.webp',
+        alt: 'Blåhaj',
+        width: 128,
+        height: 128,
       },
     ],
   },
