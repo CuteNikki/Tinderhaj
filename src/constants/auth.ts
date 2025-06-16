@@ -13,6 +13,9 @@ export const COOKIE_SESSION_KEY = 'auth-tinderhaj-session-id';
 export const MIN_DISPLAY_NAME_LENGTH = 3;
 export const MAX_DISPLAY_NAME_LENGTH = 32;
 
+export const MIN_SIZE = 1;
+export const MAX_SIZE = 1000;
+
 export const MIN_BIO_LENGTH = 0;
 export const MAX_BIO_LENGTH = 160;
 
