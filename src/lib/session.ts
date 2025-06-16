@@ -1,15 +1,15 @@
 'use server';
 
-import { Profile } from '@prisma/client';
+import { Account } from '@prisma/client';
 import { randomBytes } from 'crypto';
 import { cookies } from 'next/headers';
 import { z } from 'zod';
 
 import { COOKIE_SESSION_KEY, SESSION_EXPIRATION } from '@/constants/auth';
 import { prisma } from '@/lib/prisma';
-import { sessionSchema, sessionWithProfileSchema } from '@/lib/schemas';
+import { sessionSchema, sessionWithAccountSchema } from '@/lib/schemas';
 
-export async function getUserSession({ includeProfile = false } = {}) {
+export async function getUserSession({ includeAccount = false } = {}) {
   const cookie = await cookies();
 
   const sessionId = cookie.get(COOKIE_SESSION_KEY)?.value;
@@ -18,21 +18,21 @@ export async function getUserSession({ includeProfile = false } = {}) {
 
   const rawUser = await prisma.session.findFirst({
     where: { sessionId },
-    include: includeProfile ? { Profile: true } : undefined,
+    include: includeAccount ? { Account: true } : undefined,
   });
 
-  const { success, data: user } = includeProfile ? sessionWithProfileSchema.safeParse(rawUser) : sessionSchema.safeParse(rawUser);
+  const { success, data: user } = includeAccount ? sessionWithAccountSchema.safeParse(rawUser) : sessionSchema.safeParse(rawUser);
   return success ? user : null;
 }
 
-export async function createUserSession(profile: Profile) {
+export async function createUserSession(account: Account) {
   const sessionId = randomBytes(512).toString('hex').normalize();
 
-  const data = sessionSchema.parse({ sessionId: sessionId, profileId: profile.id });
+  const data = sessionSchema.parse({ sessionId: sessionId, accountId: account.id });
   await prisma.session.create({
     data: {
       sessionId: data.sessionId,
-      profileId: profile.id,
+      accountId: account.id,
     },
   });
 

@@ -1,8 +1,8 @@
-import { Profile } from '@prisma/client';
+import { Account, Profile } from '@prisma/client';
 
 import { ProfileCard, ProfileCardSkeleton } from '@/components/discovery/profile-card';
 
-export function ProfileList({ profiles }: { profiles: Profile[] }) {
+export function ProfileList({ profiles }: { profiles: (Profile & { Account: Account })[] }) {
   return (
     <section className='from-background to-muted w-full bg-gradient-to-b py-8 md:py-12'>
       <div className='container mx-auto px-4 md:px-6'>

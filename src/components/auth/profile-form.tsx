@@ -5,16 +5,15 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-import { updateProfile } from '@/lib/actions';
+import { deleteProfile, updateProfile } from '@/lib/actions';
 import { updateProfileSchema } from '@/lib/schemas';
 
-import { TypographyMuted } from '@/components/typography';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 
-export function ProfileForm({ profile }: { profile: z.infer<typeof updateProfileSchema> }) {
+export function ProfileForm({ profile }: { profile?: z.infer<typeof updateProfileSchema> }) {
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: profile,
@@ -32,7 +31,7 @@ export function ProfileForm({ profile }: { profile: z.infer<typeof updateProfile
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
+      <form onSubmit={form.handleSubmit(onSubmit)} className='max-w-md space-y-4'>
         <FormField
           control={form.control}
           name='displayName'
@@ -116,26 +115,28 @@ export function ProfileForm({ profile }: { profile: z.infer<typeof updateProfile
             </FormItem>
           )}
         />
-        {/* <FormField
-          control={form.control}
-          name='interests'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Interests</FormLabel>
-              <FormControl>
-                <Input type='text' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        /> */}
         <div className='flex flex-col items-center justify-between gap-4 text-pretty sm:flex-row sm:gap-8'>
-          <TypographyMuted className='text-sm'>
-            Updating your profile will <span className='underline'>remove your verification</span> status.
-            <br />
-            Any changes will need to be approved by an admin.
-          </TypographyMuted>
-          <Button type='submit'>Save Changes</Button>
+          <div className='flex flex-wrap gap-2'>
+            <Button variant='secondary' type='reset' onClick={() => form.reset(profile)}>
+              Reset Changes
+            </Button>
+            <Button type='submit'>Save Changes</Button>
+            <Button
+              type='button'
+              variant='destructive'
+              onClick={async () => {
+                const error = await deleteProfile({ profileId: profile!.id });
+
+                if (error) {
+                  toast.error(error.message, { duration: 5000, position: 'top-center' });
+                } else {
+                  toast.success('Profile deleted successfully!', { duration: 5000, position: 'top-center' });
+                }
+              }}
+            >
+              Delete
+            </Button>
+          </div>
         </div>
       </form>
     </Form>

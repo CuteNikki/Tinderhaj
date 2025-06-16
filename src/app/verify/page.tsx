@@ -8,12 +8,13 @@ import { Footer } from '@/components/common/footer';
 import { Navbar } from '@/components/common/navbar';
 import { ProfileCard } from '@/components/discovery/profile-card';
 import { TypographyH2, TypographyMuted } from '@/components/typography';
+import { Account, Profile } from '@prisma/client';
 
 export default async function DashboardPage() {
-  const session = await getCurrentUser({ includeProfile: true, redirectIfNotFound: true });
+  const session = await getCurrentUser({ includeAccount: true, redirectIfNotFound: true });
 
   // Check if the user is admin/can verify profiles
-  if (!session?.Profile?.canVerify) redirect('/');
+  if (!session?.Account?.canVerify) redirect('/');
 
   const unverifiedProfiles = await QUERIES.getUnverifiedProfiles();
 
@@ -34,7 +35,7 @@ export default async function DashboardPage() {
                 <TypographyH2>Unverified Profiles</TypographyH2>
                 <div className='flex flex-wrap justify-center gap-6'>
                   {unverifiedProfiles.map((profile, index) => (
-                    <ProfileCard className='text-start' key={`profile-card-${index}-${profile.id}`} profile={profile}>
+                    <ProfileCard className='text-start' key={`profile-card-${index}-${profile.id}`} profile={profile as Profile & { Account: Account }}>
                       <div className='flex flex-col gap-2 px-4 pb-4'>
                         <VerifyProfileButton profile={profile} />
                         <ResetProfileButton profile={profile} />

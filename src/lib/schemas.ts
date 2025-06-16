@@ -45,32 +45,53 @@ export const signUpSchema = z.object({
 });
 
 export const sessionSchema = z.object({
-  profileId: z.string(),
+  accountId: z.string(),
   sessionId: z.string(),
 });
 
-export const sessionWithProfileSchema = sessionSchema.extend({
-  Profile: z.object({
+export const sessionWithAccountSchema = sessionSchema.extend({
+  Account: z.object({
     id: z.string(),
     email: z.string().email(),
     username: z.string(),
-    displayName: z.string(),
-    avatarUrl: z.string().url(),
-    bannerUrl: z.string().url(),
-    birthday: z.date(),
-    size: z.number(),
-    pronouns: z.string(),
-    location: z.string(),
-    interests: z.array(z.string()),
-    bio: z.string(),
-    isVerified: z.boolean(),
     canVerify: z.boolean(),
     createdAt: z.date(),
     updatedAt: z.date(),
   }),
 });
 
+export const createProfileSchema = z.object({
+  displayName: z
+    .string()
+    .trim()
+    .nonempty('Display Name is required!')
+    .min(MIN_DISPLAY_NAME_LENGTH, `Display Name must be at least ${MIN_DISPLAY_NAME_LENGTH} characters.`)
+    .max(MAX_USERNAME_LENGTH, `Display Name must be at most ${MAX_USERNAME_LENGTH} characters.`)
+    .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
+  birthday: z.date().max(new Date(), 'Birthday must be in the past.'),
+  size: z.number().min(0, 'Size must be at least 0cm.').max(1000, "I don't think your shark is 1000cm long..."),
+  pronouns: z
+    .string()
+    .trim()
+    .min(MIN_PRONOUNS_LENGTH, `Pronouns must be at least ${MIN_PRONOUNS_LENGTH} characters.`)
+    .max(MAX_USERNAME_LENGTH, `Pronouns must be at most ${MAX_USERNAME_LENGTH} characters.`)
+    .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
+  location: z
+    .string()
+    .trim()
+    .min(MIN_PRONOUNS_LENGTH, `Location must be at least ${MIN_PRONOUNS_LENGTH} characters.`)
+    .max(MAX_USERNAME_LENGTH, `Location must be at most ${MAX_USERNAME_LENGTH} characters.`)
+    .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
+  bio: z
+    .string()
+    .trim()
+    .max(160, 'Bio must be at most 160 characters.')
+    .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
+});
+
 export const updateProfileSchema = z.object({
+  id: z.string(),
+  isVerified: z.boolean().optional(),
   displayName: z
     .string()
     .trim()

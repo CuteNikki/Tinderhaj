@@ -3,7 +3,7 @@ import { QUERIES } from '@/lib/queries';
 import { TypographyMuted } from '@/components/typography';
 
 export async function ProfileCount() {
-  const profileCount = await QUERIES.getProfileCount();
+  const profileCount = await QUERIES.getAccountCount();
 
   return (
     <TypographyMuted className='text-sm'>

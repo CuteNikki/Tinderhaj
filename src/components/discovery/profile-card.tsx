@@ -1,4 +1,4 @@
-import { Profile } from '@prisma/client';
+import { Account, Profile } from '@prisma/client';
 import Image from 'next/image';
 
 import { Cake, MapPin, Ruler } from 'lucide-react';
@@ -26,7 +26,7 @@ function calculateAge(dob: Date) {
   return age;
 }
 
-export function ProfileCard({ profile, children, className }: { profile: Profile; children?: React.ReactNode; className?: string }) {
+export function ProfileCard({ profile, children, className }: { profile: Profile & { Account: Account }; children?: React.ReactNode; className?: string, fitHeight?: boolean }) {
   return (
     <Card className={cn('w-72 overflow-hidden py-0', className)}>
       <Image unoptimized priority draggable={false} width={1144} height={572} src={profile.bannerUrl} alt='Banner' className='w-full select-none' />
@@ -48,12 +48,12 @@ export function ProfileCard({ profile, children, className }: { profile: Profile
         <div className='space-y-2'>
           <div>
             <TypographyH4 className='truncate text-xl font-bold'>{profile.displayName}</TypographyH4>
-            <TypographyMuted className='text-sm'>@{profile.username}</TypographyMuted>
+            <TypographyMuted className='text-sm'>@{profile.Account.username}</TypographyMuted>
           </div>
 
           <div className='flex items-center gap-1'>
             <Badge variant='outline'>
-              <span className='truncate max-w-16'>{profile.pronouns}</span>
+              <span className='max-w-16 truncate'>{profile.pronouns}</span>
             </Badge>
             <Badge variant='outline'>
               <Cake />

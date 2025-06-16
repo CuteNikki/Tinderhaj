@@ -1,18 +1,25 @@
+import { Account, Profile } from '@prisma/client';
 import { Heart, X } from 'lucide-react';
 
 import { ProfileCard } from '@/components/discovery/profile-card';
 import { TypographyH2, TypographyMuted } from '@/components/typography';
 import { Button } from '@/components/ui/button';
 import { CardFooter } from '@/components/ui/card';
-import { Profile } from '@prisma/client';
 
-const demoProfiles: Profile[] = [
+const demoProfiles: (Profile & { Account: Account })[] = [
   {
     id: '1',
-    email: 'bubble_trouble@tinderhaj.com',
-    password: 'some_secret123',
-    salt: '',
-    username: 'bubble_trouble',
+    accountId: '1',
+    Account: {
+      id: '1',
+      canVerify: false,
+      email: 'bubble_trouble@tinderhaj.com',
+      password: 'some_secret123',
+      salt: '',
+      username: 'bubble_trouble',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
     displayName: 'Bubbles',
     avatarUrl: 'https://placehold.co/512x512/33FF57/FFFFFF/webp?text=BT',
     bannerUrl: 'https://placehold.co/1144x572/33FF57/FFFFFF/webp?text=Bubbles',
@@ -25,14 +32,20 @@ const demoProfiles: Profile[] = [
     createdAt: new Date(),
     updatedAt: new Date(),
     isVerified: true,
-    canVerify: false,
   },
   {
     id: '2',
-    email: 'fin_tastic@tinderhaj.com',
-    password: 'some_secret123',
-    salt: '',
-    username: 'fin_tastic',
+    accountId: '2',
+    Account: {
+      id: '2',
+      canVerify: false,
+      email: 'fin_tastic@tinderhaj.com',
+      password: 'some_secret123',
+      salt: '',
+      username: 'fin_tastic',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
     displayName: 'Finley',
     avatarUrl: 'https://placehold.co/512x512/3357FF/FFFFFF/webp?text=FT',
     bannerUrl: 'https://placehold.co/1144x572/3357FF/FFFFFF/webp?text=Finley',
@@ -45,14 +58,20 @@ const demoProfiles: Profile[] = [
     createdAt: new Date(),
     updatedAt: new Date(),
     isVerified: true,
-    canVerify: false,
   },
   {
     id: '3',
-    email: 'tooth_fairy@tinderhaj.com',
-    password: 'some_secret123',
-    salt: '',
-    username: 'tooth_fairy',
+    accountId: '3',
+    Account: {
+      id: '3',
+      canVerify: false,
+      email: 'tooth_fairy@tinderhaj.com',
+      password: 'some_secret123',
+      salt: '',
+      username: 'tooth_fairy',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
     displayName: 'Sharky',
     avatarUrl: 'https://placehold.co/512x512/FF5733/FFFFFF/webp?text=TF',
     bannerUrl: 'https://placehold.co/1144x572/FF5733/FFFFFF/webp?text=Sharky',
@@ -65,7 +84,6 @@ const demoProfiles: Profile[] = [
     createdAt: new Date(),
     updatedAt: new Date(),
     isVerified: true,
-    canVerify: false,
   },
 ];
 

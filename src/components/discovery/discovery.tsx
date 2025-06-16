@@ -1,3 +1,4 @@
+import { Account, Profile } from '@prisma/client';
 import { SearchParams } from 'next/dist/server/request/search-params';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
@@ -28,7 +29,7 @@ export async function Discovery({ searchParams }: { searchParams: Promise<Search
   return (
     <>
       <ProfileFilter page={page} query={query} take={take} />
-      {totalProfiles ? <ProfileList profiles={profiles} /> : <NoResults />}
+      {totalProfiles ? <ProfileList profiles={profiles as (Profile & { Account: Account })[]} /> : <NoResults />}
       <ProfilePagination displayedUsers={profiles.length} totalUsers={totalProfiles} totalPages={totalPages} take={take} page={page} query={query} />
     </>
   );

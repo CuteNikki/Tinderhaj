@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 
 import {
@@ -33,7 +32,7 @@ import { Separator } from '@/components/ui/separator';
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
 export async function Navbar() {
-  const session = await getCurrentUser({ includeProfile: true, redirectIfNotFound: false });
+  const session = await getCurrentUser({ includeAccount: true, redirectIfNotFound: false });
 
   const links = [
     { name: 'Home', href: '/#top', icon: HomeIcon, showOnBar: true, showInMenu: true },
@@ -68,7 +67,7 @@ export async function Navbar() {
         <div className='ml-auto flex items-center gap-2'>
           <ThemeButton />
           <div className='hidden md:block'>
-            {session?.Profile ? (
+            {session?.Account ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant='outline' size='icon'>
@@ -77,25 +76,14 @@ export async function Navbar() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent side='bottom'>
                   <DropdownMenuLabel className='flex items-center gap-2'>
-                    <Image
-                      unoptimized
-                      priority
-                      draggable={false}
-                      width={40}
-                      height={40}
-                      src={session.Profile.avatarUrl}
-                      alt='Avatar'
-                      className='h-10 w-10 rounded-xl select-none'
-                    />
                     <div className='flex flex-col'>
-                      <span>{session.Profile.displayName}</span>
-                      <span className='text-muted-foreground text-sm'>@{session.Profile.username}</span>
+                      <span>Hello, @{session.Account.username}!</span>
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <LogOutDropdownMenuItem />
                   <DropdownMenuSeparator />
-                  {session?.Profile?.canVerify && (
+                  {session?.Account?.canVerify && (
                     <Link href='/verify#top'>
                       <DropdownMenuItem>
                         <CheckIcon />
@@ -103,10 +91,10 @@ export async function Navbar() {
                       </DropdownMenuItem>
                     </Link>
                   )}
-                  <Link href='/profile#top'>
+                  <Link href='/profiles#top'>
                     <DropdownMenuItem>
                       <UserRoundIcon />
-                      Profile
+                      Profiles
                     </DropdownMenuItem>
                   </Link>
                   <Link href='/discovery#top'>
@@ -143,22 +131,11 @@ export async function Navbar() {
               </Button>
             </SheetTrigger>
             <SheetContent side='right' className='w-[80%] justify-center sm:w-[350px]'>
-              {session?.Profile ? (
+              {session?.Account ? (
                 <SheetHeader className='flex flex-col items-center gap-2'>
                   <SheetTitle className='flex items-center justify-center gap-2'>
-                    <Image
-                      unoptimized
-                      priority
-                      draggable={false}
-                      width={40}
-                      height={40}
-                      src={session.Profile.avatarUrl}
-                      alt='Avatar'
-                      className='h-10 w-10 rounded-xl select-none'
-                    />
                     <div className='flex flex-col'>
-                      <span>{session.Profile.displayName}</span>
-                      <span className='text-muted-foreground text-sm'>@{session.Profile.username}</span>
+                      <span>Hello, @{session.Account.username}!</span>
                     </div>
                   </SheetTitle>
                   <LogOutButton />
@@ -174,7 +151,7 @@ export async function Navbar() {
               )}
               <nav className='flex flex-col items-center gap-4 p-6 text-center'>
                 <Separator />
-                {session?.Profile?.canVerify && (
+                {session?.Account?.canVerify && (
                   <SheetClose className='flex items-center gap-2' asChild>
                     <Link href='/verify#top' className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
                       <CheckIcon className='h-4 w-4' />
@@ -182,11 +159,11 @@ export async function Navbar() {
                     </Link>
                   </SheetClose>
                 )}
-                {session?.Profile && (
+                {session?.Account && (
                   <SheetClose className='flex items-center gap-2' asChild>
-                    <Link href='/profile' className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
+                    <Link href='/profiles' className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
                       <UserRoundIcon className='h-4 w-4' />
-                      Profile
+                      Profiles
                     </Link>
                   </SheetClose>
                 )}
@@ -196,7 +173,7 @@ export async function Navbar() {
                     Discovery
                   </Link>
                 </SheetClose>
-                {session?.Profile && <Separator />}
+                {session?.Account && <Separator />}
                 {links.map(
                   (link, index) =>
                     link.showInMenu && (
@@ -210,7 +187,7 @@ export async function Navbar() {
                 )}
                 <Separator />
               </nav>
-              {!session?.Profile && (
+              {!session?.Account && (
                 <div className='flex flex-col items-center gap-2 p-6'>
                   <Button variant='secondary' className='w-full' asChild>
                     <Link href='/sign-in'>Sign In</Link>

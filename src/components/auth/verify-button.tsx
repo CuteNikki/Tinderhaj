@@ -11,7 +11,7 @@ export function VerifyProfileButton({ profile }: { profile: Profile }) {
   return (
     <Button
       onClick={async () => {
-        const success = await verifyProfile(profile.id);
+        const success = await verifyProfile({ profileId: profile.id });
 
         if (success) {
           toast.success(`Successfully verified profile ${profile.displayName}!`);
@@ -31,7 +31,7 @@ export function ResetProfileButton({ profile }: { profile: Profile }) {
   return (
     <Button
       onClick={async () => {
-        const success = await resetProfile(profile.id);
+        const success = await resetProfile({ profileId: profile.id });
 
         if (success) {
           toast.success(`Successfully reset profile ${profile.displayName}!`);
