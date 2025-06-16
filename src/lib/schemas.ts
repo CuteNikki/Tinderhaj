@@ -1,14 +1,17 @@
 import { z } from 'zod';
 
 import {
+  MAX_BIO_LENGTH,
   MAX_EMAIL_LENGTH,
   MAX_INTEREST_LENGTH,
   MAX_PASSWORD_LENGTH,
+  MAX_SIZE,
   MAX_USERNAME_LENGTH,
   MIN_DISPLAY_NAME_LENGTH,
   MIN_EMAIL_LENGTH,
   MIN_PASSWORD_LENGTH,
   MIN_PRONOUNS_LENGTH,
+  MIN_SIZE,
   MIN_USERNAME_LENGTH,
 } from '@/constants/auth';
 
@@ -68,24 +71,36 @@ export const createProfileSchema = z.object({
     .min(MIN_DISPLAY_NAME_LENGTH, `Display Name must be at least ${MIN_DISPLAY_NAME_LENGTH} characters.`)
     .max(MAX_USERNAME_LENGTH, `Display Name must be at most ${MAX_USERNAME_LENGTH} characters.`)
     .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
-  birthday: z.date().max(new Date(), 'Birthday must be in the past.'),
-  size: z.number().min(0, 'Size must be at least 0cm.').max(1000, "I don't think your shark is 1000cm long..."),
+  birthday: z.date().refine(
+    (date) => {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const input = new Date(date);
+      input.setHours(0, 0, 0, 0);
+      return input <= today;
+    },
+    { message: 'Birthday must be in the past or today.' },
+  ),
+  size: z.number().min(MIN_SIZE, 'Size must be at least 1cm.').max(MAX_SIZE, `I don't think your shark is ${MAX_SIZE}cm long...`),
   pronouns: z
     .string()
     .trim()
+    .nonempty('Pronouns are required!')
     .min(MIN_PRONOUNS_LENGTH, `Pronouns must be at least ${MIN_PRONOUNS_LENGTH} characters.`)
     .max(MAX_USERNAME_LENGTH, `Pronouns must be at most ${MAX_USERNAME_LENGTH} characters.`)
     .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
   location: z
     .string()
     .trim()
+    .nonempty('Location is required!')
     .min(MIN_PRONOUNS_LENGTH, `Location must be at least ${MIN_PRONOUNS_LENGTH} characters.`)
     .max(MAX_USERNAME_LENGTH, `Location must be at most ${MAX_USERNAME_LENGTH} characters.`)
     .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
   bio: z
     .string()
     .trim()
-    .max(160, 'Bio must be at most 160 characters.')
+    .nonempty('Bio is required!')
+    .max(MAX_BIO_LENGTH, `Bio must be at most ${MAX_BIO_LENGTH} characters.`)
     .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
 });
 
@@ -101,8 +116,17 @@ export const updateProfileSchema = z.object({
     .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
   avatarUrl: z.string().trim().url().max(2000, 'Avatar URL must be at most 2000 characters.'),
   bannerUrl: z.string().trim().url().max(2000, 'Banner URL must be at most 2000 characters.'),
-  birthday: z.date().max(new Date(), 'Birthday must be in the past.'),
-  size: z.number().min(0, 'Size must be at least 0cm.').max(1000, "I don't think your shark is 1000cm long..."),
+  birthday: z.date().refine(
+    (date) => {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const input = new Date(date);
+      input.setHours(0, 0, 0, 0);
+      return input <= today;
+    },
+    { message: 'Birthday must be in the past or today.' },
+  ),
+  size: z.number().min(MIN_SIZE, 'Size must be at least 1cm.').max(MAX_SIZE, `I don't think your shark is ${MAX_SIZE}cm long...`),
   pronouns: z
     .string()
     .trim()
@@ -127,7 +151,7 @@ export const updateProfileSchema = z.object({
   bio: z
     .string()
     .trim()
-    .max(160, 'Bio must be at most 160 characters.')
+    .max(MAX_BIO_LENGTH, `Bio must be at most ${MAX_BIO_LENGTH} characters.`)
     .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
 });
 

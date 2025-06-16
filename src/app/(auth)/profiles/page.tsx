@@ -18,8 +18,8 @@ export default async function ProfilePage() {
     <div className='flex min-h-screen flex-col'>
       <Navbar />
 
-      <main className='flex-1'>
-        <section id='hero' className='bg-muted w-full py-12'>
+      <main className='bg-muted flex-1'>
+        <section id='hero' className='w-full py-12'>
           <div className='container mx-auto flex flex-col items-center justify-evenly gap-10 px-4'>
             <Card className='w-full max-w-md gap-6 text-center'>
               <CardHeader>
