@@ -6,3 +6,71 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum AccountRole {
+  USER
+  MODERATOR
+  ADMIN
+}
+
+enum ProfileStatus {
+  CREATED
+  PENDING
+  REJECTED
+  VERIFIED
+}
+
+enum SizeUnit {
+  CM
+  INCH
+}
+
+model Account {
+  id       String @id @default(cuid(2))
+  username String @unique
+  email    String @unique
+  password String
+  salt     String
+
+  role AccountRole @default(USER)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sessions Session[]
+  profiles Profile[]
+}
+
+model Session {
+  sessionId String  @id
+  accountId String
+  Account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@index([accountId])
+}
+
+model Profile {
+  id        String @id @default(cuid(2))
+  accountId String
+
+  displayName String
+  avatarUrl   String?
+  bannerUrl   String?
+
+  birthday  DateTime
+  size      Float
+  unit      SizeUnit
+  pronouns  String?
+  location  String?
+  interests String[]
+  bio       String?
+
+  status ProfileStatus @default(CREATED)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@index([accountId])
+}
