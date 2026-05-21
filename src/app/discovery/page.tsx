@@ -32,11 +32,15 @@ export default async function DiscoveryPage({ searchParams }: { searchParams: Pr
 
       {/* Profiles */}
       {totalProfiles ? (
-        <div className='flex flex-wrap items-center justify-center gap-4 p-4'>
-          {profiles.map((profile) => (
-            <DiscoveryProfile key={profile.id} profile={profile} />
-          ))}
-        </div>
+        <section className='from-background to-muted w-full bg-linear-to-b py-8 md:py-12'>
+          <div className='container mx-auto px-4 md:px-6'>
+            <div className='flex flex-wrap justify-center gap-6'>
+              {profiles.map((profile) => (
+                <DiscoveryProfile key={profile.id} profile={profile} />
+              ))}
+            </div>
+          </div>
+        </section>
       ) : (
         <DiscoveryNoResults />
       )}
