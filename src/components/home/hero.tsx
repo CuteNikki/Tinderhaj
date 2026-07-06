@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 
 export function Hero() {
   return (
-    <section id='hero' className='flex flex-1 flex-col'>
+    <section id='hero' className='flex min-h-screen'>
       <div className='relative flex min-h-full flex-1 items-center justify-center py-12 md:py-0'>
         {/* Background gradient */}
         <div className='from-background via-background to-primary/10 dark:to-primary/30 absolute inset-0 -z-10 bg-linear-to-br' />
