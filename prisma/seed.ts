@@ -10,15 +10,15 @@ const prisma = new PrismaClient({
 
 const seedData: Prisma.AccountCreateInput[] = [
   {
-    username: 'bubble_trouble',
-    email: 'bubble_trouble@tinderhaj.com',
+    username: 'system',
+    email: 'system@tinderhaj.com',
     password: 'some_secret123',
     salt: '',
     role: AccountRole.USER,
     profiles: {
       create: {
         displayName: 'Bubbles',
-        avatarUrl: 'https://placehold.co/512x512/33FF57/FFFFFF/webp?text=BT',
+        avatarUrl: 'https://placehold.co/512x512/33FF57/FFFFFF/webp?text=B',
         bannerUrl: 'https://placehold.co/1144x572/33FF57/FFFFFF/webp?text=Bubbles',
         birthday: new Date('2021-01-01'),
         size: 100.0,
@@ -32,15 +32,15 @@ const seedData: Prisma.AccountCreateInput[] = [
     },
   },
   {
-    username: 'fin_tastic',
-    email: 'fin_tastic@tinderhaj.com',
+    username: 'system',
+    email: 'system@tinderhaj.com',
     password: 'some_secret123',
     salt: '',
     role: AccountRole.USER,
     profiles: {
       create: {
         displayName: 'Finley',
-        avatarUrl: 'https://placehold.co/512x512/3357FF/FFFFFF/webp?text=FT',
+        avatarUrl: 'https://placehold.co/512x512/3357FF/FFFFFF/webp?text=F',
         bannerUrl: 'https://placehold.co/1144x572/3357FF/FFFFFF/webp?text=Finley',
         birthday: new Date('2023-01-01'),
         size: 55.0,
@@ -54,15 +54,15 @@ const seedData: Prisma.AccountCreateInput[] = [
     },
   },
   {
-    username: 'tooth_fairy',
-    email: 'tooth_fairy@tinderhaj.com',
+    username: 'system',
+    email: 'system@tinderhaj.com',
     password: 'some_secret123',
     salt: '',
     role: AccountRole.USER,
     profiles: {
       create: {
         displayName: 'Sharky',
-        avatarUrl: 'https://placehold.co/512x512/FF5733/FFFFFF/webp?text=TF',
+        avatarUrl: 'https://placehold.co/512x512/FF5733/FFFFFF/webp?text=S',
         bannerUrl: 'https://placehold.co/1144x572/FF5733/FFFFFF/webp?text=Sharky',
         birthday: new Date('2024-01-01'),
         size: 55.0,
@@ -76,15 +76,15 @@ const seedData: Prisma.AccountCreateInput[] = [
     },
   },
   {
-    username: 'ocean_swimmer',
-    email: 'ocean_swimmer@tinderhaj.com',
+    username: 'system',
+    email: 'system@tinderhaj.com',
     password: 'some_secret123',
     salt: '',
     role: AccountRole.USER,
     profiles: {
       create: {
         displayName: 'Blue Blåhaj',
-        avatarUrl: 'https://placehold.co/512x512/5733FF/FFFFFF/webp?text=OS',
+        avatarUrl: 'https://placehold.co/512x512/5733FF/FFFFFF/webp?text=BB',
         bannerUrl: 'https://placehold.co/1144x572/5733FF/FFFFFF/webp?text=Blue+Blåhaj',
         birthday: new Date('2022-01-01'),
         size: 100.0,
@@ -98,15 +98,15 @@ const seedData: Prisma.AccountCreateInput[] = [
     },
   },
   {
-    username: 'coral_reef',
-    email: 'coral_reef@tinderhaj.com',
+    username: 'system',
+    email: 'system@tinderhaj.com',
     password: 'some_secret123',
     salt: '',
     role: AccountRole.USER,
     profiles: {
       create: {
         displayName: 'Coral',
-        avatarUrl: 'https://placehold.co/512x512/FF33A1/FFFFFF/webp?text=CR',
+        avatarUrl: 'https://placehold.co/512x512/FF33A1/FFFFFF/webp?text=C',
         bannerUrl: 'https://placehold.co/1144x572/FF33A1/FFFFFF/webp?text=Coral',
         birthday: new Date('2024-01-01'),
         size: 55.0,
@@ -120,8 +120,8 @@ const seedData: Prisma.AccountCreateInput[] = [
     },
   },
   {
-    username: 'captain_of_cuddles',
-    email: 'captain_of_cuddles@tinderhaj.com',
+    username: 'system',
+    email: 'system@tinderhaj.com',
     password: 'some_secret123',
     salt: '',
     role: AccountRole.USER,
@@ -142,8 +142,8 @@ const seedData: Prisma.AccountCreateInput[] = [
     },
   },
   {
-    username: 'barnacle_buddy',
-    email: 'barnacle_buddy@tinderhaj.com',
+    username: 'system',
+    email: 'system@tinderhaj.com',
     password: 'some_secret123',
     salt: '',
     role: AccountRole.USER,
@@ -164,15 +164,15 @@ const seedData: Prisma.AccountCreateInput[] = [
     },
   },
   {
-    username: 'splash_attack',
-    email: 'splash_attack@tinderhaj.com',
+    username: 'system',
+    email: 'system@tinderhaj.com',
     password: 'some_secret123',
     salt: '',
     role: AccountRole.USER,
     profiles: {
       create: {
         displayName: 'Splash',
-        avatarUrl: 'https://placehold.co/512x512/5733FF/FFFFFF/webp?text=SA',
+        avatarUrl: 'https://placehold.co/512x512/5733FF/FFFFFF/webp?text=S',
         bannerUrl: 'https://placehold.co/1144x572/5733FF/FFFFFF/webp?text=Splash',
         birthday: new Date('2024-01-01'),
         size: 55.0,
@@ -186,15 +186,15 @@ const seedData: Prisma.AccountCreateInput[] = [
     },
   },
   {
-    username: 'misty_waters',
-    email: 'misty_waters@tinderhaj.com',
+    username: 'system',
+    email: 'system@tinderhaj.com',
     password: 'some_secret123',
     salt: '',
     role: AccountRole.USER,
     profiles: {
       create: {
         displayName: 'Misty',
-        avatarUrl: 'https://placehold.co/512x512/FF33A1/FFFFFF/webp?text=MW',
+        avatarUrl: 'https://placehold.co/512x512/FF33A1/FFFFFF/webp?text=M',
         bannerUrl: 'https://placehold.co/1144x572/FF33A1/FFFFFF/webp?text=Misty',
         birthday: new Date('2023-01-01'),
         size: 55.0,
@@ -215,8 +215,10 @@ const seedData: Prisma.AccountCreateInput[] = [
   await prisma.session.deleteMany();
 
   for (const account of seedData) {
-    await prisma.account.create({
-      data: account,
+    await prisma.account.upsert({
+      where: { email: account.email },
+      update: account,
+      create: account,
     });
   }
 })();
