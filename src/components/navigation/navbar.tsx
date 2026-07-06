@@ -1,26 +1,27 @@
 import Link from 'next/link';
 
-import { BadgeCheckIcon, HomeIcon, SearchIcon } from 'lucide-react';
+import { BadgeCheckIcon, CheckIcon, HomeIcon, MenuIcon, SearchIcon, UserRoundIcon } from 'lucide-react';
 
-// import { getCurrentUser } from '@/lib/actions';
+import { getCurrentUser } from '@/lib/actions';
 
-// import { LogOutButton, LogOutDropdownMenuItem } from '@/components/auth/logout-button';
+import { LogOutButton, LogOutDropdownMenuItem } from '@/components/auth/logout-button';
 import { Logo } from '@/components/common/logo';
 import { ThemeButton } from '@/components/theme/switch';
 import { TypographyLarge } from '@/components/typography';
-// import {
-//   DropdownMenu,
-//   DropdownMenuContent,
-//   DropdownMenuItem,
-//   DropdownMenuLabel,
-//   DropdownMenuSeparator,
-//   DropdownMenuTrigger,
-// } from '@/components/ui/dropdown-menu';
-// import { Separator } from '@/components/ui/separator';
-// import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Separator } from '@/components/ui/separator';
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
 export async function Navbar() {
-  // const session = await getCurrentUser({ includeAccount: true, redirectIfNotFound: false });
+  const session = await getCurrentUser({ includeAccount: true, redirectIfNotFound: false });
 
   const links = [
     { name: 'Home', href: '/#top', icon: HomeIcon, showOnBar: true, showInMenu: true },
@@ -30,7 +31,7 @@ export async function Navbar() {
   ];
 
   return (
-    <header className='bg-background/95 supports-[backdrop-filter]:bg-background/60 border-background sticky top-0 z-50 w-full border-b backdrop-blur-lg'>
+    <header className='bg-background/95 supports-backdrop-filter:bg-background/60 border-background sticky top-0 z-50 w-full border-b backdrop-blur-lg'>
       <nav className='container mx-auto flex h-16 items-center gap-4 px-4 md:gap-6 md:px-8'>
         <Link href='#top' className='mr-4 flex items-center gap-2'>
           <Logo className='h-6 w-6' />
@@ -52,8 +53,8 @@ export async function Navbar() {
         </div>
         <div className='ml-auto flex items-center gap-2'>
           <ThemeButton />
-          {/* <div className='hidden md:block'>
-            {session?.Account ? (
+          <div className='hidden md:block'>
+            {session?.account ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant='outline' size='icon'>
@@ -63,13 +64,13 @@ export async function Navbar() {
                 <DropdownMenuContent side='bottom'>
                   <DropdownMenuLabel className='flex items-center gap-2'>
                     <div className='flex flex-col'>
-                      <span>Hello, @{session.Account.username}!</span>
+                      <span>Hello, @{session.account.username}!</span>
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <LogOutDropdownMenuItem />
                   <DropdownMenuSeparator />
-                  {session?.Account?.canVerify && (
+                  {session?.account?.canVerify && (
                     <Link href='/verify#top'>
                       <DropdownMenuItem>
                         <CheckIcon />
@@ -108,20 +109,20 @@ export async function Navbar() {
                 <Link href='/sign-up'>Sign Up</Link>
               </Button>
             )}
-          </div> */}
-          {/* <Sheet>
+          </div>
+          <Sheet>
             <SheetTrigger asChild className='md:hidden'>
               <Button variant='outline' size='icon'>
-                <Menu className='h-5 w-5' />
+                <MenuIcon className='h-5 w-5' />
                 <span className='sr-only'>Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side='right' className='w-[80%] justify-center sm:w-[350px]'>
-              {session?.Account ? (
+            <SheetContent side='right' className='w-[80%] justify-center sm:w-87.5'>
+              {session?.account ? (
                 <SheetHeader className='flex flex-col items-center gap-2'>
                   <SheetTitle className='flex items-center justify-center gap-2'>
                     <div className='flex flex-col'>
-                      <span>Hello, @{session.Account.username}!</span>
+                      <span>Hello, @{session.account.username}!</span>
                     </div>
                   </SheetTitle>
                   <LogOutButton />
@@ -137,7 +138,7 @@ export async function Navbar() {
               )}
               <nav className='flex flex-col items-center gap-4 p-6 text-center'>
                 <Separator />
-                {session?.Account?.canVerify && (
+                {session?.account?.canVerify && (
                   <SheetClose className='flex items-center gap-2' asChild>
                     <Link href='/verify#top' className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
                       <CheckIcon className='h-4 w-4' />
@@ -145,7 +146,7 @@ export async function Navbar() {
                     </Link>
                   </SheetClose>
                 )}
-                {session?.Account && (
+                {session?.account && (
                   <SheetClose className='flex items-center gap-2' asChild>
                     <Link href='/profiles' className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
                       <UserRoundIcon className='h-4 w-4' />
@@ -159,7 +160,7 @@ export async function Navbar() {
                     Discovery
                   </Link>
                 </SheetClose>
-                {session?.Account && <Separator />}
+                {session?.account && <Separator />}
                 {links.map(
                   (link, index) =>
                     link.showInMenu && (
@@ -173,7 +174,7 @@ export async function Navbar() {
                 )}
                 <Separator />
               </nav>
-              {!session?.Account && (
+              {!session?.account && (
                 <div className='flex flex-col items-center gap-2 p-6'>
                   <Button variant='secondary' className='w-full' asChild>
                     <Link href='/sign-in'>Sign In</Link>
@@ -184,7 +185,7 @@ export async function Navbar() {
                 </div>
               )}
             </SheetContent>
-          </Sheet> */}
+          </Sheet>
         </div>
       </nav>
     </header>
