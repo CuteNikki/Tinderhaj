@@ -1,6 +1,5 @@
 'use server';
 
-import { Account } from '@prisma/client';
 import { randomBytes } from 'crypto';
 import { cookies } from 'next/headers';
 import { z } from 'zod';
@@ -8,6 +7,7 @@ import { z } from 'zod';
 import { COOKIE_SESSION_KEY, SESSION_EXPIRATION } from '@/constants/auth';
 import prisma from '@/lib/prisma';
 import { sessionSchema, sessionWithAccountSchema } from '@/lib/schemas';
+import { AccountModel } from '@/generated/models';
 
 export async function getUserSession({ includeAccount = false } = {}) {
   const cookie = await cookies();
@@ -25,7 +25,7 @@ export async function getUserSession({ includeAccount = false } = {}) {
   return success ? user : null;
 }
 
-export async function createUserSession(account: Account) {
+export async function createUserSession(account: AccountModel) {
   const sessionId = randomBytes(512).toString('hex').normalize();
 
   const data = sessionSchema.parse({ sessionId: sessionId, accountId: account.id });

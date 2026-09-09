@@ -1,10 +1,10 @@
 'use server';
 
-import { Account } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
+import { AccountModel } from '@/generated/models';
 import { comparePasswords, generateSalt, hashPassword } from '@/lib/password-hasher';
 import prisma from '@/lib/prisma';
 import { createProfileSchema, signInSchema, signUpSchema, updateProfileSchema } from '@/lib/schemas';
@@ -75,12 +75,12 @@ export async function signUp(unsafeData: z.infer<typeof signUpSchema>) {
   redirect('/');
 }
 
-function _getCurrentUser(options: { includeAccount: true; redirectIfNotFound: true }): Promise<{ sessionId: string; accountId: string; account: Account }>;
+function _getCurrentUser(options: { includeAccount: true; redirectIfNotFound: true }): Promise<{ sessionId: string; accountId: string; account: AccountModel }>;
 function _getCurrentUser(options: {
   includeAccount: true;
   redirectIfNotFound: false;
-}): Promise<{ sessionId: string; accountId: string; account: Account } | null>;
-function _getCurrentUser(options: { includeAccount: true }): Promise<{ sessionId: string; accountId: string; account: Account } | null>;
+}): Promise<{ sessionId: string; accountId: string; account: AccountModel } | null>;
+function _getCurrentUser(options: { includeAccount: true }): Promise<{ sessionId: string; accountId: string; account: AccountModel } | null>;
 function _getCurrentUser(options: { redirectIfNotFound: true }): Promise<{ sessionId: string; accountId: string }>;
 function _getCurrentUser(options: { redirectIfFound: true }): Promise<{ sessionId: string; accountId: string }>;
 function _getCurrentUser(options: { redirectIfNotFound: true }): Promise<{ sessionId: string; accountId: string } | null>;
@@ -197,7 +197,7 @@ export async function deleteProfile({ profileId }: { profileId: string }) {
 export async function verifyProfile({ profileId }: { profileId: string }) {
   const session = await getCurrentUser({ includeAccount: true, redirectIfNotFound: true });
 
-  if (!session?.account?.canVerify) return false;
+  if (session.account.role !== 'MODERATOR' && session.account.role !== 'ADMIN') return false;
 
   await prisma.profile.update({
     where: { id: profileId },
@@ -211,7 +211,7 @@ export async function verifyProfile({ profileId }: { profileId: string }) {
 export async function resetProfile({ profileId }: { profileId: string }) {
   const session = await getCurrentUser({ includeAccount: true, redirectIfNotFound: true });
 
-  if (!session?.account?.canVerify) return false;
+  if (session.account.role !== 'MODERATOR' && session.account.role !== 'ADMIN') return false;
 
   await prisma.profile.update({
     where: { id: profileId },

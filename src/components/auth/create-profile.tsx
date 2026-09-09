@@ -18,7 +18,7 @@ import { Textarea } from '@/components/ui/textarea';
 export function CreateProfile({ disableButton }: { disableButton?: boolean }) {
   const [open, setOpen] = useState(false);
 
-  const form = useForm<z.infer<typeof createProfileSchema>>({
+  const form = useForm<z.input<typeof createProfileSchema>, unknown, z.output<typeof createProfileSchema>>({
     resolver: zodResolver(createProfileSchema),
     defaultValues: {
       bio: '',
@@ -30,7 +30,7 @@ export function CreateProfile({ disableButton }: { disableButton?: boolean }) {
     },
   });
 
-  async function onSubmit(data: z.infer<typeof createProfileSchema>) {
+  async function onSubmit(data: z.output<typeof createProfileSchema>) {
     const error = await createProfile(data);
 
     if (error) {

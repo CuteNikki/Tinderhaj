@@ -70,7 +70,7 @@ export async function Navbar() {
                   <DropdownMenuSeparator />
                   <LogOutDropdownMenuItem />
                   <DropdownMenuSeparator />
-                  {session?.account?.canVerify && (
+                  {(session?.account?.role === 'MODERATOR' || session?.account?.role === 'ADMIN') && (
                     <Link href='/verify#top'>
                       <DropdownMenuItem>
                         <CheckIcon />
@@ -138,7 +138,7 @@ export async function Navbar() {
               )}
               <nav className='flex flex-col items-center gap-4 p-6 text-center'>
                 <Separator />
-                {session?.account?.canVerify && (
+                {(session?.account?.role === 'MODERATOR' || session?.account?.role === 'ADMIN') && (
                   <SheetClose className='flex items-center gap-2' asChild>
                     <Link href='/verify#top' className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
                       <CheckIcon className='h-4 w-4' />
