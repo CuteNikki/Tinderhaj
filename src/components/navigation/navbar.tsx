@@ -31,8 +31,8 @@ export async function Navbar() {
   ];
 
   return (
-    <header className='bg-background/95 supports-backdrop-filter:bg-background/60 border-background sticky top-0 z-50 w-full border-b backdrop-blur-lg'>
-      <nav className='container mx-auto flex h-16 items-center gap-4 px-4 md:gap-6 md:px-8'>
+    <header className='bg-background/60 fixed top-0 z-50 w-svw backdrop-blur-lg'>
+      <nav className='container mx-auto flex h-16 max-w-7xl items-center gap-4 px-5 md:gap-6 lg:px-8'>
         <Link href='#top' className='mr-4 flex items-center gap-2'>
           <Logo className='h-6 w-6' />
           <TypographyLarge className='font-bold'>Tinderhaj</TypographyLarge>
@@ -117,7 +117,7 @@ export async function Navbar() {
                 <span className='sr-only'>Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side='right' className='w-[80%] justify-center sm:w-87.5'>
+            <SheetContent side='right' className='w-4/5 justify-center sm:w-88'>
               {session?.account ? (
                 <SheetHeader className='flex flex-col items-center gap-2'>
                   <SheetTitle className='flex items-center justify-center gap-2'>
