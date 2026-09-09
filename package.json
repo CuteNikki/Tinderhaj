@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "format": "prettier --write .",
-    "postinstall": "prisma generate"
+    "postinstall": "bun --bun --env-file=.env run prisma generate"
   },
   "prettier": {
     "singleQuote": true,
