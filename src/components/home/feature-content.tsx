@@ -2,8 +2,8 @@
 
 import { ArrowRight, Heart, Search, ShieldCheck } from 'lucide-react';
 import { motion } from 'motion/react';
-import Link from 'next/link';
 
+import { DiscoveryLink } from '@/components/discovery/link';
 import { Button } from '@/components/ui/button';
 
 const trustItems = [
@@ -21,7 +21,7 @@ export function FeatureContent() {
       viewport={{ once: true, amount: 0.35 }}
       transition={{ duration: 0.7, ease: [0.2, 0.8, 0.2, 1] }}
     >
-      <div className='flex flex-col items-start justify-between gap-10 md:flex-row md:items-center px-2 sm:px-4'>
+      <div className='flex flex-col items-start justify-between gap-10 px-2 sm:px-4 md:flex-row md:items-center'>
         <div>
           <p className='mb-3 text-xs font-bold tracking-widest uppercase opacity-60'>Ready when you are</p>
           <h2 className='max-w-2xl text-4xl font-black tracking-tight sm:text-5xl'>Your next great connection is probably very soft.</h2>
@@ -40,9 +40,9 @@ export function FeatureContent() {
           </motion.div>
         </div>
         <Button size='lg' className='h-12 rounded-full px-6' asChild>
-          <Link href='/discovery'>
+          <DiscoveryLink>
             Start Discovering <ArrowRight />
-          </Link>
+          </DiscoveryLink>
         </Button>
       </div>
     </motion.div>

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Code2, Mail, MessageCircle } from 'lucide-react';
 
 import { Logo } from '@/components/common/logo';
+import { DiscoveryLink } from '@/components/discovery/link';
 
 const productLinks = [
   { label: 'Features', href: '/#features' },
@@ -33,9 +34,9 @@ export function Footer() {
               <Link href='/#guide' aria-label='Tinderhaj community' className='text-muted-foreground hover:text-foreground transition-colors'>
                 <MessageCircle className='h-4 w-4' />
               </Link>
-              <Link href='/discovery#top' aria-label='Tinderhaj discovery' className='text-muted-foreground hover:text-foreground transition-colors'>
+              <DiscoveryLink aria-label='Tinderhaj discovery' className='text-muted-foreground hover:text-foreground transition-colors'>
                 <Code2 className='h-4 w-4' />
-              </Link>
+              </DiscoveryLink>
               <Link
                 href='mailto:hello@tinderhaj.example'
                 aria-label='Email Tinderhaj'
@@ -86,11 +87,17 @@ function FooterColumn({ title, links }: { title: string; links: { label: string;
     <div>
       <h2 className='text-sm font-bold'>{title}</h2>
       <div className='text-muted-foreground mt-4 flex flex-col items-start gap-2 text-sm'>
-        {links.map((link) => (
-          <Link key={link.label} href={link.href} className='hover:text-foreground transition-colors'>
-            {link.label}
-          </Link>
-        ))}
+        {links.map((link) =>
+          link.href.startsWith('/discovery') ? (
+            <DiscoveryLink key={link.label} className='hover:text-foreground transition-colors'>
+              {link.label}
+            </DiscoveryLink>
+          ) : (
+            <Link key={link.label} href={link.href} className='hover:text-foreground transition-colors'>
+              {link.label}
+            </Link>
+          ),
+        )}
       </div>
     </div>
   );

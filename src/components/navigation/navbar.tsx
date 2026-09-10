@@ -6,6 +6,7 @@ import { getCurrentUser } from '@/lib/actions';
 
 import { LogOutButton, LogOutDropdownMenuItem } from '@/components/auth/logout-button';
 import { Logo } from '@/components/common/logo';
+import { DiscoveryLink } from '@/components/discovery/link';
 import { ThemeButton } from '@/components/theme/switch';
 import { TypographyLarge } from '@/components/typography';
 import { Button } from '@/components/ui/button';
@@ -40,7 +41,15 @@ export async function Navbar() {
         <div className='hidden flex-1 items-center gap-4 text-sm font-medium md:flex md:gap-6'>
           {links.map(
             (link, index) =>
-              link.showOnBar && (
+              link.showOnBar &&
+              (link.href.startsWith('/discovery') ? (
+                <DiscoveryLink
+                  key={`navbar-link-${index}-${link.href}-${link.name}`}
+                  className='text-muted-foreground hover:text-foreground transition-colors duration-150'
+                >
+                  {link.name}
+                </DiscoveryLink>
+              ) : (
                 <Link
                   key={`navbar-link-${index}-${link.href}-${link.name}`}
                   href={link.href}
@@ -48,7 +57,7 @@ export async function Navbar() {
                 >
                   {link.name}
                 </Link>
-              ),
+              )),
           )}
         </div>
         <div className='ml-auto flex items-center gap-2'>
@@ -84,12 +93,12 @@ export async function Navbar() {
                       Profiles
                     </DropdownMenuItem>
                   </Link>
-                  <Link href='/discovery#top'>
+                  <DiscoveryLink>
                     <DropdownMenuItem>
                       <SearchIcon />
                       Discovery
                     </DropdownMenuItem>
-                  </Link>
+                  </DiscoveryLink>
                   <DropdownMenuSeparator />
                   {links.map(
                     (link, index) =>
@@ -155,10 +164,10 @@ export async function Navbar() {
                   </SheetClose>
                 )}
                 <SheetClose className='flex items-center gap-2' asChild>
-                  <Link href='/discovery#top' className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
+                  <DiscoveryLink className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
                     <SearchIcon className='h-4 w-4' />
                     Discovery
-                  </Link>
+                  </DiscoveryLink>
                 </SheetClose>
                 {session?.account && <Separator />}
                 {links.map(

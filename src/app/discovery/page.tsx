@@ -15,16 +15,18 @@ const searchParamsSchema = z.object({
   q: z.preprocess((val) => val, z.string().optional().default('')),
   p: z.preprocess((val) => (isNaN(parseInt(val as string)) ? undefined : parseInt(val as string)), z.number().int().positive().default(1)),
   t: z.preprocess((val) => (isNaN(parseInt(val as string)) ? undefined : parseInt(val as string)), z.number().int().positive().default(6)),
+  s: z.preprocess((val) => (isNaN(parseInt(val as string)) ? undefined : parseInt(val as string)), z.number().int().positive().optional()),
 });
 
 export default async function DiscoveryPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
-  const { q: query, p: page, t: take } = searchParamsSchema.parse(await searchParams);
-  const { profiles, totalProfiles } = await (query?.length ? QUERIES.getProfilesWithQuery(query, page, take) : QUERIES.getProfiles(page, take));
+  const { q: query, p: page, t: take, s: seedParam } = searchParamsSchema.parse(await searchParams);
+  const seed = seedParam ?? Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+  const { profiles, totalProfiles } = await (query?.length ? QUERIES.getProfilesWithQuery(query, page, take, seed) : QUERIES.getProfiles(page, take, seed));
 
   const totalPages = Math.ceil(totalProfiles / take);
 
   if (totalPages !== 0 && page > totalPages) {
-    redirect(`?q=${query}&p=${totalPages < 1 ? 1 : totalPages}&t=${take}`);
+    redirect(`?q=${query}&p=${totalPages < 1 ? 1 : totalPages}&t=${take}&s=${seed}`);
   }
 
   return (
@@ -34,7 +36,7 @@ export default async function DiscoveryPage({ searchParams }: { searchParams: Pr
       <section className='bg-card text-card-foreground w-full flex-1 pb-8'>
         <div className='container mx-auto max-w-7xl px-4 sm:px-5 lg:px-8'>
           <div className='-mt-8 mb-4'>
-            <DiscoveryFilter page={page} query={query} take={take} />
+            <DiscoveryFilter page={page} query={query} seed={seed} take={take} />
           </div>
           {totalProfiles ? (
             <>
@@ -48,7 +50,15 @@ export default async function DiscoveryPage({ searchParams }: { searchParams: Pr
                   </ScrollReveal>
                 ))}
               </div>
-              <DiscoveryPagination displayedUsers={profiles.length} totalUsers={totalProfiles} totalPages={totalPages} take={take} page={page} query={query} />
+              <DiscoveryPagination
+                displayedUsers={profiles.length}
+                totalUsers={totalProfiles}
+                totalPages={totalPages}
+                take={take}
+                page={page}
+                query={query}
+                seed={seed}
+              />
             </>
           ) : (
             <DiscoveryNoResults />

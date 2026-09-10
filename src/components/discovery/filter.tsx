@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-export function DiscoveryFilter({ take, page, query, disabled }: { take?: number; page?: number; query?: string; disabled?: boolean }) {
+export function DiscoveryFilter({ take, page, query, seed, disabled }: { take?: number; page?: number; query?: string; seed?: number; disabled?: boolean }) {
   const router = useRouter();
 
   return (
@@ -44,7 +44,7 @@ export function DiscoveryFilter({ take, page, query, disabled }: { take?: number
           name='take'
           defaultValue={take?.toString()}
           onValueChange={(value) => {
-            const params = new URLSearchParams({ q: query ?? '', p: String(page ?? 1), t: value });
+            const params = new URLSearchParams({ q: query ?? '', p: String(page ?? 1), t: value, ...(seed ? { s: String(seed) } : {}) });
             router.push(`/discovery?${params}`, { scroll: false });
           }}
           disabled={disabled}

@@ -14,6 +14,7 @@ export function DiscoveryPagination({
   take,
   page,
   query,
+  seed,
 }: {
   displayedUsers: number;
   totalPages: number;
@@ -21,13 +22,14 @@ export function DiscoveryPagination({
   take: number;
   page: number;
   query: string;
+  seed: number;
 }) {
   if (!totalUsers) {
     return null;
   }
 
   const router = useRouter();
-  const pageHref = (targetPage: number) => `?q=${query}&p=${targetPage}&t=${take}`;
+  const pageHref = (targetPage: number) => `?q=${query}&p=${targetPage}&t=${take}&s=${seed}`;
   const scrollToProfiles = () => document.getElementById('profiles')?.scrollIntoView();
   const navigateToPage = (targetPage: number) => (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();

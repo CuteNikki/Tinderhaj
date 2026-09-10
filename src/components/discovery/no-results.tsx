@@ -1,7 +1,6 @@
-import Link from 'next/link';
-
 import { SearchXIcon } from 'lucide-react';
 
+import { DiscoveryLink } from '@/components/discovery/link';
 import { Button } from '@/components/ui/button';
 
 export function DiscoveryNoResults() {
@@ -16,7 +15,7 @@ export function DiscoveryNoResults() {
           We couldn&apos;t find a profile for that search. A wider tide usually brings more Blåhaj back into view.
         </p>
         <Button className='mt-7 rounded-full px-6' asChild>
-          <Link href='/discovery#top'>Reset discovery</Link>
+          <DiscoveryLink>Reset discovery</DiscoveryLink>
         </Button>
       </div>
     </div>

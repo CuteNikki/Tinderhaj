@@ -7,6 +7,7 @@ import { Suspense } from 'react';
 
 import { ArrowDown, ArrowRight, Search, Sparkles, Users2Icon, ZapIcon } from 'lucide-react';
 
+import { DiscoveryLink } from '@/components/discovery/link';
 import { AnimatedCount } from '@/components/home/animated-count';
 import { ScrollToElement } from '@/components/home/scroll-to-element';
 import { TypographyH1, TypographyMuted } from '@/components/typography';
@@ -62,10 +63,10 @@ export function Hero() {
               </Link>
             </Button>
             <Button size='lg' className='h-12 rounded-full px-6' asChild variant='outline'>
-              <Link href='/discovery'>
+              <DiscoveryLink>
                 Explore
                 <Search />
-              </Link>
+              </DiscoveryLink>
             </Button>
           </motion.div>
           <motion.div
