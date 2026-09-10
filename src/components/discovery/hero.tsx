@@ -50,16 +50,8 @@ export function DiscoveryHero() {
             transition={{ ...revealTransition, delay: 0.35 }}
             className='relative z-10'
           >
-            <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 5, ease: 'easeInOut', repeat: Infinity }}>
-              <Image
-                unoptimized
-                priority
-                width={320}
-                height={320}
-                src='/blahajThink.webp'
-                alt='A thoughtful Blåhaj browsing profiles'
-                className='h-auto w-24'
-              />
+            <motion.div animate={{ y: [0, 5, 0] }} transition={{ duration: 4.5, ease: 'easeInOut', repeat: Infinity }}>
+              <Image unoptimized priority width={320} height={320} src='/blahajSmall.webp' alt='Two Blåhaj sharing a hug' className='h-auto w-72' />
             </motion.div>
           </motion.div>
         </div>
