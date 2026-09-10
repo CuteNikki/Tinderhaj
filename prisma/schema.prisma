@@ -37,9 +37,9 @@ model Account {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  sessions             Session[]
-  profiles             Profile[]
-  passwordResetTokens  PasswordResetToken[]
+  sessions            Session[]
+  profiles            Profile[]
+  passwordResetTokens PasswordResetToken[]
 }
 
 model PasswordResetToken {
