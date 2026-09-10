@@ -36,7 +36,7 @@ export const QUERIES = {
         take: take,
         where: where,
         include: { account: true },
-        orderBy: { createdAt: 'asc' },
+        orderBy: { verifiedAt: 'desc' },
       }),
       totalProfiles: await prisma.profile.count({ where }),
     };
@@ -49,7 +49,7 @@ export const QUERIES = {
         take: take,
         where: { status: ProfileStatus.VERIFIED },
         include: { account: true },
-        orderBy: { createdAt: 'asc' },
+        orderBy: { verifiedAt: 'desc' },
       }),
       totalProfiles: await prisma.profile.count({ where: { status: ProfileStatus.VERIFIED } }),
     };

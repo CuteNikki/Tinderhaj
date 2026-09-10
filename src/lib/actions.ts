@@ -298,7 +298,7 @@ export async function verifyProfile({ profileId }: { profileId: string }) {
 
   await prisma.profile.update({
     where: { id: profileId },
-    data: { status: 'VERIFIED', rejectedFields: [], rejectionNote: null },
+    data: { status: 'VERIFIED', rejectedFields: [], rejectionNote: null, verifiedAt: new Date() },
   });
 
   revalidatePath('/verify');

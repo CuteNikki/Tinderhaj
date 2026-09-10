@@ -85,6 +85,7 @@ model Profile {
   rejectionNote  String?
 
   submittedAt DateTime?
+  verifiedAt  DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
