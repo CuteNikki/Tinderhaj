@@ -7,9 +7,9 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
 const trustItems = [
-  { label: 'Verified profiles', Icon: ShieldCheck },
-  { label: '100% good intentions', Icon: Heart },
-  { label: 'Zero judgment', Icon: Search },
+  { label: 'Verified Profiles', Icon: ShieldCheck },
+  { label: '100% Good Intentions', Icon: Heart },
+  { label: 'Zero Judgment', Icon: Search },
 ];
 
 export function FeatureContent() {
@@ -21,7 +21,7 @@ export function FeatureContent() {
       viewport={{ once: true, amount: 0.35 }}
       transition={{ duration: 0.7, ease: [0.2, 0.8, 0.2, 1] }}
     >
-      <div className='flex flex-col items-start justify-between gap-10 md:flex-row md:items-center lg:px-8'>
+      <div className='flex flex-col items-start justify-between gap-10 md:flex-row md:items-center px-2 sm:px-4'>
         <div>
           <p className='mb-3 text-xs font-bold tracking-widest uppercase opacity-60'>Ready when you are</p>
           <h2 className='max-w-2xl text-4xl font-black tracking-tight sm:text-5xl'>Your next great connection is probably very soft.</h2>
@@ -41,7 +41,7 @@ export function FeatureContent() {
         </div>
         <Button size='lg' className='h-12 rounded-full px-6' asChild>
           <Link href='/discovery'>
-            Start discovering <ArrowRight />
+            Start Discovering <ArrowRight />
           </Link>
         </Button>
       </div>
