@@ -1,4 +1,3 @@
-import { DiscoveryFilter } from '@/components/discovery/filter';
 import { DiscoveryPaginationSkeleton } from '@/components/discovery/pagination';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -25,6 +24,20 @@ function DiscoveryHeroSkeleton() {
         </div>
       </div>
     </section>
+  );
+}
+
+function DiscoveryFilterSkeleton() {
+  return (
+    <div className='border-foreground/10 bg-background/85 rounded-3xl border p-3 shadow-lg backdrop-blur-md sm:rounded-full'>
+      <div className='xs:flex-row xs:items-center flex flex-col gap-1'>
+        <div className='relative min-w-0 flex-1'>
+          <Skeleton className='xs:rounded-tr-sm xs:rounded-br-sm xs:rounded-bl-2xl h-9 w-full rounded-2xl rounded-br-sm rounded-bl-sm' />
+        </div>
+        <Skeleton className='bg-background xs:h-9 xs:w-24 xs:rounded-tl-sm xs:rounded-tr-sm xs:rounded-br-sm xs:rounded-bl-sm h-9 w-full rounded-sm' />
+        <Skeleton className='xs:rounded-tl-sm xs:rounded-tr-2xl xs:rounded-bl-sm h-9 w-full rounded-2xl rounded-tl-sm rounded-tr-sm sm:w-28' />
+      </div>
+    </div>
   );
 }
 
@@ -88,7 +101,7 @@ export default function DiscoveryLoading() {
       <section className='bg-card text-card-foreground w-full flex-1 pb-8'>
         <div className='container mx-auto max-w-7xl px-4 sm:px-5 lg:px-8'>
           <div className='-mt-8 mb-4'>
-            <DiscoveryFilter disabled page={1} query='' take={6} />
+            <DiscoveryFilterSkeleton />
           </div>
           <div id='profiles' className='flex scroll-m-40 flex-col justify-between gap-2 py-6 md:flex-row md:items-center'>
             <Skeleton className='h-4 w-40' />
