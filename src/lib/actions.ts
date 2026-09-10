@@ -10,7 +10,15 @@ import { AccountModel } from '@/generated/models';
 import { sendPasswordResetEmail } from '@/lib/email';
 import { comparePasswords, generateSalt, hashPassword } from '@/lib/password-hasher';
 import prisma from '@/lib/prisma';
-import { createProfileSchema, forgotPasswordSchema, resetPasswordSchema, signInSchema, signUpSchema, updateProfileSchema } from '@/lib/schemas';
+import {
+  createProfileSchema,
+  forgotPasswordSchema,
+  rejectProfileSchema,
+  resetPasswordSchema,
+  signInSchema,
+  signUpSchema,
+  updateProfileSchema,
+} from '@/lib/schemas';
 import { createUserSession, getUserSession, removeUserFromSession } from '@/lib/session';
 
 export async function signIn(unsafeData: z.infer<typeof signInSchema>) {
@@ -176,7 +184,7 @@ export const getCurrentProfiles = async () => {
   return prisma.profile.findMany({
     where: { accountId: session.accountId },
     include: { account: true },
-    orderBy: { id: 'asc' },
+    orderBy: { createdAt: 'asc' },
   });
 };
 
@@ -211,8 +219,6 @@ export async function createProfile(unsafeData: z.infer<typeof createProfileSche
   await prisma.profile.create({
     data: {
       ...data,
-      avatarUrl: data.avatarUrl ?? 'https://placehold.co/512x512/33FF57/FFFFFF/webp?text=SOON',
-      bannerUrl: data.bannerUrl ?? 'https://placehold.co/1144x572/33FF57/FFFFFF/webp?text=SOON',
       accountId: session.accountId,
       status: 'CREATED',
     },
@@ -236,7 +242,7 @@ export async function updateProfile(unsafeData: z.infer<typeof updateProfileSche
 
   await prisma.profile.update({
     where: { id },
-    data: { ...profileData, status: 'CREATED' },
+    data: { ...profileData, status: 'CREATED', rejectedFields: [], rejectionNote: null },
   });
 
   revalidatePath('/profiles');
@@ -254,13 +260,13 @@ export async function submitProfileForReview({ profileId }: { profileId: string 
     return { message: 'Profile not found or you do not have permission to submit it.' };
   }
 
-  if (profile.status !== 'CREATED' && profile.status !== 'REJECTED') {
-    return { message: 'This profile is already pending review or verified.' };
+  if (profile.status !== 'CREATED') {
+    return { message: 'Only draft profiles can be submitted for review. Edit this profile to move it back to draft.' };
   }
 
   await prisma.profile.update({
     where: { id: profileId },
-    data: { status: 'PENDING' },
+    data: { status: 'PENDING', submittedAt: new Date() },
   });
 
   revalidatePath('/profiles');
@@ -292,23 +298,28 @@ export async function verifyProfile({ profileId }: { profileId: string }) {
 
   await prisma.profile.update({
     where: { id: profileId },
-    data: { status: 'VERIFIED' },
+    data: { status: 'VERIFIED', rejectedFields: [], rejectionNote: null },
   });
 
-  revalidatePath('/dashboard');
+  revalidatePath('/verify');
+  revalidatePath('/profiles');
   return true;
 }
 
-export async function resetProfile({ profileId }: { profileId: string }) {
+export async function rejectProfile(unsafeData: z.infer<typeof rejectProfileSchema>) {
+  const { success, data } = rejectProfileSchema.safeParse(unsafeData);
+
+  if (!success) return { message: 'Unable to reject this profile.' };
+
   const session = await getCurrentUser({ includeAccount: true, redirectIfNotFound: true });
 
-  if (session.account.role !== 'MODERATOR' && session.account.role !== 'ADMIN') return false;
+  if (session.account.role !== 'MODERATOR' && session.account.role !== 'ADMIN') return { message: 'Unable to reject this profile.' };
 
   await prisma.profile.update({
-    where: { id: profileId },
-    data: { status: 'REJECTED', bio: 'reset', interests: [], location: 'reset', pronouns: 'reset', size: 0, birthday: new Date() },
+    where: { id: data.profileId },
+    data: { status: 'REJECTED', rejectedFields: data.rejectedFields, rejectionNote: data.note ?? null },
   });
 
-  revalidatePath('/dashboard');
-  return true;
+  revalidatePath('/verify');
+  revalidatePath('/profiles');
 }

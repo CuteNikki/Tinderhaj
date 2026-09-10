@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { useState, useTransition } from 'react';
 
 import { CakeIcon, MapPinIcon, RulerIcon, SendIcon, Trash2Icon } from 'lucide-react';
@@ -8,10 +7,12 @@ import { toast } from 'sonner';
 
 import { Account, Profile } from '@/generated/client';
 import { deleteProfile, submitProfileForReview } from '@/lib/actions';
+import { profileFieldLabel } from '@/lib/profile-fields';
 import { PROFILE_STATUS_META } from '@/lib/profile-status';
 import { calculateAge, cn } from '@/lib/utils';
 
 import { EditProfile } from '@/components/profiles/edit-profile';
+import { ProfileAvatar, ProfileBanner } from '@/components/profiles/profile-image';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -65,14 +66,7 @@ export function ProfileCard({ profile }: { profile: Profile & { account: Account
   return (
     <Card className='group border-foreground/10 bg-background h-full w-full overflow-hidden pt-0 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl'>
       <div className='relative aspect-5/2 overflow-hidden'>
-        <Image
-          unoptimized
-          src={profile.bannerUrl || 'https://placehold.co/1144x572'}
-          alt={`${profile.displayName}'s banner`}
-          loading='eager'
-          fill
-          className='object-cover'
-        />
+        <ProfileBanner src={profile.bannerUrl} alt={`${profile.displayName}'s banner`} />
         <div className='from-background/70 absolute inset-0 bg-linear-to-t to-transparent' />
         <Tooltip>
           <TooltipTrigger asChild>
@@ -88,15 +82,7 @@ export function ProfileCard({ profile }: { profile: Profile & { account: Account
       <CardContent className='-mt-8 px-4 pb-5 sm:px-6'>
         <div className='relative flex items-start gap-4'>
           <div className='border-background bg-muted h-18 w-18 shrink-0 overflow-hidden rounded-full border-4 shadow-md'>
-            <Image
-              unoptimized
-              src={profile.avatarUrl || 'https://placehold.co/512x512'}
-              alt={`${profile.displayName}'s avatar`}
-              loading='eager'
-              width={72}
-              height={72}
-              className='object-cover'
-            />
+            <ProfileAvatar src={profile.avatarUrl} alt={`${profile.displayName}'s avatar`} />
           </div>
           <div className='min-w-0 flex-1 pt-4'>
             <div className='flex flex-wrap items-center gap-x-2'>
@@ -127,6 +113,26 @@ export function ProfileCard({ profile }: { profile: Profile & { account: Account
           </span>
         </div>
 
+        {profile.status === 'REJECTED' && (profile.rejectedFields.length > 0 || profile.rejectionNote) && (
+          <div className='border-destructive/30 bg-destructive/10 text-destructive mt-4 rounded-md border p-3 text-sm'>
+            {profile.rejectedFields.length > 0 && (
+              <div className='flex flex-wrap items-center gap-1.5'>
+                <span className='font-semibold'>Needs fixing:</span>
+                {profile.rejectedFields.map((field) => (
+                  <Badge key={field} variant='destructive' className='rounded-full text-xs font-semibold'>
+                    {profileFieldLabel(field)}
+                  </Badge>
+                ))}
+              </div>
+            )}
+            {profile.rejectionNote && (
+              <p className={cn('leading-relaxed', profile.rejectedFields.length > 0 && 'mt-2')}>
+                <span className='font-semibold'>Note:</span> {profile.rejectionNote}
+              </p>
+            )}
+          </div>
+        )}
+
         {profile.bio && <p className='text-foreground/80 mt-4 line-clamp-3 text-sm leading-relaxed'>{profile.bio}</p>}
 
         {profile.interests.length > 0 && (
@@ -141,7 +147,7 @@ export function ProfileCard({ profile }: { profile: Profile & { account: Account
 
         <div className='mt-4 flex gap-2'>
           <EditProfile profile={profile} />
-          {(profile.status === 'CREATED' || profile.status === 'REJECTED') && (
+          {profile.status === 'CREATED' && (
             <Button variant='outline' size='sm' className='flex-1' onClick={handleSubmitForReview} disabled={isSubmitting || isDeleting}>
               <SendIcon />
               {isSubmitting ? 'Submitting…' : 'Submit'}

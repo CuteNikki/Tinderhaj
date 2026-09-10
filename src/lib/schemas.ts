@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { PROFILE_FIELDS } from '@/lib/profile-fields';
+
 import {
   MAX_BIO_LENGTH,
   MAX_EMAIL_LENGTH,
@@ -111,6 +113,12 @@ export const sessionWithAccountSchema = sessionSchema.extend({
     createdAt: z.date(),
     updatedAt: z.date(),
   }),
+});
+
+export const rejectProfileSchema = z.object({
+  profileId: z.string(),
+  rejectedFields: z.array(z.enum(PROFILE_FIELDS.map((field) => field.key) as [string, ...string[]])).max(PROFILE_FIELDS.length),
+  note: z.string().trim().max(300, 'Note must be at most 300 characters.').optional(),
 });
 
 export const createProfileSchema = z

@@ -10,6 +10,7 @@ import { z } from 'zod';
 import { MAX_INTEREST_LENGTH } from '@/constants/auth';
 import { Account, Profile } from '@/generated/client';
 import { updateProfile } from '@/lib/actions';
+import { profileFieldLabel } from '@/lib/profile-fields';
 import { updateProfileSchema } from '@/lib/schemas';
 
 import { ImageUploadField } from '@/components/profiles/image-upload-field';
@@ -44,6 +45,10 @@ export function EditProfile({ profile }: { profile: Profile & { account: Account
   });
 
   const unit = form.watch('unit');
+
+  function isFlagged(key: string) {
+    return profile.status === 'REJECTED' && profile.rejectedFields.includes(key);
+  }
 
   function addInterest() {
     const value = newInterest.trim();
@@ -88,6 +93,26 @@ export function EditProfile({ profile }: { profile: Profile & { account: Account
           </div>
         )}
 
+        {profile.status === 'REJECTED' && (profile.rejectedFields.length > 0 || profile.rejectionNote) && (
+          <div className='border-destructive/30 bg-destructive/10 text-destructive rounded-md border p-3 text-sm'>
+            {profile.rejectedFields.length > 0 && (
+              <div className='flex flex-wrap items-center gap-1.5'>
+                <span className='font-semibold'>Needs fixing:</span>
+                {profile.rejectedFields.map((field) => (
+                  <Badge key={field} variant='destructive' className='rounded-full text-xs font-semibold'>
+                    {profileFieldLabel(field)}
+                  </Badge>
+                ))}
+              </div>
+            )}
+            {profile.rejectionNote && (
+              <p className={profile.rejectedFields.length > 0 ? 'mt-2 leading-relaxed' : 'leading-relaxed'}>
+                <span className='font-semibold'>Note:</span> {profile.rejectionNote}
+              </p>
+            )}
+          </div>
+        )}
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-5'>
             <FormField
@@ -97,6 +122,11 @@ export function EditProfile({ profile }: { profile: Profile & { account: Account
                 <FormItem>
                   <FormLabel>
                     Display Name <span className='text-destructive'>*</span>
+                    {isFlagged('displayName') && (
+                      <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
+                        Needs update
+                      </Badge>
+                    )}
                   </FormLabel>
                   <FormControl>
                     <Input type='text' {...field} required />
@@ -110,7 +140,14 @@ export function EditProfile({ profile }: { profile: Profile & { account: Account
               name='avatarUrl'
               render={({ field }) => (
                 <FormItem>
-                  <ImageUploadField label='Avatar' endpoint='profileAvatar' value={field.value ?? null} onChange={field.onChange} shape='circle' />
+                  <ImageUploadField
+                    label='Avatar'
+                    flagged={isFlagged('avatarUrl')}
+                    endpoint='profileAvatar'
+                    value={field.value ?? null}
+                    onChange={field.onChange}
+                    shape='circle'
+                  />
                   <FormMessage />
                 </FormItem>
               )}
@@ -120,7 +157,14 @@ export function EditProfile({ profile }: { profile: Profile & { account: Account
               name='bannerUrl'
               render={({ field }) => (
                 <FormItem>
-                  <ImageUploadField label='Banner' endpoint='profileBanner' value={field.value ?? null} onChange={field.onChange} shape='banner' />
+                  <ImageUploadField
+                    label='Banner'
+                    flagged={isFlagged('bannerUrl')}
+                    endpoint='profileBanner'
+                    value={field.value ?? null}
+                    onChange={field.onChange}
+                    shape='banner'
+                  />
                   <FormMessage />
                 </FormItem>
               )}
@@ -130,7 +174,14 @@ export function EditProfile({ profile }: { profile: Profile & { account: Account
               name='bio'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Bio</FormLabel>
+                  <FormLabel>
+                    Bio
+                    {isFlagged('bio') && (
+                      <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
+                        Needs update
+                      </Badge>
+                    )}
+                  </FormLabel>
                   <FormControl>
                     <Textarea {...field} />
                   </FormControl>
@@ -143,7 +194,14 @@ export function EditProfile({ profile }: { profile: Profile & { account: Account
               name='birthday'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Birthday</FormLabel>
+                  <FormLabel>
+                    Birthday
+                    {isFlagged('birthday') && (
+                      <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
+                        Needs update
+                      </Badge>
+                    )}
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type='date'
@@ -163,6 +221,11 @@ export function EditProfile({ profile }: { profile: Profile & { account: Account
                 <FormItem>
                   <FormLabel>
                     Size (in {(unit ?? 'CM').toLowerCase()}) <span className='text-destructive'>*</span>
+                    {isFlagged('size') && (
+                      <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
+                        Needs update
+                      </Badge>
+                    )}
                   </FormLabel>
                   <div className='flex items-center gap-2'>
                     <FormControl>
@@ -193,7 +256,14 @@ export function EditProfile({ profile }: { profile: Profile & { account: Account
               name='pronouns'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Pronouns</FormLabel>
+                  <FormLabel>
+                    Pronouns
+                    {isFlagged('pronouns') && (
+                      <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
+                        Needs update
+                      </Badge>
+                    )}
+                  </FormLabel>
                   <FormControl>
                     <Input type='text' {...field} />
                   </FormControl>
@@ -206,7 +276,14 @@ export function EditProfile({ profile }: { profile: Profile & { account: Account
               name='location'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Location</FormLabel>
+                  <FormLabel>
+                    Location
+                    {isFlagged('location') && (
+                      <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
+                        Needs update
+                      </Badge>
+                    )}
+                  </FormLabel>
                   <FormControl>
                     <Input type='text' {...field} />
                   </FormControl>
@@ -216,7 +293,14 @@ export function EditProfile({ profile }: { profile: Profile & { account: Account
             />
 
             <FormItem>
-              <FormLabel>Interests</FormLabel>
+              <FormLabel>
+                Interests
+                {isFlagged('interests') && (
+                  <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
+                    Needs update
+                  </Badge>
+                )}
+              </FormLabel>
               {interests.length > 0 && (
                 <div className='flex flex-wrap gap-1.5'>
                   {interests.map((interest) => (

@@ -20,19 +20,31 @@ export const QUERIES = {
       status: ProfileStatus.VERIFIED,
     };
     return {
-      profiles: await prisma.profile.findMany({ skip: (page - 1) * take, take: take, where: where, include: { account: true } }),
+      profiles: await prisma.profile.findMany({
+        skip: (page - 1) * take,
+        take: take,
+        where: where,
+        include: { account: true },
+        orderBy: { createdAt: 'asc' },
+      }),
       totalProfiles: await prisma.profile.count({ where }),
     };
   },
 
   getProfiles: async (page: number, take: number) => {
     return {
-      profiles: await prisma.profile.findMany({ skip: (page - 1) * take, take: take, where: { status: ProfileStatus.VERIFIED }, include: { account: true } }),
+      profiles: await prisma.profile.findMany({
+        skip: (page - 1) * take,
+        take: take,
+        where: { status: ProfileStatus.VERIFIED },
+        include: { account: true },
+        orderBy: { createdAt: 'asc' },
+      }),
       totalProfiles: await prisma.profile.count({ where: { status: ProfileStatus.VERIFIED } }),
     };
   },
 
   getPendingProfiles: async () => {
-    return prisma.profile.findMany({ where: { status: ProfileStatus.PENDING }, include: { account: true } });
+    return prisma.profile.findMany({ where: { status: ProfileStatus.PENDING }, include: { account: true }, orderBy: { submittedAt: 'asc' } });
   },
 };

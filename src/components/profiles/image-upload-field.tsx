@@ -6,8 +6,11 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 import type { OurFileRouter } from '@/app/api/uploadthing/core';
+import { MAX_AVATAR_SIZE_MB, MAX_BANNER_SIZE_MB } from '@/constants/uploads';
 import { UploadButton } from '@/lib/uploadthing';
 import { cn } from '@/lib/utils';
+
+import { Badge } from '@/components/ui/badge';
 
 export function ImageUploadField({
   label,
@@ -15,18 +18,27 @@ export function ImageUploadField({
   value,
   onChange,
   shape,
+  flagged,
 }: {
   label: string;
   endpoint: keyof OurFileRouter;
   value: string | null;
   onChange: (url: string | null) => void;
   shape: 'circle' | 'banner';
+  flagged?: boolean;
 }) {
   const [progress, setProgress] = useState<number | null>(null);
 
   return (
     <div className='space-y-2'>
-      <p className='text-sm leading-none font-medium'>{label}</p>
+      <p className='flex items-center gap-1.5 text-sm leading-none font-medium'>
+        {label}
+        {flagged && (
+          <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
+            Needs update
+          </Badge>
+        )}
+      </p>
       <div className={cn('group relative', shape === 'circle' ? 'h-20 w-20' : 'aspect-5/2 w-full')}>
         <div className={cn('bg-muted border-input absolute inset-0 overflow-hidden border', shape === 'circle' ? 'rounded-full' : 'rounded-md')}>
           {value && <Image unoptimized src={value} alt={label} fill className='object-cover' />}
@@ -61,7 +73,7 @@ export function ImageUploadField({
             onUploadProgress={(p) => setProgress(p)}
             onClientUploadComplete={(res) => {
               setProgress(null);
-              const url = res[0]?.url;
+              const url = res[0]?.ufsUrl;
               if (url) onChange(url);
             }}
             onUploadError={(error) => {
@@ -82,6 +94,11 @@ export function ImageUploadField({
           </button>
         )}
       </div>
+      <p className='text-muted-foreground text-xs'>
+        {shape === 'circle'
+          ? `Recommended: square image, 512\u00d7512px. Max ${MAX_AVATAR_SIZE_MB}MB.`
+          : `Recommended: 5:2 aspect ratio, 1200\u00d7480px. Max ${MAX_BANNER_SIZE_MB}MB.`}
+      </p>
     </div>
   );
 }

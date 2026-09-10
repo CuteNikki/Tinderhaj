@@ -1,6 +1,7 @@
 import { createUploadthing, type FileRouter } from 'uploadthing/next';
 import { UploadThingError } from 'uploadthing/server';
 
+import { MAX_AVATAR_SIZE_MB, MAX_BANNER_SIZE_MB } from '@/constants/uploads';
 import { getUserSession } from '@/lib/session';
 
 const f = createUploadthing();
@@ -14,11 +15,11 @@ async function requireSession() {
 }
 
 export const ourFileRouter = {
-  profileAvatar: f({ image: { maxFileSize: '4MB', maxFileCount: 1 } })
+  profileAvatar: f({ image: { maxFileSize: `${MAX_AVATAR_SIZE_MB}MB`, maxFileCount: 1 } })
     .middleware(async () => ({ accountId: (await requireSession()).accountId }))
     .onUploadComplete(async ({ file }) => ({ url: file.ufsUrl })),
 
-  profileBanner: f({ image: { maxFileSize: '8MB', maxFileCount: 1 } })
+  profileBanner: f({ image: { maxFileSize: `${MAX_BANNER_SIZE_MB}MB`, maxFileCount: 1 } })
     .middleware(async () => ({ accountId: (await requireSession()).accountId }))
     .onUploadComplete(async ({ file }) => ({ url: file.ufsUrl })),
 } satisfies FileRouter;

@@ -81,6 +81,11 @@ model Profile {
 
   status ProfileStatus @default(CREATED)
 
+  rejectedFields String[] @default([])
+  rejectionNote  String?
+
+  submittedAt DateTime?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

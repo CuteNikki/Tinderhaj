@@ -53,7 +53,7 @@ export function DiscoveryPagination({
   return (
     <div className='flex flex-col items-center gap-4 px-5 pt-8 text-center text-balance'>
       <p className='text-muted-foreground text-sm'>
-        Showing {displayedUsers} of {totalUsers} users (page {page} of {totalPages})
+        Showing {displayedUsers} of {totalUsers} profiles (page {page} of {totalPages})
       </p>
       <Pagination>
         <PaginationContent>
@@ -105,7 +105,7 @@ export function DiscoveryPagination({
 export function DiscoveryPaginationSkeleton() {
   return (
     <div className='bg-muted flex flex-col items-center gap-4 p-4 text-center text-balance'>
-      <p className='flex items-center gap-2 text-sm'>Showing ? of ? users (page ? of ?)</p>
+      <p className='flex items-center gap-2 text-sm'>Showing ? of ? profiles (page ? of ?)</p>
       <Pagination>
         <PaginationContent>
           <PaginationItem>
