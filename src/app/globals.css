@@ -191,3 +191,15 @@
   background: transparent !important;
   color: var(--foreground) !important;
 }
+
+/*
+ * Thin, theme-aware scrollbars instead of the default chunky browser ones.
+ * Note: modern Chrome/Edge (121+) and Firefox both use the standard `scrollbar-color`
+ * property once it's set, which has no hover-state control in the spec — the browser
+ * applies its own native hover shading that CSS cannot override. `::-webkit-scrollbar-thumb`
+ * rules are dead code in those browsers once `scrollbar-color` is present, so we don't add them.
+ */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(128, 128, 128, 0.5) transparent;
+}

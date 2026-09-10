@@ -1,6 +1,10 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 
+import { NextSSRPlugin } from '@uploadthing/react/next-ssr-plugin';
+import { extractRouterConfig } from 'uploadthing/server';
+
+import { ourFileRouter } from '@/app/api/uploadthing/core';
 import { Footer } from '@/components/navigation/footer';
 import { Navbar } from '@/components/navigation/navbar';
 import { ThemeProvider } from '@/components/theme/provider';
@@ -36,6 +40,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className='bg-background text-foreground flex min-h-full flex-col'>
+        <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
         <div id='top' />
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
           <Navbar />

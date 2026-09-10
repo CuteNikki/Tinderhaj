@@ -71,7 +71,7 @@ model Profile {
   avatarUrl   String?
   bannerUrl   String?
 
-  birthday  DateTime
+  birthday  DateTime?
   size      Float
   unit      SizeUnit
   pronouns  String?

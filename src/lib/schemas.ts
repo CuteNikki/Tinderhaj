@@ -5,15 +5,46 @@ import {
   MAX_EMAIL_LENGTH,
   MAX_INTEREST_LENGTH,
   MAX_PASSWORD_LENGTH,
-  MAX_SIZE,
+  MAX_SIZE_CM,
+  MAX_SIZE_INCH,
   MAX_USERNAME_LENGTH,
   MIN_DISPLAY_NAME_LENGTH,
   MIN_EMAIL_LENGTH,
   MIN_PASSWORD_LENGTH,
   MIN_PRONOUNS_LENGTH,
-  MIN_SIZE,
+  MIN_SIZE_CM,
+  MIN_SIZE_INCH,
   MIN_USERNAME_LENGTH,
 } from '@/constants/auth';
+
+const SIZE_BOUNDS = {
+  CM: { min: MIN_SIZE_CM, max: MAX_SIZE_CM },
+  INCH: { min: MIN_SIZE_INCH, max: MAX_SIZE_INCH },
+} as const;
+
+function refineSize(data: { size: number; unit: 'CM' | 'INCH' }, ctx: z.RefinementCtx) {
+  const { min, max } = SIZE_BOUNDS[data.unit];
+
+  if (data.size < min || data.size > max) {
+    ctx.addIssue({ code: 'custom', path: ['size'], message: `Size must be between ${min} and ${max}${data.unit.toLowerCase()}.` });
+  }
+}
+
+const birthdaySchema = z
+  .date()
+  .nullable()
+  .refine(
+    (date) => {
+      if (!date) return true;
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const input = new Date(date);
+      input.setHours(0, 0, 0, 0);
+      return input <= today;
+    },
+    { message: 'Birthday must be in the past or today.' },
+  );
 
 export const signInSchema = z.object({
   email: z
@@ -82,98 +113,94 @@ export const sessionWithAccountSchema = sessionSchema.extend({
   }),
 });
 
-export const createProfileSchema = z.object({
-  displayName: z
-    .string()
-    .trim()
-    .nonempty('Display Name is required!')
-    .min(MIN_DISPLAY_NAME_LENGTH, `Display Name must be at least ${MIN_DISPLAY_NAME_LENGTH} characters.`)
-    .max(MAX_USERNAME_LENGTH, `Display Name must be at most ${MAX_USERNAME_LENGTH} characters.`)
-    .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
-  birthday: z.date().refine(
-    (date) => {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const input = new Date(date);
-      input.setHours(0, 0, 0, 0);
-      return input <= today;
-    },
-    { message: 'Birthday must be in the past or today.' },
-  ),
-  size: z.number().min(MIN_SIZE, 'Size must be at least 1cm.').max(MAX_SIZE, `I don't think your shark is ${MAX_SIZE} long...`),
-  unit: z.enum(['CM', 'INCH']).default('CM'),
-  pronouns: z
-    .string()
-    .trim()
-    .nonempty('Pronouns are required!')
-    .min(MIN_PRONOUNS_LENGTH, `Pronouns must be at least ${MIN_PRONOUNS_LENGTH} characters.`)
-    .max(MAX_USERNAME_LENGTH, `Pronouns must be at most ${MAX_USERNAME_LENGTH} characters.`)
-    .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
-  location: z
-    .string()
-    .trim()
-    .nonempty('Location is required!')
-    .min(MIN_PRONOUNS_LENGTH, `Location must be at least ${MIN_PRONOUNS_LENGTH} characters.`)
-    .max(MAX_USERNAME_LENGTH, `Location must be at most ${MAX_USERNAME_LENGTH} characters.`)
-    .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
-  bio: z
-    .string()
-    .trim()
-    .nonempty('Bio is required!')
-    .max(MAX_BIO_LENGTH, `Bio must be at most ${MAX_BIO_LENGTH} characters.`)
-    .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
-});
+export const createProfileSchema = z
+  .object({
+    displayName: z
+      .string()
+      .trim()
+      .nonempty('Display Name is required!')
+      .min(MIN_DISPLAY_NAME_LENGTH, `Display Name must be at least ${MIN_DISPLAY_NAME_LENGTH} characters.`)
+      .max(MAX_USERNAME_LENGTH, `Display Name must be at most ${MAX_USERNAME_LENGTH} characters.`)
+      .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
+    avatarUrl: z.url().max(2000, 'Avatar URL must be at most 2000 characters.').nullable().default(null),
+    bannerUrl: z.url().max(2000, 'Banner URL must be at most 2000 characters.').nullable().default(null),
+    birthday: birthdaySchema,
+    size: z.number(),
+    unit: z.enum(['CM', 'INCH']).default('CM'),
+    pronouns: z
+      .string()
+      .trim()
+      .min(MIN_PRONOUNS_LENGTH, `Pronouns must be at least ${MIN_PRONOUNS_LENGTH} characters.`)
+      .max(MAX_USERNAME_LENGTH, `Pronouns must be at most ${MAX_USERNAME_LENGTH} characters.`)
+      .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
+    location: z
+      .string()
+      .trim()
+      .min(MIN_PRONOUNS_LENGTH, `Location must be at least ${MIN_PRONOUNS_LENGTH} characters.`)
+      .max(MAX_USERNAME_LENGTH, `Location must be at most ${MAX_USERNAME_LENGTH} characters.`)
+      .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
+    bio: z
+      .string()
+      .trim()
+      .max(MAX_BIO_LENGTH, `Bio must be at most ${MAX_BIO_LENGTH} characters.`)
+      .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
+    interests: z
+      .array(
+        z
+          .string()
+          .trim()
+          .nonempty('Interest cannot be empty!')
+          .max(MAX_INTEREST_LENGTH, `Interest must be at most ${MAX_INTEREST_LENGTH} characters.`)
+          .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
+      )
+      .max(3, 'You can only have up to 3 interests.'),
+  })
+  .superRefine(refineSize);
 
-export const updateProfileSchema = z.object({
-  id: z.string(),
-  isVerified: z.boolean().optional(),
-  displayName: z
-    .string()
-    .trim()
-    .nonempty('Display Name is required!')
-    .min(MIN_DISPLAY_NAME_LENGTH, `Display Name must be at least ${MIN_DISPLAY_NAME_LENGTH} characters.`)
-    .max(MAX_USERNAME_LENGTH, `Display Name must be at most ${MAX_USERNAME_LENGTH} characters.`)
-    .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
-  avatarUrl: z.string().trim().url().max(2000, 'Avatar URL must be at most 2000 characters.'),
-  bannerUrl: z.string().trim().url().max(2000, 'Banner URL must be at most 2000 characters.'),
-  birthday: z.date().refine(
-    (date) => {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const input = new Date(date);
-      input.setHours(0, 0, 0, 0);
-      return input <= today;
-    },
-    { message: 'Birthday must be in the past or today.' },
-  ),
-  size: z.number().min(MIN_SIZE, 'Size must be at least 1cm.').max(MAX_SIZE, `I don't think your shark is ${MAX_SIZE}cm long...`),
-  pronouns: z
-    .string()
-    .trim()
-    .min(MIN_PRONOUNS_LENGTH, `Pronouns must be at least ${MIN_PRONOUNS_LENGTH} characters.`)
-    .max(MAX_USERNAME_LENGTH, `Pronouns must be at most ${MAX_USERNAME_LENGTH} characters.`)
-    .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
-  location: z
-    .string()
-    .trim()
-    .min(MIN_PRONOUNS_LENGTH, `Location must be at least ${MIN_PRONOUNS_LENGTH} characters.`)
-    .max(MAX_USERNAME_LENGTH, `Location must be at most ${MAX_USERNAME_LENGTH} characters.`)
-    .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
-  interests: z
-    .array(
-      z
-        .string()
-        .trim()
-        .max(MAX_INTEREST_LENGTH, `Interest must be at most ${MAX_INTEREST_LENGTH} characters.`)
-        .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
-    )
-    .max(3, 'You can only have up to 3 interests.'),
-  bio: z
-    .string()
-    .trim()
-    .max(MAX_BIO_LENGTH, `Bio must be at most ${MAX_BIO_LENGTH} characters.`)
-    .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
-});
+export const updateProfileSchema = z
+  .object({
+    id: z.string(),
+    isVerified: z.boolean().optional(),
+    displayName: z
+      .string()
+      .trim()
+      .nonempty('Display Name is required!')
+      .min(MIN_DISPLAY_NAME_LENGTH, `Display Name must be at least ${MIN_DISPLAY_NAME_LENGTH} characters.`)
+      .max(MAX_USERNAME_LENGTH, `Display Name must be at most ${MAX_USERNAME_LENGTH} characters.`)
+      .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
+    avatarUrl: z.url().max(2000, 'Avatar URL must be at most 2000 characters.').nullable(),
+    bannerUrl: z.url().max(2000, 'Banner URL must be at most 2000 characters.').nullable(),
+    birthday: birthdaySchema,
+    size: z.number(),
+    unit: z.enum(['CM', 'INCH']).default('CM'),
+    pronouns: z
+      .string()
+      .trim()
+      .min(MIN_PRONOUNS_LENGTH, `Pronouns must be at least ${MIN_PRONOUNS_LENGTH} characters.`)
+      .max(MAX_USERNAME_LENGTH, `Pronouns must be at most ${MAX_USERNAME_LENGTH} characters.`)
+      .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
+    location: z
+      .string()
+      .trim()
+      .min(MIN_PRONOUNS_LENGTH, `Location must be at least ${MIN_PRONOUNS_LENGTH} characters.`)
+      .max(MAX_USERNAME_LENGTH, `Location must be at most ${MAX_USERNAME_LENGTH} characters.`)
+      .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
+    interests: z
+      .array(
+        z
+          .string()
+          .trim()
+          .max(MAX_INTEREST_LENGTH, `Interest must be at most ${MAX_INTEREST_LENGTH} characters.`)
+          .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
+      )
+      .max(3, 'You can only have up to 3 interests.'),
+    bio: z
+      .string()
+      .trim()
+      .max(MAX_BIO_LENGTH, `Bio must be at most ${MAX_BIO_LENGTH} characters.`)
+      .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
+  })
+  .superRefine(refineSize);
 
 /**
  * Transform will remove any extra new lines and spaces from the input.

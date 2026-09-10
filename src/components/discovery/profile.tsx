@@ -48,10 +48,12 @@ export function DiscoveryProfile({ profile }: { profile: Profile & { account: Ac
           </div>
         </div>
         <div className='text-muted-foreground mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm'>
-          <span className='flex items-center gap-1.5'>
-            <CakeIcon className='text-primary h-3.5 w-3.5' />
-            {calculateAge(profile.birthday)} years old
-          </span>
+          {profile.birthday && (
+            <span className='flex items-center gap-1.5'>
+              <CakeIcon className='text-primary h-3.5 w-3.5' />
+              {calculateAge(profile.birthday)} years old
+            </span>
+          )}
           <span className='flex items-center gap-1.5'>
             <MapPinIcon className='text-primary h-3.5 w-3.5' />
             {profile.location}

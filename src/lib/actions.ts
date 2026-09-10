@@ -30,7 +30,7 @@ export async function signIn(unsafeData: z.infer<typeof signInSchema>) {
 
   await createUserSession(account);
 
-  redirect('/');
+  redirect('/profiles');
 }
 
 export async function signUp(unsafeData: z.infer<typeof signUpSchema>) {
@@ -75,7 +75,7 @@ export async function signUp(unsafeData: z.infer<typeof signUpSchema>) {
     return { message: 'Unable to create account!' };
   }
 
-  redirect('/');
+  redirect('/profiles');
 }
 
 const GENERIC_RESET_MESSAGE = 'If an account with that email exists, a password reset link has been sent.';
@@ -211,10 +211,10 @@ export async function createProfile(unsafeData: z.infer<typeof createProfileSche
   await prisma.profile.create({
     data: {
       ...data,
-      avatarUrl: 'https://placehold.co/512x512/33FF57/FFFFFF/webp?text=SOON',
-      bannerUrl: 'https://placehold.co/1144x572/33FF57/FFFFFF/webp?text=SOON',
+      avatarUrl: data.avatarUrl ?? 'https://placehold.co/512x512/33FF57/FFFFFF/webp?text=SOON',
+      bannerUrl: data.bannerUrl ?? 'https://placehold.co/1144x572/33FF57/FFFFFF/webp?text=SOON',
       accountId: session.accountId,
-      status: 'PENDING',
+      status: 'CREATED',
     },
   });
 
@@ -232,9 +232,35 @@ export async function updateProfile(unsafeData: z.infer<typeof updateProfileSche
     return { message: 'Profile not found or you do not have permission to update it.' };
   }
 
+  const { id, isVerified: _isVerified, ...profileData } = data;
+
   await prisma.profile.update({
-    where: { id: data.id },
-    data: { ...data, status: 'PENDING' },
+    where: { id },
+    data: { ...profileData, status: 'CREATED' },
+  });
+
+  revalidatePath('/profiles');
+}
+
+export async function submitProfileForReview({ profileId }: { profileId: string }) {
+  const session = await getCurrentUser({ includeAccount: true, redirectIfNotFound: true });
+
+  const profile = await prisma.profile.findUnique({
+    where: { id: profileId },
+    include: { account: true },
+  });
+
+  if (!profile || profile.account?.id !== session.accountId) {
+    return { message: 'Profile not found or you do not have permission to submit it.' };
+  }
+
+  if (profile.status !== 'CREATED' && profile.status !== 'REJECTED') {
+    return { message: 'This profile is already pending review or verified.' };
+  }
+
+  await prisma.profile.update({
+    where: { id: profileId },
+    data: { status: 'PENDING' },
   });
 
   revalidatePath('/profiles');
