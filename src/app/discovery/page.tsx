@@ -21,12 +21,19 @@ const searchParamsSchema = z.object({
 export default async function DiscoveryPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const { q: query, p: page, t: take, s: seedParam } = searchParamsSchema.parse(await searchParams);
   const seed = seedParam ?? Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+
+  if (!seedParam) {
+    const params = new URLSearchParams({ q: query, p: String(page), t: String(take), s: String(seed) });
+    redirect(`/discovery?${params}`);
+  }
+
   const { profiles, totalProfiles } = await (query?.length ? QUERIES.getProfilesWithQuery(query, page, take, seed) : QUERIES.getProfiles(page, take, seed));
 
   const totalPages = Math.ceil(totalProfiles / take);
 
   if (totalPages !== 0 && page > totalPages) {
-    redirect(`?q=${query}&p=${totalPages < 1 ? 1 : totalPages}&t=${take}&s=${seed}`);
+    const params = new URLSearchParams({ q: query, p: String(totalPages < 1 ? 1 : totalPages), t: String(take), s: String(seed) });
+    redirect(`/discovery?${params}`);
   }
 
   return (

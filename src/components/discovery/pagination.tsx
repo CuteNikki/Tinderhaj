@@ -29,7 +29,10 @@ export function DiscoveryPagination({
   }
 
   const router = useRouter();
-  const pageHref = (targetPage: number) => `?q=${query}&p=${targetPage}&t=${take}&s=${seed}`;
+  const pageHref = (targetPage: number) => {
+    const params = new URLSearchParams({ q: query, p: String(targetPage), t: String(take), s: String(seed) });
+    return `/discovery?${params}`;
+  };
   const scrollToProfiles = () => document.getElementById('profiles')?.scrollIntoView();
   const navigateToPage = (targetPage: number) => (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();

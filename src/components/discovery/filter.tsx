@@ -9,6 +9,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
+function getDiscoverySeed() {
+  return crypto.getRandomValues(new Uint32Array(1))[0];
+}
+
 export function DiscoveryFilter({ take, page, query, seed, disabled }: { take?: number; page?: number; query?: string; seed?: number; disabled?: boolean }) {
   const router = useRouter();
 
@@ -22,7 +26,9 @@ export function DiscoveryFilter({ take, page, query, seed, disabled }: { take?: 
       onSubmit={(e) => {
         e.preventDefault();
         const formData = new FormData(e.target as HTMLFormElement);
-        const params = new URLSearchParams({ q: String(formData.get('q') ?? ''), p: '1', t: String(take ?? 6) });
+        const submittedQuery = String(formData.get('q') ?? '');
+        const searchSeed = submittedQuery.trim() === (query ?? '').trim() && seed ? seed : getDiscoverySeed();
+        const params = new URLSearchParams({ q: submittedQuery, p: '1', t: String(take ?? 6), s: String(searchSeed) });
         router.push(`/discovery?${params}#profiles`, { scroll: false });
         document.getElementById('profiles')?.scrollIntoView();
       }}
@@ -41,7 +47,6 @@ export function DiscoveryFilter({ take, page, query, seed, disabled }: { take?: 
           />
         </label>
         <Select
-          name='take'
           defaultValue={take?.toString()}
           onValueChange={(value) => {
             const params = new URLSearchParams({ q: query ?? '', p: String(page ?? 1), t: value, ...(seed ? { s: String(seed) } : {}) });
