@@ -51,7 +51,7 @@ export function DiscoveryHero() {
             className='relative z-10'
           >
             <motion.div animate={{ y: [0, 5, 0] }} transition={{ duration: 4.5, ease: 'easeInOut', repeat: Infinity }}>
-              <Image unoptimized priority width={320} height={320} src='/blahajSmall.webp' alt='Two Blåhaj sharing a hug' className='h-auto w-72' />
+              <Image unoptimized priority width={320} height={320} src='/blahajSmall.png' alt='Two Blåhaj sharing a hug' className='h-auto w-72' />
             </motion.div>
           </motion.div>
         </div>
