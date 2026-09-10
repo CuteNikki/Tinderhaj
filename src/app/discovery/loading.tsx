@@ -1,8 +1,32 @@
 import { DiscoveryFilter } from '@/components/discovery/filter';
-import { DiscoveryHero } from '@/components/discovery/hero';
 import { DiscoveryPaginationSkeleton } from '@/components/discovery/pagination';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+
+function DiscoveryHeroSkeleton() {
+  return (
+    <section className='relative isolate overflow-hidden pt-28 pb-12 md:pt-32 md:pb-16'>
+      <div className='pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[6rem_6rem] opacity-20 dark:opacity-25' />
+      <div className='bg-primary/10 pointer-events-none absolute -top-16 -right-16 z-0 size-64 rounded-full blur-3xl lg:-top-8 lg:-right-8 lg:size-96' />
+      <div className='bg-secondary/60 pointer-events-none absolute -bottom-24 -left-16 z-0 size-72 rounded-full blur-3xl lg:-bottom-12 lg:-left-8 lg:size-96' />
+      <div className='relative z-10 container mx-auto grid max-w-7xl items-center gap-10 px-6 lg:grid-cols-[minmax(0,1fr)_22rem] lg:px-8'>
+        <div className='max-w-3xl'>
+          <Skeleton className='h-12 w-40 rounded-full' />
+          <Skeleton className='mt-6 h-16 w-full max-w-2xl sm:h-24' />
+          <div className='mt-6 space-y-2'>
+            <Skeleton className='h-5 w-full max-w-xl' />
+            <Skeleton className='h-5 w-4/5 max-w-lg' />
+          </div>
+        </div>
+        <div className='relative mx-auto hidden aspect-square w-full max-w-xs items-center justify-center lg:flex'>
+          <div className='border-primary/20 absolute inset-8 rounded-full border' />
+          <div className='border-primary/15 absolute inset-0 rounded-full border border-dashed' />
+          <Skeleton className='relative z-10 size-56 rounded-full' />
+        </div>
+      </div>
+    </section>
+  );
+}
 
 function DiscoveryProfileSkeleton() {
   return (
@@ -59,7 +83,7 @@ function DiscoveryProfileSkeleton() {
 export default function DiscoveryLoading() {
   return (
     <div className='bg-background flex flex-1 flex-col'>
-      <DiscoveryHero />
+      <DiscoveryHeroSkeleton />
 
       <section className='bg-card text-card-foreground w-full flex-1 pb-8'>
         <div className='container mx-auto max-w-7xl px-4 sm:px-5 lg:px-8'>
