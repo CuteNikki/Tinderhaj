@@ -15,7 +15,7 @@ export function DiscoveryHero() {
       <div className='pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[6rem_6rem] opacity-20 dark:opacity-25' />
       <div className='bg-primary/10 pointer-events-none absolute -top-16 -right-16 z-0 size-64 rounded-full blur-3xl lg:-top-8 lg:-right-8 lg:size-96' />
       <div className='bg-secondary/60 pointer-events-none absolute -bottom-24 -left-16 z-0 size-72 rounded-full blur-3xl lg:-bottom-12 lg:-left-8 lg:size-96' />
-      <div className='relative z-10 container mx-auto grid max-w-7xl items-center gap-10 px-5 lg:grid-cols-[minmax(0,1fr)_22rem] lg:px-8'>
+      <div className='relative z-10 container mx-auto grid max-w-7xl items-center gap-10 px-6 lg:grid-cols-[minmax(0,1fr)_22rem] lg:px-8'>
         <div className='max-w-3xl'>
           <motion.div initial='hidden' animate='visible' variants={reveal} transition={{ ...revealTransition, delay: 0.1 }}>
             <Badge variant='secondary' className='rounded-full p-4 font-semibold tracking-wide uppercase'>

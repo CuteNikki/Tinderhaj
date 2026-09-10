@@ -27,7 +27,7 @@ export function DiscoveryFilter({ take, page, query, disabled }: { take?: number
         document.getElementById('profiles')?.scrollIntoView();
       }}
     >
-      <div className='flex flex-col gap-1 sm:flex-row sm:items-center'>
+      <div className='xs:flex-row xs:items-center flex flex-col gap-1'>
         <label className='relative min-w-0 flex-1'>
           <span className='sr-only'>Search profiles</span>
           <Search className='text-muted-foreground pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2' />
@@ -37,7 +37,7 @@ export function DiscoveryFilter({ take, page, query, disabled }: { take?: number
             placeholder='Search profiles...'
             defaultValue={query}
             disabled={disabled}
-            className='rounded-2xl rounded-br-sm rounded-bl-sm pl-11 sm:rounded-tr-sm sm:rounded-br-sm sm:rounded-bl-2xl'
+            className='xs:rounded-tr-sm xs:rounded-br-sm xs:rounded-bl-2xl rounded-2xl rounded-br-sm rounded-bl-sm pl-11'
           />
         </label>
         <Select
@@ -51,11 +51,12 @@ export function DiscoveryFilter({ take, page, query, disabled }: { take?: number
         >
           <SelectTrigger
             aria-label='Select number of items per page'
-            className='bg-background w-full rounded-sm px-4 sm:w-24 sm:rounded-tl-sm sm:rounded-tr-sm sm:rounded-br-sm sm:rounded-bl-sm'
+            className='bg-background xs:w-24 xs:rounded-tl-sm xs:rounded-tr-sm xs:rounded-br-sm xs:rounded-bl-sm w-full rounded-sm px-4'
           >
             <span className='flex items-center gap-2 sm:contents'>
               <Grid2X2Icon className='text-muted-foreground' />
               <SelectValue />
+              <span className='xs:hidden'>per page</span>
             </span>
           </SelectTrigger>
           <SelectContent position='popper'>
@@ -74,7 +75,7 @@ export function DiscoveryFilter({ take, page, query, disabled }: { take?: number
           type='submit'
           disabled={disabled}
           variant='default'
-          className='rounded-2xl rounded-tl-sm rounded-tr-sm border-none sm:rounded-tl-sm sm:rounded-tr-2xl sm:rounded-bl-sm'
+          className='xs:rounded-tl-sm xs:rounded-tr-2xl xs:rounded-bl-sm rounded-2xl rounded-tl-sm rounded-tr-sm border-none'
         >
           <span>Search</span>
           <SearchIcon />

@@ -31,14 +31,14 @@ export default async function DiscoveryPage({ searchParams }: { searchParams: Pr
     <div className='bg-background flex flex-1 flex-col'>
       <DiscoveryHero />
 
-      <section className='bg-card text-card-foreground w-full flex-1 pb-14 md:pb-18'>
-        <div className='container mx-auto max-w-7xl px-3 sm:px-5 lg:px-8'>
-          <div className='-mt-6 mb-4'>
+      <section className='bg-card text-card-foreground w-full flex-1 pb-8'>
+        <div className='container mx-auto max-w-7xl px-4 sm:px-5 lg:px-8'>
+          <div className='-mt-8 mb-4'>
             <DiscoveryFilter page={page} query={query} take={take} />
           </div>
           {totalProfiles ? (
             <>
-              <div id='profiles' className='flex scroll-m-42 flex-col justify-between gap-2 py-6 md:flex-row md:items-center'>
+              <div id='profiles' className='flex scroll-m-40 flex-col justify-between gap-2 py-6 md:flex-row md:items-center'>
                 <p className='text-primary text-xs font-bold tracking-widest uppercase'>Fresh possibilities</p>
               </div>
               <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-3'>
