@@ -92,11 +92,13 @@ export function VerifyProfileCard({ profile }: { profile: Profile & { account: A
               {profile.location}
             </span>
           )}
-          <span className='flex items-center gap-1.5'>
-            <RulerIcon className='text-primary h-3.5 w-3.5' />
-            {profile.size}
-            {profile.unit.toLowerCase()}
-          </span>
+          {profile.size != null && (
+            <span className='flex items-center gap-1.5'>
+              <RulerIcon className='text-primary h-3.5 w-3.5' />
+              {profile.size}
+              {profile.unit.toLowerCase()}
+            </span>
+          )}
         </div>
 
         {profile.bio && <p className='text-foreground/80 mt-4 line-clamp-3 text-sm leading-relaxed'>{profile.bio}</p>}

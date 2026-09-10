@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-import { MAX_INTEREST_LENGTH } from '@/constants/auth';
+import { BLAHAJ_SIZE_CM, BLAHAJ_SIZE_INCH, MAX_BIO_LENGTH, MAX_INTEREST_LENGTH } from '@/constants/auth';
 import { Account, Profile } from '@/generated/client';
 import { updateProfile } from '@/lib/actions';
 import { profileFieldLabel } from '@/lib/profile-fields';
@@ -174,16 +174,21 @@ export function EditProfile({ profile }: { profile: Profile & { account: Account
               name='bio'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Bio
-                    {isFlagged('bio') && (
-                      <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
-                        Needs update
-                      </Badge>
-                    )}
-                  </FormLabel>
+                  <div className='flex items-center justify-between'>
+                    <FormLabel>
+                      Bio
+                      {isFlagged('bio') && (
+                        <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
+                          Needs update
+                        </Badge>
+                      )}
+                    </FormLabel>
+                    <span className='text-muted-foreground text-xs'>
+                      {(field.value ?? '').length}/{MAX_BIO_LENGTH}
+                    </span>
+                  </div>
                   <FormControl>
-                    <Textarea {...field} />
+                    <Textarea maxLength={MAX_BIO_LENGTH} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -220,7 +225,7 @@ export function EditProfile({ profile }: { profile: Profile & { account: Account
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Size (in {(unit ?? 'CM').toLowerCase()}) <span className='text-destructive'>*</span>
+                    Size
                     {isFlagged('size') && (
                       <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
                         Needs update
@@ -229,7 +234,12 @@ export function EditProfile({ profile }: { profile: Profile & { account: Account
                   </FormLabel>
                   <div className='flex items-center gap-2'>
                     <FormControl>
-                      <Input type='number' {...field} onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)} />
+                      <Input
+                        type='number'
+                        {...field}
+                        value={field.value ?? ''}
+                        onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
+                      />
                     </FormControl>
                     <FormField
                       control={form.control}
@@ -247,6 +257,11 @@ export function EditProfile({ profile }: { profile: Profile & { account: Account
                       )}
                     />
                   </div>
+                  <p className='text-muted-foreground text-xs'>
+                    IKEA BLÅHAJ sizes: Small {unit === 'INCH' ? BLAHAJ_SIZE_INCH.small : BLAHAJ_SIZE_CM.small}
+                    {unit === 'INCH' ? ' inches' : 'cm'}, Large {unit === 'INCH' ? BLAHAJ_SIZE_INCH.large : BLAHAJ_SIZE_CM.large}
+                    {unit === 'INCH' ? ' inches' : 'cm'}.
+                  </p>
                   <FormMessage />
                 </FormItem>
               )}
@@ -293,14 +308,17 @@ export function EditProfile({ profile }: { profile: Profile & { account: Account
             />
 
             <FormItem>
-              <FormLabel>
-                Interests
-                {isFlagged('interests') && (
-                  <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
-                    Needs update
-                  </Badge>
-                )}
-              </FormLabel>
+              <div className='flex items-center justify-between'>
+                <FormLabel>
+                  Interests
+                  {isFlagged('interests') && (
+                    <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
+                      Needs update
+                    </Badge>
+                  )}
+                </FormLabel>
+                <span className='text-muted-foreground text-xs'>{interests.length}/3</span>
+              </div>
               {interests.length > 0 && (
                 <div className='flex flex-wrap gap-1.5'>
                   {interests.map((interest) => (

@@ -21,6 +21,10 @@ export const MAX_SIZE_CM = 1000;
 export const MIN_SIZE_INCH = 1;
 export const MAX_SIZE_INCH = 400;
 
+// Official IKEA BLÅHAJ plush shark sizes
+export const BLAHAJ_SIZE_CM = { small: 55, large: 100 };
+export const BLAHAJ_SIZE_INCH = { small: 22, large: 39 };
+
 export const MIN_BIO_LENGTH = 0;
 export const MAX_BIO_LENGTH = 160;
 

@@ -24,7 +24,9 @@ const SIZE_BOUNDS = {
   INCH: { min: MIN_SIZE_INCH, max: MAX_SIZE_INCH },
 } as const;
 
-function refineSize(data: { size: number; unit: 'CM' | 'INCH' }, ctx: z.RefinementCtx) {
+function refineSize(data: { size: number | null; unit: 'CM' | 'INCH' }, ctx: z.RefinementCtx) {
+  if (data.size == null) return;
+
   const { min, max } = SIZE_BOUNDS[data.unit];
 
   if (data.size < min || data.size > max) {
@@ -133,7 +135,7 @@ export const createProfileSchema = z
     avatarUrl: z.url().max(2000, 'Avatar URL must be at most 2000 characters.').nullable().default(null),
     bannerUrl: z.url().max(2000, 'Banner URL must be at most 2000 characters.').nullable().default(null),
     birthday: birthdaySchema,
-    size: z.number(),
+    size: z.number().nullable(),
     unit: z.enum(['CM', 'INCH']).default('CM'),
     pronouns: z
       .string()
@@ -179,7 +181,7 @@ export const updateProfileSchema = z
     avatarUrl: z.url().max(2000, 'Avatar URL must be at most 2000 characters.').nullable(),
     bannerUrl: z.url().max(2000, 'Banner URL must be at most 2000 characters.').nullable(),
     birthday: birthdaySchema,
-    size: z.number(),
+    size: z.number().nullable(),
     unit: z.enum(['CM', 'INCH']).default('CM'),
     pronouns: z
       .string()

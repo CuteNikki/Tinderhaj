@@ -106,11 +106,13 @@ export function ProfileCard({ profile }: { profile: Profile & { account: Account
               {profile.location}
             </span>
           )}
-          <span className='flex items-center gap-1.5'>
-            <RulerIcon className='text-primary h-3.5 w-3.5' />
-            {profile.size}
-            {profile.unit.toLowerCase()}
-          </span>
+          {profile.size != null && (
+            <span className='flex items-center gap-1.5'>
+              <RulerIcon className='text-primary h-3.5 w-3.5' />
+              {profile.size}
+              {profile.unit.toLowerCase()}
+            </span>
+          )}
         </div>
 
         {profile.status === 'REJECTED' && (profile.rejectedFields.length > 0 || profile.rejectionNote) && (

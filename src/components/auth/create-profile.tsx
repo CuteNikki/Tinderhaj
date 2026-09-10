@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-import { MAX_INTEREST_LENGTH } from '@/constants/auth';
+import { BLAHAJ_SIZE_CM, BLAHAJ_SIZE_INCH, MAX_BIO_LENGTH, MAX_INTEREST_LENGTH } from '@/constants/auth';
 import { createProfile } from '@/lib/actions';
 import { createProfileSchema } from '@/lib/schemas';
 
@@ -117,9 +117,14 @@ export function CreateProfile({ disableButton }: { disableButton?: boolean }) {
               name='bio'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Bio</FormLabel>
+                  <div className='flex items-center justify-between'>
+                    <FormLabel>Bio</FormLabel>
+                    <span className='text-muted-foreground text-xs'>
+                      {(field.value ?? '').length}/{MAX_BIO_LENGTH}
+                    </span>
+                  </div>
                   <FormControl>
-                    <Textarea {...field} />
+                    <Textarea maxLength={MAX_BIO_LENGTH} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -148,12 +153,15 @@ export function CreateProfile({ disableButton }: { disableButton?: boolean }) {
               name='size'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Size <span className='text-destructive'>*</span>
-                  </FormLabel>
+                  <FormLabel>Size</FormLabel>
                   <div className='flex items-center gap-2'>
                     <FormControl>
-                      <Input type='number' {...field} onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)} />
+                      <Input
+                        type='number'
+                        {...field}
+                        value={field.value ?? ''}
+                        onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
+                      />
                     </FormControl>
                     <FormField
                       control={form.control}
@@ -171,6 +179,11 @@ export function CreateProfile({ disableButton }: { disableButton?: boolean }) {
                       )}
                     />
                   </div>
+                  <p className='text-muted-foreground text-xs'>
+                    IKEA BLÅHAJ sizes: Small {unit === 'INCH' ? BLAHAJ_SIZE_INCH.small : BLAHAJ_SIZE_CM.small}
+                    {unit === 'INCH' ? ' inches' : 'cm'}, Large {unit === 'INCH' ? BLAHAJ_SIZE_INCH.large : BLAHAJ_SIZE_CM.large}
+                    {unit === 'INCH' ? ' inches' : 'cm'}.
+                  </p>
                   <FormMessage />
                 </FormItem>
               )}
@@ -203,7 +216,10 @@ export function CreateProfile({ disableButton }: { disableButton?: boolean }) {
             />
 
             <FormItem>
-              <FormLabel>Interests</FormLabel>
+              <div className='flex items-center justify-between'>
+                <FormLabel>Interests</FormLabel>
+                <span className='text-muted-foreground text-xs'>{interests.length}/3</span>
+              </div>
               {interests.length > 0 && (
                 <div className='flex flex-wrap gap-1.5'>
                   {interests.map((interest) => (
