@@ -170,7 +170,7 @@ async function _getCurrentUser({ includeAccount = false, redirectIfNotFound = fa
   }
 
   if (redirectIfFound) {
-    return redirect('/');
+    return redirect('/profiles');
   }
 
   return session;
