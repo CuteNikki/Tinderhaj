@@ -39,7 +39,7 @@ export default function RootLayout({
       data-scroll-behavior='smooth'
       suppressHydrationWarning
     >
-      <body className='bg-background text-foreground flex min-h-full flex-col'>
+      <body className='bg-background text-foreground flex min-h-full flex-col overflow-y-scroll'>
         <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
         <div id='top' />
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
