@@ -1,18 +1,24 @@
+import Link from 'next/link';
+
+import { SearchXIcon } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
+
 export function DiscoveryNoResults() {
   return (
-    <section id='discovery-no-results' className='from-background to-muted w-full bg-linear-to-b py-8 md:py-12'>
-      <div className='container mx-auto px-4 md:px-6'>
-        <div className='flex flex-col items-center justify-center space-y-4 text-center'>
-          <div className='space-y-2'>
-            <h2>No Results Found</h2>
-            <p className='text-muted-foreground text-pretty'>
-              We couldn&apos;t find any results for your search query.
-              <br />
-              Try broadening your search or check back later.
-            </p>
-          </div>
+    <div id='discovery-no-results' className='py-16'>
+      <div className='mx-auto flex max-w-xl flex-col items-center text-center'>
+        <div className='bg-primary/10 text-primary flex size-16 items-center justify-center rounded-full'>
+          <SearchXIcon className='h-7 w-7' />
         </div>
+        <h2 className='mt-6 text-3xl font-black tracking-tight sm:text-4xl'>No matches surfaced.</h2>
+        <p className='text-muted-foreground mt-4 text-sm leading-relaxed text-pretty'>
+          We couldn&apos;t find a profile for that search. A wider tide usually brings more Blåhaj back into view.
+        </p>
+        <Button className='mt-7 rounded-full px-6' asChild>
+          <Link href='/discovery#top'>Reset discovery</Link>
+        </Button>
       </div>
-    </section>
+    </div>
   );
 }

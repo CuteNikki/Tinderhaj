@@ -1,4 +1,11 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
+import { useEffect, type MouseEvent } from 'react';
+
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
+
+const scrollToProfilesKey = 'discovery-scroll-to-profiles';
 
 export function DiscoveryPagination({
   displayedUsers,
@@ -15,43 +22,79 @@ export function DiscoveryPagination({
   page: number;
   query: string;
 }) {
+  if (!totalUsers) {
+    return null;
+  }
+
+  const router = useRouter();
+  const pageHref = (targetPage: number) => `?q=${query}&p=${targetPage}&t=${take}`;
+  const scrollToProfiles = () => document.getElementById('profiles')?.scrollIntoView();
+  const navigateToPage = (targetPage: number) => (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+
+    if (targetPage === page) {
+      scrollToProfiles();
+      return;
+    }
+
+    sessionStorage.setItem(scrollToProfilesKey, 'true');
+    router.push(pageHref(targetPage), { scroll: false });
+  };
+
+  useEffect(() => {
+    if (sessionStorage.getItem(scrollToProfilesKey) !== 'true') {
+      return;
+    }
+
+    sessionStorage.removeItem(scrollToProfilesKey);
+    scrollToProfiles();
+  }, [page, query, take]);
+
   return (
-    <div className='bg-muted flex flex-col items-center gap-4 p-4 text-center text-balance'>
-      <p className='text-sm'>
+    <div className='flex flex-col items-center gap-4 px-5 pt-8 text-center text-balance'>
+      <p className='text-muted-foreground text-sm'>
         Showing {displayedUsers} of {totalUsers} users (page {page} of {totalPages})
       </p>
       <Pagination>
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious href={page === 1 ? '#top' : `?q=${query}&p=${page - 1}&t=${take}`} />
+            <PaginationPrevious href={pageHref(Math.max(page - 1, 1))} onClick={navigateToPage(Math.max(page - 1, 1))} />
           </PaginationItem>
           {totalPages > 2 && page === totalPages && (
             <PaginationItem>
-              <PaginationLink href={`?q=${query}&p=${page - 2}&t=${take}`}>{page - 2}</PaginationLink>
+              <PaginationLink href={pageHref(page - 2)} onClick={navigateToPage(page - 2)}>
+                {page - 2}
+              </PaginationLink>
             </PaginationItem>
           )}
           {page > 1 && (
             <PaginationItem>
-              <PaginationLink href={`?q=${query}&p=${page - 1}&t=${take}`}>{page - 1}</PaginationLink>
+              <PaginationLink href={pageHref(page - 1)} onClick={navigateToPage(page - 1)}>
+                {page - 1}
+              </PaginationLink>
             </PaginationItem>
           )}
           <PaginationItem>
-            <PaginationLink href={`?q=${query}&p=${page}&t=${take}`} isActive>
+            <PaginationLink href={pageHref(page)} isActive onClick={navigateToPage(page)}>
               {page}
             </PaginationLink>
           </PaginationItem>
           {page < totalPages && (
             <PaginationItem>
-              <PaginationLink href={`?q=${query}&p=${page + 1}&t=${take}`}>{page + 1}</PaginationLink>
+              <PaginationLink href={pageHref(page + 1)} onClick={navigateToPage(page + 1)}>
+                {page + 1}
+              </PaginationLink>
             </PaginationItem>
           )}
           {totalPages > 2 && page === 1 && (
             <PaginationItem>
-              <PaginationLink href={`?q=${query}&p=3&t=${take}`}>3</PaginationLink>
+              <PaginationLink href={pageHref(3)} onClick={navigateToPage(3)}>
+                3
+              </PaginationLink>
             </PaginationItem>
           )}
           <PaginationItem>
-            <PaginationNext href={page === totalPages ? '#top' : `?q=${query}&p=${page + 1}&t=${take}`} />
+            <PaginationNext href={pageHref(Math.min(page + 1, totalPages))} onClick={navigateToPage(Math.min(page + 1, totalPages))} />
           </PaginationItem>
         </PaginationContent>
       </Pagination>
@@ -66,21 +109,19 @@ export function DiscoveryPaginationSkeleton() {
       <Pagination>
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious href='#top' />
+            <PaginationPrevious />
           </PaginationItem>
           <PaginationItem>
-            <PaginationLink href='#top'>?</PaginationLink>
+            <PaginationLink>?</PaginationLink>
           </PaginationItem>
           <PaginationItem>
-            <PaginationLink href='#top' isActive>
-              ?
-            </PaginationLink>
+            <PaginationLink isActive>?</PaginationLink>
           </PaginationItem>
           <PaginationItem>
-            <PaginationLink href='#top'>?</PaginationLink>
+            <PaginationLink>?</PaginationLink>
           </PaginationItem>
           <PaginationItem>
-            <PaginationNext href='#top' />
+            <PaginationNext />
           </PaginationItem>
         </PaginationContent>
       </Pagination>

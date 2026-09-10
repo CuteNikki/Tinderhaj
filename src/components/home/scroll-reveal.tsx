@@ -5,7 +5,7 @@ import { useRef } from 'react';
 
 export function ScrollReveal({ children, className, delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
   const elementRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(elementRef, { once: true, amount: 0.5 });
+  const isInView = useInView(elementRef, { once: true, amount: 0.2 });
 
   return (
     <motion.div

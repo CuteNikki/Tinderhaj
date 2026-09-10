@@ -22,7 +22,7 @@ export function Hero() {
       <div className='pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[6rem_6rem] opacity-20 dark:opacity-25' />
       <div className='bg-primary/10 pointer-events-none absolute -top-16 -right-16 z-0 size-64 rounded-full blur-3xl lg:-top-8 lg:-right-8 lg:size-96' />
       <div className='bg-secondary/60 pointer-events-none absolute -bottom-24 -left-16 z-0 size-72 rounded-full blur-3xl lg:-bottom-12 lg:-left-8 lg:size-96' />
-      <div className='relative z-10 container mx-auto grid min-h-screen max-w-7xl items-center gap-10 px-4 py-24 md:px-8 lg:grid-cols-2 lg:gap-12'>
+      <div className='relative z-10 container mx-auto grid min-h-screen max-w-7xl items-center gap-4 px-6 pt-24 pb-12 md:px-8 lg:grid-cols-2 lg:gap-8'>
         <div className='relative z-10 flex max-w-2xl flex-col items-start'>
           <motion.div initial='hidden' animate='visible' variants={reveal} transition={{ ...revealTransition, delay: 0.1 }}>
             <Badge
@@ -37,14 +37,14 @@ export function Hero() {
             </Badge>
           </motion.div>
           <motion.div initial='hidden' animate='visible' variants={reveal} transition={{ ...revealTransition, delay: 0.2 }}>
-            <TypographyH1 className='mt-6 max-w-3xl text-5xl leading-none font-black tracking-tight sm:text-7xl lg:text-8xl'>
+            <TypographyH1 className='xs:text-5xl mt-6 max-w-3xl text-4xl leading-none font-black tracking-tight md:text-7xl xl:text-8xl'>
               Make a splash.
               <br />
               <span className='text-primary'>Meet your match.</span>
             </TypographyH1>
           </motion.div>
           <motion.div initial='hidden' animate='visible' variants={reveal} transition={{ ...revealTransition, delay: 0.3 }}>
-            <TypographyMuted className='mt-6 max-w-lg text-base leading-relaxed text-pretty sm:text-lg'>
+            <TypographyMuted className='mt-2 max-w-lg text-base leading-relaxed text-pretty sm:mt-6 sm:text-lg'>
               A warm, weird little corner of the internet for Blåhaj looking for their person. Browse profiles, find a feeling, make it official.
             </TypographyMuted>
           </motion.div>
@@ -53,17 +53,17 @@ export function Hero() {
             animate='visible'
             variants={reveal}
             transition={{ ...revealTransition, delay: 0.4 }}
-            className='mt-8 flex w-full flex-col items-start gap-3 sm:flex-row'
+            className='mt-4 flex w-full flex-wrap items-start gap-2 sm:mt-8'
           >
             <Button size='lg' className='h-12 rounded-full px-6' asChild>
               <Link href='/sign-up'>
-                Create your profile
+                Join
                 <ArrowRight />
               </Link>
             </Button>
             <Button size='lg' className='h-12 rounded-full px-6' asChild variant='outline'>
               <Link href='/discovery'>
-                Explore matches
+                Explore
                 <Search />
               </Link>
             </Button>
@@ -73,7 +73,7 @@ export function Hero() {
             animate='visible'
             variants={reveal}
             transition={{ ...revealTransition, delay: 0.5 }}
-            className='border-foreground/10 mt-6 flex flex-wrap gap-x-6 gap-y-2'
+            className='border-foreground/10 mt-4 flex flex-wrap gap-x-4 gap-y-2 sm:mt-6'
           >
             <div className='flex items-center gap-2 text-sm'>
               <Users2Icon className='text-primary h-4 w-4' />
