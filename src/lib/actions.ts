@@ -1,13 +1,16 @@
 'use server';
 
+import { createHash, randomBytes } from 'crypto';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
+import { PASSWORD_RESET_TOKEN_EXPIRATION } from '@/constants/auth';
 import { AccountModel } from '@/generated/models';
+import { sendPasswordResetEmail } from '@/lib/email';
 import { comparePasswords, generateSalt, hashPassword } from '@/lib/password-hasher';
 import prisma from '@/lib/prisma';
-import { createProfileSchema, signInSchema, signUpSchema, updateProfileSchema } from '@/lib/schemas';
+import { createProfileSchema, forgotPasswordSchema, resetPasswordSchema, signInSchema, signUpSchema, updateProfileSchema } from '@/lib/schemas';
 import { createUserSession, getUserSession, removeUserFromSession } from '@/lib/session';
 
 export async function signIn(unsafeData: z.infer<typeof signInSchema>) {
@@ -73,6 +76,68 @@ export async function signUp(unsafeData: z.infer<typeof signUpSchema>) {
   }
 
   redirect('/');
+}
+
+const GENERIC_RESET_MESSAGE = 'If an account with that email exists, a password reset link has been sent.';
+
+export async function requestPasswordReset(unsafeData: z.infer<typeof forgotPasswordSchema>) {
+  const { success, data } = forgotPasswordSchema.safeParse(unsafeData);
+
+  if (!success) return { message: 'Unable to process request!' };
+
+  const account = await prisma.account.findFirst({ where: { email: data.email } });
+
+  // Always respond the same way to avoid leaking which emails are registered.
+  if (account == null) return { message: GENERIC_RESET_MESSAGE };
+
+  try {
+    const rawToken = randomBytes(32).toString('hex');
+    const tokenHash = createHash('sha256').update(rawToken).digest('hex');
+
+    await prisma.passwordResetToken.deleteMany({ where: { accountId: account.id } });
+    await prisma.passwordResetToken.create({
+      data: {
+        tokenHash,
+        accountId: account.id,
+        expiresAt: new Date(Date.now() + PASSWORD_RESET_TOKEN_EXPIRATION * 1000),
+      },
+    });
+
+    const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${rawToken}`;
+    await sendPasswordResetEmail({ email: account.email, resetUrl });
+  } catch (error) {
+    console.error(error);
+  }
+
+  return { message: GENERIC_RESET_MESSAGE };
+}
+
+export async function resetPassword(unsafeData: z.infer<typeof resetPasswordSchema>) {
+  const { success, data } = resetPasswordSchema.safeParse(unsafeData);
+
+  if (!success) return { message: 'Unable to reset password!' };
+
+  const tokenHash = createHash('sha256').update(data.token).digest('hex');
+
+  const resetToken = await prisma.passwordResetToken.findUnique({ where: { tokenHash } });
+
+  if (resetToken == null || resetToken.expiresAt < new Date()) {
+    return { message: 'This reset link is invalid or has expired!' };
+  }
+
+  const salt = generateSalt();
+  const hashedPassword = await hashPassword(data.password, salt);
+
+  await prisma.$transaction([
+    prisma.account.update({
+      where: { id: resetToken.accountId },
+      data: { password: hashedPassword, salt },
+    }),
+    prisma.passwordResetToken.deleteMany({ where: { accountId: resetToken.accountId } }),
+    prisma.session.deleteMany({ where: { accountId: resetToken.accountId } }),
+  ]);
+
+  redirect('/sign-in');
 }
 
 function _getCurrentUser(options: { includeAccount: true; redirectIfNotFound: true }): Promise<{ sessionId: string; accountId: string; account: AccountModel }>;

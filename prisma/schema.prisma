@@ -37,14 +37,28 @@ model Account {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  sessions Session[]
-  profiles Profile[]
+  sessions             Session[]
+  profiles             Profile[]
+  passwordResetTokens  PasswordResetToken[]
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid(2))
+  tokenHash String   @unique
+  accountId String
+  expiresAt DateTime
+
+  createdAt DateTime @default(now())
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@index([accountId])
 }
 
 model Session {
   sessionId String  @id
   accountId String
-  Account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
   @@index([accountId])
 }

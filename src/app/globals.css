@@ -122,12 +122,6 @@
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
-  html {
-    @apply scroll-smooth font-sans;
-  }
 
   /* Animations */
 
@@ -174,4 +168,26 @@
       animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
     }
   }
+}
+
+/* Center sonner's toast close button vertically, inset on the right edge, instead of hanging off the top-left corner */
+[data-sonner-toaster] [data-sonner-toast][data-styled='true'] {
+  padding-right: 2.5rem;
+}
+
+[data-sonner-toaster] [data-close-button] {
+  top: 50% !important;
+  left: unset !important;
+  right: 0.5rem !important;
+  height: 28px !important;
+  width: 28px !important;
+  transform: translateY(-50%) !important;
+  background: transparent !important;
+  border: none !important;
+  color: var(--muted-foreground) !important;
+}
+
+[data-sonner-toaster] [data-close-button]:hover {
+  background: transparent !important;
+  color: var(--foreground) !important;
 }

@@ -17,7 +17,6 @@ import {
 
 export const signInSchema = z.object({
   email: z
-    .string()
     .email(`Email is invalid!`)
     .min(MIN_EMAIL_LENGTH, `Email must be at least ${MIN_EMAIL_LENGTH} characters.`)
     .max(MAX_EMAIL_LENGTH, `Email must be at most ${MAX_EMAIL_LENGTH} characters.`),
@@ -35,8 +34,6 @@ export const signUpSchema = z.object({
     .min(MIN_USERNAME_LENGTH, `Username must be at least ${MIN_USERNAME_LENGTH} characters.`)
     .max(MAX_USERNAME_LENGTH, `Username must be at most ${MAX_USERNAME_LENGTH} characters.`),
   email: z
-    .string()
-    .nonempty(`Email is required!`)
     .email(`Email is invalid!`)
     .min(MIN_EMAIL_LENGTH, `Email must be at least ${MIN_EMAIL_LENGTH} characters.`)
     .max(MAX_EMAIL_LENGTH, `Email must be at most ${MAX_EMAIL_LENGTH} characters.`),
@@ -52,12 +49,34 @@ export const sessionSchema = z.object({
   sessionId: z.string(),
 });
 
+export const forgotPasswordSchema = z.object({
+  email: z
+    .email(`Email is invalid!`)
+    .min(MIN_EMAIL_LENGTH, `Email must be at least ${MIN_EMAIL_LENGTH} characters.`)
+    .max(MAX_EMAIL_LENGTH, `Email must be at most ${MAX_EMAIL_LENGTH} characters.`),
+});
+
+export const resetPasswordSchema = z
+  .object({
+    token: z.string().nonempty('Reset token is missing!'),
+    password: z
+      .string()
+      .nonempty(`Password is required!`)
+      .min(MIN_PASSWORD_LENGTH, `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`)
+      .max(MAX_PASSWORD_LENGTH, `Password must be at most ${MAX_PASSWORD_LENGTH} characters.`),
+    confirmPassword: z.string().nonempty('Please confirm your password!'),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords do not match!',
+    path: ['confirmPassword'],
+  });
+
 export const sessionWithAccountSchema = sessionSchema.extend({
-  Account: z.object({
+  account: z.object({
     id: z.string(),
-    email: z.string().email(),
+    email: z.email(),
     username: z.string(),
-    canVerify: z.boolean(),
+    role: z.enum(['USER', 'MODERATOR', 'ADMIN']),
     createdAt: z.date(),
     updatedAt: z.date(),
   }),

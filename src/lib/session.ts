@@ -18,7 +18,7 @@ export async function getUserSession({ includeAccount = false } = {}) {
 
   const rawUser = await prisma.session.findFirst({
     where: { sessionId },
-    include: includeAccount ? { Account: true } : undefined,
+    include: includeAccount ? { account: true } : undefined,
   });
 
   const { success, data: user } = includeAccount ? sessionWithAccountSchema.safeParse(rawUser) : sessionSchema.safeParse(rawUser);

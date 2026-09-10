@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import { Footer } from '@/components/navigation/footer';
 import { Navbar } from '@/components/navigation/navbar';
 import { ThemeProvider } from '@/components/theme/provider';
+import { Toaster } from '@/components/theme/toaster';
 
 import './globals.css';
 
@@ -28,13 +29,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en' className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`} suppressHydrationWarning>
-      <body className='flex min-h-full flex-col'>
+    <html
+      lang='en'
+      className={`${geistSans.variable} ${geistMono.variable} h-full scroll-smooth font-sans antialiased`}
+      data-scroll-behavior='smooth'
+      suppressHydrationWarning
+    >
+      <body className='bg-background text-foreground flex min-h-full flex-col'>
         <div id='top' />
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
           <Navbar />
           <main className='flex flex-1 flex-col'>{children}</main>
           <Footer />
+          <Toaster position='top-center' />
         </ThemeProvider>
       </body>
     </html>
