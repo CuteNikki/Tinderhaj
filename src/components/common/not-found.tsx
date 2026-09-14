@@ -13,9 +13,9 @@ const orbitTransition = { duration: 18, ease: 'linear' as const, repeat: Infinit
 
 export function NotFoundPage() {
   return (
-    <section className='bg-background relative isolate flex min-h-[calc(100svh-8rem)] flex-1 items-center overflow-hidden'>
+    <section className='bg-background relative isolate flex flex-1 items-center overflow-hidden'>
       <div className='pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[4rem_4rem] opacity-25' />
-      <div className='bg-primary/10 pointer-events-none absolute top-1/2 left-1/2 -z-10 size-[28rem] -translate-1/2 rounded-full blur-3xl' />
+      <div className='bg-primary/10 pointer-events-none absolute top-1/2 left-1/2 -z-10 size-112 -translate-1/2 rounded-full blur-3xl' />
 
       <div className='container mx-auto grid max-w-7xl items-center gap-10 px-6 py-20 md:grid-cols-[0.9fr_1.1fr] md:px-8 lg:gap-16 lg:py-24'>
         <div className='order-2 max-w-xl md:order-1'>
@@ -70,7 +70,7 @@ export function NotFoundPage() {
           initial={{ opacity: 0, scale: 0.86, rotate: -4 }}
           animate={{ opacity: 1, scale: 1, rotate: 0 }}
           transition={{ duration: 0.9, delay: 0.1, ease: [0.2, 0.8, 0.2, 1] }}
-          className='relative order-1 mx-auto aspect-square w-full max-w-[34rem] md:order-2'
+          className='relative order-1 mx-auto aspect-square w-full max-w-136 md:order-2'
         >
           <motion.div
             animate={{ rotate: 360 }}
