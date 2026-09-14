@@ -15,6 +15,7 @@ import { staggerContainer, staggerItem } from '@/components/auth/motion';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { ArrowRightIcon, Loader2Icon } from 'lucide-react';
 
 export function SignInForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -75,7 +76,17 @@ export function SignInForm() {
         </motion.div>
         <motion.div variants={staggerItem}>
           <Button type='submit' className='w-full transition-transform active:scale-[0.98]' disabled={isSubmitting}>
-            {isSubmitting ? 'Signing in…' : 'Sign In'}
+            {isSubmitting ? (
+              <>
+                <Loader2Icon className='shrink-0 animate-spin' aria-hidden='true' />
+                Signing in...
+              </>
+            ) : (
+              <>
+                Sign In
+                <ArrowRightIcon className='shrink-0' aria-hidden='true' />
+              </>
+            )}
           </Button>
         </motion.div>
       </motion.form>

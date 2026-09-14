@@ -12,13 +12,13 @@ export default async function SignUpPage() {
   return (
     <AuthShell
       badge='Join the club'
-      icon={<SparklesIcon className='h-3.5 w-3.5' />}
+      icon={<SparklesIcon className='size-4 shrink-0' aria-hidden='true' />}
       title='Create your account'
       description='Join Tinderhaj to find your perfect plush match.'
       footer={
         <p className='text-muted-foreground text-center text-sm'>
           Already have an account?{' '}
-          <Link href='/sign-in' className='text-foreground font-medium underline underline-offset-4'>
+          <Link href='/sign-in' className='text-foreground font-medium underline'>
             Sign in
           </Link>
         </p>

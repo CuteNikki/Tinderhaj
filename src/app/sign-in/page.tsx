@@ -12,13 +12,13 @@ export default async function SignInPage() {
   return (
     <AuthShell
       badge='Welcome back'
-      icon={<LockKeyholeIcon className='h-3.5 w-3.5' />}
+      icon={<LockKeyholeIcon className='size-4 shrink-0' aria-hidden='true' />}
       title='Sign in to Tinderhaj'
       description='Pick up right where you left off with your plush matches.'
       footer={
         <p className='text-muted-foreground text-center text-sm'>
           Don&apos;t have an account?{' '}
-          <Link href='/sign-up' className='text-foreground font-medium underline underline-offset-4'>
+          <Link href='/sign-up' className='text-foreground font-medium underline'>
             Sign up
           </Link>
         </p>

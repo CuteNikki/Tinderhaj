@@ -14,6 +14,7 @@ import { staggerContainer, staggerItem } from '@/components/auth/motion';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Loader2Icon, RotateCwIcon } from 'lucide-react';
 
 export function ResetPasswordForm({ token }: { token: string }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -69,7 +70,17 @@ export function ResetPasswordForm({ token }: { token: string }) {
         </motion.div>
         <motion.div variants={staggerItem}>
           <Button type='submit' className='w-full transition-transform active:scale-[0.98]' disabled={isSubmitting}>
-            {isSubmitting ? 'Resetting…' : 'Reset password'}
+            {isSubmitting ? (
+              <>
+                <Loader2Icon className='shrink-0 animate-spin' aria-hidden='true' />
+                Resetting...
+              </>
+            ) : (
+              <>
+                <RotateCwIcon className='shrink-0' aria-hidden='true' />
+                Reset password
+              </>
+            )}
           </Button>
         </motion.div>
       </motion.form>

@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { MailCheckIcon } from 'lucide-react';
+import { Loader2Icon, MailCheckIcon, RotateCwIcon, SendHorizontalIcon } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -76,7 +76,17 @@ export function ForgotPasswordForm() {
         </motion.div>
         <motion.div variants={staggerItem}>
           <Button type='submit' className='w-full transition-transform active:scale-[0.98]' disabled={isSubmitting}>
-            {isSubmitting ? 'Sending…' : 'Send reset link'}
+            {isSubmitting ? (
+              <>
+                <Loader2Icon className='shrink-0 animate-spin' aria-hidden='true' />
+                Sending...
+              </>
+            ) : (
+              <>
+                <RotateCwIcon className='shrink-0' aria-hidden='true' />
+                Reset password
+              </>
+            )}
           </Button>
         </motion.div>
       </motion.form>

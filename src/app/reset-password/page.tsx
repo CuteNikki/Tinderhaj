@@ -16,7 +16,7 @@ export default async function ResetPasswordPage({ searchParams }: { searchParams
   return (
     <AuthShell
       badge='Almost there'
-      icon={<ShieldCheckIcon className='h-3.5 w-3.5' />}
+      icon={<ShieldCheckIcon className='size-4 shrink-0' aria-hidden='true' />}
       title='Choose a new password'
       description="Pick something you'll remember this time."
     >
@@ -25,7 +25,7 @@ export default async function ResetPasswordPage({ searchParams }: { searchParams
       ) : (
         <p className='text-muted-foreground text-sm'>
           This reset link is missing or invalid. Please{' '}
-          <Link href='/forgot-password' className='text-foreground font-medium underline underline-offset-4'>
+          <Link href='/forgot-password' className='text-foreground font-medium underline'>
             request a new one
           </Link>
           .
