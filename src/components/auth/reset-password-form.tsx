@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
+import { MAX_PASSWORD_LENGTH } from '@/constants/auth';
 import { resetPassword } from '@/lib/actions';
 import { resetPasswordSchema } from '@/lib/schemas';
 
@@ -46,7 +47,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
               <FormItem>
                 <FormLabel>New password</FormLabel>
                 <FormControl>
-                  <Input type='password' autoComplete='new-password' {...field} required />
+                  <Input type='password' autoComplete='new-password' maxLength={MAX_PASSWORD_LENGTH} {...field} required />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -61,7 +62,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
               <FormItem>
                 <FormLabel>Confirm new password</FormLabel>
                 <FormControl>
-                  <Input type='password' autoComplete='new-password' {...field} required />
+                  <Input type='password' autoComplete='new-password' maxLength={MAX_PASSWORD_LENGTH} {...field} required />
                 </FormControl>
                 <FormMessage />
               </FormItem>

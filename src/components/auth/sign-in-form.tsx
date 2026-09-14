@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
+import { MAX_EMAIL_LENGTH, MAX_PASSWORD_LENGTH } from '@/constants/auth';
 import { signIn } from '@/lib/actions';
 import { signInSchema } from '@/lib/schemas';
 
@@ -47,7 +48,7 @@ export function SignInForm() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input type='email' autoComplete='email' {...field} required />
+                  <Input type='email' autoComplete='email' maxLength={MAX_EMAIL_LENGTH} {...field} required />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -67,7 +68,7 @@ export function SignInForm() {
                   </Link>
                 </div>
                 <FormControl>
-                  <Input type='password' autoComplete='current-password' {...field} required />
+                  <Input type='password' autoComplete='current-password' maxLength={MAX_PASSWORD_LENGTH} {...field} required />
                 </FormControl>
                 <FormMessage />
               </FormItem>

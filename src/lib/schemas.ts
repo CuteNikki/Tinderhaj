@@ -4,14 +4,18 @@ import { PROFILE_FIELDS } from '@/lib/profile-fields';
 
 import {
   MAX_BIO_LENGTH,
+  MAX_DISPLAY_NAME_LENGTH,
   MAX_EMAIL_LENGTH,
   MAX_INTEREST_LENGTH,
+  MAX_LOCATION_LENGTH,
   MAX_PASSWORD_LENGTH,
+  MAX_PRONOUNS_LENGTH,
   MAX_SIZE_CM,
   MAX_SIZE_INCH,
   MAX_USERNAME_LENGTH,
   MIN_DISPLAY_NAME_LENGTH,
   MIN_EMAIL_LENGTH,
+  MIN_LOCATION_LENGTH,
   MIN_PASSWORD_LENGTH,
   MIN_PRONOUNS_LENGTH,
   MIN_SIZE_CM,
@@ -130,7 +134,7 @@ export const createProfileSchema = z
       .trim()
       .nonempty('Display Name is required!')
       .min(MIN_DISPLAY_NAME_LENGTH, `Display Name must be at least ${MIN_DISPLAY_NAME_LENGTH} characters.`)
-      .max(MAX_USERNAME_LENGTH, `Display Name must be at most ${MAX_USERNAME_LENGTH} characters.`)
+      .max(MAX_DISPLAY_NAME_LENGTH, `Display Name must be at most ${MAX_DISPLAY_NAME_LENGTH} characters.`)
       .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
     avatarUrl: z.url().max(2000, 'Avatar URL must be at most 2000 characters.').nullable().default(null),
     bannerUrl: z.url().max(2000, 'Banner URL must be at most 2000 characters.').nullable().default(null),
@@ -141,13 +145,13 @@ export const createProfileSchema = z
       .string()
       .trim()
       .min(MIN_PRONOUNS_LENGTH, `Pronouns must be at least ${MIN_PRONOUNS_LENGTH} characters.`)
-      .max(MAX_USERNAME_LENGTH, `Pronouns must be at most ${MAX_USERNAME_LENGTH} characters.`)
+      .max(MAX_PRONOUNS_LENGTH, `Pronouns must be at most ${MAX_PRONOUNS_LENGTH} characters.`)
       .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
     location: z
       .string()
       .trim()
-      .min(MIN_PRONOUNS_LENGTH, `Location must be at least ${MIN_PRONOUNS_LENGTH} characters.`)
-      .max(MAX_USERNAME_LENGTH, `Location must be at most ${MAX_USERNAME_LENGTH} characters.`)
+      .min(MIN_LOCATION_LENGTH, `Location must be at least ${MIN_LOCATION_LENGTH} characters.`)
+      .max(MAX_LOCATION_LENGTH, `Location must be at most ${MAX_LOCATION_LENGTH} characters.`)
       .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
     bio: z
       .string()
@@ -176,7 +180,7 @@ export const updateProfileSchema = z
       .trim()
       .nonempty('Display Name is required!')
       .min(MIN_DISPLAY_NAME_LENGTH, `Display Name must be at least ${MIN_DISPLAY_NAME_LENGTH} characters.`)
-      .max(MAX_USERNAME_LENGTH, `Display Name must be at most ${MAX_USERNAME_LENGTH} characters.`)
+      .max(MAX_DISPLAY_NAME_LENGTH, `Display Name must be at most ${MAX_DISPLAY_NAME_LENGTH} characters.`)
       .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
     avatarUrl: z.url().max(2000, 'Avatar URL must be at most 2000 characters.').nullable(),
     bannerUrl: z.url().max(2000, 'Banner URL must be at most 2000 characters.').nullable(),
@@ -187,13 +191,13 @@ export const updateProfileSchema = z
       .string()
       .trim()
       .min(MIN_PRONOUNS_LENGTH, `Pronouns must be at least ${MIN_PRONOUNS_LENGTH} characters.`)
-      .max(MAX_USERNAME_LENGTH, `Pronouns must be at most ${MAX_USERNAME_LENGTH} characters.`)
+      .max(MAX_PRONOUNS_LENGTH, `Pronouns must be at most ${MAX_PRONOUNS_LENGTH} characters.`)
       .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
     location: z
       .string()
       .trim()
-      .min(MIN_PRONOUNS_LENGTH, `Location must be at least ${MIN_PRONOUNS_LENGTH} characters.`)
-      .max(MAX_USERNAME_LENGTH, `Location must be at most ${MAX_USERNAME_LENGTH} characters.`)
+      .min(MIN_LOCATION_LENGTH, `Location must be at least ${MIN_LOCATION_LENGTH} characters.`)
+      .max(MAX_LOCATION_LENGTH, `Location must be at most ${MAX_LOCATION_LENGTH} characters.`)
       .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
     interests: z
       .array(

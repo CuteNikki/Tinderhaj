@@ -7,7 +7,15 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-import { BLAHAJ_SIZE_CM, BLAHAJ_SIZE_INCH, MAX_BIO_LENGTH, MAX_INTEREST_LENGTH } from '@/constants/auth';
+import {
+  BLAHAJ_SIZE_CM,
+  BLAHAJ_SIZE_INCH,
+  MAX_BIO_LENGTH,
+  MAX_DISPLAY_NAME_LENGTH,
+  MAX_INTEREST_LENGTH,
+  MAX_LOCATION_LENGTH,
+  MAX_PRONOUNS_LENGTH,
+} from '@/constants/auth';
 import { createProfile } from '@/lib/actions';
 import { createProfileSchema } from '@/lib/schemas';
 
@@ -109,7 +117,7 @@ export function CreateProfile({ username, disableButton }: { username?: string; 
                       Display Name <span className='text-destructive'>*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input type='text' {...field} required />
+                      <Input type='text' maxLength={MAX_DISPLAY_NAME_LENGTH} {...field} required />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -198,7 +206,7 @@ export function CreateProfile({ username, disableButton }: { username?: string; 
                   <FormItem>
                     <FormLabel>Pronouns</FormLabel>
                     <FormControl>
-                      <Input type='text' {...field} />
+                      <Input type='text' maxLength={MAX_PRONOUNS_LENGTH} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -211,7 +219,7 @@ export function CreateProfile({ username, disableButton }: { username?: string; 
                   <FormItem>
                     <FormLabel>Location</FormLabel>
                     <FormControl>
-                      <Input type='text' {...field} />
+                      <Input type='text' maxLength={MAX_LOCATION_LENGTH} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

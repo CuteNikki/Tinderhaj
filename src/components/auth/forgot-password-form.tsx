@@ -1,13 +1,14 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2Icon, MailCheckIcon, RotateCwIcon, SendHorizontalIcon } from 'lucide-react';
+import { Loader2Icon, MailCheckIcon, RotateCwIcon } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
+import { MAX_EMAIL_LENGTH } from '@/constants/auth';
 import { requestPasswordReset } from '@/lib/actions';
 import { forgotPasswordSchema } from '@/lib/schemas';
 
@@ -67,7 +68,7 @@ export function ForgotPasswordForm() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input type='email' autoComplete='email' {...field} required />
+                  <Input type='email' autoComplete='email' maxLength={MAX_EMAIL_LENGTH} {...field} required />
                 </FormControl>
                 <FormMessage />
               </FormItem>

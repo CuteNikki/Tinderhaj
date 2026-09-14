@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
+import { MAX_EMAIL_LENGTH, MAX_PASSWORD_LENGTH, MAX_USERNAME_LENGTH } from '@/constants/auth';
 import { signUp } from '@/lib/actions';
 import { signUpSchema } from '@/lib/schemas';
 
@@ -51,7 +52,7 @@ export function SignUpForm() {
               <FormItem>
                 <FormLabel>Username</FormLabel>
                 <FormControl>
-                  <Input type='text' autoComplete='username' {...field} required />
+                  <Input type='text' autoComplete='username' maxLength={MAX_USERNAME_LENGTH} {...field} required />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -66,7 +67,7 @@ export function SignUpForm() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input type='email' autoComplete='email' {...field} required />
+                  <Input type='email' autoComplete='email' maxLength={MAX_EMAIL_LENGTH} {...field} required />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -81,7 +82,7 @@ export function SignUpForm() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input type='password' autoComplete='new-password' {...field} required />
+                  <Input type='password' autoComplete='new-password' maxLength={MAX_PASSWORD_LENGTH} {...field} required />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -90,19 +91,17 @@ export function SignUpForm() {
         </motion.div>
         <motion.div variants={staggerItem}>
           <Button type='submit' className='w-full transition-transform active:scale-[0.98]' disabled={isSubmitting}>
-            {
-              isSubmitting ? (
-                <>
-                  <Loader2Icon className='shrink-0 animate-spin' aria-hidden='true' />
-                  Creating Account...
-                </>
-              ) : (
-                <>
-                  Sign Up
-                  <ArrowRightIcon className='shrink-0' aria-hidden='true' />
-                </>
-              )
-            }
+            {isSubmitting ? (
+              <>
+                <Loader2Icon className='shrink-0 animate-spin' aria-hidden='true' />
+                Creating Account...
+              </>
+            ) : (
+              <>
+                Sign Up
+                <ArrowRightIcon className='shrink-0' aria-hidden='true' />
+              </>
+            )}
           </Button>
         </motion.div>
       </motion.form>
