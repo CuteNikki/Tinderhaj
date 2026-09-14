@@ -14,6 +14,7 @@ import { profileFieldLabel } from '@/lib/profile-fields';
 import { updateProfileSchema } from '@/lib/schemas';
 
 import { ImageUploadField } from '@/components/profiles/image-upload-field';
+import { ProfilePreview } from '@/components/profiles/profile-preview';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -45,6 +46,7 @@ export function EditProfile({ profile }: { profile: Profile & { account: Account
   });
 
   const unit = form.watch('unit');
+  const preview = form.watch();
 
   function isFlagged(key: string) {
     return profile.status === 'REJECTED' && profile.rejectedFields.includes(key);
@@ -77,7 +79,7 @@ export function EditProfile({ profile }: { profile: Profile & { account: Account
           Edit
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className='lg:max-w-3xl'>
         <DialogHeader>
           <DialogTitle>Editing &quot;{profile.displayName}&quot;</DialogTitle>
           <DialogDescription>Changes are saved as a draft — you&apos;ll need to submit it for review again before it shows up in discovery.</DialogDescription>
@@ -113,258 +115,273 @@ export function EditProfile({ profile }: { profile: Profile & { account: Account
           </div>
         )}
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-5'>
-            <FormField
-              control={form.control}
-              name='displayName'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Display Name <span className='text-destructive'>*</span>
-                    {isFlagged('displayName') && (
-                      <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
-                        Needs update
-                      </Badge>
-                    )}
-                  </FormLabel>
-                  <FormControl>
-                    <Input type='text' {...field} required />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='avatarUrl'
-              render={({ field }) => (
-                <FormItem>
-                  <ImageUploadField
-                    label='Avatar'
-                    flagged={isFlagged('avatarUrl')}
-                    endpoint='profileAvatar'
-                    value={field.value ?? null}
-                    onChange={field.onChange}
-                    shape='circle'
-                  />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='bannerUrl'
-              render={({ field }) => (
-                <FormItem>
-                  <ImageUploadField
-                    label='Banner'
-                    flagged={isFlagged('bannerUrl')}
-                    endpoint='profileBanner'
-                    value={field.value ?? null}
-                    onChange={field.onChange}
-                    shape='banner'
-                  />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='bio'
-              render={({ field }) => (
-                <FormItem>
-                  <div className='flex items-center justify-between'>
+        <div className='lg:flex lg:items-start lg:gap-6'>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-5 lg:min-w-0 lg:flex-1'>
+              <FormField
+                control={form.control}
+                name='displayName'
+                render={({ field }) => (
+                  <FormItem>
                     <FormLabel>
-                      Bio
-                      {isFlagged('bio') && (
+                      Display Name <span className='text-destructive'>*</span>
+                      {isFlagged('displayName') && (
                         <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
                           Needs update
                         </Badge>
                       )}
                     </FormLabel>
-                    <span className='text-muted-foreground text-xs'>
-                      {(field.value ?? '').length}/{MAX_BIO_LENGTH}
-                    </span>
-                  </div>
-                  <FormControl>
-                    <Textarea maxLength={MAX_BIO_LENGTH} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='birthday'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Birthday
-                    {isFlagged('birthday') && (
-                      <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
-                        Needs update
-                      </Badge>
-                    )}
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      type='date'
-                      {...field}
-                      value={field.value ? new Date(field.value).toISOString().split('T')[0] : ''}
-                      onChange={(e) => field.onChange(e.target.value ? new Date(e.target.value) : null)}
+                    <FormControl>
+                      <Input type='text' {...field} required />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='avatarUrl'
+                render={({ field }) => (
+                  <FormItem>
+                    <ImageUploadField
+                      label='Avatar'
+                      flagged={isFlagged('avatarUrl')}
+                      endpoint='profileAvatar'
+                      value={field.value ?? null}
+                      onChange={field.onChange}
+                      shape='circle'
                     />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='size'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Size
-                    {isFlagged('size') && (
-                      <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
-                        Needs update
-                      </Badge>
-                    )}
-                  </FormLabel>
-                  <div className='flex items-center gap-2'>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='bannerUrl'
+                render={({ field }) => (
+                  <FormItem>
+                    <ImageUploadField
+                      label='Banner'
+                      flagged={isFlagged('bannerUrl')}
+                      endpoint='profileBanner'
+                      value={field.value ?? null}
+                      onChange={field.onChange}
+                      shape='banner'
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='bio'
+                render={({ field }) => (
+                  <FormItem>
+                    <div className='flex items-center justify-between'>
+                      <FormLabel>
+                        Bio
+                        {isFlagged('bio') && (
+                          <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
+                            Needs update
+                          </Badge>
+                        )}
+                      </FormLabel>
+                      <span className='text-muted-foreground text-xs'>
+                        {(field.value ?? '').length}/{MAX_BIO_LENGTH}
+                      </span>
+                    </div>
+                    <FormControl>
+                      <Textarea maxLength={MAX_BIO_LENGTH} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='birthday'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Birthday
+                      {isFlagged('birthday') && (
+                        <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
+                          Needs update
+                        </Badge>
+                      )}
+                    </FormLabel>
                     <FormControl>
                       <Input
-                        type='number'
+                        type='date'
                         {...field}
-                        value={field.value ?? ''}
-                        onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
+                        value={field.value ? new Date(field.value).toISOString().split('T')[0] : ''}
+                        onChange={(e) => field.onChange(e.target.value ? new Date(e.target.value) : null)}
                       />
                     </FormControl>
-                    <FormField
-                      control={form.control}
-                      name='unit'
-                      render={({ field: unitField }) => (
-                        <Select value={unitField.value} onValueChange={unitField.onChange}>
-                          <SelectTrigger className='w-24'>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value='CM'>cm</SelectItem>
-                            <SelectItem value='INCH'>inch</SelectItem>
-                          </SelectContent>
-                        </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='size'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Size
+                      {isFlagged('size') && (
+                        <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
+                          Needs update
+                        </Badge>
                       )}
-                    />
+                    </FormLabel>
+                    <div className='flex items-center gap-2'>
+                      <FormControl>
+                        <Input
+                          type='number'
+                          {...field}
+                          value={field.value ?? ''}
+                          onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
+                        />
+                      </FormControl>
+                      <FormField
+                        control={form.control}
+                        name='unit'
+                        render={({ field: unitField }) => (
+                          <Select value={unitField.value} onValueChange={unitField.onChange}>
+                            <SelectTrigger className='w-24'>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value='CM'>cm</SelectItem>
+                              <SelectItem value='INCH'>inch</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
+                    </div>
+                    <p className='text-muted-foreground text-xs'>
+                      IKEA BLÅHAJ sizes: Small {unit === 'INCH' ? BLAHAJ_SIZE_INCH.small : BLAHAJ_SIZE_CM.small}
+                      {unit === 'INCH' ? ' inches' : 'cm'}, Large {unit === 'INCH' ? BLAHAJ_SIZE_INCH.large : BLAHAJ_SIZE_CM.large}
+                      {unit === 'INCH' ? ' inches' : 'cm'}.
+                    </p>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='pronouns'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Pronouns
+                      {isFlagged('pronouns') && (
+                        <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
+                          Needs update
+                        </Badge>
+                      )}
+                    </FormLabel>
+                    <FormControl>
+                      <Input type='text' {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='location'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Location
+                      {isFlagged('location') && (
+                        <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
+                          Needs update
+                        </Badge>
+                      )}
+                    </FormLabel>
+                    <FormControl>
+                      <Input type='text' {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormItem>
+                <div className='flex items-center justify-between'>
+                  <FormLabel>
+                    Interests
+                    {isFlagged('interests') && (
+                      <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
+                        Needs update
+                      </Badge>
+                    )}
+                  </FormLabel>
+                  <span className='text-muted-foreground text-xs'>{interests.length}/3</span>
+                </div>
+                {interests.length > 0 && (
+                  <div className='flex flex-wrap gap-1.5'>
+                    {interests.map((interest) => (
+                      <Badge key={interest} variant='secondary' className='gap-1 rounded-full py-1 pr-1 pl-2.5 text-xs font-semibold'>
+                        {interest}
+                        <button
+                          type='button'
+                          onClick={() => setInterests(interests.filter((i) => i !== interest))}
+                          className='hover:bg-foreground/10 rounded-full p-0.5'
+                        >
+                          <XIcon className='h-3 w-3' />
+                        </button>
+                      </Badge>
+                    ))}
                   </div>
-                  <p className='text-muted-foreground text-xs'>
-                    IKEA BLÅHAJ sizes: Small {unit === 'INCH' ? BLAHAJ_SIZE_INCH.small : BLAHAJ_SIZE_CM.small}
-                    {unit === 'INCH' ? ' inches' : 'cm'}, Large {unit === 'INCH' ? BLAHAJ_SIZE_INCH.large : BLAHAJ_SIZE_CM.large}
-                    {unit === 'INCH' ? ' inches' : 'cm'}.
-                  </p>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='pronouns'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Pronouns
-                    {isFlagged('pronouns') && (
-                      <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
-                        Needs update
-                      </Badge>
-                    )}
-                  </FormLabel>
-                  <FormControl>
-                    <Input type='text' {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='location'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Location
-                    {isFlagged('location') && (
-                      <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
-                        Needs update
-                      </Badge>
-                    )}
-                  </FormLabel>
-                  <FormControl>
-                    <Input type='text' {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                )}
+                {interests.length < 3 && (
+                  <div className='flex items-center gap-2'>
+                    <Input
+                      type='text'
+                      value={newInterest}
+                      maxLength={MAX_INTEREST_LENGTH}
+                      placeholder='e.g. Cuddles'
+                      onChange={(e) => setNewInterest(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          addInterest();
+                        }
+                      }}
+                    />
+                    <Button type='button' variant='outline' size='icon' onClick={addInterest} disabled={!newInterest.trim()}>
+                      <PlusIcon />
+                    </Button>
+                  </div>
+                )}
+              </FormItem>
 
-            <FormItem>
-              <div className='flex items-center justify-between'>
-                <FormLabel>
-                  Interests
-                  {isFlagged('interests') && (
-                    <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
-                      Needs update
-                    </Badge>
-                  )}
-                </FormLabel>
-                <span className='text-muted-foreground text-xs'>{interests.length}/3</span>
-              </div>
-              {interests.length > 0 && (
-                <div className='flex flex-wrap gap-1.5'>
-                  {interests.map((interest) => (
-                    <Badge key={interest} variant='secondary' className='gap-1 rounded-full py-1 pr-1 pl-2.5 text-xs font-semibold'>
-                      {interest}
-                      <button
-                        type='button'
-                        onClick={() => setInterests(interests.filter((i) => i !== interest))}
-                        className='hover:bg-foreground/10 rounded-full p-0.5'
-                      >
-                        <XIcon className='h-3 w-3' />
-                      </button>
-                    </Badge>
-                  ))}
-                </div>
-              )}
-              {interests.length < 3 && (
-                <div className='flex items-center gap-2'>
-                  <Input
-                    type='text'
-                    value={newInterest}
-                    maxLength={MAX_INTEREST_LENGTH}
-                    placeholder='e.g. Cuddles'
-                    onChange={(e) => setNewInterest(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                        addInterest();
-                      }
-                    }}
-                  />
-                  <Button type='button' variant='outline' size='icon' onClick={addInterest} disabled={!newInterest.trim()}>
-                    <PlusIcon />
-                  </Button>
-                </div>
-              )}
-            </FormItem>
-
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button variant='secondary'>Cancel</Button>
-              </DialogClose>
-              <Button type='submit'>Save changes</Button>
-            </DialogFooter>
-          </form>
-        </Form>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button variant='secondary'>Cancel</Button>
+                </DialogClose>
+                <Button type='submit'>Save changes</Button>
+              </DialogFooter>
+            </form>
+          </Form>
+          <ProfilePreview
+            username={profile.account.username}
+            displayName={preview.displayName}
+            pronouns={preview.pronouns}
+            avatarUrl={preview.avatarUrl}
+            bannerUrl={preview.bannerUrl}
+            bio={preview.bio}
+            location={preview.location}
+            size={preview.size}
+            unit={unit ?? 'CM'}
+            birthday={preview.birthday}
+            interests={interests}
+          />
+        </div>
       </DialogContent>
     </Dialog>
   );
