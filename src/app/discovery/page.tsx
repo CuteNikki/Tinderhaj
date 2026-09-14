@@ -11,6 +11,25 @@ import { DiscoveryPagination } from '@/components/discovery/pagination';
 import { DiscoveryProfile } from '@/components/discovery/profile';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
 
+const DISCOVERY_QUERY_TIMEOUT_MS = 8_000;
+
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number) {
+  return new Promise<T>((resolve, reject) => {
+    const timeoutId = setTimeout(() => reject(new Error('Discovery query timed out')), timeoutMs);
+
+    promise.then(
+      (value) => {
+        clearTimeout(timeoutId);
+        resolve(value);
+      },
+      (error: unknown) => {
+        clearTimeout(timeoutId);
+        reject(error);
+      },
+    );
+  });
+}
+
 const searchParamsSchema = z.object({
   q: z.preprocess((val) => val, z.string().optional().default('')),
   p: z.preprocess((val) => (isNaN(parseInt(val as string)) ? undefined : parseInt(val as string)), z.number().int().positive().default(1)),
@@ -27,7 +46,10 @@ export default async function DiscoveryPage({ searchParams }: { searchParams: Pr
     redirect(`/discovery?${params}`);
   }
 
-  const { profiles, totalProfiles } = await (query?.length ? QUERIES.getProfilesWithQuery(query, page, take, seed) : QUERIES.getProfiles(page, take, seed));
+  const { profiles, totalProfiles } = await withTimeout(
+    query?.length ? QUERIES.getProfilesWithQuery(query, page, take, seed) : QUERIES.getProfiles(page, take, seed),
+    DISCOVERY_QUERY_TIMEOUT_MS,
+  );
 
   const totalPages = Math.ceil(totalProfiles / take);
 
