@@ -25,7 +25,18 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'Tinderhaj - Meet Sharks',
   description:
-    "A warm, weird little corner of the internet for Blåhaj looking for their person. Browse profiles, find a feeling, make it official.\nThe world's first dating site exclusively for plush sharks.",
+    "A warm, weird little corner of the internet for Blåhaj looking for their person. Browse profiles, find a feeling, make it official.\nThe world's first dating site exclusively for IKEA's Blåhaj plush sharks.",
+  openGraph: {
+    url: 'https://tinderhaj.com',
+    images: [
+      {
+        url: 'https://tinderhaj.com/blahaj.webp',
+        alt: 'Blåhaj',
+        width: 128,
+        height: 128,
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
