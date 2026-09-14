@@ -85,29 +85,95 @@ export const discoveryMetadata: Metadata = {
 export const signInMetadata: Metadata = {
   title: 'Tinderhaj - Sign In',
   description: 'Sign in to Tinderhaj and pick up where you left off with your plush matches.',
+  openGraph: {
+    url: 'https://tinderhaj.com',
+    images: [
+      {
+        url: 'https://tinderhaj.com/blahaj.webp',
+        alt: 'Blåhaj',
+        width: 128,
+        height: 128,
+      },
+    ],
+  },
 };
 
 export const signUpMetadata: Metadata = {
   title: 'Tinderhaj - Sign Up',
   description: 'Create your Tinderhaj account and find your perfect plush match.',
+  openGraph: {
+    url: 'https://tinderhaj.com',
+    images: [
+      {
+        url: 'https://tinderhaj.com/blahaj.webp',
+        alt: 'Blåhaj',
+        width: 128,
+        height: 128,
+      },
+    ],
+  },
 };
 
 export const forgotPasswordMetadata: Metadata = {
-  title: 'Tinderhaj - Forgot Password',
+  title: 'Tinderhaj - Recovery',
   description: 'Request a password reset link for your Tinderhaj account.',
+  openGraph: {
+    url: 'https://tinderhaj.com',
+    images: [
+      {
+        url: 'https://tinderhaj.com/blahaj.webp',
+        alt: 'Blåhaj',
+        width: 128,
+        height: 128,
+      },
+    ],
+  },
 };
 
 export const resetPasswordMetadata: Metadata = {
-  title: 'Tinderhaj - Reset Password',
+  title: 'Tinderhaj - Recovery',
   description: 'Choose a new password for your Tinderhaj account.',
+  openGraph: {
+    url: 'https://tinderhaj.com',
+    images: [
+      {
+        url: 'https://tinderhaj.com/blahaj.webp',
+        alt: 'Blåhaj',
+        width: 128,
+        height: 128,
+      },
+    ],
+  },
 };
 
 export const profilesMetadata: Metadata = {
   title: 'Tinderhaj - Profiles',
   description: 'Create and manage your Tinderhaj profiles.',
+  openGraph: {
+    url: 'https://tinderhaj.com',
+    images: [
+      {
+        url: 'https://tinderhaj.com/blahaj.webp',
+        alt: 'Blåhaj',
+        width: 128,
+        height: 128,
+      },
+    ],
+  },
 };
 
 export const verifyMetadata: Metadata = {
-  title: 'Tinderhaj - Verify Profiles',
+  title: 'Tinderhaj - Verification',
   description: 'Review and verify Tinderhaj profiles.',
+  openGraph: {
+    url: 'https://tinderhaj.com',
+    images: [
+      {
+        url: 'https://tinderhaj.com/blahaj.webp',
+        alt: 'Blåhaj',
+        width: 128,
+        height: 128,
+      },
+    ],
+  },
 };
