@@ -70,7 +70,7 @@ export async function Navbar() {
                     <MenuIcon />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent side='bottom'>
+                <DropdownMenuContent side='bottom' align='end'>
                   <DropdownMenuLabel className='flex items-center gap-2'>
                     <div className='flex flex-col'>
                       <span>Hello, @{session.account.username}!</span>
