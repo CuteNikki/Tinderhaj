@@ -4,6 +4,8 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import { NextSSRPlugin } from '@uploadthing/react/next-ssr-plugin';
 import { extractRouterConfig } from 'uploadthing/server';
 
+import { layoutMetadata } from '@/constants/metadata';
+
 import { ourFileRouter } from '@/app/api/uploadthing/core';
 import { Footer } from '@/components/navigation/footer';
 import { Navbar } from '@/components/navigation/navbar';
@@ -22,22 +24,7 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-export const metadata: Metadata = {
-  title: 'Tinderhaj - Meet Sharks',
-  description:
-    "A warm, weird little corner of the internet for Blåhaj looking for their person. Browse profiles, find a feeling, make it official.\nThe world's first dating site exclusively for IKEA's Blåhaj plush sharks.",
-  openGraph: {
-    url: 'https://tinderhaj.com',
-    images: [
-      {
-        url: 'https://tinderhaj.com/blahaj.webp',
-        alt: 'Blåhaj',
-        width: 128,
-        height: 128,
-      },
-    ],
-  },
-};
+export const metadata: Metadata = layoutMetadata;
 
 export default function RootLayout({
   children,

@@ -1,10 +1,14 @@
 import { UserRoundIcon } from 'lucide-react';
+import type { Metadata } from 'next';
 
+import { profilesMetadata } from '@/constants/metadata';
 import { getCurrentProfiles, getCurrentUser } from '@/lib/actions';
 
 import { CreateProfile } from '@/components/auth/create-profile';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
 import { ProfileCard } from '@/components/profiles/profile-card';
+
+export const metadata: Metadata = profilesMetadata;
 
 export default async function ProfilesPage() {
   const [profiles, session] = await Promise.all([getCurrentProfiles(), getCurrentUser({ includeAccount: true })]);

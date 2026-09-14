@@ -1,10 +1,14 @@
 import { ShieldCheckIcon } from 'lucide-react';
+import type { Metadata } from 'next';
 
+import { verifyMetadata } from '@/constants/metadata';
 import { getCurrentUser } from '@/lib/actions';
 import { QUERIES } from '@/lib/queries';
 
 import { ScrollReveal } from '@/components/home/scroll-reveal';
 import { VerifyProfileCard } from '@/components/verify/verify-profile-card';
+
+export const metadata: Metadata = verifyMetadata;
 
 export default async function VerifyPage() {
   const session = await getCurrentUser({ includeAccount: true, redirectIfNotFound: true });

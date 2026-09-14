@@ -1,10 +1,14 @@
 import { SparklesIcon } from 'lucide-react';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 
+import { signUpMetadata } from '@/constants/metadata';
 import { getCurrentUser } from '@/lib/actions';
 
 import { AuthShell } from '@/components/auth/auth-shell';
 import { SignUpForm } from '@/components/auth/sign-up-form';
+
+export const metadata: Metadata = signUpMetadata;
 
 export default async function SignUpPage() {
   await getCurrentUser({ redirectIfFound: true });

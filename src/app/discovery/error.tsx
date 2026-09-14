@@ -1,11 +1,16 @@
 'use client';
 
+import { Metadata } from 'next';
 import { useEffect, useState } from 'react';
-
-import { Loader2Icon, RotateCwIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
+import { Loader2Icon, RotateCwIcon } from 'lucide-react';
+
+import { errorMetadata } from '@/constants/metadata';
+
 import { Button } from '@/components/ui/button';
+
+export const metadata: Metadata = errorMetadata;
 
 export default function DiscoveryError() {
   const [isRetrying, setIsRetrying] = useState(false);

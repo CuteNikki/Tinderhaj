@@ -1,11 +1,15 @@
 import { ShieldCheckIcon } from 'lucide-react';
+import type { Metadata } from 'next';
 import { SearchParams } from 'next/dist/server/request/search-params';
 import Link from 'next/link';
 
+import { resetPasswordMetadata } from '@/constants/metadata';
 import { getCurrentUser } from '@/lib/actions';
 
 import { AuthShell } from '@/components/auth/auth-shell';
 import { ResetPasswordForm } from '@/components/auth/reset-password-form';
+
+export const metadata: Metadata = resetPasswordMetadata;
 
 export default async function ResetPasswordPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
   await getCurrentUser({ redirectIfFound: true });

@@ -1,7 +1,13 @@
+import { Metadata } from 'next';
+
+import { homeMetadata } from '@/constants/metadata';
+
 import { FeatureContent } from '@/components/home/feature-content';
 import { GuideStep } from '@/components/home/guide-step';
 import { Hero } from '@/components/home/hero';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
+
+export const metadata: Metadata = homeMetadata;
 
 export default function Home() {
   return (
@@ -10,7 +16,7 @@ export default function Home() {
       <section id='guide' className='bg-muted text-foreground relative scroll-m-16 overflow-hidden py-18'>
         <ScrollReveal>
           <div className='container mx-auto max-w-350 px-5 lg:px-10'>
-            <div className='mb-4 md:mb-10 flex flex-col justify-between gap-6 md:flex-row md:items-center'>
+            <div className='mb-4 flex flex-col justify-between gap-6 md:mb-10 md:flex-row md:items-center'>
               <div>
                 <p className='text-primary mb-3 text-xs font-bold tracking-widest uppercase'>A better kind of first date</p>
                 <h2 className='max-w-xl text-4xl leading-tight font-black tracking-tight sm:text-5xl'>

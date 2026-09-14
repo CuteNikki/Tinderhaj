@@ -1,10 +1,14 @@
 import { KeyRoundIcon } from 'lucide-react';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 
+import { forgotPasswordMetadata } from '@/constants/metadata';
 import { getCurrentUser } from '@/lib/actions';
 
 import { AuthShell } from '@/components/auth/auth-shell';
 import { ForgotPasswordForm } from '@/components/auth/forgot-password-form';
+
+export const metadata: Metadata = forgotPasswordMetadata;
 
 export default async function ForgotPasswordPage() {
   await getCurrentUser({ redirectIfFound: true });

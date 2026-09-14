@@ -1,7 +1,9 @@
+import { Metadata } from 'next';
 import { SearchParams } from 'next/dist/server/request/search-params';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
+import { discoveryMetadata } from '@/constants/metadata';
 import { QUERIES } from '@/lib/queries';
 
 import { DiscoveryFilter } from '@/components/discovery/filter';
@@ -12,6 +14,8 @@ import { DiscoveryProfile } from '@/components/discovery/profile';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
 
 const DISCOVERY_QUERY_TIMEOUT_MS = 8_000;
+
+export const metadata: Metadata = discoveryMetadata;
 
 function withTimeout<T>(promise: Promise<T>, timeoutMs: number) {
   return new Promise<T>((resolve, reject) => {
