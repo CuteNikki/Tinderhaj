@@ -1,14 +1,13 @@
 import { UserRoundIcon } from 'lucide-react';
 
-import { getCurrentProfiles } from '@/lib/actions';
-import { getUserSession } from '@/lib/session';
+import { getCurrentProfiles, getCurrentUser } from '@/lib/actions';
 
 import { CreateProfile } from '@/components/auth/create-profile';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
 import { ProfileCard } from '@/components/profiles/profile-card';
 
 export default async function ProfilesPage() {
-  const [profiles, session] = await Promise.all([getCurrentProfiles(), getUserSession({ includeAccount: true })]);
+  const [profiles, session] = await Promise.all([getCurrentProfiles(), getCurrentUser({ includeAccount: true })]);
 
   return (
     <div className='bg-background flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'>

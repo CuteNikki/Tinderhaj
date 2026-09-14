@@ -280,7 +280,7 @@ export function CreateProfile({ username, disableButton }: { username?: string; 
             bio={preview.bio}
             location={preview.location}
             size={preview.size}
-            unit={preview.unit}
+            unit={unit ?? 'CM'}
             birthday={preview.birthday}
             interests={interests}
           />
