@@ -72,7 +72,7 @@ export function VerifyProfileCard({ profile }: { profile: Profile & { account: A
           </div>
           <div className='min-w-0 flex-1 pt-4'>
             <div className='flex flex-wrap items-center gap-x-2'>
-              <h3 className='text-foreground truncate text-xl font-black tracking-tight'>{profile.displayName}</h3>
+              <h3 className='text-foreground max-w-full truncate text-xl font-black tracking-tight'>{profile.displayName}</h3>
               {profile.pronouns && <span className='text-muted-foreground text-sm'>({profile.pronouns})</span>}
             </div>
             <p className='text-muted-foreground truncate text-sm'>@{profile.account.username}</p>

@@ -34,7 +34,7 @@ export function ProfilePreview({
   interests: string[];
 }) {
   return (
-    <div className={cn('hidden shrink-0 basis-72 lg:block', className)}>
+    <div className={cn('hidden w-72 shrink-0 lg:block', className)}>
       <p className='text-muted-foreground mb-2 text-xs font-bold tracking-widest uppercase'>Preview</p>
       <Card className='border-foreground/10 bg-background overflow-hidden pt-0 shadow-sm'>
         <div className='relative aspect-5/2 overflow-hidden'>
@@ -51,7 +51,7 @@ export function ProfilePreview({
             </div>
             <div className='min-w-0 flex-1 pt-4'>
               <div className='flex flex-wrap items-center gap-x-2'>
-                <h3 className='text-foreground truncate text-lg font-black tracking-tight'>{displayName || 'Your name'}</h3>
+                <h3 className='text-foreground max-w-full truncate text-lg font-black tracking-tight'>{displayName || 'Your name'}</h3>
                 {pronouns && <span className='text-muted-foreground text-sm'>({pronouns})</span>}
               </div>
               {username && <p className='text-muted-foreground truncate text-sm'>@{username}</p>}
@@ -65,9 +65,9 @@ export function ProfilePreview({
               </span>
             )}
             {location && (
-              <span className='flex items-center gap-1.5'>
-                <MapPinIcon className='text-primary h-3.5 w-3.5' />
-                {location}
+              <span className='flex max-w-full min-w-0 items-center gap-1.5'>
+                <MapPinIcon className='text-primary h-3.5 w-3.5 shrink-0' />
+                <span className='truncate'>{location}</span>
               </span>
             )}
             {size != null && (
@@ -79,13 +79,13 @@ export function ProfilePreview({
             )}
           </div>
 
-          {bio && <p className='text-foreground/80 mt-4 line-clamp-3 text-sm leading-relaxed'>{bio}</p>}
+          {bio && <p className='text-foreground/80 mt-4 line-clamp-3 text-sm leading-relaxed wrap-break-word'>{bio}</p>}
 
           {interests.length > 0 && (
             <div className='flex flex-wrap gap-1.5 pt-4'>
               {interests.map((interest) => (
-                <Badge key={interest} variant='secondary' className='rounded-full text-xs font-semibold'>
-                  {interest}
+                <Badge key={interest} variant='secondary' className='max-w-full rounded-full text-xs font-semibold'>
+                  <span className='truncate'>{interest}</span>
                 </Badge>
               ))}
             </div>
