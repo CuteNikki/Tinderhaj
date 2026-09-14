@@ -23,8 +23,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Tinderhaj | Meet your plush match',
-  description: 'A warm, weird little corner of the internet for Blåhaj looking for their person.',
+  title: 'Tinderhaj - Meet Sharks',
+  description:
+    "A warm, weird little corner of the internet for Blåhaj looking for their person. Browse profiles, find a feeling, make it official.\nThe world's first dating site exclusively for plush sharks.",
 };
 
 export default function RootLayout({
