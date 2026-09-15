@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { BadgeCheckIcon, CheckIcon, HomeIcon, MenuIcon, SearchIcon, UserRoundIcon } from 'lucide-react';
+import { BadgeCheckIcon, CheckIcon, HomeIcon, MenuIcon, SearchIcon, ShieldIcon, SignpostIcon, UserRoundIcon, UsersRoundIcon } from 'lucide-react';
 
 import { getCurrentUser } from '@/lib/actions';
 
@@ -10,14 +10,7 @@ import { DiscoveryLink } from '@/components/discovery/link';
 import { ThemeButton } from '@/components/theme/switch';
 import { TypographyLarge } from '@/components/typography';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Separator } from '@/components/ui/separator';
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
@@ -26,9 +19,9 @@ export async function Navbar() {
 
   const links = [
     { name: 'Home', href: '/#top', icon: HomeIcon, showOnBar: true, showInMenu: true },
-    { name: 'Guide', href: '/#guide', icon: BadgeCheckIcon, showOnBar: true, showInMenu: true },
+    { name: 'Guide', href: '/#guide', icon: SignpostIcon, showOnBar: true, showInMenu: true },
     { name: 'Features', href: '/#features', icon: BadgeCheckIcon, showOnBar: true, showInMenu: true },
-    { name: 'Discovery', href: '/discovery#top', icon: SearchIcon, showOnBar: true, showInMenu: false },
+    { name: 'Discovery', href: '/discovery#top', icon: SearchIcon, showOnBar: true, showInMenu: true },
   ];
 
   return (
@@ -71,45 +64,49 @@ export async function Navbar() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent side='bottom' align='end'>
-                  <DropdownMenuLabel className='flex items-center gap-2'>
-                    <div className='flex flex-col'>
-                      <span>Hello, @{session.account.username}!</span>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
                   <LogOutDropdownMenuItem />
-                  <DropdownMenuSeparator />
-                  {(session?.account?.role === 'MODERATOR' || session?.account?.role === 'ADMIN') && (
-                    <Link href='/verify#top'>
-                      <DropdownMenuItem>
-                        <CheckIcon />
-                        Verify
-                      </DropdownMenuItem>
-                    </Link>
-                  )}
-                  <Link href='/profiles#top'>
+                  <Link href='/account#top'>
                     <DropdownMenuItem>
                       <UserRoundIcon />
+                      Account
+                    </DropdownMenuItem>
+                  </Link>
+                  <Link href='/profiles#top'>
+                    <DropdownMenuItem>
+                      <UsersRoundIcon />
                       Profiles
                     </DropdownMenuItem>
                   </Link>
-                  <DiscoveryLink>
-                    <DropdownMenuItem>
-                      <SearchIcon />
-                      Discovery
-                    </DropdownMenuItem>
-                  </DiscoveryLink>
+                  {(session?.account?.role === 'MODERATOR' || session?.account?.role === 'ADMIN') && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <Link href='/verification#top'>
+                        <DropdownMenuItem>
+                          <ShieldIcon />
+                          Verification
+                        </DropdownMenuItem>
+                      </Link>
+                    </>
+                  )}
                   <DropdownMenuSeparator />
                   {links.map(
                     (link, index) =>
-                      link.showInMenu && (
+                      link.showInMenu &&
+                      (link.href.startsWith('/discovery') ? (
+                        <DiscoveryLink key={`navdropdown-link-${index}-${link.href}-${link.name}`}>
+                          <DropdownMenuItem>
+                            <link.icon />
+                            {link.name}
+                          </DropdownMenuItem>
+                        </DiscoveryLink>
+                      ) : (
                         <Link href={link.href} key={`navdropdown-link-${index}-${link.href}-${link.name}`}>
                           <DropdownMenuItem>
                             <link.icon />
                             {link.name}
                           </DropdownMenuItem>
                         </Link>
-                      ),
+                      )),
                   )}
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -131,7 +128,7 @@ export async function Navbar() {
                 <SheetHeader className='flex flex-col items-center gap-2'>
                   <SheetTitle className='flex items-center justify-center gap-2'>
                     <div className='flex flex-col'>
-                      <span>Hello, @{session.account.username}!</span>
+                      <span className='font-bold uppercase'>@{session.account.username}</span>
                     </div>
                   </SheetTitle>
                   <LogOutButton />
@@ -147,14 +144,6 @@ export async function Navbar() {
               )}
               <nav className='flex flex-col items-center gap-4 p-6 text-center'>
                 <Separator />
-                {(session?.account?.role === 'MODERATOR' || session?.account?.role === 'ADMIN') && (
-                  <SheetClose className='flex items-center gap-2' asChild>
-                    <Link href='/verify#top' className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
-                      <CheckIcon className='h-4 w-4' />
-                      Verify
-                    </Link>
-                  </SheetClose>
-                )}
                 {session?.account && (
                   <SheetClose className='flex items-center gap-2' asChild>
                     <Link href='/profiles' className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
@@ -163,23 +152,36 @@ export async function Navbar() {
                     </Link>
                   </SheetClose>
                 )}
-                <SheetClose className='flex items-center gap-2' asChild>
-                  <DiscoveryLink className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
-                    <SearchIcon className='h-4 w-4' />
-                    Discovery
-                  </DiscoveryLink>
-                </SheetClose>
+                {(session?.account?.role === 'MODERATOR' || session?.account?.role === 'ADMIN') && (
+                  <>
+                    <Separator />
+                    <SheetClose className='flex items-center gap-2' asChild>
+                      <Link href='/verification#top' className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
+                        <CheckIcon className='h-4 w-4' />
+                        Verification
+                      </Link>
+                    </SheetClose>
+                  </>
+                )}
                 {session?.account && <Separator />}
                 {links.map(
                   (link, index) =>
-                    link.showInMenu && (
+                    link.showInMenu &&
+                    (link.href.startsWith('/discovery') ? (
+                      <SheetClose className='flex items-center gap-2' key={`navsheet-link-${index}-${link.href}-${link.name}`} asChild>
+                        <DiscoveryLink className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
+                          <link.icon className='h-4 w-4' />
+                          {link.name}
+                        </DiscoveryLink>
+                      </SheetClose>
+                    ) : (
                       <SheetClose className='flex items-center gap-2' key={`navsheet-link-${index}-${link.href}-${link.name}`} asChild>
                         <Link href={link.href} className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
                           <link.icon className='h-4 w-4' />
                           {link.name}
                         </Link>
                       </SheetClose>
-                    ),
+                    )),
                 )}
                 <Separator />
               </nav>

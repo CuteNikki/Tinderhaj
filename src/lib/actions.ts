@@ -301,7 +301,7 @@ export async function verifyProfile({ profileId }: { profileId: string }) {
     data: { status: 'VERIFIED', rejectedFields: [], rejectionNote: null, verifiedAt: new Date() },
   });
 
-  revalidatePath('/verify');
+  revalidatePath('/verification');
   revalidatePath('/profiles');
   return true;
 }
@@ -320,6 +320,6 @@ export async function rejectProfile(unsafeData: z.infer<typeof rejectProfileSche
     data: { status: 'REJECTED', rejectedFields: data.rejectedFields, rejectionNote: data.note ?? null },
   });
 
-  revalidatePath('/verify');
+  revalidatePath('/verification');
   revalidatePath('/profiles');
 }
