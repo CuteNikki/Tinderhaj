@@ -162,6 +162,22 @@ export const profilesMetadata: Metadata = {
   },
 };
 
+export const accountMetadata: Metadata = {
+  title: 'Tinderhaj - Account',
+  description: 'Manage your Tinderhaj account.',
+  openGraph: {
+    url: 'https://tinderhaj.com',
+    images: [
+      {
+        url: 'https://tinderhaj.com/blahaj.webp',
+        alt: 'Blåhaj',
+        width: 128,
+        height: 128,
+      },
+    ],
+  },
+};
+
 export const verifyMetadata: Metadata = {
   title: 'Tinderhaj - Verification',
   description: 'Review and verify Tinderhaj profiles.',

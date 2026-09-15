@@ -2,10 +2,11 @@
 
 import { createHash, randomBytes } from 'crypto';
 import { revalidatePath } from 'next/cache';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
-import { PASSWORD_RESET_TOKEN_EXPIRATION } from '@/constants/auth';
+import { COOKIE_SESSION_KEY, PASSWORD_RESET_TOKEN_EXPIRATION } from '@/constants/auth';
 import { AccountModel } from '@/generated/models';
 import { sendPasswordResetEmail } from '@/lib/email';
 import { comparePasswords, generateSalt, hashPassword } from '@/lib/password-hasher';
@@ -18,6 +19,7 @@ import {
   signInSchema,
   signUpSchema,
   updateProfileSchema,
+  updateUsernameSchema,
 } from '@/lib/schemas';
 import { createUserSession, getUserSession, removeUserFromSession } from '@/lib/session';
 
@@ -198,6 +200,48 @@ export const getCurrentProfileCount = async () => {
 
 export async function logOut() {
   await removeUserFromSession();
+
+  redirect('/');
+}
+
+export async function updateUsername(unsafeData: z.infer<typeof updateUsernameSchema>) {
+  const { success, data } = updateUsernameSchema.safeParse(unsafeData);
+
+  if (!success) return { message: 'Unable to update username!' };
+
+  const session = await getCurrentUser({ includeAccount: true, redirectIfNotFound: true });
+
+  if (session.account.username === data.username) return { message: 'That is already your username.' };
+
+  const existingAccount = await prisma.account.findUnique({ where: { username: data.username } });
+
+  if (existingAccount) return { field: 'username', message: 'Username is already in use!' };
+
+  try {
+    await prisma.account.update({ where: { id: session.accountId }, data: { username: data.username } });
+  } catch (error) {
+    console.error(error);
+    return { message: 'Unable to update username!' };
+  }
+
+  revalidatePath('/account');
+  revalidatePath('/profiles');
+  revalidatePath('/discovery');
+  revalidatePath('/verification');
+}
+
+export async function deleteAccount() {
+  const session = await getCurrentUser({ redirectIfNotFound: true });
+
+  try {
+    await prisma.account.delete({ where: { id: session.accountId } });
+  } catch (error) {
+    console.error(error);
+    return { message: 'Unable to delete your account!' };
+  }
+
+  const cookieStore = await cookies();
+  cookieStore.delete(COOKIE_SESSION_KEY);
 
   redirect('/');
 }

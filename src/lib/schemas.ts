@@ -83,6 +83,16 @@ export const signUpSchema = z.object({
     .max(MAX_PASSWORD_LENGTH, `Password must be at most ${MAX_PASSWORD_LENGTH} characters.`),
 });
 
+export const updateUsernameSchema = z.object({
+  username: z
+    .string()
+    .trim()
+    .nonempty('Username is required!')
+    .regex(/^[a-z0-9_]+$/, 'Username can only contain lowercase letters, numbers, and underscores.')
+    .min(MIN_USERNAME_LENGTH, `Username must be at least ${MIN_USERNAME_LENGTH} characters.`)
+    .max(MAX_USERNAME_LENGTH, `Username must be at most ${MAX_USERNAME_LENGTH} characters.`),
+});
+
 export const sessionSchema = z.object({
   accountId: z.string(),
   sessionId: z.string(),
