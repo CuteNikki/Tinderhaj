@@ -210,6 +210,22 @@ export const termsMetadata: Metadata = {
   },
 };
 
+export const imprintMetadata: Metadata = {
+  title: 'Tinderhaj - Imprint',
+  description: 'Legal information and contact details for Tinderhaj.',
+  openGraph: {
+    url: 'https://tinderhaj.com/imprint',
+    images: [
+      {
+        url: 'https://tinderhaj.com/blahaj.webp',
+        alt: 'Blåhaj',
+        width: 128,
+        height: 128,
+      },
+    ],
+  },
+};
+
 export const verifyMetadata: Metadata = {
   title: 'Tinderhaj - Verification',
   description: 'Review and verify Tinderhaj profiles.',

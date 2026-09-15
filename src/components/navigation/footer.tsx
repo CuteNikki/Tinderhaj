@@ -67,7 +67,7 @@ export function Footer() {
               <Link href='/terms' className='hover:text-foreground transition-colors'>
                 Terms
               </Link>
-              <Link href='/#top' className='hover:text-foreground transition-colors'>
+              <Link href='/imprint' className='hover:text-foreground transition-colors'>
                 Imprint
               </Link>
             </div>
