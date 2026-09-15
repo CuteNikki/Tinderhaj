@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { BadgeCheckIcon, HomeIcon, MenuIcon, SearchIcon, SettingsIcon, SignpostIcon, UserCheckIcon, UserRoundIcon, UserShieldIcon } from 'lucide-react';
+import { HomeIcon, MenuIcon, MessageCircleIcon, SearchIcon, SettingsIcon, SignpostIcon, UserCheckIcon, UserRoundIcon, UserShieldIcon } from 'lucide-react';
 
 import { getCurrentUser } from '@/lib/actions';
 
@@ -20,7 +20,7 @@ export async function Navbar() {
   const regularLinks = [
     { name: 'Home', href: '/#top', icon: HomeIcon, showOnBar: true, showInMenu: true },
     { name: 'Guide', href: '/#guide', icon: SignpostIcon, showOnBar: true, showInMenu: true },
-    { name: 'Features', href: '/#features', icon: BadgeCheckIcon, showOnBar: true, showInMenu: true },
+    { name: 'Features', href: '/#features', icon: MessageCircleIcon, showOnBar: true, showInMenu: true },
     { name: 'Discovery', href: '/discovery#top', icon: SearchIcon, showOnBar: true, showInMenu: true },
   ];
   const accountLinks = [
