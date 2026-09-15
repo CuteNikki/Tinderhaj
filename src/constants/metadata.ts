@@ -178,6 +178,22 @@ export const accountMetadata: Metadata = {
   },
 };
 
+export const privacyMetadata: Metadata = {
+  title: 'Tinderhaj - Privacy',
+  description: 'Learn how Tinderhaj collects, uses, and protects your information.',
+  openGraph: {
+    url: 'https://tinderhaj.com/privacy',
+    images: [
+      {
+        url: 'https://tinderhaj.com/blahaj.webp',
+        alt: 'Blåhaj',
+        width: 128,
+        height: 128,
+      },
+    ],
+  },
+};
+
 export const verifyMetadata: Metadata = {
   title: 'Tinderhaj - Verification',
   description: 'Review and verify Tinderhaj profiles.',

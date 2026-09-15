@@ -37,11 +37,7 @@ export function Footer() {
               <DiscoveryLink aria-label='Tinderhaj discovery' className='text-muted-foreground hover:text-foreground transition-colors'>
                 <Code2 className='h-4 w-4' />
               </DiscoveryLink>
-              <Link
-                href='mailto:hello@tinderhaj.example'
-                aria-label='Email Tinderhaj'
-                className='text-muted-foreground hover:text-foreground transition-colors'
-              >
+              <Link href='mailto:contact@tinderhaj.com' aria-label='Email Tinderhaj' className='text-muted-foreground hover:text-foreground transition-colors'>
                 <Mail className='h-4 w-4' />
               </Link>
             </div>
@@ -52,7 +48,7 @@ export function Footer() {
             title='Company'
             links={[
               { label: 'About', href: '/#top' },
-              { label: 'Contact', href: 'mailto:hello@tinderhaj.example' },
+              { label: 'Contact', href: 'mailto:contact@tinderhaj.com' },
             ]}
           />
         </div>
@@ -65,7 +61,7 @@ export function Footer() {
               Tinderhaj is not affiliated with IKEA or Tinder.
             </p>
             <div className='text-muted-foreground flex gap-4 md:justify-end'>
-              <Link href='/#top' className='hover:text-foreground transition-colors'>
+              <Link href='/privacy' className='hover:text-foreground transition-colors'>
                 Privacy
               </Link>
               <Link href='/#top' className='hover:text-foreground transition-colors'>
