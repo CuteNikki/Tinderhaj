@@ -1,5 +1,5 @@
 import { PageLoading } from '@/components/common/page-loading';
 
 export default function Loading() {
-  return <PageLoading />;
+  return <PageLoading eyebrow='Moderation' title='Verify Profiles' />;
 }

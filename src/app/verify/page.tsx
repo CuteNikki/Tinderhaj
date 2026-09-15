@@ -5,6 +5,7 @@ import { verifyMetadata } from '@/constants/metadata';
 import { getCurrentUser } from '@/lib/actions';
 import { QUERIES } from '@/lib/queries';
 
+import { EmptyState } from '@/components/common/empty-state';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
 import { VerifyProfileCard } from '@/components/verify/verify-profile-card';
 
@@ -44,15 +45,7 @@ export default async function VerifyPage() {
           </div>
         ) : (
           <ScrollReveal delay={0.1}>
-            <div className='py-16'>
-              <div className='mx-auto flex max-w-xl flex-col items-center text-center'>
-                <div className='bg-primary/10 text-primary flex size-16 items-center justify-center rounded-full'>
-                  <ShieldCheckIcon className='h-7 w-7' />
-                </div>
-                <h2 className='mt-6 text-3xl font-black tracking-tight sm:text-4xl'>All caught up.</h2>
-                <p className='text-muted-foreground mt-4 text-sm leading-relaxed text-pretty'>There are no profiles waiting for review right now.</p>
-              </div>
-            </div>
+            <EmptyState icon={ShieldCheckIcon} title='All caught up.' description='There are no profiles waiting for review right now.' />
           </ScrollReveal>
         )}
       </div>

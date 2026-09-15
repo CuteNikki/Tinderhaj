@@ -5,6 +5,7 @@ import { profilesMetadata } from '@/constants/metadata';
 import { getCurrentProfiles, getCurrentUser } from '@/lib/actions';
 
 import { CreateProfile } from '@/components/auth/create-profile';
+import { EmptyState } from '@/components/common/empty-state';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
 import { ProfileCard } from '@/components/profiles/profile-card';
 
@@ -36,17 +37,11 @@ export default async function ProfilesPage() {
           </div>
         ) : (
           <ScrollReveal delay={0.1}>
-            <div className='py-16'>
-              <div className='mx-auto flex max-w-xl flex-col items-center text-center'>
-                <div className='bg-primary/10 text-primary flex size-16 items-center justify-center rounded-full'>
-                  <UserRoundIcon className='h-7 w-7' />
-                </div>
-                <h2 className='mt-6 text-3xl font-black tracking-tight sm:text-4xl'>No profiles yet.</h2>
-                <p className='text-muted-foreground mt-4 text-sm leading-relaxed text-pretty'>
-                  Create your first profile to start showing up in discovery once it&apos;s verified.
-                </p>
-              </div>
-            </div>
+            <EmptyState
+              icon={UserRoundIcon}
+              title='No profiles yet.'
+              description="Create your first profile to start showing up in discovery once it's verified."
+            />
           </ScrollReveal>
         )}
       </div>
