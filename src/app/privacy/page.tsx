@@ -12,7 +12,7 @@ export default function PrivacyPage() {
     <div className='bg-background flex flex-1 flex-col px-4 py-28 sm:px-4 lg:px-8'>
       <article className='container mx-auto max-w-7xl'>
         <ScrollReveal>
-          <header className='mx-auto mb-12 max-w-4xl'>
+          <header className='mx-auto mb-6 max-w-4xl'>
             <p className='text-primary mb-1 text-xs font-bold tracking-widest uppercase'>Legal</p>
             <TypographyH1>Privacy Policy</TypographyH1>
             <TypographyLead className='text-foreground mt-2'>How Tinderhaj handles the information needed to run the service.</TypographyLead>
@@ -20,7 +20,7 @@ export default function PrivacyPage() {
           </header>
         </ScrollReveal>
 
-        <div className='mx-auto max-w-4xl space-y-10'>
+        <div className='mx-auto max-w-4xl space-y-6'>
           <ScrollReveal delay={0.05}>
             <section className='space-y-2'>
               <TypographyH2>1. Information we collect</TypographyH2>
