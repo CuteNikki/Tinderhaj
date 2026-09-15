@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { HomeIcon, MenuIcon, MessageCircleIcon, SearchIcon, SettingsIcon, SignpostIcon, UserCheckIcon, UserRoundIcon, UserShieldIcon } from 'lucide-react';
 
+import type { AccountModel } from '@/generated/models';
 import { getCurrentUser } from '@/lib/actions';
 
 import { LogOutButton, LogOutDropdownMenuItem } from '@/components/auth/logout-button';
@@ -17,6 +18,14 @@ import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTi
 export async function Navbar() {
   const session = await getCurrentUser({ includeAccount: true, redirectIfNotFound: false });
 
+  return <NavbarContent session={session} showAuthElements />;
+}
+
+export function NavbarFallback() {
+  return <NavbarContent session={null} showAuthElements={false} />;
+}
+
+function NavbarContent({ session, showAuthElements }: { session: { account: AccountModel } | null; showAuthElements: boolean }) {
   const regularLinks = [
     { name: 'Home', href: '/#top', icon: HomeIcon, showOnBar: true, showInMenu: true },
     { name: 'Guide', href: '/#guide', icon: SignpostIcon, showOnBar: true, showInMenu: true },
@@ -66,65 +75,67 @@ export async function Navbar() {
         </div>
         <div className='ml-auto flex items-center gap-2'>
           <ThemeButton />
-          <div className='hidden md:block'>
-            {session?.account ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant='outline' size='icon'>
-                    <MenuIcon />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent side='bottom' align='end'>
-                  <LogOutDropdownMenuItem />
-                  {accountLinks.map((link, index) => (
-                    <Link href={link.href} key={`account-dropdown-link-${index}-${link.href}`}>
-                      <DropdownMenuItem>
-                        <link.icon />
-                        {link.name}
-                      </DropdownMenuItem>
-                    </Link>
-                  ))}
-                  {moderationLinks.length > 0 && (
-                    <>
-                      <DropdownMenuSeparator />
-                      {moderationLinks.map((link, index) => (
-                        <Link href={link.href} key={`moderation-dropdown-link-${index}-${link.href}`}>
-                          <DropdownMenuItem>
-                            <link.icon />
-                            {link.name}
-                          </DropdownMenuItem>
-                        </Link>
-                      ))}
-                    </>
-                  )}
-                  <DropdownMenuSeparator />
-                  {regularLinks.map(
-                    (link, index) =>
-                      link.showInMenu &&
-                      (link.href.startsWith('/discovery') ? (
-                        <DiscoveryLink key={`navdropdown-link-${index}-${link.href}-${link.name}`}>
-                          <DropdownMenuItem>
-                            <link.icon />
-                            {link.name}
-                          </DropdownMenuItem>
-                        </DiscoveryLink>
-                      ) : (
-                        <Link href={link.href} key={`navdropdown-link-${index}-${link.href}-${link.name}`}>
-                          <DropdownMenuItem>
-                            <link.icon />
-                            {link.name}
-                          </DropdownMenuItem>
-                        </Link>
-                      )),
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <Button asChild>
-                <Link href='/sign-up'>Sign Up</Link>
-              </Button>
-            )}
-          </div>
+          {showAuthElements && (
+            <div className='hidden md:block'>
+              {session?.account ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant='outline' size='icon'>
+                      <MenuIcon />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent side='bottom' align='end'>
+                    <LogOutDropdownMenuItem />
+                    {accountLinks.map((link, index) => (
+                      <Link href={link.href} key={`account-dropdown-link-${index}-${link.href}`}>
+                        <DropdownMenuItem>
+                          <link.icon />
+                          {link.name}
+                        </DropdownMenuItem>
+                      </Link>
+                    ))}
+                    {moderationLinks.length > 0 && (
+                      <>
+                        <DropdownMenuSeparator />
+                        {moderationLinks.map((link, index) => (
+                          <Link href={link.href} key={`moderation-dropdown-link-${index}-${link.href}`}>
+                            <DropdownMenuItem>
+                              <link.icon />
+                              {link.name}
+                            </DropdownMenuItem>
+                          </Link>
+                        ))}
+                      </>
+                    )}
+                    <DropdownMenuSeparator />
+                    {regularLinks.map(
+                      (link, index) =>
+                        link.showInMenu &&
+                        (link.href.startsWith('/discovery') ? (
+                          <DiscoveryLink key={`navdropdown-link-${index}-${link.href}-${link.name}`}>
+                            <DropdownMenuItem>
+                              <link.icon />
+                              {link.name}
+                            </DropdownMenuItem>
+                          </DiscoveryLink>
+                        ) : (
+                          <Link href={link.href} key={`navdropdown-link-${index}-${link.href}-${link.name}`}>
+                            <DropdownMenuItem>
+                              <link.icon />
+                              {link.name}
+                            </DropdownMenuItem>
+                          </Link>
+                        )),
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Button asChild>
+                  <Link href='/sign-up'>Sign Up</Link>
+                </Button>
+              )}
+            </div>
+          )}
           <Sheet>
             <SheetTrigger asChild className='md:hidden'>
               <Button variant='outline' size='icon'>
@@ -197,7 +208,7 @@ export async function Navbar() {
                 )}
                 <Separator />
               </nav>
-              {!session?.account && (
+              {showAuthElements && !session?.account && (
                 <div className='flex flex-col items-center gap-2 p-6'>
                   <Button variant='secondary' className='w-full' asChild>
                     <Link href='/sign-in'>Sign In</Link>
