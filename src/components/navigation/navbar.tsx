@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { BadgeCheckIcon, CheckIcon, HomeIcon, MenuIcon, SearchIcon, ShieldIcon, SignpostIcon, UserRoundIcon, UsersRoundIcon } from 'lucide-react';
+import { BadgeCheckIcon, HomeIcon, MenuIcon, SearchIcon, SettingsIcon, SignpostIcon, UserCheckIcon, UserRoundIcon, UserShieldIcon } from 'lucide-react';
 
 import { getCurrentUser } from '@/lib/actions';
 
@@ -17,12 +17,23 @@ import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTi
 export async function Navbar() {
   const session = await getCurrentUser({ includeAccount: true, redirectIfNotFound: false });
 
-  const links = [
+  const regularLinks = [
     { name: 'Home', href: '/#top', icon: HomeIcon, showOnBar: true, showInMenu: true },
     { name: 'Guide', href: '/#guide', icon: SignpostIcon, showOnBar: true, showInMenu: true },
     { name: 'Features', href: '/#features', icon: BadgeCheckIcon, showOnBar: true, showInMenu: true },
     { name: 'Discovery', href: '/discovery#top', icon: SearchIcon, showOnBar: true, showInMenu: true },
   ];
+  const accountLinks = [
+    { name: 'Account', href: '/account#top', icon: SettingsIcon },
+    { name: 'Profiles', href: '/profiles#top', icon: UserRoundIcon },
+  ];
+  const moderationLinks =
+    session?.account?.role === 'MODERATOR' || session?.account?.role === 'ADMIN'
+      ? [
+          { name: 'Roles', href: '/roles#top', icon: UserShieldIcon },
+          { name: 'Verification', href: '/verification#top', icon: UserCheckIcon },
+        ]
+      : [];
 
   return (
     <header className='bg-background/60 fixed top-0 z-50 w-svw backdrop-blur-lg'>
@@ -32,7 +43,7 @@ export async function Navbar() {
           <TypographyLarge className='font-bold'>Tinderhaj</TypographyLarge>
         </Link>
         <div className='hidden flex-1 items-center gap-4 text-sm font-medium md:flex md:gap-6'>
-          {links.map(
+          {regularLinks.map(
             (link, index) =>
               link.showOnBar &&
               (link.href.startsWith('/discovery') ? (
@@ -65,31 +76,29 @@ export async function Navbar() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent side='bottom' align='end'>
                   <LogOutDropdownMenuItem />
-                  <Link href='/account#top'>
-                    <DropdownMenuItem>
-                      <UserRoundIcon />
-                      Account
-                    </DropdownMenuItem>
-                  </Link>
-                  <Link href='/profiles#top'>
-                    <DropdownMenuItem>
-                      <UsersRoundIcon />
-                      Profiles
-                    </DropdownMenuItem>
-                  </Link>
-                  {(session?.account?.role === 'MODERATOR' || session?.account?.role === 'ADMIN') && (
+                  {accountLinks.map((link, index) => (
+                    <Link href={link.href} key={`account-dropdown-link-${index}-${link.href}`}>
+                      <DropdownMenuItem>
+                        <link.icon />
+                        {link.name}
+                      </DropdownMenuItem>
+                    </Link>
+                  ))}
+                  {moderationLinks.length > 0 && (
                     <>
                       <DropdownMenuSeparator />
-                      <Link href='/verification#top'>
-                        <DropdownMenuItem>
-                          <ShieldIcon />
-                          Verification
-                        </DropdownMenuItem>
-                      </Link>
+                      {moderationLinks.map((link, index) => (
+                        <Link href={link.href} key={`moderation-dropdown-link-${index}-${link.href}`}>
+                          <DropdownMenuItem>
+                            <link.icon />
+                            {link.name}
+                          </DropdownMenuItem>
+                        </Link>
+                      ))}
                     </>
                   )}
                   <DropdownMenuSeparator />
-                  {links.map(
+                  {regularLinks.map(
                     (link, index) =>
                       link.showInMenu &&
                       (link.href.startsWith('/discovery') ? (
@@ -144,27 +153,30 @@ export async function Navbar() {
               )}
               <nav className='flex flex-col items-center gap-4 p-6 text-center'>
                 <Separator />
-                {session?.account && (
-                  <SheetClose className='flex items-center gap-2' asChild>
-                    <Link href='/profiles' className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
-                      <UserRoundIcon className='h-4 w-4' />
-                      Profiles
-                    </Link>
-                  </SheetClose>
-                )}
-                {(session?.account?.role === 'MODERATOR' || session?.account?.role === 'ADMIN') && (
-                  <>
-                    <Separator />
-                    <SheetClose className='flex items-center gap-2' asChild>
-                      <Link href='/verification#top' className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
-                        <CheckIcon className='h-4 w-4' />
-                        Verification
+                {session?.account &&
+                  accountLinks.map((link, index) => (
+                    <SheetClose className='flex items-center gap-2' key={`account-sheet-link-${index}-${link.href}`} asChild>
+                      <Link href={link.href} className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
+                        <link.icon className='h-4 w-4' />
+                        {link.name}
                       </Link>
                     </SheetClose>
+                  ))}
+                {moderationLinks.length > 0 && (
+                  <>
+                    <Separator />
+                    {moderationLinks.map((link, index) => (
+                      <SheetClose className='flex items-center gap-2' key={`moderation-sheet-link-${index}-${link.href}`} asChild>
+                        <Link href={link.href} className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
+                          <link.icon className='h-4 w-4' />
+                          {link.name}
+                        </Link>
+                      </SheetClose>
+                    ))}
                   </>
                 )}
                 {session?.account && <Separator />}
-                {links.map(
+                {regularLinks.map(
                   (link, index) =>
                     link.showInMenu &&
                     (link.href.startsWith('/discovery') ? (
