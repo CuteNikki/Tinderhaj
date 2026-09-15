@@ -56,6 +56,18 @@ export function EditProfile({ profile }: { profile: Profile & { account: Account
   const unit = form.watch('unit');
   const preview = form.watch();
 
+  function resetForm() {
+    form.reset();
+    setInterests(profile.interests);
+    setNewInterest('');
+  }
+
+  function handleOpenChange(nextOpen: boolean) {
+    if (!nextOpen) resetForm();
+
+    setOpen(nextOpen);
+  }
+
   function isFlagged(key: string) {
     return profile.status === 'REJECTED' && profile.rejectedFields.includes(key);
   }
@@ -80,7 +92,7 @@ export function EditProfile({ profile }: { profile: Profile & { account: Account
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant='outline' size='sm' className='flex-1'>
           <PencilIcon />
