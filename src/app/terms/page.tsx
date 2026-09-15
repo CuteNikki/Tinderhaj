@@ -33,7 +33,17 @@ export default function TermsPage() {
 
           <ScrollReveal delay={0.1}>
             <section className='space-y-2'>
-              <TypographyH2>2. Your account</TypographyH2>
+              <TypographyH2>2. Eligibility</TypographyH2>
+              <TypographyP>
+                You must be at least 13 years old, or the minimum age required in your country, to use Tinderhaj. If you are under the age of legal majority
+                where you live, you may use the service only with the consent and supervision of a parent or guardian.
+              </TypographyP>
+            </section>
+          </ScrollReveal>
+
+          <ScrollReveal delay={0.15}>
+            <section className='space-y-2'>
+              <TypographyH2>3. Your account</TypographyH2>
               <TypographyList>
                 <li>You are responsible for providing accurate information and keeping your login details secure.</li>
                 <li>You may not impersonate another person, create accounts for abusive purposes, or share access to your account.</li>
@@ -42,9 +52,9 @@ export default function TermsPage() {
             </section>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.15}>
+          <ScrollReveal delay={0.2}>
             <section className='space-y-2'>
-              <TypographyH2>3. Profiles and content</TypographyH2>
+              <TypographyH2>4. Profiles and content</TypographyH2>
               <TypographyP>
                 You are responsible for the content you submit, including profile text and images. You confirm that you have the right to share that content and
                 that it does not violate the rights of others.
@@ -56,9 +66,9 @@ export default function TermsPage() {
             </section>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.2}>
+          <ScrollReveal delay={0.25}>
             <section className='space-y-2'>
-              <TypographyH2>4. Community rules</TypographyH2>
+              <TypographyH2>5. Community rules</TypographyH2>
               <TypographyP>You may not use Tinderhaj to:</TypographyP>
               <TypographyList>
                 <li>Harass, threaten, exploit, or harm other people.</li>
@@ -70,9 +80,9 @@ export default function TermsPage() {
             </section>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.25}>
+          <ScrollReveal delay={0.3}>
             <section className='space-y-2'>
-              <TypographyH2>5. Verification and moderation</TypographyH2>
+              <TypographyH2>6. Verification and moderation</TypographyH2>
               <TypographyP>
                 Verification is a moderation decision and is not a guarantee about a profile or its owner. We may review, reject, restrict, or remove profiles
                 and content that violate these terms or create risk for the community.
@@ -80,9 +90,19 @@ export default function TermsPage() {
             </section>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.3}>
+          <ScrollReveal delay={0.35}>
             <section className='space-y-2'>
-              <TypographyH2>6. Account suspension and deletion</TypographyH2>
+              <TypographyH2>7. Third-party services</TypographyH2>
+              <TypographyP>
+                Tinderhaj depends on third-party providers for hosting, databases, email delivery, and file storage. We are not responsible for the
+                availability, performance, or actions of those third-party services.
+              </TypographyP>
+            </section>
+          </ScrollReveal>
+
+          <ScrollReveal delay={0.4}>
+            <section className='space-y-2'>
+              <TypographyH2>8. Account suspension and deletion</TypographyH2>
               <TypographyP>
                 We may suspend or remove accounts, profiles, or content when necessary to protect the service, investigate abuse, comply with law, or enforce
                 these terms. You can delete your account from Account Settings. Deletion is permanent for the account data managed by Tinderhaj, subject to
@@ -91,9 +111,9 @@ export default function TermsPage() {
             </section>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.35}>
+          <ScrollReveal delay={0.45}>
             <section className='space-y-2'>
-              <TypographyH2>7. Service availability</TypographyH2>
+              <TypographyH2>9. Disclaimers</TypographyH2>
               <TypographyP>
                 Tinderhaj is provided as an evolving service. Features may change, be interrupted, or become unavailable. To the extent permitted by law,
                 Tinderhaj is provided without guarantees that it will always be available, secure, or error-free.
@@ -101,9 +121,19 @@ export default function TermsPage() {
             </section>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.4}>
+          <ScrollReveal delay={0.5}>
             <section className='space-y-2'>
-              <TypographyH2>8. Changes to these terms</TypographyH2>
+              <TypographyH2>10. Limitation of liability</TypographyH2>
+              <TypographyP>
+                To the fullest extent permitted by law, Tinderhaj and its operator will not be liable for indirect, incidental, special, or consequential
+                damages arising from your use of, or inability to use, the service.
+              </TypographyP>
+            </section>
+          </ScrollReveal>
+
+          <ScrollReveal delay={0.55}>
+            <section className='space-y-2'>
+              <TypographyH2>11. Changes to these terms</TypographyH2>
               <TypographyP>
                 We may update these terms as the service changes. The updated version will be posted on this page with a revised update date. Continued use of
                 Tinderhaj after an update means you accept the revised terms.
@@ -111,15 +141,25 @@ export default function TermsPage() {
             </section>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.45}>
+          <ScrollReveal delay={0.6}>
             <section className='space-y-2'>
-              <TypographyH2>9. Contact</TypographyH2>
+              <TypographyH2>12. Contact</TypographyH2>
               <TypographyP>
                 Questions about these terms can be sent to{' '}
                 <a className='text-foreground font-medium underline' href='mailto:contact@tinderhaj.com'>
                   contact@tinderhaj.com
                 </a>
                 .
+              </TypographyP>
+            </section>
+          </ScrollReveal>
+
+          <ScrollReveal delay={0.65}>
+            <section className='space-y-2'>
+              <TypographyH2>13. Governing law</TypographyH2>
+              <TypographyP>
+                These terms are governed by the laws of Germany, without regard to its conflict-of-law provisions, subject to any mandatory consumer protections
+                that apply to you.
               </TypographyP>
             </section>
           </ScrollReveal>
