@@ -2,6 +2,17 @@ import { BadgeCheckIcon, ClockIcon, FileIcon, XCircleIcon } from 'lucide-react';
 
 import { ProfileStatus } from '@/generated/enums';
 
+const DAY_IN_MS = 24 * 60 * 60 * 1000;
+
+// How long a verified profile is treated as "new" for discovery ranking/badging.
+export const FRESH_PROFILE_WINDOW_IN_DAYS = 3;
+
+export function isFreshProfile(verifiedAt: Date | null, createdAt: Date) {
+  const verifiedAgeInDays = (Date.now() - (verifiedAt ?? createdAt).getTime()) / DAY_IN_MS;
+
+  return verifiedAgeInDays < FRESH_PROFILE_WINDOW_IN_DAYS;
+}
+
 export const PROFILE_STATUS_META: Record<ProfileStatus, { label: string; badgeClassName: string; icon: typeof ClockIcon; description: string }> = {
   CREATED: {
     label: 'Draft',

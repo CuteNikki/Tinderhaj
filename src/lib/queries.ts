@@ -2,9 +2,9 @@ import 'server-only';
 
 import { Prisma, ProfileStatus } from '@/generated/client';
 import prisma from '@/lib/prisma';
+import { FRESH_PROFILE_WINDOW_IN_DAYS } from '@/lib/profile-status';
 
 const DAY_IN_MS = 24 * 60 * 60 * 1000;
-const FRESH_PROFILE_WINDOW_IN_DAYS = 1;
 
 type DiscoveryProfile = Prisma.ProfileGetPayload<{ include: { account: true } }>;
 

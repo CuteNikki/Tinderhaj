@@ -2,6 +2,7 @@ import { CakeIcon, MapPinIcon, RulerIcon } from 'lucide-react';
 
 import { Account, Profile } from '@/generated/client';
 
+import { isFreshProfile } from '@/lib/profile-status';
 import { calculateAge } from '@/lib/utils';
 
 import { ProfileAvatar, ProfileBanner } from '@/components/profiles/profile-image';
@@ -14,6 +15,9 @@ export function DiscoveryProfile({ profile }: { profile: Profile & { account: Ac
       <div className='relative aspect-5/2 overflow-hidden'>
         <ProfileBanner src={profile.bannerUrl} alt={`${profile.account.username}'s banner`} />
         <div className='from-background/70 absolute inset-0 bg-linear-to-t to-transparent' />
+        {isFreshProfile(profile.verifiedAt, profile.createdAt) && (
+          <Badge className='bg-primary text-primary-foreground absolute top-3 right-3 rounded-full text-xs font-semibold shadow-md'>New</Badge>
+        )}
       </div>
 
       <CardContent className='-mt-8 px-4 pb-5 sm:px-6'>
