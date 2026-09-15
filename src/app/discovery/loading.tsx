@@ -5,21 +5,26 @@ import { Skeleton } from '@/components/ui/skeleton';
 function DiscoveryHeroSkeleton() {
   return (
     <section className='relative isolate overflow-hidden pt-28 pb-12 md:pt-32 md:pb-16'>
-      <div className='pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[6rem_6rem] opacity-20 dark:opacity-25' />
-      <div className='bg-primary/10 pointer-events-none absolute -top-16 -right-16 z-0 size-64 rounded-full blur-3xl lg:-top-8 lg:-right-8 lg:size-96' />
-      <div className='bg-secondary/60 pointer-events-none absolute -bottom-24 -left-16 z-0 size-72 rounded-full blur-3xl lg:-bottom-12 lg:-left-8 lg:size-96' />
+      <div className='pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[4rem_4rem] opacity-25' />
+      <div className='bg-primary/10 pointer-events-none absolute top-1/2 left-1/2 z-0 size-112 -translate-1/2 rounded-full blur-3xl' />
       <div className='relative z-10 container mx-auto grid max-w-7xl items-center gap-10 px-6 lg:grid-cols-[minmax(0,1fr)_22rem] lg:px-8'>
         <div className='max-w-3xl'>
           <Skeleton className='h-12 w-40 rounded-full' />
-          <Skeleton className='mt-6 h-16 w-full max-w-2xl sm:h-24' />
-          <div className='mt-6 space-y-2'>
-            <Skeleton className='h-5 w-full max-w-xl' />
-            <Skeleton className='h-5 w-4/5 max-w-lg' />
-          </div>
+          {/* Real copy (with a skeleton fill) so wrapping matches the loaded heading at every breakpoint */}
+          <h1 aria-hidden className='mt-6 max-w-3xl text-5xl leading-none font-black tracking-tight sm:text-7xl'>
+            <span className='bg-muted animate-pulse rounded-md [box-decoration-break:clone] text-transparent [-webkit-box-decoration-break:clone]'>
+              Browse the soft side of the sea.
+            </span>
+          </h1>
+          <p aria-hidden className='text-muted-foreground mt-6 max-w-2xl text-base leading-relaxed text-pretty sm:text-lg'>
+            <span className='bg-muted animate-pulse rounded-md [box-decoration-break:clone] text-transparent [-webkit-box-decoration-break:clone]'>
+              Search by name, location, pronouns, interests, or anything else that makes a profile feel like your kind of tide.
+            </span>
+          </p>
         </div>
         <div className='relative mx-auto hidden aspect-square w-full max-w-xs items-center justify-center lg:flex'>
-          <div className='border-primary/20 absolute inset-8 rounded-full border' />
-          <div className='border-primary/15 absolute inset-0 rounded-full border border-dashed' />
+          <div className='border-primary/20 absolute inset-8 rounded-full border border-dashed' />
+          <div className='border-primary/15 absolute inset-0 rounded-full border' />
           <Skeleton className='relative z-10 size-56 rounded-full' />
         </div>
       </div>

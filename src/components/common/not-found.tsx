@@ -111,7 +111,7 @@ export function NotFoundPage() {
           <motion.div
             animate={{ y: [0, 6, 0] }}
             transition={{ duration: 4, ease: 'easeInOut', repeat: Infinity, delay: 0.2 }}
-            className='border-foreground/10 bg-background/90 absolute bottom-[15%] left-[5%] z-20 rounded-xl border px-4 py-3 shadow-xl backdrop-blur-md'
+            className='border-foreground/10 bg-background/90 absolute bottom-[15%] left-[5%] z-20 rounded-xl border px-4 py-3 shadow-xl backdrop-blur-md rotate-2'
           >
             <p className='text-primary text-[0.65rem] font-bold tracking-widest uppercase'>Last known location</p>
             <p className='mt-1 text-sm font-bold'>Somewhere between here &amp; there</p>

@@ -16,20 +16,16 @@ import { Button } from '@/components/ui/button';
 
 export function Hero() {
   const reveal = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } };
-  const revealTransition = { duration: 0.7, ease: [0.2, 0.8, 0.2, 1] as const };
+  const revealTransition = { duration: 0.65, ease: [0.2, 0.8, 0.2, 1] as const };
 
   return (
     <section id='hero' className='bg-background relative isolate overflow-hidden'>
-      <div className='pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[6rem_6rem] opacity-20 dark:opacity-25' />
-      <div className='bg-primary/10 pointer-events-none absolute -top-16 -right-16 z-0 size-64 rounded-full blur-3xl lg:-top-8 lg:-right-8 lg:size-96' />
-      <div className='bg-secondary/60 pointer-events-none absolute -bottom-24 -left-16 z-0 size-72 rounded-full blur-3xl lg:-bottom-12 lg:-left-8 lg:size-96' />
+      <div className='pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[4rem_4rem] opacity-25' />
+      <div className='bg-primary/10 pointer-events-none absolute top-1/2 left-1/2 z-0 size-112 -translate-1/2 rounded-full blur-3xl' />
       <div className='relative z-10 container mx-auto grid min-h-screen max-w-7xl items-center gap-4 px-6 pt-24 pb-12 md:px-8 lg:grid-cols-2 lg:gap-8'>
         <div className='relative z-10 flex max-w-2xl flex-col items-start'>
-          <motion.div initial='hidden' animate='visible' variants={reveal} transition={{ ...revealTransition, delay: 0.1 }}>
-            <Badge
-              variant='secondary'
-              className='animate-in fade-in slide-in-from-bottom-4 rounded-full p-4 font-semibold tracking-wide uppercase delay-100 duration-700'
-            >
+          <motion.div initial='hidden' animate='visible' variants={reveal} transition={revealTransition}>
+            <Badge variant='secondary' className='rounded-full p-4 font-semibold tracking-wide uppercase'>
               <span className='relative mr-2 flex h-2 w-2'>
                 <span className='bg-primary absolute inline-flex h-full w-full animate-ping rounded-full opacity-75' />
                 <span className='bg-primary relative inline-flex h-2 w-2 rounded-full' />
@@ -37,14 +33,14 @@ export function Hero() {
               The plush dating club
             </Badge>
           </motion.div>
-          <motion.div initial='hidden' animate='visible' variants={reveal} transition={{ ...revealTransition, delay: 0.2 }}>
+          <motion.div initial='hidden' animate='visible' variants={reveal} transition={{ ...revealTransition, duration: 0.7, delay: 0.1 }}>
             <TypographyH1 className='xs:text-5xl mt-6 max-w-3xl text-4xl leading-none font-black tracking-tight md:text-7xl xl:text-8xl'>
               Make a splash.
               <br />
               <span className='text-primary'>Meet your match.</span>
             </TypographyH1>
           </motion.div>
-          <motion.div initial='hidden' animate='visible' variants={reveal} transition={{ ...revealTransition, delay: 0.3 }}>
+          <motion.div initial='hidden' animate='visible' variants={reveal} transition={{ ...revealTransition, delay: 0.2 }}>
             <TypographyMuted className='mt-2 max-w-lg text-base leading-relaxed text-pretty sm:mt-6 sm:text-lg'>
               A warm, weird little corner of the internet for Blåhaj looking for their person. Browse profiles, find a feeling, make it official.
             </TypographyMuted>
@@ -53,7 +49,7 @@ export function Hero() {
             initial='hidden'
             animate='visible'
             variants={reveal}
-            transition={{ ...revealTransition, delay: 0.4 }}
+            transition={{ ...revealTransition, delay: 0.3 }}
             className='mt-4 flex w-full flex-wrap items-start gap-2 sm:mt-8'
           >
             <Button size='lg' className='h-12 rounded-full px-6' asChild>
@@ -73,7 +69,7 @@ export function Hero() {
             initial='hidden'
             animate='visible'
             variants={reveal}
-            transition={{ ...revealTransition, delay: 0.5 }}
+            transition={{ ...revealTransition, delay: 0.4 }}
             className='border-foreground/10 mt-4 flex flex-wrap gap-x-4 gap-y-2 sm:mt-6'
           >
             <div className='flex items-center gap-2 text-sm'>
@@ -110,12 +106,22 @@ export function Hero() {
             animate='visible'
             variants={reveal}
             transition={{ ...revealTransition, delay: 0.35 }}
-            className='border-foreground/10 bg-background/80 absolute top-4 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 rounded-full border px-3 py-2 text-xs font-semibold whitespace-nowrap shadow-lg backdrop-blur-sm'
+            className='absolute top-4 left-1/2 z-10 -translate-x-1/2'
           >
-            <Sparkles className='text-primary h-3.5 w-3.5' /> A match worth meeting
+            <motion.div
+              animate={{ y: [0, -5, 0] }}
+              transition={{ duration: 3.5, ease: 'easeInOut', repeat: Infinity, delay: 0.6 }}
+              className='border-foreground/10 bg-background/80 flex items-center gap-2 rounded-full border px-3 py-2 text-xs font-semibold whitespace-nowrap shadow-lg backdrop-blur-sm'
+            >
+              <Sparkles className='text-primary h-3.5 w-3.5' /> A match worth meeting
+            </motion.div>
           </motion.div>
           <div className='relative z-1 w-3/4 max-w-md'>
-            <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ ...revealTransition, delay: 0.45 }}>
+            <motion.div
+              initial={{ opacity: 0, y: 24, rotate: -4 }}
+              animate={{ opacity: 1, y: 0, rotate: 0 }}
+              transition={{ ...revealTransition, duration: 0.9, delay: 0.45 }}
+            >
               <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 5, ease: 'easeInOut', repeat: Infinity }}>
                 <Image
                   unoptimized
@@ -135,13 +141,19 @@ export function Hero() {
             animate='visible'
             variants={reveal}
             transition={{ ...revealTransition, delay: 0.65 }}
-            className='border-foreground/10 bg-background/90 absolute right-4 bottom-8 z-10 flex max-w-64 -rotate-3 items-center gap-3 rounded-xl border p-3 shadow-xl backdrop-blur-md'
+            className='absolute right-4 bottom-8 z-10'
           >
-            <Image unoptimized width={64} height={64} src='/blahajHug.webp' alt='' className='bg-primary/10 h-14 w-14 shrink-0 rounded-lg object-contain' />
-            <div>
-              <p className='text-sm font-bold'>Good chemistry</p>
-              <p className='text-muted-foreground mt-1 text-xs leading-relaxed'>The right people are out there. You&apos;ll find &apos;em.</p>
-            </div>
+            <motion.div
+              animate={{ y: [0, 6, 0] }}
+              transition={{ duration: 4, ease: 'easeInOut', repeat: Infinity, delay: 0.2 }}
+              className='border-foreground/10 bg-background/90 flex max-w-64 -rotate-3 items-center gap-3 rounded-xl border p-3 shadow-xl backdrop-blur-md'
+            >
+              <Image unoptimized width={64} height={64} src='/blahajHug.webp' alt='' className='bg-primary/10 h-14 w-14 shrink-0 rounded-lg object-contain' />
+              <div>
+                <p className='text-sm font-bold'>Good chemistry</p>
+                <p className='text-muted-foreground mt-1 text-xs leading-relaxed'>The right people are out there. You&apos;ll find &apos;em.</p>
+              </div>
+            </motion.div>
           </motion.div>
           <motion.div
             initial={{ opacity: 0, scale: 0.7 }}
