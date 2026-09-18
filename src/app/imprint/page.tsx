@@ -28,9 +28,9 @@ export default function ImprintPage() {
               <TypographyP>
                 Nikki Sophie Berthold
                 <br />
-                Friedrich-Karl-Straße 283
+                Friedrich-Karl-Straße 28
                 <br />
-                2584 Löhne
+                32584 Löhne
                 <br />
                 Germany
               </TypographyP>
@@ -57,9 +57,9 @@ export default function ImprintPage() {
               <TypographyP>
                 Nikki Sophie Berthold
                 <br />
-                Friedrich-Karl-Straße 283
+                Friedrich-Karl-Straße 28
                 <br />
-                2584 Löhne
+                32584 Löhne
                 <br />
                 Germany
               </TypographyP>
