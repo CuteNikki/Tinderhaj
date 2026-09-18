@@ -16,7 +16,7 @@ export default function PrivacyPage() {
             <p className='text-primary mb-1 text-xs font-bold tracking-widest uppercase'>Legal</p>
             <TypographyH1>Privacy Policy</TypographyH1>
             <TypographyLead className='text-foreground mt-2'>How Tinderhaj handles the information needed to run the service.</TypographyLead>
-            <p className='text-muted-foreground mt-2 text-sm'>Last updated: September 15, 2026</p>
+            <p className='text-muted-foreground mt-2 text-sm'>Last updated: September 18, 2026</p>
           </header>
         </ScrollReveal>
         <div className='mx-auto max-w-4xl space-y-6'>

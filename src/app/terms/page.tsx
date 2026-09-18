@@ -16,7 +16,7 @@ export default function TermsPage() {
             <p className='text-primary mb-1 text-xs font-bold tracking-widest uppercase'>Legal</p>
             <TypographyH1>Terms of Service</TypographyH1>
             <TypographyLead className='text-foreground mt-2'>The rules for using Tinderhaj and taking part in the community.</TypographyLead>
-            <p className='text-muted-foreground mt-2 text-sm'>Last updated: September 15, 2026</p>
+            <p className='text-muted-foreground mt-2 text-sm'>Last updated: September 18, 2026</p>
           </header>
         </ScrollReveal>
 
