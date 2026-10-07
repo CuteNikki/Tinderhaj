@@ -8,9 +8,11 @@ import { isBanned } from '@/lib/bans';
 import { QUERIES } from '@/lib/queries';
 import { isAdmin, isRole, ROLE_DESCRIPTIONS, ROLE_LABELS, ROLES, type AccountRole } from '@/lib/roles';
 import { isModerator, requireUser } from '@/lib/session';
+import { CONTENT_DELAY } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 
 import { EmptyState } from '@/components/common/empty-state';
+import { Stagger } from '@/components/common/stagger';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -63,20 +65,18 @@ export default async function UsersPage({ searchParams }: PageProps<'/users'>) {
   return (
     <div className='bg-background flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'>
       <div className='container mx-auto max-w-7xl'>
-        <ScrollReveal>
-          <div className='mb-8'>
-            <p className='text-primary mb-1 text-xs font-bold tracking-widest uppercase'>Moderation</p>
-            <h1 className='text-3xl font-black tracking-tight sm:text-4xl'>Users</h1>
-            <p className='text-muted-foreground mt-2 text-sm text-pretty'>
-              {admin
-                ? 'Open someone to see their profiles, change their role, ban them, or manage their account.'
-                : 'Open someone to see their profiles, or ban them. Only admins change roles and manage accounts.'}
-            </p>
-          </div>
-        </ScrollReveal>
+        <Stagger className='mb-8'>
+          <p className='text-primary mb-1 text-xs font-bold tracking-widest uppercase'>Moderation</p>
+          <h1 className='text-3xl font-black tracking-tight sm:text-4xl'>Users</h1>
+          <p className='text-muted-foreground mt-2 text-sm text-pretty'>
+            {admin
+              ? 'Open someone to see their profiles, change their role, ban them, or manage their account.'
+              : 'Open someone to see their profiles, or ban them. Only admins change roles and manage accounts.'}
+          </p>
+        </Stagger>
 
-        <ScrollReveal delay={0.1}>
-          <nav aria-label='Filter users' className='mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5'>
+        <nav aria-label='Filter users'>
+          <Stagger className='mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5' itemClassName='h-full' gap={0.05} delay={CONTENT_DELAY}>
             {filters.map((filter) => {
               const active = filter.show === show;
               return (
@@ -85,7 +85,7 @@ export default async function UsersPage({ searchParams }: PageProps<'/users'>) {
                   href={usersHref({ query, show: filter.show, page: 1 })}
                   aria-current={active ? 'page' : undefined}
                   className={cn(
-                    'rounded-xl border p-4 transition-colors',
+                    'block h-full rounded-xl border p-4 transition-colors',
                     active ? 'border-primary/50 bg-primary/10' : 'border-foreground/10 bg-card hover:bg-muted/50 shadow-sm',
                   )}
                 >
@@ -97,10 +97,10 @@ export default async function UsersPage({ searchParams }: PageProps<'/users'>) {
                 </Link>
               );
             })}
-          </nav>
-        </ScrollReveal>
+          </Stagger>
+        </nav>
 
-        <ScrollReveal delay={0.15}>
+        <ScrollReveal delay={0.65}>
           {/* A plain form, so searching works before the page's scripts load. */}
           <form action='/users' className='mb-4 flex gap-2'>
             {show && <input type='hidden' name='show' value={show} />}
@@ -119,69 +119,79 @@ export default async function UsersPage({ searchParams }: PageProps<'/users'>) {
           </form>
         </ScrollReveal>
 
-        <ScrollReveal delay={0.2}>
+        <>
           {users.length ? (
-            <ul className='border-foreground/10 bg-card divide-foreground/10 divide-y rounded-xl border shadow-sm'>
+            <Stagger
+              as='ul'
+              itemAs='li'
+              className='border-foreground/10 bg-card divide-foreground/10 divide-y rounded-xl border shadow-sm'
+              // All rows at once: one list, not a cascade.
+              gap={0}
+              delay={0.75}
+            >
               {users.map((user) => {
                 const self = user.id === session.user.id;
                 return (
-                  <li key={user.id}>
-                    <Link
-                      href={`/users/${user.id}`}
-                      className='hover:bg-muted/50 flex items-center gap-3 p-4 transition-colors first:rounded-t-xl last:rounded-b-xl'
-                    >
-                      <div className='min-w-0 flex-1'>
-                        <p className='flex flex-wrap items-center gap-2 font-medium'>
-                          <span className='truncate'>@{user.username}</span>
-                          {self && <Badge variant='secondary'>You</Badge>}
-                        </p>
-                        {'email' in user && user.email && <p className='text-muted-foreground truncate text-sm'>{user.email}</p>}
-                        <p className='text-muted-foreground text-xs'>
-                          Joined {user.createdAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} ·{' '}
-                          {user._count.profiles === 1 ? '1 profile' : `${user._count.profiles} profiles`}
-                        </p>
-                      </div>
-                      <div className='flex flex-wrap justify-end gap-1.5'>
-                        {isBanned(user) && (
-                          <Badge variant='destructive'>
-                            <BanIcon aria-hidden='true' />
-                            Banned
-                          </Badge>
-                        )}
-                        <Badge variant={user.role === 'USER' ? 'outline' : 'default'}>{ROLE_LABELS[user.role]}</Badge>
-                      </div>
-                      <ChevronRightIcon className='text-muted-foreground size-4 shrink-0' aria-hidden='true' />
-                    </Link>
-                  </li>
+                  <Link
+                    key={user.id}
+                    href={`/users/${user.id}`}
+                    className='hover:bg-muted/50 flex items-center gap-3 p-4 transition-colors first:rounded-t-xl last:rounded-b-xl'
+                  >
+                    <div className='min-w-0 flex-1'>
+                      <p className='flex flex-wrap items-center gap-2 font-medium'>
+                        <span className='truncate'>@{user.username}</span>
+                        {self && <Badge variant='secondary'>You</Badge>}
+                      </p>
+                      {'email' in user && user.email && <p className='text-muted-foreground truncate text-sm'>{user.email}</p>}
+                      <p className='text-muted-foreground text-xs'>
+                        Joined {user.createdAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} ·{' '}
+                        {user._count.profiles === 1 ? '1 profile' : `${user._count.profiles} profiles`}
+                      </p>
+                    </div>
+                    <div className='flex flex-wrap justify-end gap-1.5'>
+                      {isBanned(user) && (
+                        <Badge variant='destructive'>
+                          <BanIcon aria-hidden='true' />
+                          Banned
+                        </Badge>
+                      )}
+                      <Badge variant={user.role === 'USER' ? 'outline' : 'default'}>{ROLE_LABELS[user.role]}</Badge>
+                    </div>
+                    <ChevronRightIcon className='text-muted-foreground size-4 shrink-0' aria-hidden='true' />
+                  </Link>
                 );
               })}
-            </ul>
+            </Stagger>
           ) : (
-            <EmptyState
-              icon={UsersRoundIcon}
-              title='No one found.'
-              description={query ? `No ${shownLabel} match “${query}”.` : `There are no ${shownLabel} right now.`}
-            />
+            <ScrollReveal delay={0.75}>
+              <EmptyState
+                icon={UsersRoundIcon}
+                title='No one found.'
+                description={query ? `No ${shownLabel} match “${query}”.` : `There are no ${shownLabel} right now.`}
+              />
+            </ScrollReveal>
           )}
 
           {totalPages > 1 && (
-            <nav aria-label='Pages' className='mt-4 flex items-center justify-between gap-2'>
-              <Button variant='outline' asChild className={cn(page <= 1 && 'pointer-events-none opacity-50')}>
-                <Link href={usersHref({ query, show, page: page - 1 })} aria-disabled={page <= 1} tabIndex={page <= 1 ? -1 : undefined}>
-                  Previous
-                </Link>
-              </Button>
-              <p className='text-muted-foreground text-sm'>
-                Page {page} of {totalPages}
-              </p>
-              <Button variant='outline' asChild className={cn(page >= totalPages && 'pointer-events-none opacity-50')}>
-                <Link href={usersHref({ query, show, page: page + 1 })} aria-disabled={page >= totalPages} tabIndex={page >= totalPages ? -1 : undefined}>
-                  Next
-                </Link>
-              </Button>
-            </nav>
+            <ScrollReveal delay={0.85}>
+              <nav aria-label='Pages' className='mt-4 flex items-center justify-between gap-2'>
+                <Button variant='outline' asChild className={cn(page <= 1 && 'pointer-events-none opacity-50')}>
+                  <Link href={usersHref({ query, show, page: page - 1 })} aria-disabled={page <= 1} tabIndex={page <= 1 ? -1 : undefined}>
+                    Previous
+                  </Link>
+                </Button>
+                <p className='text-muted-foreground text-sm'>
+                  Page {page} of {totalPages}
+                </p>
+                <Button variant='outline' asChild className={cn(page >= totalPages && 'pointer-events-none opacity-50')}>
+                  <Link href={usersHref({ query, show, page: page + 1 })} aria-disabled={page >= totalPages} tabIndex={page >= totalPages ? -1 : undefined}>
+                    Next
+                  </Link>
+                </Button>
+              </nav>
+            </ScrollReveal>
           )}
-        </ScrollReveal>
+        </>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Code2, Mail, MessageCircle } from 'lucide-react';
 
 import { Logo } from '@/components/common/logo';
+import { Stagger } from '@/components/common/stagger';
 import { DiscoveryLink } from '@/components/discovery/link';
 
 const productLinks = [
@@ -21,10 +22,10 @@ export function Footer() {
   return (
     <footer className='bg-muted text-foreground dark:bg-background'>
       <div className='xs:pt-12 container mx-auto max-w-7xl px-6 py-6'>
-        <div className='xs:grid-cols-2 grid gap-8 md:grid-cols-[1.75fr_repeat(3,1fr)]'>
+        <Stagger className='xs:grid-cols-2 grid gap-8 md:grid-cols-[1.75fr_repeat(3,1fr)]' gap={0.08}>
           <div>
-            <Link href='/#top' className='flex items-center gap-2 text-lg font-bold'>
-              <Logo className='h-6 w-6' />
+            <Link href='/#top' className='group flex items-center gap-2 text-lg font-bold'>
+              <Logo className='group-hover:animate-wiggle h-6 w-6' />
               Tinderhaj
             </Link>
             <p className='text-muted-foreground mt-4 max-w-xs text-sm leading-relaxed text-balance'>
@@ -51,7 +52,7 @@ export function Footer() {
               { label: 'Contact', href: 'mailto:contact@tinderhaj.com' },
             ]}
           />
-        </div>
+        </Stagger>
         <div className='border-border mt-10 border-t pt-6'>
           <div className='flex flex-col gap-6 text-xs md:flex-row md:items-center md:justify-between'>
             <p className='text-muted-foreground'>© 2026 Tinderhaj. All rights reserved.</p>

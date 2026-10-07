@@ -5,6 +5,7 @@ import { z } from 'zod';
 
 import { discoveryMetadata } from '@/constants/metadata';
 import { QUERIES } from '@/lib/queries';
+import { STAGGER } from '@/lib/motion';
 
 import { DiscoveryFilter } from '@/components/discovery/filter';
 import { DiscoveryHero } from '@/components/discovery/hero';
@@ -78,7 +79,7 @@ export default async function DiscoveryPage({ searchParams }: { searchParams: Pr
               </div>
               <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-3'>
                 {profiles.map((profile, index) => (
-                  <ScrollReveal key={profile.id} className='h-full' delay={index * 0.1}>
+                  <ScrollReveal key={profile.id} className='h-full' delay={0.5 + index * STAGGER} scrollDelay={(index % 3) * STAGGER} variant='card'>
                     <DiscoveryProfile profile={profile} />
                   </ScrollReveal>
                 ))}

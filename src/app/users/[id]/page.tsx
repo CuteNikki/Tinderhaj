@@ -12,6 +12,7 @@ import { isModerator, requireUser } from '@/lib/session';
 import { cn } from '@/lib/utils';
 
 import { EmptyState } from '@/components/common/empty-state';
+import { Stagger } from '@/components/common/stagger';
 import { LocalTime } from '@/components/common/local-time';
 import { DiscoveryProfile } from '@/components/discovery/profile';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
@@ -50,57 +51,55 @@ export default async function UserPage({ params }: PageProps<'/users/[id]'>) {
   return (
     <div className='bg-background flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'>
       <div className='container mx-auto max-w-7xl'>
-        <ScrollReveal>
+        <Stagger className='mb-8'>
           <Link href='/users' className='text-muted-foreground hover:text-foreground mb-6 inline-flex items-center gap-1 text-sm transition-colors'>
             <ArrowLeftIcon className='size-4' aria-hidden='true' />
             Users
           </Link>
-          <div className='mb-8'>
-            <p className='text-primary mb-1 text-xs font-bold tracking-widest uppercase'>Moderation</p>
-            <h1 className='text-3xl font-black tracking-tight break-all sm:text-4xl'>@{user.username}</h1>
-            {'email' in user && user.email && <p className='text-muted-foreground mt-1 break-all'>{user.email}</p>}
-            <div className='mt-3 flex flex-wrap items-center gap-1.5'>
-              <Badge variant={user.role === 'USER' ? 'outline' : 'default'}>{ROLE_LABELS[user.role]}</Badge>
-              {self && <Badge variant='secondary'>You</Badge>}
-              {banned && (
-                <Badge variant='destructive'>
-                  <BanIcon aria-hidden='true' />
-                  Banned
-                </Badge>
-              )}
-              <Badge variant='outline'>
-                {user.emailVerified && <BadgeCheckIcon aria-hidden='true' />}
-                {user.emailVerified ? 'Email verified' : 'Email unverified'}
+          <p className='text-primary mb-1 text-xs font-bold tracking-widest uppercase'>Moderation</p>
+          <h1 className='text-3xl font-black tracking-tight break-all sm:text-4xl'>@{user.username}</h1>
+          {'email' in user && user.email && <p className='text-muted-foreground mt-1 break-all'>{user.email}</p>}
+          <Stagger className='mt-3 flex flex-wrap items-center gap-1.5' itemAs='span' gap={0.03} delay={0.45}>
+            <Badge variant={user.role === 'USER' ? 'outline' : 'default'}>{ROLE_LABELS[user.role]}</Badge>
+            {self && <Badge variant='secondary'>You</Badge>}
+            {banned && (
+              <Badge variant='destructive'>
+                <BanIcon aria-hidden='true' />
+                Banned
               </Badge>
-              {user.twoFactorEnabled && (
-                <Badge variant='outline'>
-                  <ShieldCheckIcon aria-hidden='true' />
-                  Two-step sign-in
-                </Badge>
-              )}
-              {user._count.passkeys > 0 && (
-                <Badge variant='outline'>
-                  <FingerprintIcon aria-hidden='true' />
-                  {user._count.passkeys === 1 ? '1 passkey' : `${user._count.passkeys} passkeys`}
-                </Badge>
-              )}
-              {providers.map((provider) => (
-                <Badge key={provider} variant='outline'>
-                  {providerLabel(provider)}
-                </Badge>
-              ))}
-              <span className='text-muted-foreground ml-1 text-xs'>
-                Joined {user.createdAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-              </span>
-            </div>
-          </div>
-        </ScrollReveal>
+            )}
+            <Badge variant='outline'>
+              {user.emailVerified && <BadgeCheckIcon aria-hidden='true' />}
+              {user.emailVerified ? 'Email verified' : 'Email unverified'}
+            </Badge>
+            {user.twoFactorEnabled && (
+              <Badge variant='outline'>
+                <ShieldCheckIcon aria-hidden='true' />
+                Two-step sign-in
+              </Badge>
+            )}
+            {user._count.passkeys > 0 && (
+              <Badge variant='outline'>
+                <FingerprintIcon aria-hidden='true' />
+                {user._count.passkeys === 1 ? '1 passkey' : `${user._count.passkeys} passkeys`}
+              </Badge>
+            )}
+            {providers.map((provider) => (
+              <Badge key={provider} variant='outline'>
+                {providerLabel(provider)}
+              </Badge>
+            ))}
+            <span className='text-muted-foreground ml-1 text-xs'>
+              Joined {user.createdAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+            </span>
+          </Stagger>
+        </Stagger>
 
         <div className='grid gap-6'>
           <Section
             title='Profiles'
             description={user.profiles.length === 1 ? '1 profile, in any state of review.' : `${user.profiles.length} profiles, in any state of review.`}
-            delay={0.1}
+            delay={0.6}
           >
             {user.profiles.length ? (
               <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-3'>
@@ -113,7 +112,7 @@ export default async function UserPage({ params }: PageProps<'/users/[id]'>) {
             )}
           </Section>
 
-          <Section title='Role' description={ROLE_DESCRIPTIONS[user.role]} delay={0.15}>
+          <Section title='Role' description={ROLE_DESCRIPTIONS[user.role]} delay={0.7}>
             {admin && !self ? (
               <RoleSelect userId={user.id} username={user.username} role={user.role} />
             ) : (
@@ -128,7 +127,7 @@ export default async function UserPage({ params }: PageProps<'/users/[id]'>) {
               title='Ban'
               description={banned ? undefined : 'Signs them out everywhere and stops them signing in. They see the reason, if you give one, when they try.'}
               destructive
-              delay={0.2}
+              delay={0.8}
             >
               {banned ? (
                 <div className='flex flex-col gap-3'>
@@ -169,7 +168,7 @@ export default async function UserPage({ params }: PageProps<'/users/[id]'>) {
           )}
 
           {mayManage && (
-            <Section title='Account' description='Things only admins can do. Each asks first.' delay={0.25}>
+            <Section title='Account' description='Things only admins can do. Each asks first.' delay={0.9}>
               <AccountActions user={user} sessions={user._count.sessions} />
             </Section>
           )}

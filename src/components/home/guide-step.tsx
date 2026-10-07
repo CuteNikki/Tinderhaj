@@ -4,6 +4,8 @@ import { Heart, Search, Sparkles } from 'lucide-react';
 import { motion, useInView } from 'motion/react';
 import { useRef } from 'react';
 
+import { after, cardReveal, spring } from '@/lib/motion';
+
 const icons = { sparkles: Sparkles, search: Search, heart: Heart };
 
 export function GuideStep({ number, title, copy, icon }: { number: string; title: string; copy: string; icon: keyof typeof icons }) {
@@ -14,15 +16,16 @@ export function GuideStep({ number, title, copy, icon }: { number: string; title
   return (
     <motion.div
       ref={elementRef}
-      className='group/step border-b border-current/20 px-4 sm:px-6 py-4 md:border-r md:border-b-0 last:border-b-0 last:md:border-r-0'
-      initial={{ opacity: 1, y: 22 }}
-      animate={isInView ? { opacity: 1, y: 0 } : undefined}
-      transition={{ duration: 0.65, delay: Number(number) * 0.1, ease: [0.2, 0.8, 0.2, 1] }}
+      className='group/step border-b border-current/20 px-4 py-4 last:border-b-0 sm:px-6 md:border-r md:border-b-0 last:md:border-r-0'
+      initial='hidden'
+      animate={isInView ? 'visible' : 'hidden'}
+      variants={cardReveal}
+      transition={after(Number(number) * 0.08, spring.pop)}
     >
       <div className='mb-4 flex items-center justify-between'>
         <span className='text-muted-foreground font-mono text-sm'>{number}</span>
-        <span className='bg-background flex h-10 w-10 items-center justify-center rounded-full'>
-          <Icon className='text-primary h-5 w-5 transition-transform group-hover/step:rotate-12' />
+        <span className='bg-background ease-bounce flex h-10 w-10 items-center justify-center rounded-full transition-transform duration-300 group-hover/step:scale-110'>
+          <Icon className='text-primary group-hover/step:animate-wiggle h-5 w-5' />
         </span>
       </div>
       <h3 className='text-2xl font-bold'>{title}</h3>

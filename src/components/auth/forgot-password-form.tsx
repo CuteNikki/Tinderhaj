@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { MAX_EMAIL_LENGTH } from '@/constants/auth';
+import { after, popIn, spring } from '@/lib/motion';
 import { authClient } from '@/lib/auth-client';
 import { forgotPasswordSchema } from '@/lib/schemas';
 
@@ -48,13 +49,14 @@ export function ForgotPasswordForm() {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.2, 0.8, 0.2, 1] }}
+        transition={spring.soft}
         className='flex flex-col items-center gap-3 py-2 text-center'
       >
         <motion.div
-          initial={{ scale: 0.5, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.1, ease: [0.2, 0.8, 0.2, 1] }}
+          initial='hidden'
+          animate='visible'
+          variants={popIn}
+          transition={after(0.1, spring.pop)}
           className='bg-primary/10 text-primary flex size-12 items-center justify-center rounded-full'
         >
           <MailCheckIcon className='h-6 w-6' />

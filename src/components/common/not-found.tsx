@@ -1,6 +1,8 @@
 'use client';
 
 import { motion } from 'motion/react';
+
+import { after, spring } from '@/lib/motion';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -22,7 +24,7 @@ export function NotFoundPage() {
           <motion.div
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, ease: [0.2, 0.8, 0.2, 1] }}
+            transition={spring.soft}
             className='text-primary mb-5 flex items-center gap-2 text-xs font-bold tracking-[0.24em] uppercase'
           >
             <Radio className='h-4 w-4 animate-pulse' /> Signal lost
@@ -30,7 +32,7 @@ export function NotFoundPage() {
           <motion.h1
             initial={{ opacity: 0, y: 22 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1, ease: [0.2, 0.8, 0.2, 1] }}
+            transition={after(0.1)}
             className='text-foreground text-6xl leading-[0.9] font-black tracking-tight sm:text-8xl'
           >
             404
@@ -40,17 +42,12 @@ export function NotFoundPage() {
           <motion.p
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, delay: 0.2, ease: [0.2, 0.8, 0.2, 1] }}
+            transition={after(0.2)}
             className='text-muted-foreground mt-6 max-w-md text-base leading-relaxed text-pretty sm:text-lg'
           >
             This page drifted out of range. Let&apos;s get you back to the good stuff before the tide changes.
           </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, delay: 0.3, ease: [0.2, 0.8, 0.2, 1] }}
-            className='mt-8 flex flex-wrap gap-3'
-          >
+          <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={after(0.3)} className='mt-8 flex flex-wrap gap-3'>
             <Button size='lg' className='h-12 rounded-full px-6' asChild>
               <Link href='/'>
                 <ArrowLeft />
@@ -67,9 +64,9 @@ export function NotFoundPage() {
         </div>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.86, rotate: -4 }}
+          initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
           animate={{ opacity: 1, scale: 1, rotate: 0 }}
-          transition={{ duration: 0.9, delay: 0.1, ease: [0.2, 0.8, 0.2, 1] }}
+          transition={after(0.1, spring.pop)}
           className='relative order-1 mx-auto aspect-square w-full max-w-136 md:order-2'
         >
           <motion.div
@@ -111,7 +108,7 @@ export function NotFoundPage() {
           <motion.div
             animate={{ y: [0, 6, 0] }}
             transition={{ duration: 4, ease: 'easeInOut', repeat: Infinity, delay: 0.2 }}
-            className='border-foreground/10 bg-background/90 absolute bottom-[15%] left-[5%] z-20 rounded-xl border px-4 py-3 shadow-xl backdrop-blur-md rotate-2'
+            className='border-foreground/10 bg-background/90 absolute bottom-[15%] left-[5%] z-20 rotate-2 rounded-xl border px-4 py-3 shadow-xl backdrop-blur-md'
           >
             <p className='text-primary text-[0.65rem] font-bold tracking-widest uppercase'>Last known location</p>
             <p className='mt-1 text-sm font-bold'>Somewhere between here &amp; there</p>

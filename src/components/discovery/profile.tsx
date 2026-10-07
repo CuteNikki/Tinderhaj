@@ -14,7 +14,7 @@ export function DiscoveryProfile({ profile, showStatus = false }: { profile: Pro
   const status = PROFILE_STATUS_META[profile.status];
 
   return (
-    <Card className='group border-foreground/10 bg-background h-full w-full overflow-hidden pt-0 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl'>
+    <Card className='group border-foreground/10 bg-background ease-bounce h-full w-full overflow-hidden pt-0 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:-rotate-[0.6deg] hover:shadow-xl'>
       <div className='relative aspect-5/2 overflow-hidden'>
         <ProfileBanner src={profile.bannerUrl} alt={`${profile.user.username}'s banner`} />
         {showStatus ? (

@@ -7,6 +7,8 @@ import { Suspense } from 'react';
 
 import { ArrowDown, ArrowRight, Search, Sparkles, Users2Icon, ZapIcon } from 'lucide-react';
 
+import { after, popIn, reveal, spring } from '@/lib/motion';
+
 import { DiscoveryLink } from '@/components/discovery/link';
 import { AnimatedCount } from '@/components/home/animated-count';
 import { ScrollToElement } from '@/components/home/scroll-to-element';
@@ -16,16 +18,13 @@ import { Button } from '@/components/ui/button';
 
 /** `profileCount` is rendered on the server, where the count comes from. */
 export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
-  const reveal = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } };
-  const revealTransition = { duration: 0.65, ease: [0.2, 0.8, 0.2, 1] as const };
-
   return (
     <section id='hero' className='bg-background relative isolate overflow-hidden'>
       <div className='pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[4rem_4rem] opacity-25' />
       <div className='bg-primary/10 pointer-events-none absolute top-1/2 left-1/2 z-0 size-112 -translate-1/2 rounded-full blur-3xl' />
       <div className='relative z-10 container mx-auto grid min-h-screen max-w-7xl items-center gap-4 px-6 pt-24 pb-12 md:px-8 lg:grid-cols-2 lg:gap-8'>
         <div className='relative z-10 flex max-w-2xl flex-col items-start'>
-          <motion.div initial='hidden' animate='visible' variants={reveal} transition={revealTransition}>
+          <motion.div initial='hidden' animate='visible' variants={popIn} transition={spring.pop}>
             <Badge variant='secondary' className='rounded-full p-4 font-semibold tracking-wide uppercase'>
               <span className='relative mr-2 flex h-2 w-2'>
                 <span className='bg-primary absolute inline-flex h-full w-full animate-ping rounded-full opacity-75' />
@@ -34,14 +33,14 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
               The plush dating club
             </Badge>
           </motion.div>
-          <motion.div initial='hidden' animate='visible' variants={reveal} transition={{ ...revealTransition, duration: 0.7, delay: 0.1 }}>
+          <motion.div initial='hidden' animate='visible' variants={reveal} transition={after(0.1)}>
             <TypographyH1 className='xs:text-5xl mt-6 max-w-3xl text-4xl leading-none font-black tracking-tight md:text-7xl xl:text-8xl'>
               Make a splash.
               <br />
               <span className='text-primary'>Meet your match.</span>
             </TypographyH1>
           </motion.div>
-          <motion.div initial='hidden' animate='visible' variants={reveal} transition={{ ...revealTransition, delay: 0.2 }}>
+          <motion.div initial='hidden' animate='visible' variants={reveal} transition={after(0.2)}>
             <TypographyMuted className='mt-2 max-w-lg text-base leading-relaxed text-pretty sm:mt-6 sm:text-lg'>
               A warm, weird little corner of the internet for Blåhaj looking for their person. Browse profiles, find a feeling, make it official.
             </TypographyMuted>
@@ -50,7 +49,7 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
             initial='hidden'
             animate='visible'
             variants={reveal}
-            transition={{ ...revealTransition, delay: 0.3 }}
+            transition={after(0.3)}
             className='mt-4 flex w-full flex-wrap items-start gap-2 sm:mt-8'
           >
             <Button size='lg' className='h-12 rounded-full px-6' asChild>
@@ -70,7 +69,7 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
             initial='hidden'
             animate='visible'
             variants={reveal}
-            transition={{ ...revealTransition, delay: 0.4 }}
+            transition={after(0.4)}
             className='border-foreground/10 mt-4 flex flex-wrap gap-x-4 gap-y-2 sm:mt-6'
           >
             <div className='flex items-center gap-2 text-sm'>
@@ -91,20 +90,20 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
           <motion.div
             initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ ...revealTransition, delay: 0.15 }}
+            transition={after(0.15)}
             className='border-primary/20 absolute top-1/2 left-1/2 size-3/4 -translate-1/2 rounded-full border'
           />
           <motion.div
             initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ ...revealTransition, delay: 0.25 }}
+            transition={after(0.25)}
             className='border-primary/15 absolute top-1/2 left-1/2 size-11/12 -translate-1/2 rounded-full border border-dashed'
           />
           <motion.div
             initial='hidden'
             animate='visible'
-            variants={reveal}
-            transition={{ ...revealTransition, delay: 0.35 }}
+            variants={popIn}
+            transition={after(0.6, spring.pop)}
             className='absolute top-4 left-1/2 z-10 -translate-x-1/2'
           >
             <motion.div
@@ -117,11 +116,12 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
           </motion.div>
           <div className='relative z-1 w-3/4 max-w-md'>
             <motion.div
-              initial={{ opacity: 0, y: 24, rotate: -4 }}
-              animate={{ opacity: 1, y: 0, rotate: 0 }}
-              transition={{ ...revealTransition, duration: 0.9, delay: 0.45 }}
+              initial={{ opacity: 0, y: 40, scale: 0.85, rotate: -10 }}
+              animate={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
+              transition={after(0.3, spring.pop)}
+              whileHover={{ scale: 1.04, rotate: -3, transition: spring.snappy }}
             >
-              <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 5, ease: 'easeInOut', repeat: Infinity }}>
+              <motion.div animate={{ y: [0, 10, 0], rotate: [0, -2, 0, 2, 0] }} transition={{ duration: 6, ease: 'easeInOut', repeat: Infinity }}>
                 <Image
                   unoptimized
                   priority
@@ -135,13 +135,7 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
               </motion.div>
             </motion.div>
           </div>
-          <motion.div
-            initial='hidden'
-            animate='visible'
-            variants={reveal}
-            transition={{ ...revealTransition, delay: 0.65 }}
-            className='absolute right-4 bottom-8 z-10'
-          >
+          <motion.div initial='hidden' animate='visible' variants={popIn} transition={after(0.75, spring.pop)} className='absolute right-4 bottom-8 z-10'>
             <motion.div
               animate={{ y: [0, 6, 0] }}
               transition={{ duration: 4, ease: 'easeInOut', repeat: Infinity, delay: 0.2 }}
@@ -155,9 +149,10 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
             </motion.div>
           </motion.div>
           <motion.div
-            initial={{ opacity: 0, scale: 0.7 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ ...revealTransition, delay: 0.9 }}
+            initial={{ opacity: 0, scale: 0.3, rotate: -30 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            transition={after(0.9, spring.pop)}
+            whileHover={{ scale: 1.15, rotate: -8, transition: spring.snappy }}
             className='absolute top-1/4 right-8'
           >
             <motion.div

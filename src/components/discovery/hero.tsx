@@ -4,10 +4,9 @@ import Image from 'next/image';
 
 import { motion } from 'motion/react';
 
-import { Badge } from '@/components/ui/badge';
+import { after, popIn, reveal, spring } from '@/lib/motion';
 
-const reveal = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } };
-const revealTransition = { duration: 0.65, ease: [0.2, 0.8, 0.2, 1] as const };
+import { Badge } from '@/components/ui/badge';
 
 export function DiscoveryHero() {
   return (
@@ -16,15 +15,15 @@ export function DiscoveryHero() {
       <div className='bg-primary/10 pointer-events-none absolute top-1/2 left-1/2 z-0 size-112 -translate-1/2 rounded-full blur-3xl' />
       <div className='relative z-10 container mx-auto grid max-w-7xl items-center gap-10 px-6 lg:grid-cols-[minmax(0,1fr)_22rem] lg:px-8'>
         <div className='max-w-3xl'>
-          <motion.div initial='hidden' animate='visible' variants={reveal} transition={revealTransition}>
+          <motion.div initial='hidden' animate='visible' variants={popIn} transition={spring.pop}>
             <Badge variant='secondary' className='rounded-full p-4 font-semibold tracking-wide uppercase'>
               Discovery deck
             </Badge>
           </motion.div>
-          <motion.div initial='hidden' animate='visible' variants={reveal} transition={{ ...revealTransition, duration: 0.7, delay: 0.1 }}>
+          <motion.div initial='hidden' animate='visible' variants={reveal} transition={after(0.1)}>
             <h1 className='mt-6 max-w-3xl text-5xl leading-none font-black tracking-tight sm:text-7xl'>Browse the soft side of the sea.</h1>
           </motion.div>
-          <motion.div initial='hidden' animate='visible' variants={reveal} transition={{ ...revealTransition, delay: 0.2 }}>
+          <motion.div initial='hidden' animate='visible' variants={reveal} transition={after(0.2)}>
             <p className='text-muted-foreground mt-6 max-w-2xl text-base leading-relaxed text-pretty sm:text-lg'>
               Search by name, location, pronouns, interests, or anything else that makes a profile feel like your kind of tide.
             </p>
@@ -34,22 +33,23 @@ export function DiscoveryHero() {
           <motion.div
             initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ ...revealTransition, delay: 0.15 }}
+            transition={after(0.15)}
             className='border-primary/20 absolute inset-8 rounded-full border'
           />
           <motion.div
             initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ ...revealTransition, delay: 0.25 }}
+            transition={after(0.25)}
             className='border-primary/15 absolute inset-0 rounded-full border border-dashed'
           />
           <motion.div
-            initial={{ opacity: 0, y: 24, rotate: -4 }}
-            animate={{ opacity: 1, y: 0, rotate: 0 }}
-            transition={{ ...revealTransition, duration: 0.9, delay: 0.35 }}
+            initial={{ opacity: 0, y: 40, scale: 0.85, rotate: -10 }}
+            animate={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
+            transition={after(0.3, spring.pop)}
+            whileHover={{ scale: 1.05, rotate: 3, transition: spring.snappy }}
             className='relative z-10'
           >
-            <motion.div animate={{ y: [0, 5, 0] }} transition={{ duration: 4.5, ease: 'easeInOut', repeat: Infinity }}>
+            <motion.div animate={{ y: [0, 6, 0], rotate: [0, 2, 0, -2, 0] }} transition={{ duration: 5.5, ease: 'easeInOut', repeat: Infinity }}>
               <Image unoptimized priority width={320} height={320} src='/blahajSmall.png' alt='Two Blåhaj sharing a hug' className='h-auto w-72' />
             </motion.div>
           </motion.div>

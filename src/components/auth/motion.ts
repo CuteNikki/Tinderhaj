@@ -1,9 +1,11 @@
-export const staggerContainer = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
-};
+import type { Variants } from 'motion/react';
 
-export const staggerItem = {
-  hidden: { opacity: 0, y: 14 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.2, 0.8, 0.2, 1] as const } },
+import { spring, stagger } from '@/lib/motion';
+
+/** The fields and buttons of the auth forms, one after another. */
+export const staggerContainer = stagger(0.06, 0.05);
+
+export const staggerItem: Variants = {
+  hidden: { opacity: 0, y: 14, scale: 0.97 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: spring.pop },
 };

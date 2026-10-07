@@ -8,6 +8,7 @@ import { authClient } from '@/lib/auth-client';
 import { providerLabel, type SocialProviderId } from '@/lib/providers';
 
 import { ProviderIcon } from '@/components/common/provider-icon';
+import { Stagger } from '@/components/common/stagger';
 import { Button } from '@/components/ui/button';
 
 /**
@@ -36,20 +37,13 @@ export function SocialButtons({ providers, errorCallbackURL }: { providers: Soci
   if (!providers.length) return null;
 
   return (
-    <div className='grid gap-2 sm:grid-cols-2'>
+    <Stagger className='grid gap-2 sm:grid-cols-2' itemClassName='sm:last:odd:col-span-2' variant='pop' gap={0.05}>
       {providers.map((provider) => (
-        <Button
-          key={provider}
-          type='button'
-          variant='outline'
-          className='w-full transition-transform active:scale-[0.98] sm:last:odd:col-span-2'
-          disabled={pending !== null}
-          onClick={() => signIn(provider)}
-        >
+        <Button key={provider} type='button' variant='outline' className='w-full' disabled={pending !== null} onClick={() => signIn(provider)}>
           {pending === provider ? <Loader2Icon className='animate-spin' aria-hidden='true' /> : <ProviderIcon provider={provider} />}
           {providerLabel(provider)}
         </Button>
       ))}
-    </div>
+    </Stagger>
   );
 }

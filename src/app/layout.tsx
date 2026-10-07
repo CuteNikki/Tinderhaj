@@ -11,6 +11,7 @@ import { ourFileRouter } from '@/app/api/uploadthing/core';
 import { Footer } from '@/components/navigation/footer';
 import { Navbar, NavbarFallback } from '@/components/navigation/navbar';
 import { ThemeProvider } from '@/components/theme/provider';
+import { MotionProvider } from '@/components/theme/motion-provider';
 import { Toaster } from '@/components/theme/toaster';
 
 import './globals.css';
@@ -45,12 +46,14 @@ export default function RootLayout({
         <NextSSRPlugin routerConfig={uploadthingRouterConfig} />
         <div id='top' />
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
-          <Suspense fallback={<NavbarFallback />}>
-            <Navbar />
-          </Suspense>
-          <main className='flex flex-1 flex-col'>{children}</main>
-          <Footer />
-          <Toaster position='top-center' />
+          <MotionProvider>
+            <Suspense fallback={<NavbarFallback />}>
+              <Navbar />
+            </Suspense>
+            <main className='flex flex-1 flex-col'>{children}</main>
+            <Footer />
+            <Toaster position='top-center' />
+          </MotionProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -1,19 +1,39 @@
 'use client';
 
-import { motion, useInView } from 'motion/react';
-import { useRef } from 'react';
+import { motion } from 'motion/react';
 
-export function ScrollReveal({ children, className, delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
-  const elementRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(elementRef, { once: true, amount: 0.2 });
+import { useReveal } from '@/components/common/use-reveal';
+import { after, cardReveal, reveal, spring } from '@/lib/motion';
+
+/**
+ * Springs into place once scrolled into view. `card` tips up from a slight
+ * tilt, for cards in a grid; sections and text just rise. `delay` places it
+ * in the page's opening sequence; `scrollDelay` is all it waits when it's
+ * only scrolled to later (see useReveal).
+ */
+export function ScrollReveal({
+  children,
+  className,
+  delay = 0,
+  scrollDelay = 0,
+  variant = 'section',
+}: {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+  scrollDelay?: number;
+  variant?: 'section' | 'card';
+}) {
+  const { ref, visible, delay: revealDelay } = useReveal<HTMLDivElement>({ delay, scrollDelay });
 
   return (
     <motion.div
-      ref={elementRef}
+      ref={ref}
       className={className}
-      initial={{ opacity: 0, y: 28 }}
-      animate={isInView ? { opacity: 1, y: 0 } : undefined}
-      transition={{ duration: 0.7, delay, ease: [0.2, 0.8, 0.2, 1] }}
+      initial='hidden'
+      animate={visible ? 'visible' : 'hidden'}
+      variants={variant === 'card' ? cardReveal : reveal}
+      transition={after(revealDelay, variant === 'card' ? spring.pop : spring.soft)}
     >
       {children}
     </motion.div>

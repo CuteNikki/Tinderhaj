@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 
 import { imprintMetadata } from '@/constants/metadata';
 
+import { Stagger } from '@/components/common/stagger';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
 import { TypographyH1, TypographyH2, TypographyLead, TypographyP } from '@/components/typography';
 
@@ -11,17 +12,15 @@ export default function ImprintPage() {
   return (
     <div className='bg-background flex flex-1 flex-col px-4 py-28 sm:px-4 lg:px-8'>
       <article className='container mx-auto max-w-7xl'>
-        <ScrollReveal>
-          <header className='mx-auto mb-6 max-w-4xl'>
-            <p className='text-primary mb-1 text-xs font-bold tracking-widest uppercase'>Legal</p>
-            <TypographyH1>Imprint</TypographyH1>
-            <TypographyLead className='text-foreground mt-2'>Legal information and contact details for Tinderhaj.</TypographyLead>
-            <p className='text-muted-foreground mt-2 text-sm'>Last updated: September 18, 2026</p>
-          </header>
-        </ScrollReveal>
+        <Stagger as='header' className='mx-auto mb-6 max-w-4xl'>
+          <p className='text-primary mb-1 text-xs font-bold tracking-widest uppercase'>Legal</p>
+          <TypographyH1>Imprint</TypographyH1>
+          <TypographyLead className='text-foreground mt-2'>Legal information and contact details for Tinderhaj.</TypographyLead>
+          <p className='text-muted-foreground mt-2 text-sm'>Last updated: September 18, 2026</p>
+        </Stagger>
 
         <div className='mx-auto max-w-4xl space-y-6'>
-          <ScrollReveal delay={0.05}>
+          <ScrollReveal delay={0.35}>
             <section className='space-y-2'>
               <TypographyH2>Provider</TypographyH2>
               <TypographyP>Information pursuant to § 5 DDG (German Digital Services Act):</TypographyP>
@@ -37,7 +36,7 @@ export default function ImprintPage() {
             </section>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.1}>
+          <ScrollReveal delay={0.45}>
             <section className='space-y-2'>
               <TypographyH2>Contact</TypographyH2>
               <TypographyP>
@@ -50,7 +49,7 @@ export default function ImprintPage() {
             </section>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.2}>
+          <ScrollReveal delay={0.55}>
             <section className='space-y-2'>
               <TypographyH2>Responsible for content</TypographyH2>
               <TypographyP>Responsible for content pursuant to § 18 (2) MStV:</TypographyP>
@@ -66,7 +65,7 @@ export default function ImprintPage() {
             </section>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.3}>
+          <ScrollReveal delay={0.65}>
             <section className='space-y-2'>
               <TypographyH2>Liability for content</TypographyH2>
               <TypographyP>
@@ -79,7 +78,7 @@ export default function ImprintPage() {
             </section>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.4}>
+          <ScrollReveal delay={0.75}>
             <section className='space-y-2'>
               <TypographyH2>Liability for links</TypographyH2>
               <TypographyP>
@@ -90,14 +89,14 @@ export default function ImprintPage() {
             </section>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.5}>
+          <ScrollReveal delay={0.85}>
             <section className='space-y-2'>
               <TypographyH2>Trademark notice</TypographyH2>
               <TypographyP>Blåhaj is a trademark of IKEA. Tinderhaj is an independent project and is not affiliated with IKEA or Tinder.</TypographyP>
             </section>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.6}>
+          <ScrollReveal delay={0.95}>
             <section className='space-y-2'>
               <TypographyH2>Copyright</TypographyH2>
               <TypographyP>

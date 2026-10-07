@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 
 import { termsMetadata } from '@/constants/metadata';
 
+import { Stagger } from '@/components/common/stagger';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
 import { TypographyH1, TypographyH2, TypographyLead, TypographyList, TypographyP } from '@/components/typography';
 
@@ -11,17 +12,15 @@ export default function TermsPage() {
   return (
     <div className='bg-background flex flex-1 flex-col px-4 py-28 sm:px-4 lg:px-8'>
       <article className='container mx-auto max-w-7xl'>
-        <ScrollReveal>
-          <header className='mx-auto mb-6 max-w-4xl'>
-            <p className='text-primary mb-1 text-xs font-bold tracking-widest uppercase'>Legal</p>
-            <TypographyH1>Terms of Service</TypographyH1>
-            <TypographyLead className='text-foreground mt-2'>The rules for using Tinderhaj and taking part in the community.</TypographyLead>
-            <p className='text-muted-foreground mt-2 text-sm'>Last updated: September 18, 2026</p>
-          </header>
-        </ScrollReveal>
+        <Stagger as='header' className='mx-auto mb-6 max-w-4xl'>
+          <p className='text-primary mb-1 text-xs font-bold tracking-widest uppercase'>Legal</p>
+          <TypographyH1>Terms of Service</TypographyH1>
+          <TypographyLead className='text-foreground mt-2'>The rules for using Tinderhaj and taking part in the community.</TypographyLead>
+          <p className='text-muted-foreground mt-2 text-sm'>Last updated: September 18, 2026</p>
+        </Stagger>
 
         <div className='mx-auto max-w-4xl space-y-6'>
-          <ScrollReveal delay={0.05}>
+          <ScrollReveal delay={0.35}>
             <section className='space-y-2'>
               <TypographyH2>1. Using Tinderhaj</TypographyH2>
               <TypographyP>
@@ -31,7 +30,7 @@ export default function TermsPage() {
             </section>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.1}>
+          <ScrollReveal delay={0.45}>
             <section className='space-y-2'>
               <TypographyH2>2. Eligibility</TypographyH2>
               <TypographyP>
@@ -41,7 +40,7 @@ export default function TermsPage() {
             </section>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.15}>
+          <ScrollReveal delay={0.55}>
             <section className='space-y-2'>
               <TypographyH2>3. Your account</TypographyH2>
               <TypographyList>
@@ -52,7 +51,7 @@ export default function TermsPage() {
             </section>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.2}>
+          <ScrollReveal delay={0.65}>
             <section className='space-y-2'>
               <TypographyH2>4. Profiles and content</TypographyH2>
               <TypographyP>
@@ -66,7 +65,7 @@ export default function TermsPage() {
             </section>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.25}>
+          <ScrollReveal delay={0.75}>
             <section className='space-y-2'>
               <TypographyH2>5. Community rules</TypographyH2>
               <TypographyP>You may not use Tinderhaj to:</TypographyP>
@@ -80,7 +79,7 @@ export default function TermsPage() {
             </section>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.3}>
+          <ScrollReveal delay={0.85}>
             <section className='space-y-2'>
               <TypographyH2>6. Verification and moderation</TypographyH2>
               <TypographyP>
@@ -90,7 +89,7 @@ export default function TermsPage() {
             </section>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.35}>
+          <ScrollReveal delay={0.95}>
             <section className='space-y-2'>
               <TypographyH2>7. Third-party services</TypographyH2>
               <TypographyP>
@@ -100,7 +99,7 @@ export default function TermsPage() {
             </section>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.4}>
+          <ScrollReveal delay={1.05}>
             <section className='space-y-2'>
               <TypographyH2>8. Account suspension and deletion</TypographyH2>
               <TypographyP>
@@ -111,7 +110,7 @@ export default function TermsPage() {
             </section>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.45}>
+          <ScrollReveal delay={1.15}>
             <section className='space-y-2'>
               <TypographyH2>9. Disclaimers</TypographyH2>
               <TypographyP>
@@ -121,7 +120,7 @@ export default function TermsPage() {
             </section>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.5}>
+          <ScrollReveal delay={1.25}>
             <section className='space-y-2'>
               <TypographyH2>10. Limitation of liability</TypographyH2>
               <TypographyP>
@@ -131,7 +130,7 @@ export default function TermsPage() {
             </section>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.55}>
+          <ScrollReveal delay={1.35}>
             <section className='space-y-2'>
               <TypographyH2>11. Changes to these terms</TypographyH2>
               <TypographyP>
@@ -141,7 +140,7 @@ export default function TermsPage() {
             </section>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.6}>
+          <ScrollReveal delay={1.45}>
             <section className='space-y-2'>
               <TypographyH2>12. Contact</TypographyH2>
               <TypographyP>
@@ -154,7 +153,7 @@ export default function TermsPage() {
             </section>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.65}>
+          <ScrollReveal delay={1.55}>
             <section className='space-y-2'>
               <TypographyH2>13. Governing law</TypographyH2>
               <TypographyP>
