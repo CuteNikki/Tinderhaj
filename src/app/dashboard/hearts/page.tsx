@@ -59,7 +59,7 @@ export default async function HeartsPage({ searchParams }: PageProps<'/dashboard
   return (
     <div className='bg-background flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'>
       <MarkHeartsSeen unseen={unseen} />
-      <div className='container mx-auto max-w-3xl'>
+      <div className='container mx-auto max-w-7xl'>
         <Stagger className='mb-8'>
           <p className='text-primary mb-1 text-xs font-bold tracking-widest uppercase'>Your sharks</p>
           <h1 className='text-3xl font-black tracking-tight sm:text-4xl'>Hearts</h1>
@@ -67,7 +67,7 @@ export default async function HeartsPage({ searchParams }: PageProps<'/dashboard
         </Stagger>
 
         <ScrollReveal delay={CONTENT_DELAY}>
-          <nav aria-label='Hearts' className='bg-muted mb-4 grid grid-cols-3 gap-1 rounded-xl p-1'>
+          <nav aria-label='Hearts' className='bg-muted mb-4 grid max-w-md grid-cols-3 gap-1 rounded-xl p-1'>
             {(Object.keys(TABS) as Tab[]).map((key) => {
               const { label, icon: Icon } = TABS[key];
               const fresh = hearts[key].filter((row) => row.unseen).length;

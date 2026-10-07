@@ -48,13 +48,16 @@ const siteLinks: NavLink[] = [
   { name: 'Discovery', href: '/discovery#top', icon: SearchIcon },
 ];
 
-function accountLinks(unseenHearts: number): NavLink[] {
+/** Each group here is a page's eyebrow: "Your sharks", "Moderation", "Your account". */
+function sharkLinks(unseenHearts: number): NavLink[] {
   return [
     { name: 'Profiles', href: '/dashboard/profiles#top', icon: UserRoundIcon },
     { name: 'Hearts', href: '/dashboard/hearts#top', icon: HeartIcon, count: unseenHearts },
-    { name: 'Account', href: '/dashboard/account#top', icon: SettingsIcon },
   ];
 }
+
+/** Sits with Log out, as the other thing about you rather than your sharks. */
+const accountLink: NavLink = { name: 'Settings', href: '/dashboard/account#top', icon: SettingsIcon };
 
 export async function Navbar() {
   const session = await getSession();
@@ -72,7 +75,7 @@ export function NavbarFallback() {
 }
 
 function NavbarContent({ user, pending, hearts, showAuthElements }: { user: NavUser | null; pending: number; hearts: number; showAuthElements: boolean }) {
-  const yourLinks = accountLinks(hearts);
+  const yourLinks = sharkLinks(hearts);
   const moderationLinks: NavLink[] =
     user && isModerator(user.role)
       ? [
@@ -124,6 +127,7 @@ function NavbarContent({ user, pending, hearts, showAuthElements }: { user: NavU
                       </>
                     )}
                     <DropdownMenuSeparator />
+                    <MenuLink link={accountLink} />
                     <LogOutDropdownMenuItem />
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -159,14 +163,24 @@ function NavbarContent({ user, pending, hearts, showAuthElements }: { user: NavU
 
               <div className='flex flex-1 flex-col gap-6 overflow-y-auto p-4'>
                 <SheetSection title='Explore' links={siteLinks} />
-                {user && <SheetSection title='Account' links={yourLinks} />}
+                {user && <SheetSection title='Your sharks' links={yourLinks} />}
                 {moderationLinks.length > 0 && <SheetSection title='Moderation' links={moderationLinks} />}
               </div>
 
               {showAuthElements && (
                 <SheetFooter className='border-foreground/10 border-t'>
                   {user ? (
-                    <LogOutButton className='w-full' />
+                    <>
+                      <SheetClose asChild>
+                        <Button variant='outline' className='w-full' asChild>
+                          <Link href={accountLink.href}>
+                            <accountLink.icon aria-hidden='true' />
+                            {accountLink.name}
+                          </Link>
+                        </Button>
+                      </SheetClose>
+                      <LogOutButton className='w-full' />
+                    </>
                   ) : (
                     <>
                       <SheetClose asChild>

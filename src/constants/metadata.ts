@@ -163,7 +163,7 @@ export const profilesMetadata: Metadata = {
 };
 
 export const accountMetadata: Metadata = {
-  title: 'Tinderhaj - Account',
+  title: 'Tinderhaj - Settings',
   description: 'Manage your Tinderhaj account.',
   openGraph: {
     url: 'https://tinderhaj.com',

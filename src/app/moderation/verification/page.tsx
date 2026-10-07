@@ -32,7 +32,7 @@ export default async function VerifyPage() {
       <div className='container mx-auto max-w-7xl'>
         <Stagger className='mb-8'>
           <p className='text-primary mb-1 text-xs font-bold tracking-widest uppercase'>Moderation</p>
-          <h1 className='text-3xl font-black tracking-tight sm:text-4xl'>Profile Verification</h1>
+          <h1 className='text-3xl font-black tracking-tight sm:text-4xl'>Verification</h1>
         </Stagger>
 
         {profiles.length ? (

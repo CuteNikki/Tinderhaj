@@ -23,8 +23,8 @@ export default async function ProfilesPage() {
       <div className='container mx-auto max-w-7xl'>
         <Stagger className='mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center'>
           <div>
-            <p className='text-primary mb-1 text-xs font-bold tracking-widest uppercase'>Your account</p>
-            <h1 className='text-3xl font-black tracking-tight sm:text-4xl'>Manage Profiles</h1>
+            <p className='text-primary mb-1 text-xs font-bold tracking-widest uppercase'>Your sharks</p>
+            <h1 className='text-3xl font-black tracking-tight sm:text-4xl'>Profiles</h1>
           </div>
           <CreateProfile username={session.user.name} disableButton={profiles.length >= 5} />
         </Stagger>

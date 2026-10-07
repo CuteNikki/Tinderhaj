@@ -30,7 +30,7 @@ export default async function AccountPage({ searchParams }: PageProps<'/dashboar
       <div className='container mx-auto max-w-7xl'>
         <Stagger className='mb-8'>
           <p className='text-primary mb-1 text-xs font-bold tracking-widest uppercase'>Your account</p>
-          <h1 className='text-3xl font-black tracking-tight sm:text-4xl'>Account Settings</h1>
+          <h1 className='text-3xl font-black tracking-tight sm:text-4xl'>Settings</h1>
         </Stagger>
         <div className='grid items-start gap-6 lg:grid-cols-2'>
           <div className='grid gap-6'>
