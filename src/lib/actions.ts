@@ -10,6 +10,7 @@ import { auth, forgetTrustedDevices as forget } from '@/lib/auth';
 import prisma from '@/lib/prisma';
 import { PROFILE_COUNT_TAG, QUERIES } from '@/lib/queries';
 import { BAN_REASON_MAX, banExpiry, isBanDuration, isBanned } from '@/lib/bans';
+import { HEARTS_PER_DAY, liveProfileWhere } from '@/lib/hearts';
 import { canBan, canManageAccount, isAdmin, isRole } from '@/lib/roles';
 import { createProfileSchema, rejectProfileSchema, updateProfileSchema, updateUsernameSchema } from '@/lib/schemas';
 import { getSession, isModerator, requireUser } from '@/lib/session';
@@ -327,4 +328,49 @@ export async function rejectProfile(unsafeData: z.infer<typeof rejectProfileSche
   revalidatePath('/verification');
   revalidatePath('/profiles');
   updateTag(PROFILE_COUNT_TAG);
+}
+
+/**
+ * One of the user's verified sharks hearts someone else's live shark.
+ * Returns whether that made a match.
+ */
+export async function sendHeart({ fromProfileId, toProfileId }: { fromProfileId: string; toProfileId: string }) {
+  const session = await requireUser();
+
+  const from = await prisma.profile.findFirst({ where: { id: fromProfileId, userId: session.user.id }, select: { status: true, displayName: true } });
+  if (!from) return { message: 'That shark isn’t yours.' };
+  if (from.status !== 'VERIFIED') return { message: 'Only verified sharks can send hearts.' };
+
+  const to = await prisma.profile.findFirst({ where: { id: toProfileId, ...liveProfileWhere() }, select: { userId: true } });
+  if (!to) return { message: 'That shark isn’t around anymore.' };
+  if (to.userId === session.user.id) return { message: 'Your sharks can’t heart each other.' };
+
+  const today = await prisma.heart.count({ where: { fromProfileId, createdAt: { gt: new Date(Date.now() - 24 * 60 * 60 * 1000) } } });
+  if (today >= HEARTS_PER_DAY) return { message: `${from.displayName} has sent ${HEARTS_PER_DAY} hearts today. Try again tomorrow.` };
+
+  // Sending twice does nothing.
+  await prisma.heart.createMany({ data: { fromProfileId, toProfileId }, skipDuplicates: true });
+  const back = await prisma.heart.count({ where: { fromProfileId: toProfileId, toProfileId: fromProfileId } });
+
+  revalidatePath('/discovery');
+  revalidatePath('/hearts');
+  return { matched: back > 0 };
+}
+
+/** Takes a heart back, which also ends a match. */
+export async function takeBackHeart({ fromProfileId, toProfileId }: { fromProfileId: string; toProfileId: string }) {
+  const session = await requireUser();
+
+  const { count } = await prisma.heart.deleteMany({ where: { fromProfileId, toProfileId, from: { userId: session.user.id } } });
+  if (!count) return { message: 'That heart was already taken back.' };
+
+  revalidatePath('/discovery');
+  revalidatePath('/hearts');
+}
+
+/** Called when they open their hearts, so the nav stops pointing at them. */
+export async function markHeartsSeen() {
+  const session = await requireUser();
+
+  await prisma.heart.updateMany({ where: { seenAt: null, to: { userId: session.user.id } }, data: { seenAt: new Date() } });
 }

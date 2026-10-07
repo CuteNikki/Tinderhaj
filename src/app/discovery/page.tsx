@@ -4,7 +4,9 @@ import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
 import { discoveryMetadata } from '@/constants/metadata';
+import { getHeartStates } from '@/lib/hearts';
 import { QUERIES } from '@/lib/queries';
+import { getSession } from '@/lib/session';
 import { STAGGER } from '@/lib/motion';
 
 import { DiscoveryFilter } from '@/components/discovery/filter';
@@ -12,6 +14,7 @@ import { DiscoveryHero } from '@/components/discovery/hero';
 import { DiscoveryNoResults } from '@/components/discovery/no-results';
 import { DiscoveryPagination } from '@/components/discovery/pagination';
 import { DiscoveryProfile } from '@/components/discovery/profile';
+import { CardHearts } from '@/components/hearts/card-hearts';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
 
 const DISCOVERY_QUERY_TIMEOUT_MS = 8_000;
@@ -56,6 +59,15 @@ export default async function DiscoveryPage({ searchParams }: { searchParams: Pr
     DISCOVERY_QUERY_TIMEOUT_MS,
   );
 
+  // Where the viewer's sharks stand with each one on this page.
+  const session = await getSession();
+  const hearts = session
+    ? await getHeartStates(
+        session.user.id,
+        profiles.map((profile) => profile.id),
+      )
+    : null;
+
   const totalPages = Math.ceil(totalProfiles / take);
 
   if (totalPages !== 0 && page > totalPages) {
@@ -80,7 +92,17 @@ export default async function DiscoveryPage({ searchParams }: { searchParams: Pr
               <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-3'>
                 {profiles.map((profile, index) => (
                   <ScrollReveal key={profile.id} className='h-full' delay={0.5 + index * STAGGER} scrollDelay={(index % 3) * STAGGER} variant='card'>
-                    <DiscoveryProfile profile={profile} />
+                    <DiscoveryProfile
+                      profile={profile}
+                      action={
+                        <CardHearts
+                          target={{ id: profile.id, displayName: profile.displayName }}
+                          states={hearts?.[profile.id] ?? null}
+                          signedIn={!!session}
+                          own={profile.userId === session?.user.id}
+                        />
+                      }
+                    />
                   </ScrollReveal>
                 ))}
               </div>

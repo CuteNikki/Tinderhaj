@@ -1,0 +1,96 @@
+import { ShieldIcon, UserRoundIcon } from 'lucide-react';
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+
+import { userPageMetadata } from '@/constants/metadata';
+import { getHeartStates, getUserPage } from '@/lib/hearts';
+import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
+import { getSession } from '@/lib/session';
+
+import { EmptyState } from '@/components/common/empty-state';
+import { Stagger } from '@/components/common/stagger';
+import { DiscoveryProfile } from '@/components/discovery/profile';
+import { CardHearts } from '@/components/hearts/card-hearts';
+import { ScrollReveal } from '@/components/home/scroll-reveal';
+import { Button } from '@/components/ui/button';
+
+// Not the username: metadata is worked out apart from who may see the page.
+export const metadata: Metadata = userPageMetadata;
+
+/** Someone's sharks, for anyone to browse and heart. */
+export default async function UserSharksPage({ params }: PageProps<'/u/[username]'>) {
+  const { username } = await params;
+  const session = await getSession();
+  const page = await getUserPage(decodeURIComponent(username), session ? { id: session.user.id, role: session.user.role } : null);
+  if (!page) notFound();
+
+  const { user, sharks, banned, own, moderator } = page;
+  const hearts =
+    session && !own
+      ? await getHeartStates(
+          session.user.id,
+          sharks.map((shark) => shark.id),
+        )
+      : null;
+
+  return (
+    <div className='bg-background flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'>
+      <div className='container mx-auto max-w-7xl'>
+        <Stagger className='mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end'>
+          <div>
+            <p className='text-primary mb-1 text-xs font-bold tracking-widest uppercase'>{sharks.length === 1 ? '1 shark' : `${sharks.length} sharks`}</p>
+            <h1 className='text-3xl font-black tracking-tight break-all sm:text-4xl'>@{user.username}</h1>
+            <p className='text-muted-foreground mt-2 text-sm'>
+              Joined {user.createdAt.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+              {banned && ' · Banned: only moderators see this page'}
+            </p>
+          </div>
+          {(own || moderator) && (
+            <div className='flex flex-wrap gap-2'>
+              {own && (
+                <Button variant='outline' asChild>
+                  <Link href='/profiles'>
+                    <UserRoundIcon aria-hidden='true' />
+                    Manage your profiles
+                  </Link>
+                </Button>
+              )}
+              {moderator && !own && (
+                <Button variant='outline' asChild>
+                  <Link href={`/users/${user.id}`}>
+                    <ShieldIcon aria-hidden='true' />
+                    Moderate
+                  </Link>
+                </Button>
+              )}
+            </div>
+          )}
+        </Stagger>
+
+        {sharks.length ? (
+          <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-3'>
+            {sharks.map((shark, index) => (
+              <ScrollReveal key={shark.id} className='h-full' delay={CONTENT_DELAY + index * STAGGER} scrollDelay={(index % 3) * STAGGER} variant='card'>
+                <DiscoveryProfile
+                  profile={shark}
+                  action={
+                    <CardHearts target={{ id: shark.id, displayName: shark.displayName }} states={hearts?.[shark.id] ?? null} signedIn={!!session} own={own} />
+                  }
+                />
+              </ScrollReveal>
+            ))}
+          </div>
+        ) : (
+          <ScrollReveal delay={CONTENT_DELAY}>
+            <EmptyState
+              icon={UserRoundIcon}
+              title='No sharks yet.'
+              description={own ? 'Your sharks show up here once they’re verified.' : 'Their sharks show up here once they’re verified.'}
+            />
+          </ScrollReveal>
+        )}
+      </div>
+    </div>
+  );
+}

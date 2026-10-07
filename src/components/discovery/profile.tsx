@@ -1,6 +1,7 @@
 import { CakeIcon, MapPinIcon, RulerIcon } from 'lucide-react';
+import Link from 'next/link';
 
-import type { ProfileWithOwner } from '@/lib/queries';
+import type { PublicProfile } from '@/lib/queries';
 
 import { isFreshProfile, PROFILE_STATUS_META } from '@/lib/profile-status';
 import { calculateAge, cn } from '@/lib/utils';
@@ -9,12 +10,15 @@ import { ProfileAvatar, ProfileBanner } from '@/components/profiles/profile-imag
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 
-/** `showStatus` shows where it is in review instead of whether it's new, for moderators. */
-export function DiscoveryProfile({ profile, showStatus = false }: { profile: ProfileWithOwner; showStatus?: boolean }) {
+/**
+ * A shark's card. `showStatus` shows where it is in review instead of whether
+ * it's new, for moderators; `action` floats in the bottom-right corner, e.g. a heart.
+ */
+export function DiscoveryProfile({ profile, showStatus = false, action }: { profile: PublicProfile; showStatus?: boolean; action?: React.ReactNode }) {
   const status = PROFILE_STATUS_META[profile.status];
 
   return (
-    <Card className='group border-foreground/10 bg-background ease-bounce h-full w-full overflow-hidden pt-0 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:-rotate-[0.6deg] hover:shadow-xl'>
+    <Card className='group border-foreground/10 bg-background ease-bounce h-full w-full overflow-hidden pt-0 pb-0 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:-rotate-[0.6deg] hover:shadow-xl'>
       <div className='relative aspect-5/2 overflow-hidden'>
         <ProfileBanner src={profile.bannerUrl} alt={`${profile.user.username}'s banner`} />
         {showStatus ? (
@@ -29,7 +33,7 @@ export function DiscoveryProfile({ profile, showStatus = false }: { profile: Pro
         )}
       </div>
 
-      <CardContent className='-mt-8 px-4 pb-5 sm:px-6'>
+      <CardContent className='-mt-8 flex flex-1 flex-col px-4 pb-4 sm:px-6 sm:pb-6'>
         <div className='relative flex items-start gap-4'>
           <div className='relative shrink-0'>
             <div className='border-background bg-muted h-18 w-18 overflow-hidden rounded-full border-4 shadow-md'>
@@ -41,7 +45,11 @@ export function DiscoveryProfile({ profile, showStatus = false }: { profile: Pro
               <h3 className='text-foreground max-w-full truncate text-xl font-black tracking-tight'>{profile.displayName}</h3>
               {profile.pronouns && <span className='text-muted-foreground text-sm'>({profile.pronouns})</span>}
             </div>
-            <p className='text-muted-foreground truncate text-sm'>@{profile.user.username}</p>
+            <p className='text-muted-foreground truncate text-sm'>
+              <Link href={`/u/${profile.user.username}`} className='hover:text-foreground hover:underline'>
+                @{profile.user.username}
+              </Link>
+            </p>
           </div>
         </div>
         <div className='text-muted-foreground mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm'>
@@ -75,6 +83,8 @@ export function DiscoveryProfile({ profile, showStatus = false }: { profile: Pro
             </Badge>
           ))}
         </div>
+        {/* Pinned to the bottom, so it sits in the same corner on every card. */}
+        {action && <div className='mt-auto flex justify-end pt-3'>{action}</div>}
       </CardContent>
     </Card>
   );

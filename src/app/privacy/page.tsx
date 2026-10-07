@@ -39,6 +39,7 @@ export default function PrivacyPage() {
                 tokens from that service, which we store encrypted and don&apos;t use after you sign in. We don&apos;t keep your profile picture from it.
               </li>
               <li>Profile information such as display name, images, pronouns, location, size, interests, and biography.</li>
+              <li>Hearts your profiles send and receive, when they were sent, and when you saw the ones you received.</li>
               <li>
                 Moderation information such as verification status, rejection feedback, and notes associated with a profile, and, if your account is banned, the
                 reason, when the ban ends, and which moderator banned you.
@@ -77,9 +78,10 @@ export default function PrivacyPage() {
           </PrivacySection>
           <PrivacySection delay={0.85} title='6. Public profiles and sharing'>
             <TypographyP>
-              Verified profile information may be visible to other Tinderhaj users through discovery. We do not sell personal information. We share information
-              only with service providers needed to host, operate, secure, store, or deliver parts of the service, or when required for legal and safety
-              reasons.
+              Verified profile information may be visible to anyone through discovery and on your user page, along with your username and when you joined. When
+              one of your profiles sends a heart, the owner of the profile it goes to sees which of your profiles sent it. We do not sell personal information.
+              We share information only with service providers needed to host, operate, secure, store, or deliver parts of the service, or when required for
+              legal and safety reasons.
             </TypographyP>
           </PrivacySection>
           <PrivacySection delay={0.95} title='7. Third-party services'>

@@ -14,6 +14,27 @@ const PROFILE_OWNER = { user: { select: { username: true } } } satisfies Prisma.
 
 export type ProfileWithOwner = Prisma.ProfileGetPayload<{ include: typeof PROFILE_OWNER }>;
 
+/** What anyone may see of a profile: what its card shows. For cards rendered in the browser. */
+export const PUBLIC_PROFILE = {
+  id: true,
+  displayName: true,
+  avatarUrl: true,
+  bannerUrl: true,
+  birthday: true,
+  size: true,
+  unit: true,
+  pronouns: true,
+  location: true,
+  interests: true,
+  bio: true,
+  status: true,
+  verifiedAt: true,
+  createdAt: true,
+  user: { select: { username: true } },
+} satisfies Prisma.ProfileSelect;
+
+export type PublicProfile = Prisma.ProfileGetPayload<{ select: typeof PUBLIC_PROFILE }>;
+
 function getProfileShuffle(profileId: string, seed: number) {
   let hash = 0;
 

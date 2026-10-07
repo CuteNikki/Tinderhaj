@@ -177,5 +177,26 @@ model Profile {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  heartsSent     Heart[] @relation("HeartsSent")
+  heartsReceived Heart[] @relation("HeartsReceived")
+
   @@index([userId])
+}
+
+/// One shark telling another it likes them. Two sharks hearting each other
+/// is a match.
+model Heart {
+  id            String @id @default(cuid(2))
+  fromProfileId String
+  toProfileId   String
+
+  createdAt DateTime  @default(now())
+  /// When the owner of the shark it went to saw it, for the nav's dot.
+  seenAt    DateTime?
+
+  from Profile @relation("HeartsSent", fields: [fromProfileId], references: [id], onDelete: Cascade)
+  to   Profile @relation("HeartsReceived", fields: [toProfileId], references: [id], onDelete: Cascade)
+
+  @@unique([fromProfileId, toProfileId])
+  @@index([toProfileId])
 }

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import {
+  HeartIcon,
   HomeIcon,
   type LucideIcon,
   MenuIcon,
@@ -13,6 +14,7 @@ import {
   UsersRoundIcon,
 } from 'lucide-react';
 
+import { countUnseenHearts } from '@/lib/hearts';
 import { QUERIES } from '@/lib/queries';
 import type { AccountRole } from '@/lib/roles';
 import { getSession, isModerator } from '@/lib/session';
@@ -46,24 +48,31 @@ const siteLinks: NavLink[] = [
   { name: 'Discovery', href: '/discovery#top', icon: SearchIcon },
 ];
 
-const accountLinks: NavLink[] = [
-  { name: 'Profiles', href: '/profiles#top', icon: UserRoundIcon },
-  { name: 'Account', href: '/account#top', icon: SettingsIcon },
-];
+function accountLinks(unseenHearts: number): NavLink[] {
+  return [
+    { name: 'Profiles', href: '/profiles#top', icon: UserRoundIcon },
+    { name: 'Hearts', href: '/hearts#top', icon: HeartIcon, count: unseenHearts },
+    { name: 'Account', href: '/account#top', icon: SettingsIcon },
+  ];
+}
 
 export async function Navbar() {
   const session = await getSession();
   const user = session ? { role: session.user.role as AccountRole } : null;
-  const pending = user && isModerator(user.role) ? await QUERIES.getPendingProfileCount() : 0;
+  const [pending, hearts] = await Promise.all([
+    user && isModerator(user.role) ? QUERIES.getPendingProfileCount() : 0,
+    session ? countUnseenHearts(session.user.id) : 0,
+  ]);
 
-  return <NavbarContent user={user} pending={pending} showAuthElements />;
+  return <NavbarContent user={user} pending={pending} hearts={hearts} showAuthElements />;
 }
 
 export function NavbarFallback() {
-  return <NavbarContent user={null} pending={0} showAuthElements={false} />;
+  return <NavbarContent user={null} pending={0} hearts={0} showAuthElements={false} />;
 }
 
-function NavbarContent({ user, pending, showAuthElements }: { user: NavUser | null; pending: number; showAuthElements: boolean }) {
+function NavbarContent({ user, pending, hearts, showAuthElements }: { user: NavUser | null; pending: number; hearts: number; showAuthElements: boolean }) {
+  const yourLinks = accountLinks(hearts);
   const moderationLinks: NavLink[] =
     user && isModerator(user.role)
       ? [
@@ -95,12 +104,12 @@ function NavbarContent({ user, pending, showAuthElements }: { user: NavUser | nu
                   <DropdownMenuTrigger asChild>
                     <Button variant='outline' size='icon' className='relative'>
                       <MenuIcon />
-                      <PendingDot pending={pending} />
+                      <MenuDot pending={pending} hearts={hearts} />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent side='bottom' align='end' className='w-56'>
                     <DropdownMenuGroup>
-                      {accountLinks.map((link) => (
+                      {yourLinks.map((link) => (
                         <MenuLink key={link.href} link={link} />
                       ))}
                     </DropdownMenuGroup>
@@ -136,7 +145,7 @@ function NavbarContent({ user, pending, showAuthElements }: { user: NavUser | nu
             <SheetTrigger asChild className='md:hidden'>
               <Button variant='outline' size='icon' className='relative'>
                 <MenuIcon className='h-5 w-5' />
-                <PendingDot pending={pending} />
+                <MenuDot pending={pending} hearts={hearts} />
               </Button>
             </SheetTrigger>
             <SheetContent side='right' className='w-4/5 gap-0 sm:w-88'>
@@ -150,7 +159,7 @@ function NavbarContent({ user, pending, showAuthElements }: { user: NavUser | nu
 
               <div className='flex flex-1 flex-col gap-6 overflow-y-auto p-4'>
                 <SheetSection title='Explore' links={siteLinks} />
-                {user && <SheetSection title='Account' links={accountLinks} />}
+                {user && <SheetSection title='Account' links={yourLinks} />}
                 {moderationLinks.length > 0 && <SheetSection title='Moderation' links={moderationLinks} />}
               </div>
 
@@ -193,12 +202,13 @@ function SiteLink({ link, className, children }: { link: NavLink; className?: st
   );
 }
 
-/** Marks the menu button while profiles wait for review. */
-function PendingDot({ pending }: { pending: number }) {
+/** Marks the menu button while there are new hearts, or profiles wait for review. */
+function MenuDot({ pending, hearts }: { pending: number; hearts: number }) {
+  const news = [hearts > 0 && `${hearts} new ${hearts === 1 ? 'heart' : 'hearts'}`, pending > 0 && `${pending} profiles waiting for review`].filter(Boolean);
   return (
     <>
-      {pending > 0 && <span className='bg-primary absolute -top-1 -right-1 size-2.5 rounded-full' aria-hidden='true' />}
-      <span className='sr-only'>{pending > 0 ? `Open menu, ${pending} profiles waiting for review` : 'Open menu'}</span>
+      {news.length > 0 && <span className='bg-primary absolute -top-1 -right-1 size-2.5 rounded-full' aria-hidden='true' />}
+      <span className='sr-only'>{['Open menu', ...news].join(', ')}</span>
     </>
   );
 }
@@ -206,7 +216,7 @@ function PendingDot({ pending }: { pending: number }) {
 function Count({ count }: { count?: number }) {
   if (!count) return null;
   return (
-    <Badge className='ml-auto tabular-nums' aria-label={`${count} waiting`}>
+    <Badge className='ml-auto tabular-nums' aria-label={`${count} new`}>
       {count}
     </Badge>
   );

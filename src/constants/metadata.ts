@@ -315,3 +315,13 @@ export const bannedMetadata: Metadata = {
   title: 'Tinderhaj - Banned',
   description: 'Why your Tinderhaj account can’t sign in.',
 };
+
+export const heartsMetadata: Metadata = {
+  title: 'Tinderhaj - Hearts',
+  description: 'Your matches, and the hearts your sharks sent and received.',
+};
+
+export const userPageMetadata: Metadata = {
+  title: 'Tinderhaj - Sharks',
+  description: 'All the sharks of someone on Tinderhaj.',
+};
