@@ -1,45 +1,74 @@
 import Link from 'next/link';
 
-import { HomeIcon, MenuIcon, MessageCircleIcon, SearchIcon, SettingsIcon, SignpostIcon, UserCheckIcon, UserRoundIcon, UsersRoundIcon } from 'lucide-react';
+import {
+  HomeIcon,
+  type LucideIcon,
+  MenuIcon,
+  MessageCircleIcon,
+  SearchIcon,
+  SettingsIcon,
+  SignpostIcon,
+  UserCheckIcon,
+  UserRoundIcon,
+  UsersRoundIcon,
+} from 'lucide-react';
 
-import { getSession } from '@/lib/session';
+import { QUERIES } from '@/lib/queries';
+import type { AccountRole } from '@/lib/roles';
+import { getSession, isModerator } from '@/lib/session';
 
 import { LogOutButton, LogOutDropdownMenuItem } from '@/components/auth/logout-button';
 import { Logo } from '@/components/common/logo';
 import { DiscoveryLink } from '@/components/discovery/link';
 import { ThemeButton } from '@/components/theme/switch';
 import { TypographyLarge } from '@/components/typography';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Separator } from '@/components/ui/separator';
-import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+
+type NavLink = { name: string; href: string; icon: LucideIcon; /** Shown as a count next to the link, when above 0. */ count?: number };
+
+type NavUser = { role: AccountRole };
+
+/** The site's pages, on the bar on wide screens and in the menu on narrow ones. */
+const siteLinks: NavLink[] = [
+  { name: 'Home', href: '/#top', icon: HomeIcon },
+  { name: 'Guide', href: '/#guide', icon: SignpostIcon },
+  { name: 'Features', href: '/#features', icon: MessageCircleIcon },
+  { name: 'Discovery', href: '/discovery#top', icon: SearchIcon },
+];
+
+const accountLinks: NavLink[] = [
+  { name: 'Profiles', href: '/profiles#top', icon: UserRoundIcon },
+  { name: 'Account', href: '/account#top', icon: SettingsIcon },
+];
 
 export async function Navbar() {
   const session = await getSession();
+  const user = session ? { role: session.user.role as AccountRole } : null;
+  const pending = user && isModerator(user.role) ? await QUERIES.getPendingProfileCount() : 0;
 
-  return <NavbarContent session={session} showAuthElements />;
+  return <NavbarContent user={user} pending={pending} showAuthElements />;
 }
 
 export function NavbarFallback() {
-  return <NavbarContent session={null} showAuthElements={false} />;
+  return <NavbarContent user={null} pending={0} showAuthElements={false} />;
 }
 
-function NavbarContent({ session, showAuthElements }: { session: { user: { name: string; role?: string | null } } | null; showAuthElements: boolean }) {
-  const regularLinks = [
-    { name: 'Home', href: '/#top', icon: HomeIcon, showOnBar: true, showInMenu: true },
-    { name: 'Guide', href: '/#guide', icon: SignpostIcon, showOnBar: true, showInMenu: true },
-    { name: 'Features', href: '/#features', icon: MessageCircleIcon, showOnBar: true, showInMenu: true },
-    { name: 'Discovery', href: '/discovery#top', icon: SearchIcon, showOnBar: true, showInMenu: true },
-  ];
-  const accountLinks = [
-    { name: 'Account', href: '/account#top', icon: SettingsIcon },
-    { name: 'Profiles', href: '/profiles#top', icon: UserRoundIcon },
-  ];
-  const moderationLinks =
-    session?.user?.role === 'MODERATOR' || session?.user?.role === 'ADMIN'
+function NavbarContent({ user, pending, showAuthElements }: { user: NavUser | null; pending: number; showAuthElements: boolean }) {
+  const moderationLinks: NavLink[] =
+    user && isModerator(user.role)
       ? [
+          { name: 'Verification', href: '/verification#top', icon: UserCheckIcon, count: pending },
           { name: 'Users', href: '/users#top', icon: UsersRoundIcon },
-          { name: 'Verification', href: '/verification#top', icon: UserCheckIcon },
         ]
       : [];
 
@@ -51,176 +80,167 @@ function NavbarContent({ session, showAuthElements }: { session: { user: { name:
           <TypographyLarge className='font-bold'>Tinderhaj</TypographyLarge>
         </Link>
         <div className='hidden flex-1 items-center gap-4 text-sm font-medium md:flex md:gap-6'>
-          {regularLinks.map(
-            (link, index) =>
-              link.showOnBar &&
-              (link.href.startsWith('/discovery') ? (
-                <DiscoveryLink
-                  key={`navbar-link-${index}-${link.href}-${link.name}`}
-                  className='text-muted-foreground hover:text-foreground transition-colors duration-150'
-                >
-                  {link.name}
-                </DiscoveryLink>
-              ) : (
-                <Link
-                  key={`navbar-link-${index}-${link.href}-${link.name}`}
-                  href={link.href}
-                  className='text-muted-foreground hover:text-foreground transition-colors duration-150'
-                >
-                  {link.name}
-                </Link>
-              )),
-          )}
+          {siteLinks.map((link) => (
+            <SiteLink key={link.href} link={link} className='text-muted-foreground hover:text-foreground transition-colors duration-150' />
+          ))}
         </div>
         <div className='ml-auto flex items-center gap-2'>
           <ThemeButton />
+
+          {/* Wide screens: the site's pages are on the bar, so the menu only holds the account. */}
           {showAuthElements && (
             <div className='hidden md:block'>
-              {session?.user ? (
+              {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant='outline' size='icon'>
+                    <Button variant='outline' size='icon' className='relative'>
                       <MenuIcon />
+                      <PendingDot pending={pending} />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent side='bottom' align='end'>
-                    <LogOutDropdownMenuItem />
-                    {accountLinks.map((link, index) => (
-                      <Link href={link.href} key={`account-dropdown-link-${index}-${link.href}`}>
-                        <DropdownMenuItem>
-                          <link.icon />
-                          {link.name}
-                        </DropdownMenuItem>
-                      </Link>
-                    ))}
+                  <DropdownMenuContent side='bottom' align='end' className='w-56'>
+                    <DropdownMenuGroup>
+                      {accountLinks.map((link) => (
+                        <MenuLink key={link.href} link={link} />
+                      ))}
+                    </DropdownMenuGroup>
                     {moderationLinks.length > 0 && (
                       <>
                         <DropdownMenuSeparator />
-                        {moderationLinks.map((link, index) => (
-                          <Link href={link.href} key={`moderation-dropdown-link-${index}-${link.href}`}>
-                            <DropdownMenuItem>
-                              <link.icon />
-                              {link.name}
-                            </DropdownMenuItem>
-                          </Link>
-                        ))}
+                        <DropdownMenuGroup>
+                          {moderationLinks.map((link) => (
+                            <MenuLink key={link.href} link={link} />
+                          ))}
+                        </DropdownMenuGroup>
                       </>
                     )}
                     <DropdownMenuSeparator />
-                    {regularLinks.map(
-                      (link, index) =>
-                        link.showInMenu &&
-                        (link.href.startsWith('/discovery') ? (
-                          <DiscoveryLink key={`navdropdown-link-${index}-${link.href}-${link.name}`}>
-                            <DropdownMenuItem>
-                              <link.icon />
-                              {link.name}
-                            </DropdownMenuItem>
-                          </DiscoveryLink>
-                        ) : (
-                          <Link href={link.href} key={`navdropdown-link-${index}-${link.href}-${link.name}`}>
-                            <DropdownMenuItem>
-                              <link.icon />
-                              {link.name}
-                            </DropdownMenuItem>
-                          </Link>
-                        )),
-                    )}
+                    <LogOutDropdownMenuItem />
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <Button asChild>
-                  <Link href='/sign-up'>Sign Up</Link>
-                </Button>
+                <div className='flex items-center gap-2'>
+                  <Button variant='ghost' asChild>
+                    <Link href='/sign-in'>Sign in</Link>
+                  </Button>
+                  <Button asChild>
+                    <Link href='/sign-up'>Sign up</Link>
+                  </Button>
+                </div>
               )}
             </div>
           )}
+
+          {/* Narrow screens: everything, in one sheet. */}
           <Sheet>
             <SheetTrigger asChild className='md:hidden'>
-              <Button variant='outline' size='icon'>
+              <Button variant='outline' size='icon' className='relative'>
                 <MenuIcon className='h-5 w-5' />
-                <span className='sr-only'>Toggle menu</span>
+                <PendingDot pending={pending} />
               </Button>
             </SheetTrigger>
-            <SheetContent side='right' className='w-4/5 justify-center sm:w-88'>
-              {session?.user ? (
-                <SheetHeader className='flex flex-col items-center gap-2'>
-                  <SheetTitle className='flex items-center justify-center gap-2'>
-                    <div className='flex flex-col'>
-                      <span className='font-bold uppercase'>@{session.user.name}</span>
-                    </div>
-                  </SheetTitle>
-                  <LogOutButton />
-                </SheetHeader>
-              ) : (
-                <SheetHeader>
-                  <SheetTitle className='flex items-center justify-center gap-2'>
-                    <Logo className='h-6 w-6' />
-                    <span className='text-lg font-bold'>Tinderhaj</span>
-                  </SheetTitle>
-                  <SheetDescription className='text-center text-balance'>The best place to find your perfect match</SheetDescription>
-                </SheetHeader>
-              )}
-              <nav className='flex flex-col items-center gap-4 p-6 text-center'>
-                <Separator />
-                {session?.user &&
-                  accountLinks.map((link, index) => (
-                    <SheetClose className='flex items-center gap-2' key={`account-sheet-link-${index}-${link.href}`} asChild>
-                      <Link href={link.href} className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
-                        <link.icon className='h-4 w-4' />
-                        {link.name}
-                      </Link>
-                    </SheetClose>
-                  ))}
-                {moderationLinks.length > 0 && (
-                  <>
-                    <Separator />
-                    {moderationLinks.map((link, index) => (
-                      <SheetClose className='flex items-center gap-2' key={`moderation-sheet-link-${index}-${link.href}`} asChild>
-                        <Link href={link.href} className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
-                          <link.icon className='h-4 w-4' />
-                          {link.name}
-                        </Link>
+            <SheetContent side='right' className='w-4/5 gap-0 sm:w-88'>
+              <SheetHeader className='border-foreground/10 border-b pr-12'>
+                <SheetTitle className='flex items-center gap-2'>
+                  <Logo className='h-6 w-6' />
+                  <span className='text-lg font-bold'>Tinderhaj</span>
+                </SheetTitle>
+                <SheetDescription className='text-balance'>The best place to find your perfect match</SheetDescription>
+              </SheetHeader>
+
+              <div className='flex flex-1 flex-col gap-6 overflow-y-auto p-4'>
+                <SheetSection title='Explore' links={siteLinks} />
+                {user && <SheetSection title='Account' links={accountLinks} />}
+                {moderationLinks.length > 0 && <SheetSection title='Moderation' links={moderationLinks} />}
+              </div>
+
+              {showAuthElements && (
+                <SheetFooter className='border-foreground/10 border-t'>
+                  {user ? (
+                    <LogOutButton className='w-full' />
+                  ) : (
+                    <>
+                      <SheetClose asChild>
+                        <Button variant='secondary' className='w-full' asChild>
+                          <Link href='/sign-in'>Sign in</Link>
+                        </Button>
                       </SheetClose>
-                    ))}
-                  </>
-                )}
-                {session?.user && <Separator />}
-                {regularLinks.map(
-                  (link, index) =>
-                    link.showInMenu &&
-                    (link.href.startsWith('/discovery') ? (
-                      <SheetClose className='flex items-center gap-2' key={`navsheet-link-${index}-${link.href}-${link.name}`} asChild>
-                        <DiscoveryLink className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
-                          <link.icon className='h-4 w-4' />
-                          {link.name}
-                        </DiscoveryLink>
+                      <SheetClose asChild>
+                        <Button className='w-full' asChild>
+                          <Link href='/sign-up'>Sign up</Link>
+                        </Button>
                       </SheetClose>
-                    ) : (
-                      <SheetClose className='flex items-center gap-2' key={`navsheet-link-${index}-${link.href}-${link.name}`} asChild>
-                        <Link href={link.href} className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
-                          <link.icon className='h-4 w-4' />
-                          {link.name}
-                        </Link>
-                      </SheetClose>
-                    )),
-                )}
-                <Separator />
-              </nav>
-              {showAuthElements && !session?.user && (
-                <div className='flex flex-col items-center gap-2 p-6'>
-                  <Button variant='secondary' className='w-full' asChild>
-                    <Link href='/sign-in'>Sign In</Link>
-                  </Button>
-                  <Button className='w-full' asChild>
-                    <Link href='/sign-up'>Sign Up</Link>
-                  </Button>
-                </div>
+                    </>
+                  )}
+                </SheetFooter>
               )}
             </SheetContent>
           </Sheet>
         </div>
       </nav>
     </header>
+  );
+}
+
+/** Discovery gets a fresh shuffle each time it's opened from here. */
+function SiteLink({ link, className, children }: { link: NavLink; className?: string; children?: React.ReactNode }) {
+  return link.href.startsWith('/discovery') ? (
+    <DiscoveryLink className={className}>{children ?? link.name}</DiscoveryLink>
+  ) : (
+    <Link href={link.href} className={className}>
+      {children ?? link.name}
+    </Link>
+  );
+}
+
+/** Marks the menu button while profiles wait for review. */
+function PendingDot({ pending }: { pending: number }) {
+  return (
+    <>
+      {pending > 0 && <span className='bg-primary absolute -top-1 -right-1 size-2.5 rounded-full' aria-hidden='true' />}
+      <span className='sr-only'>{pending > 0 ? `Open menu, ${pending} profiles waiting for review` : 'Open menu'}</span>
+    </>
+  );
+}
+
+function Count({ count }: { count?: number }) {
+  if (!count) return null;
+  return (
+    <Badge className='ml-auto tabular-nums' aria-label={`${count} waiting`}>
+      {count}
+    </Badge>
+  );
+}
+
+function MenuLink({ link }: { link: NavLink }) {
+  return (
+    <DropdownMenuItem asChild>
+      <Link href={link.href}>
+        <link.icon aria-hidden='true' />
+        {link.name}
+        <Count count={link.count} />
+      </Link>
+    </DropdownMenuItem>
+  );
+}
+
+function SheetSection({ title, links }: { title: string; links: NavLink[] }) {
+  return (
+    <section>
+      <h2 className='text-muted-foreground mb-1 px-3 text-xs font-semibold tracking-widest uppercase'>{title}</h2>
+      <ul>
+        {links.map((link) => (
+          <li key={link.href}>
+            <SheetClose asChild>
+              <SiteLink link={link} className='hover:bg-muted flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors'>
+                <link.icon className='text-muted-foreground size-4' aria-hidden='true' />
+                {link.name}
+                <Count count={link.count} />
+              </SiteLink>
+            </SheetClose>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }

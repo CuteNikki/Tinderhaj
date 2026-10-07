@@ -183,6 +183,11 @@ export const QUERIES = {
     });
   },
 
+  /** How many profiles wait for review, for the moderation menu. */
+  getPendingProfileCount: async () => {
+    return prisma.profile.count({ where: { status: ProfileStatus.PENDING } });
+  },
+
   getPendingProfiles: async () => {
     return prisma.profile.findMany({ where: { status: ProfileStatus.PENDING }, include: PROFILE_OWNER, orderBy: { submittedAt: 'asc' } });
   },

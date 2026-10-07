@@ -2,14 +2,17 @@
 
 import { logOut } from '@/lib/actions';
 
+import { cn } from '@/lib/utils';
+
 import { Button } from '@/components/ui/button';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { LogOutIcon } from 'lucide-react';
 
-export function LogOutButton() {
+export function LogOutButton({ className }: { className?: string }) {
   return (
-    <Button variant='destructive' className='cursor-pointer' onClick={async () => await logOut()}>
-      Log Out
+    <Button variant='destructive' className={cn('cursor-pointer', className)} onClick={async () => await logOut()}>
+      <LogOutIcon aria-hidden='true' />
+      Log out
     </Button>
   );
 }
