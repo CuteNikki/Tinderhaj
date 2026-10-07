@@ -39,7 +39,6 @@ export function ProfilePreview({
       <Card className='border-foreground/10 bg-background overflow-hidden pt-0 shadow-sm'>
         <div className='relative aspect-5/2 overflow-hidden'>
           <ProfileBanner src={bannerUrl ?? null} alt='Banner preview' />
-          <div className='from-background/70 absolute inset-0 bg-linear-to-t to-transparent' />
         </div>
 
         <CardContent className='-mt-8 px-4 pb-5'>

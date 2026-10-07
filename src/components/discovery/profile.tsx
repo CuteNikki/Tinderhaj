@@ -17,7 +17,6 @@ export function DiscoveryProfile({ profile, showStatus = false }: { profile: Pro
     <Card className='group border-foreground/10 bg-background h-full w-full overflow-hidden pt-0 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl'>
       <div className='relative aspect-5/2 overflow-hidden'>
         <ProfileBanner src={profile.bannerUrl} alt={`${profile.user.username}'s banner`} />
-        <div className='from-background/70 absolute inset-0 bg-linear-to-t to-transparent' />
         {showStatus ? (
           <Badge className={cn(status.badgeClassName, 'absolute top-3 right-3 rounded-full text-xs font-semibold shadow-md')}>
             <status.icon aria-hidden='true' />

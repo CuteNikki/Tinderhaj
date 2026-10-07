@@ -62,7 +62,6 @@ export function VerifyProfileCard({ profile }: { profile: ProfileWithOwner }) {
     <Card className='border-foreground/10 bg-background h-full w-full overflow-hidden pt-0 shadow-sm'>
       <div className='relative aspect-5/2 overflow-hidden'>
         <ProfileBanner src={profile.bannerUrl} alt={`${profile.displayName}'s banner`} />
-        <div className='from-background/70 absolute inset-0 bg-linear-to-t to-transparent' />
       </div>
 
       <CardContent className='-mt-8 px-4 pb-5 sm:px-6'>

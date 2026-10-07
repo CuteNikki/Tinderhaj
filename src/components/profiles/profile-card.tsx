@@ -67,7 +67,6 @@ export function ProfileCard({ profile }: { profile: ProfileWithOwner }) {
     <Card className='group border-foreground/10 bg-background h-full w-full overflow-hidden pt-0 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl'>
       <div className='relative aspect-5/2 overflow-hidden'>
         <ProfileBanner src={profile.bannerUrl} alt={`${profile.displayName}'s banner`} />
-        <div className='from-background/70 absolute inset-0 bg-linear-to-t to-transparent' />
         <Tooltip>
           <TooltipTrigger asChild>
             <Badge className={cn('absolute top-3 right-3 gap-1 rounded-full font-semibold shadow-sm', PROFILE_STATUS_META[profile.status].badgeClassName)}>
