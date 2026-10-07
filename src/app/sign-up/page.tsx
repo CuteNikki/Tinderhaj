@@ -34,7 +34,7 @@ export default async function SignUpPage() {
       <SignUpForm />
       {enabledProviders.length > 0 && (
         <>
-          <div className='text-muted-foreground my-6 flex items-center gap-3 text-xs'>
+          <div className='text-muted-foreground my-2 flex items-center gap-3 text-xs'>
             <span className='bg-border h-px flex-1' />
             or
             <span className='bg-border h-px flex-1' />

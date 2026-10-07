@@ -12,10 +12,10 @@ import { MAX_PASSWORD_LENGTH } from '@/constants/auth';
 import { authClient } from '@/lib/auth-client';
 import { resetPasswordSchema } from '@/lib/schemas';
 
+import { AuthInput } from '@/components/auth/auth-input';
 import { staggerContainer, staggerItem } from '@/components/auth/motion';
 import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Loader2Icon, RotateCwIcon } from 'lucide-react';
 
 export function ResetPasswordForm({ token }: { token: string }) {
@@ -48,17 +48,14 @@ export function ResetPasswordForm({ token }: { token: string }) {
 
   return (
     <Form {...form}>
-      <motion.form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6' initial='hidden' animate='visible' variants={staggerContainer}>
+      <motion.form onSubmit={form.handleSubmit(onSubmit)} className='space-y-2' initial='hidden' animate='visible' variants={staggerContainer}>
         <motion.div variants={staggerItem}>
           <FormField
             control={form.control}
             name='password'
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>New password</FormLabel>
-                <FormControl>
-                  <Input type='password' autoComplete='new-password' maxLength={MAX_PASSWORD_LENGTH} {...field} required />
-                </FormControl>
+              <FormItem className='gap-1.5'>
+                <AuthInput label='New password' type='password' autoComplete='new-password' maxLength={MAX_PASSWORD_LENGTH} {...field} required />
                 <FormMessage />
               </FormItem>
             )}
@@ -69,11 +66,8 @@ export function ResetPasswordForm({ token }: { token: string }) {
             control={form.control}
             name='confirmPassword'
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Confirm new password</FormLabel>
-                <FormControl>
-                  <Input type='password' autoComplete='new-password' maxLength={MAX_PASSWORD_LENGTH} {...field} required />
-                </FormControl>
+              <FormItem className='gap-1.5'>
+                <AuthInput label='Confirm new password' type='password' autoComplete='new-password' maxLength={MAX_PASSWORD_LENGTH} {...field} required />
                 <FormMessage />
               </FormItem>
             )}

@@ -12,10 +12,10 @@ import { MAX_EMAIL_LENGTH } from '@/constants/auth';
 import { authClient } from '@/lib/auth-client';
 import { forgotPasswordSchema } from '@/lib/schemas';
 
+import { AuthInput } from '@/components/auth/auth-input';
 import { staggerContainer, staggerItem } from '@/components/auth/motion';
 import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form';
 
 export function ForgotPasswordForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -66,17 +66,14 @@ export function ForgotPasswordForm() {
 
   return (
     <Form {...form}>
-      <motion.form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6' initial='hidden' animate='visible' variants={staggerContainer}>
+      <motion.form onSubmit={form.handleSubmit(onSubmit)} className='space-y-2' initial='hidden' animate='visible' variants={staggerContainer}>
         <motion.div variants={staggerItem}>
           <FormField
             control={form.control}
             name='email'
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input type='email' autoComplete='email' maxLength={MAX_EMAIL_LENGTH} {...field} required />
-                </FormControl>
+              <FormItem className='gap-1.5'>
+                <AuthInput label='Email' type='email' autoComplete='email' maxLength={MAX_EMAIL_LENGTH} {...field} required />
                 <FormMessage />
               </FormItem>
             )}

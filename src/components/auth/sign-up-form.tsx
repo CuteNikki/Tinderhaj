@@ -12,10 +12,10 @@ import { MAX_EMAIL_LENGTH, MAX_PASSWORD_LENGTH, MAX_USERNAME_LENGTH } from '@/co
 import { authClient } from '@/lib/auth-client';
 import { signUpSchema } from '@/lib/schemas';
 
+import { AuthInput } from '@/components/auth/auth-input';
 import { staggerContainer, staggerItem } from '@/components/auth/motion';
 import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { ArrowRightIcon, Loader2Icon } from 'lucide-react';
 
 export function SignUpForm() {
@@ -56,17 +56,14 @@ export function SignUpForm() {
 
   return (
     <Form {...form}>
-      <motion.form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6' initial='hidden' animate='visible' variants={staggerContainer}>
+      <motion.form onSubmit={form.handleSubmit(onSubmit)} className='space-y-2' initial='hidden' animate='visible' variants={staggerContainer}>
         <motion.div variants={staggerItem}>
           <FormField
             control={form.control}
             name='username'
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input type='text' autoComplete='username' maxLength={MAX_USERNAME_LENGTH} {...field} required />
-                </FormControl>
+              <FormItem className='gap-1.5'>
+                <AuthInput label='Username' type='text' autoComplete='username' maxLength={MAX_USERNAME_LENGTH} {...field} required />
                 <FormMessage />
               </FormItem>
             )}
@@ -77,11 +74,8 @@ export function SignUpForm() {
             control={form.control}
             name='email'
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input type='email' autoComplete='email' maxLength={MAX_EMAIL_LENGTH} {...field} required />
-                </FormControl>
+              <FormItem className='gap-1.5'>
+                <AuthInput label='Email' type='email' autoComplete='email' maxLength={MAX_EMAIL_LENGTH} {...field} required />
                 <FormMessage />
               </FormItem>
             )}
@@ -92,11 +86,8 @@ export function SignUpForm() {
             control={form.control}
             name='password'
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input type='password' autoComplete='new-password' maxLength={MAX_PASSWORD_LENGTH} {...field} required />
-                </FormControl>
+              <FormItem className='gap-1.5'>
+                <AuthInput label='Password' type='password' autoComplete='new-password' maxLength={MAX_PASSWORD_LENGTH} {...field} required />
                 <FormMessage />
               </FormItem>
             )}

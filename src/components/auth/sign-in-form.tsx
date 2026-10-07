@@ -14,12 +14,12 @@ import { authClient } from '@/lib/auth-client';
 import type { SocialProviderId } from '@/lib/providers';
 import { signInSchema } from '@/lib/schemas';
 
+import { AuthInput } from '@/components/auth/auth-input';
 import { staggerContainer, staggerItem } from '@/components/auth/motion';
 import { SocialButtons } from '@/components/auth/social-buttons';
 import { SEND_CODE_KEY } from '@/components/auth/two-factor-form';
 import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { ArrowRightIcon, FingerprintIcon, Loader2Icon } from 'lucide-react';
 
 /** `error` says why signing in with a provider just failed. */
@@ -94,7 +94,7 @@ export function SignInForm({ providers, error }: { providers: SocialProviderId[]
 
   return (
     <Form {...form}>
-      <motion.form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6' initial='hidden' animate='visible' variants={staggerContainer}>
+      <motion.form onSubmit={form.handleSubmit(onSubmit)} className='space-y-2' initial='hidden' animate='visible' variants={staggerContainer}>
         {error && (
           <motion.p variants={staggerItem} role='alert' className='bg-destructive/10 text-destructive rounded-lg px-3 py-2 text-sm text-pretty'>
             {error}
@@ -105,11 +105,8 @@ export function SignInForm({ providers, error }: { providers: SocialProviderId[]
             control={form.control}
             name='email'
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input type='email' autoComplete='email webauthn' maxLength={MAX_EMAIL_LENGTH} {...field} required />
-                </FormControl>
+              <FormItem className='gap-1.5'>
+                <AuthInput label='Email' type='email' autoComplete='email webauthn' maxLength={MAX_EMAIL_LENGTH} {...field} required />
                 <FormMessage />
               </FormItem>
             )}
@@ -120,17 +117,12 @@ export function SignInForm({ providers, error }: { providers: SocialProviderId[]
             control={form.control}
             name='password'
             render={({ field }) => (
-              <FormItem>
-                <div className='flex items-center justify-between'>
-                  <FormLabel>Password</FormLabel>
-                  <Link href='/forgot-password' className='text-muted-foreground hover:text-foreground text-xs transition-colors duration-150'>
-                    Forgot password?
-                  </Link>
-                </div>
-                <FormControl>
-                  <Input type='password' autoComplete='current-password' maxLength={MAX_PASSWORD_LENGTH} {...field} required />
-                </FormControl>
+              <FormItem className='gap-1.5'>
+                <AuthInput label='Password' type='password' autoComplete='current-password' maxLength={MAX_PASSWORD_LENGTH} {...field} required />
                 <FormMessage />
+                <Link href='/forgot-password' className='text-muted-foreground hover:text-foreground justify-self-end text-xs transition-colors duration-150'>
+                  Forgot password?
+                </Link>
               </FormItem>
             )}
           />
