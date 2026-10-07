@@ -8,6 +8,7 @@ import { socialErrorMessage } from '@/lib/providers';
 import { requireSignedOut } from '@/lib/session';
 
 import { AuthShell } from '@/components/auth/auth-shell';
+import { LegalNotice } from '@/components/auth/legal-notice';
 import { SignInForm } from '@/components/auth/sign-in-form';
 
 export const metadata: Metadata = signInMetadata;
@@ -33,6 +34,7 @@ export default async function SignInPage({ searchParams }: PageProps<'/sign-in'>
       }
     >
       <SignInForm providers={enabledProviders} error={typeof error === 'string' ? socialErrorMessage(error) : undefined} />
+      <LegalNotice />
     </AuthShell>
   );
 }

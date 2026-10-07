@@ -7,6 +7,7 @@ import { enabledProviders } from '@/lib/auth';
 import { requireSignedOut } from '@/lib/session';
 
 import { AuthShell } from '@/components/auth/auth-shell';
+import { LegalNotice } from '@/components/auth/legal-notice';
 import { SignUpForm } from '@/components/auth/sign-up-form';
 import { SocialButtons } from '@/components/auth/social-buttons';
 
@@ -42,6 +43,7 @@ export default async function SignUpPage() {
           <SocialButtons providers={enabledProviders} errorCallbackURL='/sign-in' />
         </>
       )}
+      <LegalNotice />
     </AuthShell>
   );
 }
