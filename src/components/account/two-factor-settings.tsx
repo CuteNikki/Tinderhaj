@@ -134,7 +134,7 @@ export function TwoFactorSettings({
 
   if (step.kind === 'codes') {
     return (
-      <div className='bg-muted/40 flex flex-col gap-4 rounded-lg p-4'>
+      <div className='border-foreground/10 flex flex-col gap-4 rounded-lg border p-4'>
         <BackupCodes codes={step.backupCodes} />
         <p className='text-muted-foreground text-sm'>Your old backup codes don&rsquo;t work anymore.</p>
         <Button className='w-fit' onClick={() => done('Backup codes saved')}>
@@ -170,7 +170,7 @@ export function TwoFactorSettings({
 
   return (
     <div className='flex flex-col gap-3'>
-      <div className='bg-muted/40 flex flex-col gap-3 rounded-lg p-4 sm:flex-row sm:items-center'>
+      <div className='border-foreground/10 flex flex-col gap-3 rounded-lg border p-3 px-4 sm:flex-row sm:items-center'>
         <div className='flex flex-1 items-center gap-3'>
           <span className='bg-primary/15 text-primary flex size-9 shrink-0 items-center justify-center rounded-full'>
             <ShieldCheckIcon className='size-5' aria-hidden />
@@ -269,7 +269,7 @@ function PasswordStep({
         setPending(false);
         if (failed) setError(failed);
       }}
-      className='bg-muted/40 flex flex-col gap-3 rounded-lg p-4'
+      className='border-foreground/10 flex flex-col gap-3 rounded-lg border p-4'
     >
       <div className='flex flex-col gap-1'>
         <Label htmlFor={id}>Your password</Label>
@@ -304,7 +304,7 @@ function AppSetup({ totpURI, backupCodes, onCancel, onDone }: { totpURI: string;
 
   if (confirmed) {
     return (
-      <div className='bg-muted/40 flex flex-col gap-4 rounded-lg p-4'>
+      <div className='border-foreground/10 flex flex-col gap-4 rounded-lg border p-4'>
         <p className='flex items-center gap-2 font-medium'>
           <CheckIcon className='text-primary size-4' aria-hidden />
           Your authenticator app is set up
@@ -318,7 +318,7 @@ function AppSetup({ totpURI, backupCodes, onCancel, onDone }: { totpURI: string;
   }
 
   return (
-    <div className='bg-muted/40 flex flex-col gap-4 rounded-lg p-4'>
+    <div className='border-foreground/10 flex flex-col gap-4 rounded-lg border p-4'>
       <ol className='flex list-decimal flex-col gap-1 pl-5 text-sm'>
         <li>Open your authenticator app and add a new account.</li>
         <li>Scan this code, or type in the key under it.</li>
