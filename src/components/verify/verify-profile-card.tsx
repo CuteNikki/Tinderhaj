@@ -5,7 +5,7 @@ import { useState, useTransition } from 'react';
 import { BadgeCheckIcon, CakeIcon, MapPinIcon, RulerIcon, XCircleIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { Account, Profile } from '@/generated/client';
+import type { ProfileWithOwner } from '@/lib/queries';
 import { rejectProfile, verifyProfile } from '@/lib/actions';
 import { PROFILE_FIELDS } from '@/lib/profile-fields';
 import { calculateAge } from '@/lib/utils';
@@ -17,7 +17,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 
-export function VerifyProfileCard({ profile }: { profile: Profile & { account: Account } }) {
+export function VerifyProfileCard({ profile }: { profile: ProfileWithOwner }) {
   const [isVerifying, startVerifyTransition] = useTransition();
   const [isRejecting, startRejectTransition] = useTransition();
   const [isHandled, setIsHandled] = useState(false);
@@ -75,7 +75,7 @@ export function VerifyProfileCard({ profile }: { profile: Profile & { account: A
               <h3 className='text-foreground max-w-full truncate text-xl font-black tracking-tight'>{profile.displayName}</h3>
               {profile.pronouns && <span className='text-muted-foreground text-sm'>({profile.pronouns})</span>}
             </div>
-            <p className='text-muted-foreground truncate text-sm'>@{profile.account.username}</p>
+            <p className='text-muted-foreground truncate text-sm'>@{profile.user.username}</p>
           </div>
         </div>
 

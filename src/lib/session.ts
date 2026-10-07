@@ -1,86 +1,29 @@
-'use server';
+import 'server-only';
 
-import { randomBytes } from 'crypto';
-import { cookies } from 'next/headers';
-import { z } from 'zod';
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { cache } from 'react';
 
-import { COOKIE_SESSION_KEY, SESSION_EXPIRATION } from '@/constants/auth';
-import prisma from '@/lib/prisma';
-import { sessionSchema, sessionWithAccountSchema } from '@/lib/schemas';
-import { AccountModel } from '@/generated/models';
+import { auth } from '@/lib/auth';
 
-export async function getUserSession({ includeAccount = false } = {}) {
-  const cookie = await cookies();
+/**
+ * The signed-in session, looked up once per request however often asked.
+ * `user.name` is the username.
+ */
+export const getSession = cache(async () => auth.api.getSession({ headers: await headers() }));
 
-  const sessionId = cookie.get(COOKIE_SESSION_KEY)?.value;
-
-  if (sessionId == null) return null;
-
-  const rawUser = await prisma.session.findFirst({
-    where: { sessionId },
-    include: includeAccount ? { account: true } : undefined,
-  });
-
-  const { success, data: user } = includeAccount ? sessionWithAccountSchema.safeParse(rawUser) : sessionSchema.safeParse(rawUser);
-  return success ? user : null;
+/** Redirects to sign in if signed out. */
+export async function requireUser() {
+  const session = await getSession();
+  if (!session) redirect('/sign-in');
+  return session;
 }
 
-export async function createUserSession(account: AccountModel) {
-  const sessionId = randomBytes(512).toString('hex').normalize();
-
-  const data = sessionSchema.parse({ sessionId: sessionId, accountId: account.id });
-  await prisma.session.create({
-    data: {
-      sessionId: data.sessionId,
-      accountId: account.id,
-    },
-  });
-
-  const cookie = await cookies();
-  cookie.set(COOKIE_SESSION_KEY, sessionId, {
-    secure: true,
-    httpOnly: true,
-    sameSite: 'lax',
-    expires: Date.now() + SESSION_EXPIRATION * 1000,
-  });
+/** Redirects to the profiles page if already signed in, e.g. on sign-in pages. */
+export async function requireSignedOut() {
+  if (await getSession()) redirect('/profiles');
 }
 
-export async function removeUserFromSession() {
-  const cookie = await cookies();
-
-  const sessionId = cookie.get(COOKIE_SESSION_KEY)?.value;
-  if (sessionId == null) return;
-
-  await prisma.session.delete({
-    where: { sessionId },
-  });
-
-  cookie.delete(COOKIE_SESSION_KEY);
-}
-
-export async function updateUserSession(session: z.infer<typeof sessionSchema>) {
-  const cookie = await cookies();
-
-  const sessionId = cookie.get(COOKIE_SESSION_KEY)?.value;
-  if (sessionId == null) return;
-
-  await prisma.session.update({
-    where: { sessionId },
-    data: session,
-  });
-}
-
-export async function updateUserSessionExpiration() {
-  const cookie = await cookies();
-
-  const session = await getUserSession();
-
-  if (session == null) return null;
-
-  cookie.set(COOKIE_SESSION_KEY, session.sessionId, {
-    secure: true,
-    httpOnly: true,
-    sameSite: 'lax',
-    expires: Date.now() + SESSION_EXPIRATION * 1000,
-  });
+export function isModerator(role: string | null | undefined) {
+  return role === 'MODERATOR' || role === 'ADMIN';
 }

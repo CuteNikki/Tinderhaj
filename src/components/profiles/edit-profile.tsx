@@ -16,7 +16,7 @@ import {
   MAX_LOCATION_LENGTH,
   MAX_PRONOUNS_LENGTH,
 } from '@/constants/auth';
-import { Account, Profile } from '@/generated/client';
+import type { ProfileWithOwner } from '@/lib/queries';
 import { updateProfile } from '@/lib/actions';
 import { profileFieldLabel } from '@/lib/profile-fields';
 import { updateProfileSchema } from '@/lib/schemas';
@@ -31,7 +31,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 
-export function EditProfile({ profile }: { profile: Profile & { account: Account } }) {
+export function EditProfile({ profile }: { profile: ProfileWithOwner }) {
   const [open, setOpen] = useState(false);
   const [interests, setInterests] = useState<string[]>(profile.interests);
   const [newInterest, setNewInterest] = useState('');
@@ -389,7 +389,7 @@ export function EditProfile({ profile }: { profile: Profile & { account: Account
             </form>
           </Form>
           <ProfilePreview
-            username={profile.account.username}
+            username={profile.user.username}
             displayName={preview.displayName}
             pronouns={preview.pronouns}
             avatarUrl={preview.avatarUrl}

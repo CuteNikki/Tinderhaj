@@ -241,3 +241,51 @@ export const verifyMetadata: Metadata = {
     ],
   },
 };
+
+export const twoFactorMetadata: Metadata = {
+  title: 'Tinderhaj - Two-Step Sign-In',
+  description: 'Finish signing in to Tinderhaj with a code.',
+  openGraph: {
+    url: 'https://tinderhaj.com/two-factor',
+    images: [
+      {
+        url: 'https://tinderhaj.com/blahaj.webp',
+        alt: 'Blåhaj',
+        width: 128,
+        height: 128,
+      },
+    ],
+  },
+};
+
+export const verifiedMetadata: Metadata = {
+  title: 'Tinderhaj - Email Verification',
+  description: 'Confirm the email address of your Tinderhaj account.',
+  openGraph: {
+    url: 'https://tinderhaj.com/verified',
+    images: [
+      {
+        url: 'https://tinderhaj.com/blahaj.webp',
+        alt: 'Blåhaj',
+        width: 128,
+        height: 128,
+      },
+    ],
+  },
+};
+
+export const deleteAccountMetadata: Metadata = {
+  title: 'Tinderhaj - Delete Account',
+  description: 'Confirm deleting your Tinderhaj account.',
+  openGraph: {
+    url: 'https://tinderhaj.com/account/delete',
+    images: [
+      {
+        url: 'https://tinderhaj.com/blahaj.webp',
+        alt: 'Blåhaj',
+        width: 128,
+        height: 128,
+      },
+    ],
+  },
+};

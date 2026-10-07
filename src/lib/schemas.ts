@@ -54,6 +54,14 @@ const birthdaySchema = z
     { message: 'Birthday must be in the past or today.' },
   );
 
+/** Also checked by Better Auth on sign-up and username changes (see lib/auth.ts). */
+export const usernameSchema = z
+  .string()
+  .nonempty('Username is required!')
+  .regex(/^[a-z0-9_]+$/, 'Username can only contain lowercase letters, numbers, and underscores.')
+  .min(MIN_USERNAME_LENGTH, `Username must be at least ${MIN_USERNAME_LENGTH} characters.`)
+  .max(MAX_USERNAME_LENGTH, `Username must be at most ${MAX_USERNAME_LENGTH} characters.`);
+
 export const signInSchema = z.object({
   email: z
     .email(`Email is invalid!`)
@@ -66,12 +74,7 @@ export const signInSchema = z.object({
 });
 
 export const signUpSchema = z.object({
-  username: z
-    .string()
-    .nonempty(`Username is required!`)
-    .regex(/^[a-z0-9_]+$/, `Username can only contain lowercase letters, numbers, and underscores.`)
-    .min(MIN_USERNAME_LENGTH, `Username must be at least ${MIN_USERNAME_LENGTH} characters.`)
-    .max(MAX_USERNAME_LENGTH, `Username must be at most ${MAX_USERNAME_LENGTH} characters.`),
+  username: usernameSchema,
   email: z
     .email(`Email is invalid!`)
     .min(MIN_EMAIL_LENGTH, `Email must be at least ${MIN_EMAIL_LENGTH} characters.`)
@@ -84,18 +87,7 @@ export const signUpSchema = z.object({
 });
 
 export const updateUsernameSchema = z.object({
-  username: z
-    .string()
-    .trim()
-    .nonempty('Username is required!')
-    .regex(/^[a-z0-9_]+$/, 'Username can only contain lowercase letters, numbers, and underscores.')
-    .min(MIN_USERNAME_LENGTH, `Username must be at least ${MIN_USERNAME_LENGTH} characters.`)
-    .max(MAX_USERNAME_LENGTH, `Username must be at most ${MAX_USERNAME_LENGTH} characters.`),
-});
-
-export const sessionSchema = z.object({
-  accountId: z.string(),
-  sessionId: z.string(),
+  username: usernameSchema,
 });
 
 export const forgotPasswordSchema = z.object({
@@ -119,17 +111,6 @@ export const resetPasswordSchema = z
     message: 'Passwords do not match!',
     path: ['confirmPassword'],
   });
-
-export const sessionWithAccountSchema = sessionSchema.extend({
-  account: z.object({
-    id: z.string(),
-    email: z.email(),
-    username: z.string(),
-    role: z.enum(['USER', 'MODERATOR', 'ADMIN']),
-    createdAt: z.date(),
-    updatedAt: z.date(),
-  }),
-});
 
 export const rejectProfileSchema = z.object({
   profileId: z.string(),

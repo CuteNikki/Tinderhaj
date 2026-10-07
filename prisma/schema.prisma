@@ -25,47 +25,119 @@ enum SizeUnit {
   INCH
 }
 
-model Account {
-  id       String @id @default(cuid(2))
-  username String @unique
-  email    String @unique
-  password String
-  salt     String
+/// Someone with a Tinderhaj account. Better Auth calls this the user and
+/// knows `username` as its `name`.
+model User {
+  id               String   @id @default(cuid(2))
+  username         String   @unique
+  email            String   @unique
+  emailVerified    Boolean  @default(false)
+  image            String?
+  /// Whether signing in with a password asks for a second step.
+  twoFactorEnabled Boolean? @default(false)
 
   role AccountRole @default(USER)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  sessions            Session[]
-  profiles            Profile[]
-  passwordResetTokens PasswordResetToken[]
+  sessions   Session[]
+  accounts   Account[]
+  twoFactors TwoFactor[]
+  passkeys   Passkey[]
+  profiles   Profile[]
 }
 
-model PasswordResetToken {
-  id        String   @id @default(cuid(2))
-  tokenHash String   @unique
-  accountId String
-  expiresAt DateTime
+/// A way to sign in. Only `credential`, which holds the password as
+/// `salt:hash`, since Tinderhaj has no other providers.
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 
-  createdAt DateTime @default(now())
-
-  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
-
-  @@index([accountId])
+  @@index([userId])
 }
 
 model Session {
-  sessionId String  @id
-  accountId String
-  account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  @@index([accountId])
+  @@index([userId])
+}
+
+/// Links sent by email (verifying, changing email, resetting the password,
+/// deleting the account), and devices that skip two-step sign-in.
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+}
+
+/// An authenticator app set up for two-step sign-in, with backup codes.
+/// Accounts using email codes only have none.
+model TwoFactor {
+  id                      String    @id
+  /// Encrypted by Better Auth, like the backup codes.
+  secret                  String
+  backupCodes             String
+  userId                  String
+  user                    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// False until the first code from the app confirms it's set up.
+  verified                Boolean?  @default(true)
+  /// For locking sign-in after too many wrong codes.
+  failedVerificationCount Int?      @default(0)
+  lockedUntil             DateTime?
+
+  @@index([secret])
+  @@index([userId])
+}
+
+/// A passkey someone can sign in with instead of a password.
+model Passkey {
+  id           String    @id
+  name         String?
+  publicKey    String
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  credentialID String
+  counter      Int
+  deviceType   String
+  backedUp     Boolean
+  transports   String?
+  createdAt    DateTime?
+  /// Which kind of authenticator made it, when it says.
+  aaguid       String?
+
+  @@index([userId])
+  @@index([credentialID])
 }
 
 model Profile {
-  id        String @id @default(cuid(2))
-  accountId String
+  id     String @id @default(cuid(2))
+  userId String
 
   displayName String
   avatarUrl   String?
@@ -90,7 +162,7 @@ model Profile {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([accountId])
+  @@index([userId])
 }

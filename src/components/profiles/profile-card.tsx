@@ -5,7 +5,7 @@ import { useState, useTransition } from 'react';
 import { CakeIcon, MapPinIcon, RulerIcon, SendIcon, Trash2Icon } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { Account, Profile } from '@/generated/client';
+import type { ProfileWithOwner } from '@/lib/queries';
 import { deleteProfile, submitProfileForReview } from '@/lib/actions';
 import { profileFieldLabel } from '@/lib/profile-fields';
 import { PROFILE_STATUS_META } from '@/lib/profile-status';
@@ -29,7 +29,7 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
-export function ProfileCard({ profile }: { profile: Profile & { account: Account } }) {
+export function ProfileCard({ profile }: { profile: ProfileWithOwner }) {
   const [isDeleting, startDeleteTransition] = useTransition();
   const [isSubmitting, startSubmitTransition] = useTransition();
   const [isDeleted, setIsDeleted] = useState(false);
@@ -89,7 +89,7 @@ export function ProfileCard({ profile }: { profile: Profile & { account: Account
               <h3 className='text-foreground max-w-full truncate text-xl font-black tracking-tight'>{profile.displayName}</h3>
               {profile.pronouns && <span className='text-muted-foreground text-sm'>({profile.pronouns})</span>}
             </div>
-            <p className='text-muted-foreground truncate text-sm'>@{profile.account.username}</p>
+            <p className='text-muted-foreground truncate text-sm'>@{profile.user.username}</p>
           </div>
         </div>
 

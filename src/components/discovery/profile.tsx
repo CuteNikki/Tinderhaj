@@ -1,6 +1,6 @@
 import { CakeIcon, MapPinIcon, RulerIcon } from 'lucide-react';
 
-import { Account, Profile } from '@/generated/client';
+import type { ProfileWithOwner } from '@/lib/queries';
 
 import { isFreshProfile } from '@/lib/profile-status';
 import { calculateAge } from '@/lib/utils';
@@ -9,11 +9,11 @@ import { ProfileAvatar, ProfileBanner } from '@/components/profiles/profile-imag
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 
-export function DiscoveryProfile({ profile }: { profile: Profile & { account: Account } }) {
+export function DiscoveryProfile({ profile }: { profile: ProfileWithOwner }) {
   return (
     <Card className='group border-foreground/10 bg-background h-full w-full overflow-hidden pt-0 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl'>
       <div className='relative aspect-5/2 overflow-hidden'>
-        <ProfileBanner src={profile.bannerUrl} alt={`${profile.account.username}'s banner`} />
+        <ProfileBanner src={profile.bannerUrl} alt={`${profile.user.username}'s banner`} />
         <div className='from-background/70 absolute inset-0 bg-linear-to-t to-transparent' />
         {isFreshProfile(profile.verifiedAt, profile.createdAt) && (
           <Badge className='bg-primary text-primary-foreground absolute top-3 right-3 rounded-full text-xs font-semibold shadow-md'>New</Badge>
@@ -24,7 +24,7 @@ export function DiscoveryProfile({ profile }: { profile: Profile & { account: Ac
         <div className='relative flex items-start gap-4'>
           <div className='relative shrink-0'>
             <div className='border-background bg-muted h-18 w-18 overflow-hidden rounded-full border-4 shadow-md'>
-              <ProfileAvatar src={profile.avatarUrl} alt={`${profile.account.username}'s avatar`} />
+              <ProfileAvatar src={profile.avatarUrl} alt={`${profile.user.username}'s avatar`} />
             </div>
           </div>
           <div className='min-w-0 flex-1 pt-4'>
@@ -32,7 +32,7 @@ export function DiscoveryProfile({ profile }: { profile: Profile & { account: Ac
               <h3 className='text-foreground max-w-full truncate text-xl font-black tracking-tight'>{profile.displayName}</h3>
               {profile.pronouns && <span className='text-muted-foreground text-sm'>({profile.pronouns})</span>}
             </div>
-            <p className='text-muted-foreground truncate text-sm'>@{profile.account.username}</p>
+            <p className='text-muted-foreground truncate text-sm'>@{profile.user.username}</p>
           </div>
         </div>
         <div className='text-muted-foreground mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm'>

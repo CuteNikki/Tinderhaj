@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { MAX_EMAIL_LENGTH } from '@/constants/auth';
-import { requestPasswordReset } from '@/lib/actions';
+import { authClient } from '@/lib/auth-client';
 import { forgotPasswordSchema } from '@/lib/schemas';
 
 import { staggerContainer, staggerItem } from '@/components/auth/motion';
@@ -29,11 +29,18 @@ export function ForgotPasswordForm() {
   async function onSubmit(data: z.infer<typeof forgotPasswordSchema>) {
     setIsSubmitting(true);
 
-    const result = await requestPasswordReset(data);
+    // The answer is the same whether or not the email has an account.
+    const { error } = await authClient.requestPasswordReset({ email: data.email, redirectTo: '/reset-password' });
 
     setIsSubmitting(false);
+
+    if (error) {
+      toast.error(error.message ?? 'Unable to process request!', { duration: 5000, position: 'top-center' });
+      return;
+    }
+
     setIsSent(true);
-    toast.success(result.message, { duration: 6000, position: 'top-center' });
+    toast.success('If an account with that email exists, a password reset link has been sent.', { duration: 6000, position: 'top-center' });
   }
 
   if (isSent) {

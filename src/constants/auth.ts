@@ -8,7 +8,6 @@ export const MIN_USERNAME_LENGTH = 3;
 export const MAX_USERNAME_LENGTH = 32;
 
 export const SESSION_EXPIRATION = 60 * 60 * 24 * 3; // 3 days
-export const COOKIE_SESSION_KEY = 'auth-tinderhaj-session-id';
 
 export const PASSWORD_RESET_TOKEN_EXPIRATION = 60 * 60; // 1 hour
 

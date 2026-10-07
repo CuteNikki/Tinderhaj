@@ -7,6 +7,7 @@ Tinderhaj is a Next.js dating/profile platform built around profile discovery, a
 This project combines:
 
 - Next.js App Router for the web app and server actions
+- Better Auth for sign-in, sessions, two-step sign-in, and passkeys
 - Prisma + PostgreSQL for persistence
 - UploadThing for image uploads
 - Resend for transactional email
@@ -17,14 +18,19 @@ The product flow is centered on creating a personal profile, submitting it for r
 
 ## Features
 
-- User registration and sign-in
-- Secure session handling with HTTP-only cookies
-- Password reset flow with email delivery
+- User registration and sign-in with [Better Auth](https://www.better-auth.com)
+- Email verification, and email changes confirmed from the old address first
+- Two-step sign-in with an authenticator app, email codes, or backup codes, and trusted devices
+- Passkeys (fingerprint, face, or device PIN)
+- Sign-in with Google, Apple, Microsoft, GitHub, Discord, X, Twitch, or Facebook, each turned on by setting its credentials, and connecting or disconnecting them from Account Settings
+- A list of active sessions, with signing out other devices
+- Password change and password reset flow with email delivery
+- Account deletion confirmed by an email link
 - Profile creation, editing, and deletion
 - Avatar and banner uploads
 - Profile moderation states: created, pending, rejected, and verified
 - Discovery feed for verified profiles
-- Account settings and username updates
+- Account settings: username, email, password, two-step sign-in, passkeys, sessions
 - Moderator verification tools
 
 ## Tech Stack
@@ -33,6 +39,7 @@ The product flow is centered on creating a personal profile, submitting it for r
 - React 19
 - TypeScript
 - Tailwind CSS
+- Better Auth
 - Prisma ORM
 - PostgreSQL
 - UploadThing
@@ -80,14 +87,40 @@ DATABASE_URL="postgresql://username:password@localhost:5432/tinderhaj"
 RESEND_API_KEY="your_resend_api_key"
 RESEND_FROM_EMAIL="Tinderhaj <no-reply@your-domain.com>"
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
+BETTER_AUTH_SECRET="a random string, e.g. from openssl rand -base64 32"
+BETTER_AUTH_URL="http://localhost:3000"
 UPLOADTHING_TOKEN="your_uploadthing_token"
+
+# Optional: social sign-in. Each provider shows up once both of its values are set.
+GOOGLE_CLIENT_ID=""
+GOOGLE_CLIENT_SECRET=""
+APPLE_CLIENT_ID=""
+APPLE_CLIENT_SECRET=""
+APPLE_APP_BUNDLE_IDENTIFIER=""
+MICROSOFT_CLIENT_ID=""
+MICROSOFT_CLIENT_SECRET=""
+GITHUB_CLIENT_ID=""
+GITHUB_CLIENT_SECRET=""
+DISCORD_CLIENT_ID=""
+DISCORD_CLIENT_SECRET=""
+TWITTER_CLIENT_ID=""
+TWITTER_CLIENT_SECRET=""
+TWITCH_CLIENT_ID=""
+TWITCH_CLIENT_SECRET=""
+FACEBOOK_CLIENT_ID=""
+FACEBOOK_CLIENT_SECRET=""
 ```
 
 Notes:
 
 - `DATABASE_URL` is required for Prisma and the app database connection.
-- `NEXT_PUBLIC_APP_URL` is used for password reset links.
+- `BETTER_AUTH_SECRET` signs session cookies and encrypts two-step sign-in secrets. Keep it the same across deploys, or everyone is signed out and authenticator apps stop working.
+- `BETTER_AUTH_URL` is where the site runs. Links in emails point there, and passkeys only work on its domain. Defaults to `NEXT_PUBLIC_APP_URL`.
 - UploadThing variables are required for avatar/banner uploads to work.
+- Social sign-in providers are optional. Register an app with each provider and set its redirect URL to `<BETTER_AUTH_URL>/api/auth/callback/<provider>`, e.g. `http://localhost:3000/api/auth/callback/github`. The provider ids are `google`, `apple`, `microsoft`, `github`, `discord`, `twitter` (X), `twitch`, and `facebook`.
+  - Apple's client secret is a signed JWT you generate from your Apple key, and it expires after at most six months. `APPLE_APP_BUNDLE_IDENTIFIER` is only needed for signing in from an iOS app.
+  - X only shares the email address if the app asks for it ("Request email from users" in the X developer portal); without it, signing in with X fails.
+  - Microsoft accepts both personal and work or school accounts.
 
 ## Installation
 
@@ -142,17 +175,24 @@ npm run format   # Prettier formatting
 
 ## Authentication and Session Flow
 
-The app stores session identifiers in an HTTP-only cookie and stores a matching session record in PostgreSQL. Authentication and user session logic live under `src/lib/session.ts`, with server actions in `src/lib/actions.ts`.
+Sign-in runs on Better Auth, configured in `src/lib/auth.ts` and served from `/api/auth/*`. Sessions are kept in PostgreSQL and an HTTP-only cookie; server code reads them with `getSession()` and `requireUser()` from `src/lib/session.ts`, and client components call Better Auth through `authClient` from `src/lib/auth-client.ts`.
 
-Password reset links are generated with a hashed token and emailed through Resend.
+Better Auth calls the username `name`. It checks usernames on sign-up and on changes against the same rules as the forms. People who sign up with a provider get a username made from their handle or name there (e.g. `nikki_b`, or `nikki_b_4821` if taken), which they can change in Account Settings.
+
+Signing in with a provider joins an existing account with the same email only when both the provider and Tinderhaj have verified that email. Otherwise the person is asked to sign in another way and connect the provider from Account Settings. Passwords are hashed with scrypt as `salt:hash` (`src/lib/password-hasher.ts`), the same way as before Better Auth, so older accounts keep their passwords.
+
+Emails (verification, email changes, password resets, sign-in codes, and account deletion) are sent through Resend from `src/lib/email.ts`.
 
 ## Profile and Moderation Model
 
 The Prisma schema defines the core models:
 
-- `Account`: user account, credentials, roles, sessions
-- `Session`: active authenticated sessions
-- `PasswordResetToken`: reset token lifecycle management
+- `User`: username, email, role, and whether two-step sign-in is on
+- `Account`: ways to sign in; holds the password
+- `Session`: active sessions, with IP address and browser
+- `Verification`: email links and trusted devices
+- `TwoFactor`: authenticator app secrets and backup codes
+- `Passkey`: passkeys
 - `Profile`: user profile content, moderation status, verification timestamps
 
 Profile states include:
@@ -170,7 +210,10 @@ This app is designed for deployment on modern Node.js hosting platforms such as 
 - `RESEND_API_KEY`
 - `RESEND_FROM_EMAIL`
 - `NEXT_PUBLIC_APP_URL`
+- `BETTER_AUTH_SECRET` and `BETTER_AUTH_URL`
 - UploadThing credentials
+
+Better Auth rate limits sign-in, sign-up, and code requests per IP address in production. It reads the address from `x-forwarded-for`, which Vercel sets. Behind a proxy that doesn't, every visitor shares one limit.
 
 ## Contributing
 

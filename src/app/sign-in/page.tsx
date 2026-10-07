@@ -3,15 +3,19 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import { signInMetadata } from '@/constants/metadata';
-import { getCurrentUser } from '@/lib/actions';
+import { enabledProviders } from '@/lib/auth';
+import { socialErrorMessage } from '@/lib/providers';
+import { requireSignedOut } from '@/lib/session';
 
 import { AuthShell } from '@/components/auth/auth-shell';
 import { SignInForm } from '@/components/auth/sign-in-form';
 
 export const metadata: Metadata = signInMetadata;
 
-export default async function SignInPage() {
-  await getCurrentUser({ redirectIfFound: true });
+export default async function SignInPage({ searchParams }: PageProps<'/sign-in'>) {
+  await requireSignedOut();
+
+  const { error } = await searchParams;
 
   return (
     <AuthShell
@@ -28,7 +32,7 @@ export default async function SignInPage() {
         </p>
       }
     >
-      <SignInForm />
+      <SignInForm providers={enabledProviders} error={typeof error === 'string' ? socialErrorMessage(error) : undefined} />
     </AuthShell>
   );
 }

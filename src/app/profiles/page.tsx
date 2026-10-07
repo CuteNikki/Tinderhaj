@@ -2,7 +2,8 @@ import { UserRoundIcon } from 'lucide-react';
 import type { Metadata } from 'next';
 
 import { profilesMetadata } from '@/constants/metadata';
-import { getCurrentProfiles, getCurrentUser } from '@/lib/actions';
+import { QUERIES } from '@/lib/queries';
+import { requireUser } from '@/lib/session';
 
 import { CreateProfile } from '@/components/auth/create-profile';
 import { EmptyState } from '@/components/common/empty-state';
@@ -12,7 +13,8 @@ import { ProfileCard } from '@/components/profiles/profile-card';
 export const metadata: Metadata = profilesMetadata;
 
 export default async function ProfilesPage() {
-  const [profiles, session] = await Promise.all([getCurrentProfiles(), getCurrentUser({ includeAccount: true })]);
+  const session = await requireUser();
+  const profiles = await QUERIES.getUserProfiles(session.user.id);
 
   return (
     <div className='bg-background flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'>
@@ -23,7 +25,7 @@ export default async function ProfilesPage() {
               <p className='text-primary mb-1 text-xs font-bold tracking-widest uppercase'>Your account</p>
               <h1 className='text-3xl font-black tracking-tight sm:text-4xl'>Manage Profiles</h1>
             </div>
-            <CreateProfile username={session?.account.username} disableButton={profiles.length >= 5} />
+            <CreateProfile username={session.user.name} disableButton={profiles.length >= 5} />
           </div>
         </ScrollReveal>
 

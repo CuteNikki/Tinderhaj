@@ -2,13 +2,14 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'motion/react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { MAX_PASSWORD_LENGTH } from '@/constants/auth';
-import { resetPassword } from '@/lib/actions';
+import { authClient } from '@/lib/auth-client';
 import { resetPasswordSchema } from '@/lib/schemas';
 
 import { staggerContainer, staggerItem } from '@/components/auth/motion';
@@ -18,6 +19,7 @@ import { Input } from '@/components/ui/input';
 import { Loader2Icon, RotateCwIcon } from 'lucide-react';
 
 export function ResetPasswordForm({ token }: { token: string }) {
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof resetPasswordSchema>>({
@@ -28,12 +30,20 @@ export function ResetPasswordForm({ token }: { token: string }) {
   async function onSubmit(data: z.infer<typeof resetPasswordSchema>) {
     setIsSubmitting(true);
 
-    const error = await resetPassword(data);
+    // Also signs out everywhere (see lib/auth.ts).
+    const { error } = await authClient.resetPassword({ newPassword: data.password, token: data.token });
 
     if (error) {
       setIsSubmitting(false);
-      toast.error(error.message, { duration: 5000, position: 'top-center' });
+      toast.error(error.code === 'INVALID_TOKEN' ? 'This reset link is invalid or has expired!' : (error.message ?? 'Unable to reset password!'), {
+        duration: 5000,
+        position: 'top-center',
+      });
+      return;
     }
+
+    toast.success('Password changed. Sign in with your new password.', { duration: 5000, position: 'top-center' });
+    router.push('/sign-in');
   }
 
   return (

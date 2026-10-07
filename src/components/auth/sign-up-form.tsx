@@ -2,13 +2,14 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'motion/react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { MAX_EMAIL_LENGTH, MAX_PASSWORD_LENGTH, MAX_USERNAME_LENGTH } from '@/constants/auth';
-import { signUp } from '@/lib/actions';
+import { authClient } from '@/lib/auth-client';
 import { signUpSchema } from '@/lib/schemas';
 
 import { staggerContainer, staggerItem } from '@/components/auth/motion';
@@ -18,6 +19,7 @@ import { Input } from '@/components/ui/input';
 import { ArrowRightIcon, Loader2Icon } from 'lucide-react';
 
 export function SignUpForm() {
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof signUpSchema>>({
@@ -28,17 +30,28 @@ export function SignUpForm() {
   async function onSubmit(data: z.infer<typeof signUpSchema>) {
     setIsSubmitting(true);
 
-    const error = await signUp(data);
+    const { error } = await authClient.signUp.email({
+      name: data.username,
+      email: data.email,
+      password: data.password,
+      // Where the link in the verification email leads.
+      callbackURL: '/verified',
+    });
 
     if (error) {
       setIsSubmitting(false);
 
-      if (error.field === 'email' || error.field === 'username') {
-        form.setError(error.field, { message: error.message });
-      }
+      const message = error.message ?? 'Unable to create account!';
+      if (error.code === 'USERNAME_TAKEN' || error.code === 'INVALID_USERNAME') form.setError('username', { message });
+      if (error.code?.startsWith('USER_ALREADY_EXISTS')) form.setError('email', { message: 'Email is already in use!' });
 
-      toast.error(error.message, { duration: 5000, position: 'top-center' });
+      toast.error(error.code?.startsWith('USER_ALREADY_EXISTS') ? 'Email is already in use!' : message, { duration: 5000, position: 'top-center' });
+      return;
     }
+
+    toast.success('Account created! Check your inbox to verify your email.', { duration: 5000, position: 'top-center' });
+    router.push('/profiles');
+    router.refresh();
   }
 
   return (

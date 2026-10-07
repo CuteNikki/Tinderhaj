@@ -6,7 +6,10 @@ import { FRESH_PROFILE_WINDOW_IN_DAYS } from '@/lib/profile-status';
 
 const DAY_IN_MS = 24 * 60 * 60 * 1000;
 
-type DiscoveryProfile = Prisma.ProfileGetPayload<{ include: { account: true } }>;
+/** Only the owner's username: profiles go to the browser, emails mustn't. */
+const PROFILE_OWNER = { user: { select: { username: true } } } satisfies Prisma.ProfileInclude;
+
+export type ProfileWithOwner = Prisma.ProfileGetPayload<{ include: typeof PROFILE_OWNER }>;
 
 function getProfileShuffle(profileId: string, seed: number) {
   let hash = 0;
@@ -18,7 +21,7 @@ function getProfileShuffle(profileId: string, seed: number) {
   return hash / 0xffffffff;
 }
 
-function rankDiscoveryProfiles(profiles: DiscoveryProfile[], seed: number) {
+function rankDiscoveryProfiles(profiles: ProfileWithOwner[], seed: number) {
   const now = Date.now();
 
   return profiles
@@ -38,7 +41,7 @@ async function getRankedDiscoveryProfiles(where: Prisma.ProfileWhereInput, page:
   const profiles = rankDiscoveryProfiles(
     await prisma.profile.findMany({
       where,
-      include: { account: true },
+      include: PROFILE_OWNER,
     }),
     seed,
   );
@@ -51,7 +54,11 @@ async function getRankedDiscoveryProfiles(where: Prisma.ProfileWhereInput, page:
 
 export const QUERIES = {
   getAccountCount: async () => {
-    return await prisma.account.count();
+    return await prisma.user.count();
+  },
+
+  getUserProfiles: async (userId: string) => {
+    return prisma.profile.findMany({ where: { userId }, include: PROFILE_OWNER, orderBy: { createdAt: 'asc' } });
   },
 
   getProfilesWithQuery: async (query: string, page: number, take: number, seed: number) => {
@@ -70,7 +77,7 @@ export const QUERIES = {
 
     const where: Prisma.ProfileWhereInput = {
       OR: [
-        { account: { username: { contains: normalizedQuery, mode: 'insensitive' } } },
+        { user: { username: { contains: normalizedQuery, mode: 'insensitive' } } },
         { displayName: { contains: normalizedQuery, mode: 'insensitive' } },
         { bio: { contains: normalizedQuery, mode: 'insensitive' } },
         { location: { contains: normalizedQuery, mode: 'insensitive' } },
@@ -86,6 +93,6 @@ export const QUERIES = {
   },
 
   getPendingProfiles: async () => {
-    return prisma.profile.findMany({ where: { status: ProfileStatus.PENDING }, include: { account: true }, orderBy: { submittedAt: 'asc' } });
+    return prisma.profile.findMany({ where: { status: ProfileStatus.PENDING }, include: PROFILE_OWNER, orderBy: { submittedAt: 'asc' } });
   },
 };

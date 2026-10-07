@@ -1,205 +1,19 @@
 'use server';
 
-import { createHash, randomBytes } from 'crypto';
+import { isAPIError } from 'better-auth/api';
 import { revalidatePath } from 'next/cache';
-import { cookies } from 'next/headers';
+import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
-import { COOKIE_SESSION_KEY, PASSWORD_RESET_TOKEN_EXPIRATION } from '@/constants/auth';
-import { AccountModel } from '@/generated/models';
-import { sendPasswordResetEmail } from '@/lib/email';
-import { comparePasswords, generateSalt, hashPassword } from '@/lib/password-hasher';
+import { auth, forgetTrustedDevices as forget } from '@/lib/auth';
 import prisma from '@/lib/prisma';
-import {
-  createProfileSchema,
-  forgotPasswordSchema,
-  rejectProfileSchema,
-  resetPasswordSchema,
-  signInSchema,
-  signUpSchema,
-  updateProfileSchema,
-  updateUsernameSchema,
-} from '@/lib/schemas';
-import { createUserSession, getUserSession, removeUserFromSession } from '@/lib/session';
-
-export async function signIn(unsafeData: z.infer<typeof signInSchema>) {
-  const { success, data } = signInSchema.safeParse(unsafeData);
-
-  if (!success) return { message: 'Unable to sign in!' };
-
-  const account = await prisma.account.findFirst({
-    where: { email: data.email },
-  });
-
-  if (account == null) return { message: 'Unable to sign in!' };
-
-  const isCorrectPassword = await comparePasswords({ hashedPassword: account.password, password: data.password, salt: account.salt });
-
-  if (!isCorrectPassword) return { message: 'Unable to sign in!' };
-
-  await createUserSession(account);
-
-  redirect('/profiles');
-}
-
-export async function signUp(unsafeData: z.infer<typeof signUpSchema>) {
-  const { success, data } = signUpSchema.safeParse(unsafeData);
-
-  if (!success) return { message: 'Unable to create account!' };
-
-  const existingUser = await prisma.account.findFirst({
-    where: {
-      OR: [{ email: data.email }, { username: data.username }],
-    },
-  });
-
-  if (existingUser != null) {
-    if (existingUser.email === data.email) {
-      return { field: 'email', message: 'Email is already in use!' };
-    }
-    if (existingUser.username === data.username) {
-      return { field: 'username', message: 'Username is already in use!' };
-    }
-    return { message: 'Unable to create account!' };
-  }
-
-  try {
-    const salt = generateSalt();
-    const hashedPassword = await hashPassword(data.password, salt);
-
-    const account = await prisma.account.create({
-      data: {
-        email: data.email,
-        password: hashedPassword,
-        salt: salt,
-        username: data.username,
-      },
-    });
-
-    if (account == null) return { message: 'Unable to create account!' };
-
-    await createUserSession(account);
-  } catch (error) {
-    console.error(error);
-    return { message: 'Unable to create account!' };
-  }
-
-  redirect('/profiles');
-}
-
-const GENERIC_RESET_MESSAGE = 'If an account with that email exists, a password reset link has been sent.';
-
-export async function requestPasswordReset(unsafeData: z.infer<typeof forgotPasswordSchema>) {
-  const { success, data } = forgotPasswordSchema.safeParse(unsafeData);
-
-  if (!success) return { message: 'Unable to process request!' };
-
-  const account = await prisma.account.findFirst({ where: { email: data.email } });
-
-  // Always respond the same way to avoid leaking which emails are registered.
-  if (account == null) return { message: GENERIC_RESET_MESSAGE };
-
-  try {
-    const rawToken = randomBytes(32).toString('hex');
-    const tokenHash = createHash('sha256').update(rawToken).digest('hex');
-
-    await prisma.passwordResetToken.deleteMany({ where: { accountId: account.id } });
-    await prisma.passwordResetToken.create({
-      data: {
-        tokenHash,
-        accountId: account.id,
-        expiresAt: new Date(Date.now() + PASSWORD_RESET_TOKEN_EXPIRATION * 1000),
-      },
-    });
-
-    const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${rawToken}`;
-    await sendPasswordResetEmail({ email: account.email, resetUrl });
-  } catch (error) {
-    console.error(error);
-  }
-
-  return { message: GENERIC_RESET_MESSAGE };
-}
-
-export async function resetPassword(unsafeData: z.infer<typeof resetPasswordSchema>) {
-  const { success, data } = resetPasswordSchema.safeParse(unsafeData);
-
-  if (!success) return { message: 'Unable to reset password!' };
-
-  const tokenHash = createHash('sha256').update(data.token).digest('hex');
-
-  const resetToken = await prisma.passwordResetToken.findUnique({ where: { tokenHash } });
-
-  if (resetToken == null || resetToken.expiresAt < new Date()) {
-    return { message: 'This reset link is invalid or has expired!' };
-  }
-
-  const salt = generateSalt();
-  const hashedPassword = await hashPassword(data.password, salt);
-
-  await prisma.$transaction([
-    prisma.account.update({
-      where: { id: resetToken.accountId },
-      data: { password: hashedPassword, salt },
-    }),
-    prisma.passwordResetToken.deleteMany({ where: { accountId: resetToken.accountId } }),
-    prisma.session.deleteMany({ where: { accountId: resetToken.accountId } }),
-  ]);
-
-  redirect('/sign-in');
-}
-
-function _getCurrentUser(options: { includeAccount: true; redirectIfNotFound: true }): Promise<{ sessionId: string; accountId: string; account: AccountModel }>;
-function _getCurrentUser(options: {
-  includeAccount: true;
-  redirectIfNotFound: false;
-}): Promise<{ sessionId: string; accountId: string; account: AccountModel } | null>;
-function _getCurrentUser(options: { includeAccount: true }): Promise<{ sessionId: string; accountId: string; account: AccountModel } | null>;
-function _getCurrentUser(options: { redirectIfNotFound: true }): Promise<{ sessionId: string; accountId: string }>;
-function _getCurrentUser(options: { redirectIfFound: true }): Promise<{ sessionId: string; accountId: string }>;
-function _getCurrentUser(options: { redirectIfNotFound: true }): Promise<{ sessionId: string; accountId: string } | null>;
-function _getCurrentUser(): Promise<{ sessionId: string; accountId: string } | null>;
-async function _getCurrentUser({ includeAccount = false, redirectIfNotFound = false, redirectIfFound = false } = {}) {
-  const session = await getUserSession({ includeAccount });
-
-  if (!session?.sessionId) {
-    if (redirectIfNotFound) {
-      redirect('/sign-in');
-    }
-
-    return null;
-  }
-
-  if (redirectIfFound) {
-    return redirect('/profiles');
-  }
-
-  return session;
-}
-
-export const getCurrentUser = _getCurrentUser;
-
-export const getCurrentProfiles = async () => {
-  const session = await getCurrentUser({ includeAccount: true, redirectIfNotFound: true });
-
-  return prisma.profile.findMany({
-    where: { accountId: session.accountId },
-    include: { account: true },
-    orderBy: { createdAt: 'asc' },
-  });
-};
-
-export const getCurrentProfileCount = async () => {
-  const session = await getCurrentUser({ includeAccount: true, redirectIfNotFound: true });
-
-  return prisma.profile.count({
-    where: { accountId: session.accountId },
-  });
-};
+import { QUERIES } from '@/lib/queries';
+import { createProfileSchema, rejectProfileSchema, updateProfileSchema, updateUsernameSchema } from '@/lib/schemas';
+import { getSession, isModerator, requireUser } from '@/lib/session';
 
 export async function logOut() {
-  await removeUserFromSession();
+  await auth.api.signOut({ headers: await headers() });
 
   redirect('/');
 }
@@ -209,17 +23,17 @@ export async function updateUsername(unsafeData: z.infer<typeof updateUsernameSc
 
   if (!success) return { message: 'Unable to update username!' };
 
-  const session = await getCurrentUser({ includeAccount: true, redirectIfNotFound: true });
+  const session = await requireUser();
 
-  if (session.account.username === data.username) return { message: 'That is already your username.' };
+  if (session.user.name === data.username) return { message: 'That is already your username.' };
 
-  const existingAccount = await prisma.account.findUnique({ where: { username: data.username } });
-
-  if (existingAccount) return { field: 'username', message: 'Username is already in use!' };
-
+  // Better Auth checks the username is free (see lib/auth.ts).
   try {
-    await prisma.account.update({ where: { id: session.accountId }, data: { username: data.username } });
+    await auth.api.updateUser({ body: { name: data.username }, headers: await headers() });
   } catch (error) {
+    if (isAPIError(error) && error.body?.code === 'USERNAME_TAKEN') {
+      return { field: 'username', message: error.message };
+    }
     console.error(error);
     return { message: 'Unable to update username!' };
   }
@@ -230,20 +44,49 @@ export async function updateUsername(unsafeData: z.infer<typeof updateUsernameSc
   revalidatePath('/verification');
 }
 
-export async function deleteAccount() {
-  const session = await getCurrentUser({ redirectIfNotFound: true });
-
+/** For accounts without a password yet, e.g. signed up with a provider. */
+export async function setPassword(newPassword: string) {
   try {
-    await prisma.account.delete({ where: { id: session.accountId } });
+    await auth.api.setPassword({ body: { newPassword }, headers: await headers() });
   } catch (error) {
+    if (isAPIError(error)) return { message: error.message };
     console.error(error);
-    return { message: 'Unable to delete your account!' };
+    return { message: 'Unable to add a password!' };
   }
 
-  const cookieStore = await cookies();
-  cookieStore.delete(COOKIE_SESSION_KEY);
+  revalidatePath('/account');
+}
 
-  redirect('/');
+export async function revokeSession(sessionId: string) {
+  const session = await getSession();
+  if (!session) return { message: 'You are not signed in.' };
+
+  // Looked up by id, so session tokens never have to be sent to the browser.
+  const target = await prisma.session.findFirst({ where: { id: sessionId, userId: session.user.id } });
+  if (!target) return { message: 'That session has already ended.' };
+
+  await auth.api.revokeSession({ body: { token: target.token }, headers: await headers() });
+
+  revalidatePath('/account');
+}
+
+export async function revokeOtherSessions() {
+  await auth.api.revokeOtherSessions({ headers: await headers() });
+
+  revalidatePath('/account');
+}
+
+/**
+ * Makes every device ask for a code again, including this one. Their
+ * "Don't ask again" cookies stay, but no longer count for anything.
+ */
+export async function forgetTrustedDevices() {
+  const session = await getSession();
+  if (!session) return { message: 'You are not signed in.' };
+
+  await forget(session.user.id);
+
+  revalidatePath('/account');
 }
 
 export async function createProfile(unsafeData: z.infer<typeof createProfileSchema>) {
@@ -251,9 +94,9 @@ export async function createProfile(unsafeData: z.infer<typeof createProfileSche
 
   if (!success) return { message: 'Unable to create profile!' };
 
-  const session = await getCurrentUser({ includeAccount: true, redirectIfNotFound: true });
+  const session = await requireUser();
 
-  const profileCount = await getCurrentProfileCount();
+  const profileCount = await prisma.profile.count({ where: { userId: session.user.id } });
 
   // Temporary MAX_PROFILES limit = 5
   if (profileCount >= 5) {
@@ -263,7 +106,7 @@ export async function createProfile(unsafeData: z.infer<typeof createProfileSche
   await prisma.profile.create({
     data: {
       ...data,
-      accountId: session.accountId,
+      userId: session.user.id,
       status: 'CREATED',
     },
   });
@@ -276,7 +119,8 @@ export async function updateProfile(unsafeData: z.infer<typeof updateProfileSche
 
   if (!success) return { message: 'Unable to update profile!' };
 
-  const profiles = await getCurrentProfiles();
+  const session = await requireUser();
+  const profiles = await QUERIES.getUserProfiles(session.user.id);
 
   if (!profiles.map((profile) => profile.id).includes(data.id)) {
     return { message: 'Profile not found or you do not have permission to update it.' };
@@ -293,14 +137,13 @@ export async function updateProfile(unsafeData: z.infer<typeof updateProfileSche
 }
 
 export async function submitProfileForReview({ profileId }: { profileId: string }) {
-  const session = await getCurrentUser({ includeAccount: true, redirectIfNotFound: true });
+  const session = await requireUser();
 
   const profile = await prisma.profile.findUnique({
     where: { id: profileId },
-    include: { account: true },
   });
 
-  if (!profile || profile.account?.id !== session.accountId) {
+  if (!profile || profile.userId !== session.user.id) {
     return { message: 'Profile not found or you do not have permission to submit it.' };
   }
 
@@ -317,14 +160,13 @@ export async function submitProfileForReview({ profileId }: { profileId: string 
 }
 
 export async function deleteProfile({ profileId }: { profileId: string }) {
-  const session = await getCurrentUser({ includeAccount: true, redirectIfNotFound: true });
+  const session = await requireUser();
 
   const profile = await prisma.profile.findUnique({
     where: { id: profileId },
-    include: { account: true },
   });
 
-  if (!profile || profile.account?.id !== session.accountId) {
+  if (!profile || profile.userId !== session.user.id) {
     return { message: 'Profile not found or you do not have permission to delete it.' };
   }
 
@@ -336,9 +178,9 @@ export async function deleteProfile({ profileId }: { profileId: string }) {
 }
 
 export async function verifyProfile({ profileId }: { profileId: string }) {
-  const session = await getCurrentUser({ includeAccount: true, redirectIfNotFound: true });
+  const session = await requireUser();
 
-  if (session.account.role !== 'MODERATOR' && session.account.role !== 'ADMIN') return false;
+  if (!isModerator(session.user.role)) return false;
 
   await prisma.profile.update({
     where: { id: profileId },
@@ -355,9 +197,9 @@ export async function rejectProfile(unsafeData: z.infer<typeof rejectProfileSche
 
   if (!success) return { message: 'Unable to reject this profile.' };
 
-  const session = await getCurrentUser({ includeAccount: true, redirectIfNotFound: true });
+  const session = await requireUser();
 
-  if (session.account.role !== 'MODERATOR' && session.account.role !== 'ADMIN') return { message: 'Unable to reject this profile.' };
+  if (!isModerator(session.user.role)) return { message: 'Unable to reject this profile.' };
 
   await prisma.profile.update({
     where: { id: data.profileId },

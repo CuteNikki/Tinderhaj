@@ -8,12 +8,10 @@ const prisma = new PrismaClient({
   }),
 });
 
-const seedData: Prisma.AccountCreateInput[] = [
+const seedData: Prisma.UserCreateInput[] = [
   {
     username: 'system',
     email: 'system@tinderhaj.com',
-    password: 'some_secret123',
-    salt: '',
     role: AccountRole.USER,
     profiles: {
       create: {
@@ -34,8 +32,6 @@ const seedData: Prisma.AccountCreateInput[] = [
   {
     username: 'system',
     email: 'system@tinderhaj.com',
-    password: 'some_secret123',
-    salt: '',
     role: AccountRole.USER,
     profiles: {
       create: {
@@ -56,8 +52,6 @@ const seedData: Prisma.AccountCreateInput[] = [
   {
     username: 'system',
     email: 'system@tinderhaj.com',
-    password: 'some_secret123',
-    salt: '',
     role: AccountRole.USER,
     profiles: {
       create: {
@@ -78,8 +72,6 @@ const seedData: Prisma.AccountCreateInput[] = [
   {
     username: 'system',
     email: 'system@tinderhaj.com',
-    password: 'some_secret123',
-    salt: '',
     role: AccountRole.USER,
     profiles: {
       create: {
@@ -100,8 +92,6 @@ const seedData: Prisma.AccountCreateInput[] = [
   {
     username: 'system',
     email: 'system@tinderhaj.com',
-    password: 'some_secret123',
-    salt: '',
     role: AccountRole.USER,
     profiles: {
       create: {
@@ -122,8 +112,6 @@ const seedData: Prisma.AccountCreateInput[] = [
   {
     username: 'system',
     email: 'system@tinderhaj.com',
-    password: 'some_secret123',
-    salt: '',
     role: AccountRole.USER,
     profiles: {
       create: {
@@ -144,8 +132,6 @@ const seedData: Prisma.AccountCreateInput[] = [
   {
     username: 'system',
     email: 'system@tinderhaj.com',
-    password: 'some_secret123',
-    salt: '',
     role: AccountRole.USER,
     profiles: {
       create: {
@@ -166,8 +152,6 @@ const seedData: Prisma.AccountCreateInput[] = [
   {
     username: 'system',
     email: 'system@tinderhaj.com',
-    password: 'some_secret123',
-    salt: '',
     role: AccountRole.USER,
     profiles: {
       create: {
@@ -188,8 +172,6 @@ const seedData: Prisma.AccountCreateInput[] = [
   {
     username: 'system',
     email: 'system@tinderhaj.com',
-    password: 'some_secret123',
-    salt: '',
     role: AccountRole.USER,
     profiles: {
       create: {
@@ -211,14 +193,15 @@ const seedData: Prisma.AccountCreateInput[] = [
 
 (async () => {
   await prisma.profile.deleteMany();
-  await prisma.account.deleteMany();
-  await prisma.session.deleteMany();
+  // Also removes their sessions and passwords.
+  await prisma.user.deleteMany();
 
-  for (const account of seedData) {
-    await prisma.account.upsert({
-      where: { email: account.email },
-      update: account,
-      create: account,
+  // Without a password: the system account can't be signed in to.
+  for (const user of seedData) {
+    await prisma.user.upsert({
+      where: { email: user.email },
+      update: user,
+      create: user,
     });
   }
 })();

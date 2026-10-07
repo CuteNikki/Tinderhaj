@@ -3,15 +3,17 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import { signUpMetadata } from '@/constants/metadata';
-import { getCurrentUser } from '@/lib/actions';
+import { enabledProviders } from '@/lib/auth';
+import { requireSignedOut } from '@/lib/session';
 
 import { AuthShell } from '@/components/auth/auth-shell';
 import { SignUpForm } from '@/components/auth/sign-up-form';
+import { SocialButtons } from '@/components/auth/social-buttons';
 
 export const metadata: Metadata = signUpMetadata;
 
 export default async function SignUpPage() {
-  await getCurrentUser({ redirectIfFound: true });
+  await requireSignedOut();
 
   return (
     <AuthShell
@@ -29,6 +31,17 @@ export default async function SignUpPage() {
       }
     >
       <SignUpForm />
+      {enabledProviders.length > 0 && (
+        <>
+          <div className='text-muted-foreground my-6 flex items-center gap-3 text-xs'>
+            <span className='bg-border h-px flex-1' />
+            or
+            <span className='bg-border h-px flex-1' />
+          </div>
+          {/* Signing up with a provider lands on sign-in if it fails, which says why. */}
+          <SocialButtons providers={enabledProviders} errorCallbackURL='/sign-in' />
+        </>
+      )}
     </AuthShell>
   );
 }

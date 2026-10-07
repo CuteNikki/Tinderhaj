@@ -2,8 +2,7 @@ import Link from 'next/link';
 
 import { HomeIcon, MenuIcon, MessageCircleIcon, SearchIcon, SettingsIcon, SignpostIcon, UserCheckIcon, UserRoundIcon, UserShieldIcon } from 'lucide-react';
 
-import type { AccountModel } from '@/generated/models';
-import { getCurrentUser } from '@/lib/actions';
+import { getSession } from '@/lib/session';
 
 import { LogOutButton, LogOutDropdownMenuItem } from '@/components/auth/logout-button';
 import { Logo } from '@/components/common/logo';
@@ -16,7 +15,7 @@ import { Separator } from '@/components/ui/separator';
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
 export async function Navbar() {
-  const session = await getCurrentUser({ includeAccount: true, redirectIfNotFound: false });
+  const session = await getSession();
 
   return <NavbarContent session={session} showAuthElements />;
 }
@@ -25,7 +24,7 @@ export function NavbarFallback() {
   return <NavbarContent session={null} showAuthElements={false} />;
 }
 
-function NavbarContent({ session, showAuthElements }: { session: { account: AccountModel } | null; showAuthElements: boolean }) {
+function NavbarContent({ session, showAuthElements }: { session: { user: { name: string; role?: string | null } } | null; showAuthElements: boolean }) {
   const regularLinks = [
     { name: 'Home', href: '/#top', icon: HomeIcon, showOnBar: true, showInMenu: true },
     { name: 'Guide', href: '/#guide', icon: SignpostIcon, showOnBar: true, showInMenu: true },
@@ -37,7 +36,7 @@ function NavbarContent({ session, showAuthElements }: { session: { account: Acco
     { name: 'Profiles', href: '/profiles#top', icon: UserRoundIcon },
   ];
   const moderationLinks =
-    session?.account?.role === 'MODERATOR' || session?.account?.role === 'ADMIN'
+    session?.user?.role === 'MODERATOR' || session?.user?.role === 'ADMIN'
       ? [
           { name: 'Roles', href: '/roles#top', icon: UserShieldIcon },
           { name: 'Verification', href: '/verification#top', icon: UserCheckIcon },
@@ -77,7 +76,7 @@ function NavbarContent({ session, showAuthElements }: { session: { account: Acco
           <ThemeButton />
           {showAuthElements && (
             <div className='hidden md:block'>
-              {session?.account ? (
+              {session?.user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant='outline' size='icon'>
@@ -144,11 +143,11 @@ function NavbarContent({ session, showAuthElements }: { session: { account: Acco
               </Button>
             </SheetTrigger>
             <SheetContent side='right' className='w-4/5 justify-center sm:w-88'>
-              {session?.account ? (
+              {session?.user ? (
                 <SheetHeader className='flex flex-col items-center gap-2'>
                   <SheetTitle className='flex items-center justify-center gap-2'>
                     <div className='flex flex-col'>
-                      <span className='font-bold uppercase'>@{session.account.username}</span>
+                      <span className='font-bold uppercase'>@{session.user.name}</span>
                     </div>
                   </SheetTitle>
                   <LogOutButton />
@@ -164,7 +163,7 @@ function NavbarContent({ session, showAuthElements }: { session: { account: Acco
               )}
               <nav className='flex flex-col items-center gap-4 p-6 text-center'>
                 <Separator />
-                {session?.account &&
+                {session?.user &&
                   accountLinks.map((link, index) => (
                     <SheetClose className='flex items-center gap-2' key={`account-sheet-link-${index}-${link.href}`} asChild>
                       <Link href={link.href} className='text-muted-foreground hover:text-foreground transition-colors duration-150'>
@@ -186,7 +185,7 @@ function NavbarContent({ session, showAuthElements }: { session: { account: Acco
                     ))}
                   </>
                 )}
-                {session?.account && <Separator />}
+                {session?.user && <Separator />}
                 {regularLinks.map(
                   (link, index) =>
                     link.showInMenu &&
@@ -208,7 +207,7 @@ function NavbarContent({ session, showAuthElements }: { session: { account: Acco
                 )}
                 <Separator />
               </nav>
-              {showAuthElements && !session?.account && (
+              {showAuthElements && !session?.user && (
                 <div className='flex flex-col items-center gap-2 p-6'>
                   <Button variant='secondary' className='w-full' asChild>
                     <Link href='/sign-in'>Sign In</Link>

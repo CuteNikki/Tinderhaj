@@ -2,7 +2,7 @@ import { ShieldCheckIcon } from 'lucide-react';
 import type { Metadata } from 'next';
 
 import { verifyMetadata } from '@/constants/metadata';
-import { getCurrentUser } from '@/lib/actions';
+import { isModerator, requireUser } from '@/lib/session';
 import { QUERIES } from '@/lib/queries';
 
 import { EmptyState } from '@/components/common/empty-state';
@@ -12,9 +12,9 @@ import { VerifyProfileCard } from '@/components/verify/verify-profile-card';
 export const metadata: Metadata = verifyMetadata;
 
 export default async function VerifyPage() {
-  const session = await getCurrentUser({ includeAccount: true, redirectIfNotFound: true });
+  const session = await requireUser();
 
-  if (session.account.role !== 'MODERATOR' && session.account.role !== 'ADMIN') {
+  if (!isModerator(session.user.role)) {
     return (
       <div className='flex flex-1 flex-col items-center justify-center px-4 py-28 text-center'>
         <h1 className='text-3xl font-black tracking-tight'>Nothing to see here.</h1>
