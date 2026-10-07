@@ -14,7 +14,8 @@ import { TypographyH1, TypographyMuted } from '@/components/typography';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
-export function Hero() {
+/** `profileCount` is rendered on the server, where the count comes from. */
+export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
   const reveal = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } };
   const revealTransition = { duration: 0.65, ease: [0.2, 0.8, 0.2, 1] as const };
 
@@ -75,9 +76,7 @@ export function Hero() {
             <div className='flex items-center gap-2 text-sm'>
               <Users2Icon className='text-primary h-4 w-4' />
               <Suspense fallback={<TypographyMuted className='text-sm'>0 profiles</TypographyMuted>}>
-                <TypographyMuted className='text-sm tabular-nums'>
-                  <AnimatedCount target={1234} duration={1000} localize /> profiles
-                </TypographyMuted>
+                <TypographyMuted className='text-sm tabular-nums'>{profileCount}</TypographyMuted>
               </Suspense>
             </div>
             <div className='flex items-center gap-2 text-sm'>

@@ -5,6 +5,7 @@ import { homeMetadata } from '@/constants/metadata';
 import { FeatureContent } from '@/components/home/feature-content';
 import { GuideStep } from '@/components/home/guide-step';
 import { Hero } from '@/components/home/hero';
+import { ProfileCount } from '@/components/home/profile-count';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
 
 export const metadata: Metadata = homeMetadata;
@@ -12,7 +13,7 @@ export const metadata: Metadata = homeMetadata;
 export default function Home() {
   return (
     <>
-      <Hero />
+      <Hero profileCount={<ProfileCount />} />
       <section id='guide' className='bg-muted text-foreground relative scroll-m-16 overflow-hidden py-18'>
         <ScrollReveal>
           <div className='container mx-auto max-w-350 px-5 lg:px-10'>

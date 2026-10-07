@@ -1,14 +1,14 @@
 'use server';
 
 import { isAPIError } from 'better-auth/api';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, updateTag } from 'next/cache';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
 import { auth, forgetTrustedDevices as forget } from '@/lib/auth';
 import prisma from '@/lib/prisma';
-import { QUERIES } from '@/lib/queries';
+import { PROFILE_COUNT_TAG, QUERIES } from '@/lib/queries';
 import { BAN_REASON_MAX, banExpiry, isBanDuration, isBanned } from '@/lib/bans';
 import { canBan, canManageAccount, isAdmin, isRole } from '@/lib/roles';
 import { createProfileSchema, rejectProfileSchema, updateProfileSchema, updateUsernameSchema } from '@/lib/schemas';
@@ -149,6 +149,7 @@ export async function banUser(userId: string, input: { reason: string; duration:
 
   revalidateUser(userId);
   revalidatePath('/discovery');
+  updateTag(PROFILE_COUNT_TAG);
 }
 
 export async function unbanUser(userId: string) {
@@ -164,6 +165,7 @@ export async function unbanUser(userId: string) {
 
   revalidateUser(userId);
   revalidatePath('/discovery');
+  updateTag(PROFILE_COUNT_TAG);
 }
 
 export async function signOutUserEverywhere(userId: string) {
@@ -198,6 +200,7 @@ export async function deleteUserAccount(userId: string) {
 
   revalidatePath('/users');
   revalidatePath('/discovery');
+  updateTag(PROFILE_COUNT_TAG);
   revalidatePath('/verification');
 }
 
@@ -246,6 +249,7 @@ export async function updateProfile(unsafeData: z.infer<typeof updateProfileSche
   });
 
   revalidatePath('/profiles');
+  updateTag(PROFILE_COUNT_TAG);
 }
 
 export async function submitProfileForReview({ profileId }: { profileId: string }) {
@@ -287,6 +291,7 @@ export async function deleteProfile({ profileId }: { profileId: string }) {
   });
 
   revalidatePath('/profiles');
+  updateTag(PROFILE_COUNT_TAG);
 }
 
 export async function verifyProfile({ profileId }: { profileId: string }) {
@@ -301,6 +306,7 @@ export async function verifyProfile({ profileId }: { profileId: string }) {
 
   revalidatePath('/verification');
   revalidatePath('/profiles');
+  updateTag(PROFILE_COUNT_TAG);
   return true;
 }
 
@@ -320,4 +326,5 @@ export async function rejectProfile(unsafeData: z.infer<typeof rejectProfileSche
 
   revalidatePath('/verification');
   revalidatePath('/profiles');
+  updateTag(PROFILE_COUNT_TAG);
 }

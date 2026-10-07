@@ -1,5 +1,7 @@
 import 'server-only';
 
+import { cacheLife, cacheTag } from 'next/cache';
+
 import { AccountRole, Prisma, ProfileStatus } from '@/generated/client';
 import prisma from '@/lib/prisma';
 import { notBannedWhere } from '@/lib/bans';
@@ -52,6 +54,21 @@ async function getRankedDiscoveryProfiles(where: Prisma.ProfileWhereInput, page:
     profiles: profiles.slice((page - 1) * take, page * take),
     totalProfiles: profiles.length,
   };
+}
+
+/** Refreshed by the actions that change which profiles discovery shows (see lib/actions.ts). */
+export const PROFILE_COUNT_TAG = 'profile-count';
+
+/**
+ * How many profiles discovery can show: verified, from accounts that aren't
+ * banned. Cached, so the home page stays prerendered.
+ */
+export async function getDiscoverableProfileCount() {
+  'use cache';
+  cacheLife('hours');
+  cacheTag(PROFILE_COUNT_TAG);
+
+  return prisma.profile.count({ where: { status: ProfileStatus.VERIFIED, user: notBannedWhere() } });
 }
 
 export const QUERIES = {
