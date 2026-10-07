@@ -41,7 +41,8 @@ export function CreateProfile({ username, disableButton }: { username?: string; 
       displayName: '',
       location: '',
       pronouns: '',
-      size: 100,
+      // Optional: empty unless they fill it in.
+      size: null,
       unit: 'CM',
       birthday: null,
       interests: [],
@@ -169,6 +170,7 @@ export function CreateProfile({ username, disableButton }: { username?: string; 
                       <FormControl>
                         <Input
                           type='number'
+                          placeholder='Optional'
                           {...field}
                           value={field.value ?? ''}
                           onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}

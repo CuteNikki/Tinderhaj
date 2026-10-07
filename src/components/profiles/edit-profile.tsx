@@ -259,6 +259,7 @@ export function EditProfile({ profile }: { profile: ProfileWithOwner }) {
                       <FormControl>
                         <Input
                           type='number'
+                          placeholder='Optional'
                           {...field}
                           value={field.value ?? ''}
                           onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
