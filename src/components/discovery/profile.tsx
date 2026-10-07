@@ -2,21 +2,31 @@ import { CakeIcon, MapPinIcon, RulerIcon } from 'lucide-react';
 
 import type { ProfileWithOwner } from '@/lib/queries';
 
-import { isFreshProfile } from '@/lib/profile-status';
-import { calculateAge } from '@/lib/utils';
+import { isFreshProfile, PROFILE_STATUS_META } from '@/lib/profile-status';
+import { calculateAge, cn } from '@/lib/utils';
 
 import { ProfileAvatar, ProfileBanner } from '@/components/profiles/profile-image';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 
-export function DiscoveryProfile({ profile }: { profile: ProfileWithOwner }) {
+/** `showStatus` shows where it is in review instead of whether it's new, for moderators. */
+export function DiscoveryProfile({ profile, showStatus = false }: { profile: ProfileWithOwner; showStatus?: boolean }) {
+  const status = PROFILE_STATUS_META[profile.status];
+
   return (
     <Card className='group border-foreground/10 bg-background h-full w-full overflow-hidden pt-0 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl'>
       <div className='relative aspect-5/2 overflow-hidden'>
         <ProfileBanner src={profile.bannerUrl} alt={`${profile.user.username}'s banner`} />
         <div className='from-background/70 absolute inset-0 bg-linear-to-t to-transparent' />
-        {isFreshProfile(profile.verifiedAt, profile.createdAt) && (
-          <Badge className='bg-primary text-primary-foreground absolute top-3 right-3 rounded-full text-xs font-semibold shadow-md'>New</Badge>
+        {showStatus ? (
+          <Badge className={cn(status.badgeClassName, 'absolute top-3 right-3 rounded-full text-xs font-semibold shadow-md')}>
+            <status.icon aria-hidden='true' />
+            {status.label}
+          </Badge>
+        ) : (
+          isFreshProfile(profile.verifiedAt, profile.createdAt) && (
+            <Badge className='bg-primary text-primary-foreground absolute top-3 right-3 rounded-full text-xs font-semibold shadow-md'>New</Badge>
+          )
         )}
       </div>
 

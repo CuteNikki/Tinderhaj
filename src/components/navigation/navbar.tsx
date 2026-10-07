@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { HomeIcon, MenuIcon, MessageCircleIcon, SearchIcon, SettingsIcon, SignpostIcon, UserCheckIcon, UserRoundIcon, UserShieldIcon } from 'lucide-react';
+import { HomeIcon, MenuIcon, MessageCircleIcon, SearchIcon, SettingsIcon, SignpostIcon, UserCheckIcon, UserRoundIcon, UsersRoundIcon } from 'lucide-react';
 
 import { getSession } from '@/lib/session';
 
@@ -38,7 +38,7 @@ function NavbarContent({ session, showAuthElements }: { session: { user: { name:
   const moderationLinks =
     session?.user?.role === 'MODERATOR' || session?.user?.role === 'ADMIN'
       ? [
-          { name: 'Roles', href: '/roles#top', icon: UserShieldIcon },
+          { name: 'Users', href: '/users#top', icon: UsersRoundIcon },
           { name: 'Verification', href: '/verification#top', icon: UserCheckIcon },
         ]
       : [];

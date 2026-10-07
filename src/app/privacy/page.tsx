@@ -40,7 +40,10 @@ export default function PrivacyPage() {
                 tokens from that service, which we store encrypted and don&apos;t use after you sign in. We don&apos;t keep your profile picture from it.
               </li>
               <li>Profile information such as display name, images, pronouns, location, size, interests, and biography.</li>
-              <li>Moderation information such as verification status, rejection feedback, and notes associated with a profile.</li>
+              <li>
+                Moderation information such as verification status, rejection feedback, and notes associated with a profile, and, if your account is banned, the
+                reason, when the ban ends, and which moderator banned you.
+              </li>
               <li>Messages or requests you send to us, including privacy or support requests.</li>
             </TypographyList>
           </PrivacySection>

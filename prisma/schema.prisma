@@ -38,6 +38,19 @@ model User {
 
   role AccountRole @default(USER)
 
+  /// Banned accounts can't sign in. Check banExpires too (see lib/bans.ts):
+  /// an expired ban is only cleared at their next sign-in.
+  banned      Boolean   @default(false)
+  /// Shown to them when they try to sign in.
+  banReason   String?
+  /// When the ban ends by itself. Null bans until it's lifted.
+  banExpires  DateTime?
+  bannedAt    DateTime?
+  bannedById  String?
+  bannedBy    User?     @relation("BannedBy", fields: [bannedById], references: [id], onDelete: SetNull)
+  /// Accounts this moderator or admin banned.
+  usersBanned User[]    @relation("BannedBy")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

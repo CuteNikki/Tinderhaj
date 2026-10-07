@@ -91,6 +91,7 @@ export function TwoFactorForm({ hasApp }: { hasApp: boolean }) {
           ? await authClient.twoFactor.verifyOtp(body)
           : await authClient.twoFactor.verifyBackupCode(body);
     setPending(false);
+    if (error?.code === 'BANNED_USER') return router.push('/banned');
     if (error) return fail(error);
     router.push('/profiles');
     router.refresh();

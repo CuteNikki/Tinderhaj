@@ -289,3 +289,29 @@ export const deleteAccountMetadata: Metadata = {
     ],
   },
 };
+
+export const usersMetadata: Metadata = {
+  title: 'Tinderhaj - Users',
+  description: 'See and manage the accounts on Tinderhaj.',
+  openGraph: {
+    url: 'https://tinderhaj.com/users',
+    images: [
+      {
+        url: 'https://tinderhaj.com/blahaj.webp',
+        alt: 'Blåhaj',
+        width: 128,
+        height: 128,
+      },
+    ],
+  },
+};
+
+export const userMetadata: Metadata = {
+  title: 'Tinderhaj - User',
+  description: 'A Tinderhaj account, for moderators.',
+};
+
+export const bannedMetadata: Metadata = {
+  title: 'Tinderhaj - Banned',
+  description: 'Why your Tinderhaj account can’t sign in.',
+};

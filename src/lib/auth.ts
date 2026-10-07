@@ -17,8 +17,11 @@ import {
   PASSWORD_RESET_TOKEN_EXPIRATION,
   SESSION_EXPIRATION,
 } from '@/constants/auth';
+import { BAN_NOTICE_COOKIE, BAN_NOTICE_MAX_AGE, signBanNotice } from '@/lib/ban-notice';
+import { isBanned } from '@/lib/bans';
 import { sendDeleteAccountEmail, sendEmailChangeConfirmation, sendPasswordResetEmail, sendTwoFactorCode, sendVerificationEmail } from '@/lib/email';
 import { hashPassword, verifyPassword } from '@/lib/password-hasher';
+import { isAdmin } from '@/lib/roles';
 import prisma from '@/lib/prisma';
 import { SOCIAL_PROVIDERS, type SocialProviderId } from '@/lib/providers';
 import { usernameSchema } from '@/lib/schemas';
@@ -132,6 +135,18 @@ const providerOptions = {
 
 const socialProviders = Object.fromEntries(enabledProviders.map((id) => [id, { ...credentials(id), ...providerOptions[id] }])) as SocialProviders;
 
+/** Stops the only admin from deleting their account and leaving nobody to manage roles. */
+async function assertNotLastAdmin(user: { role?: string | null }) {
+  if (!isAdmin(user.role)) return;
+
+  if ((await prisma.user.count({ where: { role: 'ADMIN' } })) <= 1) {
+    throw new APIError('BAD_REQUEST', {
+      code: 'LAST_ADMIN',
+      message: 'You’re the only admin. Make someone else an admin before deleting your account.',
+    });
+  }
+}
+
 export const auth = betterAuth({
   baseURL: authURL.origin,
   database: prismaAdapter(prisma, { provider: 'postgresql' }),
@@ -156,6 +171,37 @@ export const auth = betterAuth({
     },
   },
   databaseHooks: {
+    // Every way of signing in ends here: password, two-step, passkey,
+    // provider, or a link from an email.
+    session: {
+      create: {
+        before: async (session, ctx) => {
+          const user = await prisma.user.findUnique({ where: { id: session.userId }, select: { banned: true, banExpires: true } });
+          if (!user?.banned) return;
+
+          if (!isBanned(user)) {
+            // Ended by itself.
+            await prisma.user.update({
+              where: { id: session.userId },
+              data: { banned: false, banReason: null, banExpires: null, bannedAt: null, bannedById: null },
+            });
+            return;
+          }
+
+          // Lets /banned tell them why, and nobody else.
+          ctx?.setCookie(BAN_NOTICE_COOKIE, signBanNotice(session.userId), {
+            httpOnly: true,
+            sameSite: 'lax',
+            secure: authURL.protocol === 'https:',
+            path: '/',
+            maxAge: BAN_NOTICE_MAX_AGE,
+          });
+          // Coming back from a provider, there's no form to show an error.
+          if (ctx?.path.startsWith('/callback')) throw ctx.redirect(new URL('/banned', authURL).toString());
+          throw new APIError('FORBIDDEN', { code: 'BANNED_USER', message: 'This account is banned.' });
+        },
+      },
+    },
     user: {
       create: {
         // Sign-up with a password already checked the username; this is for
@@ -231,6 +277,8 @@ export const auth = betterAuth({
         );
       },
       deleteTokenExpiresIn: 60 * 60,
+      // Checked when it's asked for (in hooks) and again when it happens.
+      beforeDelete: (user) => assertNotLastAdmin(user as typeof user & { role?: string }),
     },
   },
   rateLimit: {
@@ -242,6 +290,12 @@ export const auth = betterAuth({
   },
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
+      // Asking to delete: check before the email goes out. Errors thrown while
+      // sending it are only logged, so the page would still say "sent".
+      if (ctx.path === '/delete-user' && !ctx.body?.token) {
+        const session = await getSessionFromCtx(ctx);
+        if (session) await assertNotLastAdmin(session.user as { role?: string });
+      }
       if (ctx.path === '/sign-up/email') {
         await assertUsernameAvailable(ctx.body?.name);
       }

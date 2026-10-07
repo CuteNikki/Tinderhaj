@@ -9,6 +9,8 @@ import { z } from 'zod';
 import { auth, forgetTrustedDevices as forget } from '@/lib/auth';
 import prisma from '@/lib/prisma';
 import { QUERIES } from '@/lib/queries';
+import { BAN_REASON_MAX, banExpiry, isBanDuration, isBanned } from '@/lib/bans';
+import { canBan, canManageAccount, isAdmin, isRole } from '@/lib/roles';
 import { createProfileSchema, rejectProfileSchema, updateProfileSchema, updateUsernameSchema } from '@/lib/schemas';
 import { getSession, isModerator, requireUser } from '@/lib/session';
 
@@ -87,6 +89,116 @@ export async function forgetTrustedDevices() {
   await forget(session.user.id);
 
   revalidatePath('/account');
+}
+
+/**
+ * The signed-in moderator or admin, and the account they want to act on,
+ * which mustn't be their own.
+ */
+async function moderationTarget(userId: string) {
+  const session = await requireUser();
+  if (session.user.id === userId) return { error: { message: 'You can’t do that to your own account.' } } as const;
+
+  const target = await prisma.user.findUnique({ where: { id: userId }, select: { id: true, username: true, email: true, role: true } });
+  if (!target) return { error: { message: 'That account doesn’t exist anymore.' } } as const;
+
+  return { session, target } as const;
+}
+
+function revalidateUser(userId: string) {
+  revalidatePath('/users');
+  revalidatePath(`/users/${userId}`);
+}
+
+/** Admins change anyone's role but their own, so there's always an admin left. */
+export async function setUserRole(userId: string, role: string) {
+  const found = await moderationTarget(userId);
+  if (found.error) return found.error;
+
+  if (!isAdmin(found.session.user.role)) return { message: 'Only admins can change roles.' };
+  if (!isRole(role)) return { message: 'Unknown role.' };
+  if (role === 'ADMIN') {
+    // Nobody can ban or unban an admin, so their ban could never be lifted.
+    const ban = await prisma.user.findUniqueOrThrow({ where: { id: userId }, select: { banned: true, banExpires: true } });
+    if (isBanned(ban)) return { message: 'Lift their ban before making them an admin.' };
+  }
+
+  await prisma.user.update({ where: { id: userId }, data: { role } });
+
+  revalidateUser(userId);
+}
+
+/** Signs them out everywhere and stops them signing in until the ban ends or is lifted. */
+export async function banUser(userId: string, input: { reason: string; duration: string }) {
+  const found = await moderationTarget(userId);
+  if (found.error) return found.error;
+
+  const { session, target } = found;
+  if (!canBan(session.user.role, target.role)) return { message: 'You can’t ban this account.' };
+  if (!isBanDuration(input.duration)) return { message: 'Unknown ban length.' };
+
+  const reason = input.reason.trim().slice(0, BAN_REASON_MAX) || null;
+
+  await prisma.$transaction([
+    prisma.user.update({
+      where: { id: userId },
+      data: { banned: true, banReason: reason, banExpires: banExpiry(input.duration), bannedAt: new Date(), bannedById: session.user.id },
+    }),
+    prisma.session.deleteMany({ where: { userId } }),
+  ]);
+
+  revalidateUser(userId);
+  revalidatePath('/discovery');
+}
+
+export async function unbanUser(userId: string) {
+  const found = await moderationTarget(userId);
+  if (found.error) return found.error;
+
+  if (!canBan(found.session.user.role, found.target.role)) return { message: 'You can’t lift this ban.' };
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: { banned: false, banReason: null, banExpires: null, bannedAt: null, bannedById: null },
+  });
+
+  revalidateUser(userId);
+  revalidatePath('/discovery');
+}
+
+export async function signOutUserEverywhere(userId: string) {
+  const found = await moderationTarget(userId);
+  if (found.error) return found.error;
+
+  if (!canManageAccount(found.session.user.role, found.target.role)) return { message: 'Only admins can sign others out.' };
+
+  await prisma.session.deleteMany({ where: { userId } });
+
+  revalidateUser(userId);
+}
+
+/** Also works for accounts made with a provider: the link adds a password. */
+export async function sendUserPasswordReset(userId: string) {
+  const found = await moderationTarget(userId);
+  if (found.error) return found.error;
+
+  if (!canManageAccount(found.session.user.role, found.target.role)) return { message: 'Only admins can send password resets.' };
+
+  await auth.api.requestPasswordReset({ body: { email: found.target.email, redirectTo: '/reset-password' } });
+}
+
+/** Deletes the account with all its profiles, right away. */
+export async function deleteUserAccount(userId: string) {
+  const found = await moderationTarget(userId);
+  if (found.error) return found.error;
+
+  if (!canManageAccount(found.session.user.role, found.target.role)) return { message: 'Only admins can delete accounts.' };
+
+  await prisma.user.delete({ where: { id: userId } });
+
+  revalidatePath('/users');
+  revalidatePath('/discovery');
+  revalidatePath('/verification');
 }
 
 export async function createProfile(unsafeData: z.infer<typeof createProfileSchema>) {

@@ -46,6 +46,7 @@ export function SignInForm({ providers, error }: { providers: SocialProviderId[]
     }
 
     const code = 'code' in error ? error.code : undefined;
+    if (code === 'BANNED_USER') return router.push('/banned');
     // Closing the browser's prompt, or ignoring the suggestions, is fine.
     if (autoFill || code === 'AUTH_CANCELLED' || code?.startsWith('ERROR_')) return;
 
@@ -66,6 +67,9 @@ export function SignInForm({ providers, error }: { providers: SocialProviderId[]
     setIsSubmitting(true);
 
     const { data: result, error } = await authClient.signIn.email(data);
+
+    // The ban notice cookie is set now, so the page can say why.
+    if (error?.code === 'BANNED_USER') return router.push('/banned');
 
     if (error) {
       setIsSubmitting(false);

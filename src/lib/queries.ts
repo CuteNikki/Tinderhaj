@@ -1,7 +1,8 @@
 import 'server-only';
 
-import { Prisma, ProfileStatus } from '@/generated/client';
+import { AccountRole, Prisma, ProfileStatus } from '@/generated/client';
 import prisma from '@/lib/prisma';
+import { notBannedWhere } from '@/lib/bans';
 import { FRESH_PROFILE_WINDOW_IN_DAYS } from '@/lib/profile-status';
 
 const DAY_IN_MS = 24 * 60 * 60 * 1000;
@@ -40,7 +41,8 @@ function rankDiscoveryProfiles(profiles: ProfileWithOwner[], seed: number) {
 async function getRankedDiscoveryProfiles(where: Prisma.ProfileWhereInput, page: number, take: number, seed: number) {
   const profiles = rankDiscoveryProfiles(
     await prisma.profile.findMany({
-      where,
+      // Banned accounts' profiles stay out of discovery while the ban lasts.
+      where: { AND: [where, { user: notBannedWhere() }] },
       include: PROFILE_OWNER,
     }),
     seed,
@@ -90,6 +92,95 @@ export const QUERIES = {
 
   getProfiles: async (page: number, take: number, seed: number) => {
     return getRankedDiscoveryProfiles({ status: ProfileStatus.VERIFIED }, page, take, seed);
+  },
+
+  /**
+   * People for the users page, highest role first, then by username. `show`
+   * is a role, or BANNED for accounts banned right now. Emails are only
+   * searched and returned for admins.
+   */
+  getUsers: async ({
+    query,
+    show,
+    page,
+    take,
+    withEmail,
+  }: {
+    query: string;
+    show: AccountRole | 'BANNED' | null;
+    page: number;
+    take: number;
+    withEmail: boolean;
+  }) => {
+    const search = query.trim();
+    const bannedNow = { banned: true, OR: [{ banExpires: null }, { banExpires: { gt: new Date() } }] } satisfies Prisma.UserWhereInput;
+    const where: Prisma.UserWhereInput = {
+      AND: [
+        show === 'BANNED' ? bannedNow : show ? { role: show } : {},
+        search
+          ? {
+              OR: [
+                { username: { contains: search, mode: 'insensitive' } },
+                ...(withEmail ? [{ email: { contains: search, mode: 'insensitive' as const } }] : []),
+              ],
+            }
+          : {},
+      ],
+    };
+
+    const [users, total, counts, banned] = await Promise.all([
+      prisma.user.findMany({
+        where,
+        // Enums sort in declaration order: USER, MODERATOR, ADMIN.
+        orderBy: [{ role: 'desc' }, { username: 'asc' }],
+        skip: (page - 1) * take,
+        take,
+        select: {
+          id: true,
+          username: true,
+          email: withEmail,
+          role: true,
+          banned: true,
+          banExpires: true,
+          createdAt: true,
+          _count: { select: { profiles: true } },
+        },
+      }),
+      prisma.user.count({ where }),
+      prisma.user.groupBy({ by: ['role'], _count: { _all: true } }),
+      prisma.user.count({ where: bannedNow }),
+    ]);
+
+    return {
+      users,
+      total,
+      /** Everyone per role, and banned, ignoring the search, for the filter. */
+      counts: { ...(Object.fromEntries(counts.map((count) => [count.role, count._count._all])) as Partial<Record<AccountRole, number>>), BANNED: banned },
+    };
+  },
+
+  /** Everything the user page shows. The email only for admins. */
+  getUserDetail: async (id: string, withEmail: boolean) => {
+    return prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        username: true,
+        email: withEmail,
+        emailVerified: true,
+        twoFactorEnabled: true,
+        role: true,
+        banned: true,
+        banReason: true,
+        banExpires: true,
+        bannedAt: true,
+        bannedBy: { select: { id: true, username: true } },
+        createdAt: true,
+        accounts: { select: { providerId: true } },
+        _count: { select: { passkeys: true, sessions: { where: { expiresAt: { gt: new Date() } } } } },
+        profiles: { include: PROFILE_OWNER, orderBy: { createdAt: 'asc' } },
+      },
+    });
   },
 
   getPendingProfiles: async () => {
