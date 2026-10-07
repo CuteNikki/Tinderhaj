@@ -19,6 +19,7 @@ import { ScrollReveal } from '@/components/home/scroll-reveal';
 import { Badge } from '@/components/ui/badge';
 import { AccountActions } from '@/components/users/account-actions';
 import { BanForm, UnbanButton } from '@/components/users/ban-controls';
+import { UnverifyButton } from '@/components/verify/unverify-button';
 import { RoleSelect } from '@/components/users/role-select';
 
 // Not the username: metadata is worked out apart from the page's moderator check.
@@ -104,7 +105,16 @@ export default async function UserPage({ params }: PageProps<'/moderation/users/
             {user.profiles.length ? (
               <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-3'>
                 {user.profiles.map((profile) => (
-                  <DiscoveryProfile key={profile.id} profile={profile} showStatus />
+                  <DiscoveryProfile
+                    key={profile.id}
+                    profile={profile}
+                    showStatus
+                    action={
+                      profile.status === 'VERIFIED' ? (
+                        <UnverifyButton profile={{ id: profile.id, displayName: profile.displayName }} verifiedAt={profile.verifiedAt?.toISOString()} />
+                      ) : undefined
+                    }
+                  />
                 ))}
               </div>
             ) : (

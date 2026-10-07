@@ -226,6 +226,16 @@ export const QUERIES = {
     return prisma.profile.count({ where: { status: ProfileStatus.PENDING } });
   },
 
+  /** The latest verified profiles, newest first, in case one was verified by mistake. */
+  getRecentlyVerified: async () => {
+    return prisma.profile.findMany({
+      where: { status: ProfileStatus.VERIFIED, verifiedAt: { not: null } },
+      select: PUBLIC_PROFILE,
+      orderBy: { verifiedAt: 'desc' },
+      take: 12,
+    });
+  },
+
   getPendingProfiles: async () => {
     return prisma.profile.findMany({ where: { status: ProfileStatus.PENDING }, include: PROFILE_OWNER, orderBy: { submittedAt: 'asc' } });
   },

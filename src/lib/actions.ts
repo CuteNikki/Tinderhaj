@@ -311,6 +311,29 @@ export async function verifyProfile({ profileId }: { profileId: string }) {
   return true;
 }
 
+/**
+ * Undoes a verification, e.g. one made by mistake: the profile leaves
+ * discovery and goes back to waiting for review. Its hearts stay, hidden
+ * until it's verified again.
+ */
+export async function unverifyProfile({ profileId }: { profileId: string }) {
+  const session = await requireUser();
+
+  if (!isModerator(session.user.role)) return { message: 'Only moderators can unverify profiles.' };
+
+  const { count } = await prisma.profile.updateMany({
+    where: { id: profileId, status: 'VERIFIED' },
+    data: { status: 'PENDING', verifiedAt: null, submittedAt: new Date() },
+  });
+  if (!count) return { message: 'That profile isn’t verified anymore.' };
+
+  revalidatePath('/moderation/verification');
+  revalidatePath('/moderation/users', 'layout');
+  revalidatePath('/discovery');
+  revalidatePath('/dashboard/profiles');
+  updateTag(PROFILE_COUNT_TAG);
+}
+
 export async function rejectProfile(unsafeData: z.infer<typeof rejectProfileSchema>) {
   const { success, data } = rejectProfileSchema.safeParse(unsafeData);
 
