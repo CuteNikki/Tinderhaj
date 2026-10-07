@@ -92,7 +92,7 @@ export function AccountActions({ user, sessions }: { user: { id: string; usernam
             },
             () => deleteUserAccount(user.id),
             `@${user.username} is deleted.`,
-            () => router.push('/users'),
+            () => router.push('/moderation/users'),
           )
         }
       >

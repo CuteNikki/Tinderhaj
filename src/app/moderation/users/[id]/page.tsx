@@ -25,7 +25,7 @@ import { RoleSelect } from '@/components/users/role-select';
 export const metadata: Metadata = userMetadata;
 
 /** One account, for moderators and admins: their profiles, role, ban and account actions. */
-export default async function UserPage({ params }: PageProps<'/users/[id]'>) {
+export default async function UserPage({ params }: PageProps<'/moderation/users/[id]'>) {
   const session = await requireUser();
 
   if (!isModerator(session.user.role)) {
@@ -52,7 +52,7 @@ export default async function UserPage({ params }: PageProps<'/users/[id]'>) {
     <div className='bg-background flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'>
       <div className='container mx-auto max-w-7xl'>
         <Stagger className='mb-8'>
-          <Link href='/users' className='text-muted-foreground hover:text-foreground mb-6 inline-flex items-center gap-1 text-sm transition-colors'>
+          <Link href='/moderation/users' className='text-muted-foreground hover:text-foreground mb-6 inline-flex items-center gap-1 text-sm transition-colors'>
             <ArrowLeftIcon className='size-4' aria-hidden='true' />
             Users
           </Link>
@@ -137,7 +137,7 @@ export default async function UserPage({ params }: PageProps<'/users/[id]'>) {
                       <>
                         {' '}
                         by{' '}
-                        <Link href={`/users/${user.bannedBy.id}`} className='font-semibold hover:underline'>
+                        <Link href={`/moderation/users/${user.bannedBy.id}`} className='font-semibold hover:underline'>
                           @{user.bannedBy.username}
                         </Link>
                       </>

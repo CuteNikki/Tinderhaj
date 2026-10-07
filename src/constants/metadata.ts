@@ -294,7 +294,7 @@ export const usersMetadata: Metadata = {
   title: 'Tinderhaj - Users',
   description: 'See and manage the accounts on Tinderhaj.',
   openGraph: {
-    url: 'https://tinderhaj.com/users',
+    url: 'https://tinderhaj.com/moderation/users',
     images: [
       {
         url: 'https://tinderhaj.com/blahaj.webp',

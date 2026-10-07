@@ -93,7 +93,7 @@ export function TwoFactorForm({ hasApp }: { hasApp: boolean }) {
     setPending(false);
     if (error?.code === 'BANNED_USER') return router.push('/banned');
     if (error) return fail(error);
-    router.push('/profiles');
+    router.push('/dashboard/profiles');
     router.refresh();
   }
 

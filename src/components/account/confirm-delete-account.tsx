@@ -39,7 +39,7 @@ export function ConfirmDeleteAccount({ token }: { token: string }) {
         Delete my account
       </Button>
       <Button variant='ghost' asChild>
-        <Link href='/account'>Keep my account</Link>
+        <Link href='/dashboard/account'>Keep my account</Link>
       </Button>
     </div>
   );

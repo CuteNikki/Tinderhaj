@@ -50,9 +50,9 @@ const siteLinks: NavLink[] = [
 
 function accountLinks(unseenHearts: number): NavLink[] {
   return [
-    { name: 'Profiles', href: '/profiles#top', icon: UserRoundIcon },
-    { name: 'Hearts', href: '/hearts#top', icon: HeartIcon, count: unseenHearts },
-    { name: 'Account', href: '/account#top', icon: SettingsIcon },
+    { name: 'Profiles', href: '/dashboard/profiles#top', icon: UserRoundIcon },
+    { name: 'Hearts', href: '/dashboard/hearts#top', icon: HeartIcon, count: unseenHearts },
+    { name: 'Account', href: '/dashboard/account#top', icon: SettingsIcon },
   ];
 }
 
@@ -76,8 +76,8 @@ function NavbarContent({ user, pending, hearts, showAuthElements }: { user: NavU
   const moderationLinks: NavLink[] =
     user && isModerator(user.role)
       ? [
-          { name: 'Verification', href: '/verification#top', icon: UserCheckIcon, count: pending },
-          { name: 'Users', href: '/users#top', icon: UsersRoundIcon },
+          { name: 'Verification', href: '/moderation/verification#top', icon: UserCheckIcon, count: pending },
+          { name: 'Users', href: '/moderation/users#top', icon: UsersRoundIcon },
         ]
       : [];
 

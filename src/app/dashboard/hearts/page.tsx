@@ -41,7 +41,7 @@ const TABS = {
 type Tab = keyof typeof TABS;
 
 /** The user's matches, and the hearts their sharks received and sent. */
-export default async function HeartsPage({ searchParams }: PageProps<'/hearts'>) {
+export default async function HeartsPage({ searchParams }: PageProps<'/dashboard/hearts'>) {
   const session = await requireUser();
   const { tab: tabParam } = await searchParams;
   const hearts = await getHearts(session.user.id);
@@ -74,7 +74,7 @@ export default async function HeartsPage({ searchParams }: PageProps<'/hearts'>)
               return (
                 <Link
                   key={key}
-                  href={key === 'matches' ? '/hearts?tab=matches' : `/hearts?tab=${key}`}
+                  href={key === 'matches' ? '/dashboard/hearts?tab=matches' : `/dashboard/hearts?tab=${key}`}
                   aria-current={key === tab ? 'page' : undefined}
                   className={cn(
                     'flex items-center justify-center gap-2 rounded-lg px-2 py-2 text-sm font-medium transition-colors',

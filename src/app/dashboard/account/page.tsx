@@ -20,7 +20,7 @@ import { ScrollReveal } from '@/components/home/scroll-reveal';
 
 export const metadata: Metadata = accountMetadata;
 
-export default async function AccountPage({ searchParams }: PageProps<'/account'>) {
+export default async function AccountPage({ searchParams }: PageProps<'/dashboard/account'>) {
   const { user, session } = await requireUser();
   const { error } = await searchParams;
   const { accounts, hasPassword, twoFactor, trustedDevices, passkeys, sessions } = await getAccountSettings({ userId: user.id, sessionId: session.id });

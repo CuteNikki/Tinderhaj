@@ -41,7 +41,7 @@ export function SignInForm({ providers, error }: { providers: SocialProviderId[]
     const error = result?.error;
 
     if (!error) {
-      router.push('/profiles');
+      router.push('/dashboard/profiles');
       return router.refresh();
     }
 
@@ -88,7 +88,7 @@ export function SignInForm({ providers, error }: { providers: SocialProviderId[]
       return router.push(`/two-factor?${new URLSearchParams({ methods: methods.join(',') })}`);
     }
 
-    router.push('/profiles');
+    router.push('/dashboard/profiles');
     router.refresh();
   }
 

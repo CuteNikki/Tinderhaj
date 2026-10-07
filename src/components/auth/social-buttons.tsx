@@ -22,8 +22,8 @@ export function SocialButtons({ providers, errorCallbackURL }: { providers: Soci
     setPending(provider);
     const { error } = await authClient.signIn.social({
       provider,
-      callbackURL: '/profiles',
-      newUserCallbackURL: '/account',
+      callbackURL: '/dashboard/profiles',
+      newUserCallbackURL: '/dashboard/account',
       // Better Auth adds ?error=… to it.
       errorCallbackURL,
     });

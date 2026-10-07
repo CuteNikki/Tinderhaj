@@ -21,7 +21,7 @@ export async function requireUser() {
 
 /** Redirects to the profiles page if already signed in, e.g. on sign-in pages. */
 export async function requireSignedOut() {
-  if (await getSession()) redirect('/profiles');
+  if (await getSession()) redirect('/dashboard/profiles');
 }
 
 export function isModerator(role: string | null | undefined) {

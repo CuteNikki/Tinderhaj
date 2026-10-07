@@ -43,7 +43,7 @@ export default async function VerifiedPage({ searchParams }: PageProps<'/verifie
         description={`${error === 'TOKEN_EXPIRED' ? 'It has expired. Links work for 24 hours.' : 'It is invalid or was already used.'} Sign in and try again from your account settings.`}
       >
         <Button asChild className='w-full'>
-          <Link href='/account'>Go to account settings</Link>
+          <Link href='/dashboard/account'>Go to account settings</Link>
         </Button>
       </AuthShell>
     );
@@ -61,7 +61,7 @@ export default async function VerifiedPage({ searchParams }: PageProps<'/verifie
       description={message.text}
     >
       <Button asChild className='w-full'>
-        <Link href={step ? '/account' : '/profiles'}>{step ? 'Go to account settings' : 'Go to your profiles'}</Link>
+        <Link href={step ? '/dashboard/account' : '/dashboard/profiles'}>{step ? 'Go to account settings' : 'Go to your profiles'}</Link>
       </Button>
     </AuthShell>
   );

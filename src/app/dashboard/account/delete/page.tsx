@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 export const metadata: Metadata = deleteAccountMetadata;
 
 /** Where the link in the delete account email lands. */
-export default async function DeleteAccountPage({ searchParams }: PageProps<'/account/delete'>) {
+export default async function DeleteAccountPage({ searchParams }: PageProps<'/dashboard/account/delete'>) {
   const { token } = await searchParams;
   const session = await getSession();
 
@@ -25,7 +25,7 @@ export default async function DeleteAccountPage({ searchParams }: PageProps<'/ac
         description='It is incomplete. Open the link from the email again.'
       >
         <Button asChild className='w-full'>
-          <Link href='/account'>Go to account settings</Link>
+          <Link href='/dashboard/account'>Go to account settings</Link>
         </Button>
       </AuthShell>
     );

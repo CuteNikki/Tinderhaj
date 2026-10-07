@@ -41,10 +41,10 @@ export async function updateUsername(unsafeData: z.infer<typeof updateUsernameSc
     return { message: 'Unable to update username!' };
   }
 
-  revalidatePath('/account');
-  revalidatePath('/profiles');
+  revalidatePath('/dashboard/account');
+  revalidatePath('/dashboard/profiles');
   revalidatePath('/discovery');
-  revalidatePath('/verification');
+  revalidatePath('/moderation/verification');
 }
 
 /** For accounts without a password yet, e.g. signed up with a provider. */
@@ -57,7 +57,7 @@ export async function setPassword(newPassword: string) {
     return { message: 'Unable to add a password!' };
   }
 
-  revalidatePath('/account');
+  revalidatePath('/dashboard/account');
 }
 
 export async function revokeSession(sessionId: string) {
@@ -70,13 +70,13 @@ export async function revokeSession(sessionId: string) {
 
   await auth.api.revokeSession({ body: { token: target.token }, headers: await headers() });
 
-  revalidatePath('/account');
+  revalidatePath('/dashboard/account');
 }
 
 export async function revokeOtherSessions() {
   await auth.api.revokeOtherSessions({ headers: await headers() });
 
-  revalidatePath('/account');
+  revalidatePath('/dashboard/account');
 }
 
 /**
@@ -89,7 +89,7 @@ export async function forgetTrustedDevices() {
 
   await forget(session.user.id);
 
-  revalidatePath('/account');
+  revalidatePath('/dashboard/account');
 }
 
 /**
@@ -107,8 +107,8 @@ async function moderationTarget(userId: string) {
 }
 
 function revalidateUser(userId: string) {
-  revalidatePath('/users');
-  revalidatePath(`/users/${userId}`);
+  revalidatePath('/moderation/users');
+  revalidatePath(`/moderation/users/${userId}`);
 }
 
 /** Admins change anyone's role but their own, so there's always an admin left. */
@@ -199,10 +199,10 @@ export async function deleteUserAccount(userId: string) {
 
   await prisma.user.delete({ where: { id: userId } });
 
-  revalidatePath('/users');
+  revalidatePath('/moderation/users');
   revalidatePath('/discovery');
   updateTag(PROFILE_COUNT_TAG);
-  revalidatePath('/verification');
+  revalidatePath('/moderation/verification');
 }
 
 export async function createProfile(unsafeData: z.infer<typeof createProfileSchema>) {
@@ -227,7 +227,7 @@ export async function createProfile(unsafeData: z.infer<typeof createProfileSche
     },
   });
 
-  revalidatePath('/profiles');
+  revalidatePath('/dashboard/profiles');
 }
 
 export async function updateProfile(unsafeData: z.infer<typeof updateProfileSchema>) {
@@ -249,7 +249,7 @@ export async function updateProfile(unsafeData: z.infer<typeof updateProfileSche
     data: { ...profileData, status: 'CREATED', rejectedFields: [], rejectionNote: null },
   });
 
-  revalidatePath('/profiles');
+  revalidatePath('/dashboard/profiles');
   updateTag(PROFILE_COUNT_TAG);
 }
 
@@ -273,7 +273,7 @@ export async function submitProfileForReview({ profileId }: { profileId: string 
     data: { status: 'PENDING', submittedAt: new Date() },
   });
 
-  revalidatePath('/profiles');
+  revalidatePath('/dashboard/profiles');
 }
 
 export async function deleteProfile({ profileId }: { profileId: string }) {
@@ -291,7 +291,7 @@ export async function deleteProfile({ profileId }: { profileId: string }) {
     where: { id: profileId },
   });
 
-  revalidatePath('/profiles');
+  revalidatePath('/dashboard/profiles');
   updateTag(PROFILE_COUNT_TAG);
 }
 
@@ -305,8 +305,8 @@ export async function verifyProfile({ profileId }: { profileId: string }) {
     data: { status: 'VERIFIED', rejectedFields: [], rejectionNote: null, verifiedAt: new Date() },
   });
 
-  revalidatePath('/verification');
-  revalidatePath('/profiles');
+  revalidatePath('/moderation/verification');
+  revalidatePath('/dashboard/profiles');
   updateTag(PROFILE_COUNT_TAG);
   return true;
 }
@@ -325,8 +325,8 @@ export async function rejectProfile(unsafeData: z.infer<typeof rejectProfileSche
     data: { status: 'REJECTED', rejectedFields: data.rejectedFields, rejectionNote: data.note ?? null },
   });
 
-  revalidatePath('/verification');
-  revalidatePath('/profiles');
+  revalidatePath('/moderation/verification');
+  revalidatePath('/dashboard/profiles');
   updateTag(PROFILE_COUNT_TAG);
 }
 
@@ -353,7 +353,7 @@ export async function sendHeart({ fromProfileId, toProfileId }: { fromProfileId:
   const back = await prisma.heart.count({ where: { fromProfileId: toProfileId, toProfileId: fromProfileId } });
 
   revalidatePath('/discovery');
-  revalidatePath('/hearts');
+  revalidatePath('/dashboard/hearts');
   return { matched: back > 0 };
 }
 
@@ -365,7 +365,7 @@ export async function takeBackHeart({ fromProfileId, toProfileId }: { fromProfil
   if (!count) return { message: 'That heart was already taken back.' };
 
   revalidatePath('/discovery');
-  revalidatePath('/hearts');
+  revalidatePath('/dashboard/hearts');
 }
 
 /** Called when they open their hearts, so the nav stops pointing at them. */

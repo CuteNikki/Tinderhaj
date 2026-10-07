@@ -41,7 +41,7 @@ export function LinkedAccounts({
   useEffect(() => {
     if (!error) return;
     toast.error(linkErrors[error] ?? 'Unable to connect that account. Please try again.', { duration: 5000, position: 'top-center' });
-    router.replace('/account');
+    router.replace('/dashboard/account');
   }, [error, router]);
 
   // Connected ones stay listed after their provider is turned off, so they
@@ -52,7 +52,7 @@ export function LinkedAccounts({
 
   async function connect(provider: string) {
     setPending(provider);
-    const { error } = await authClient.linkSocial({ provider, callbackURL: '/account', errorCallbackURL: '/account' });
+    const { error } = await authClient.linkSocial({ provider, callbackURL: '/dashboard/account', errorCallbackURL: '/dashboard/account' });
     // On success the browser is sent off to the provider.
     if (error) {
       setPending(null);

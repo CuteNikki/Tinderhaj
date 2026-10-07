@@ -5,6 +5,14 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   reactCompiler: true,
 
+  async redirects() {
+    return [
+      // The sections themselves open on their first page, for now.
+      { source: '/dashboard', destination: '/dashboard/profiles', permanent: false },
+      { source: '/moderation', destination: '/moderation/verification', permanent: false },
+    ];
+  },
+
   images: {
     remotePatterns: [
       {

@@ -50,7 +50,7 @@ export function SignUpForm() {
     }
 
     toast.success('Account created! Check your inbox to verify your email.', { duration: 5000, position: 'top-center' });
-    router.push('/profiles');
+    router.push('/dashboard/profiles');
     router.refresh();
   }
 

@@ -269,7 +269,7 @@ export const auth = betterAuth({
       // Deleting always needs a link from the account's email, so a stolen
       // session or an unlocked computer isn't enough.
       sendDeleteAccountVerification: async ({ user, url, token }) => {
-        const link = new URL('/account/delete', new URL(url).origin);
+        const link = new URL('/dashboard/account/delete', new URL(url).origin);
         link.searchParams.set('token', token);
 
         void sendDeleteAccountEmail({ email: user.email, username: user.name, url: link.toString() }).catch((error) =>

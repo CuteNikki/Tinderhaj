@@ -27,11 +27,11 @@ type Show = AccountRole | 'BANNED' | null;
 /** The users page with these filters, leaving out the defaults. */
 function usersHref({ query, show, page }: { query: string; show: Show; page: number }) {
   const params = new URLSearchParams({ ...(query && { q: query }), ...(show && { show }), ...(page > 1 && { p: String(page) }) });
-  return params.size ? `/users?${params}` : '/users';
+  return params.size ? `/moderation/users?${params}` : '/moderation/users';
 }
 
 /** Everyone with an account, for moderators and admins. Each opens their own page. */
-export default async function UsersPage({ searchParams }: PageProps<'/users'>) {
+export default async function UsersPage({ searchParams }: PageProps<'/moderation/users'>) {
   const session = await requireUser();
 
   if (!isModerator(session.user.role)) {
@@ -102,7 +102,7 @@ export default async function UsersPage({ searchParams }: PageProps<'/users'>) {
 
         <ScrollReveal delay={0.65}>
           {/* A plain form, so searching works before the page's scripts load. */}
-          <form action='/users' className='mb-4 flex gap-2'>
+          <form action='/moderation/users' className='mb-4 flex gap-2'>
             {show && <input type='hidden' name='show' value={show} />}
             <label className='relative min-w-0 flex-1'>
               <span className='sr-only'>{admin ? 'Search by username or email' : 'Search by username'}</span>
@@ -134,7 +134,7 @@ export default async function UsersPage({ searchParams }: PageProps<'/users'>) {
                 return (
                   <Link
                     key={user.id}
-                    href={`/users/${user.id}`}
+                    href={`/moderation/users/${user.id}`}
                     className='hover:bg-muted/50 flex items-center gap-3 p-4 transition-colors first:rounded-t-xl last:rounded-b-xl'
                   >
                     <div className='min-w-0 flex-1'>

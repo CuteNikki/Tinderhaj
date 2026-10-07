@@ -50,7 +50,7 @@ export function CardHearts({
     return (
       <Hint label={label}>
         <Button variant='outline' size='icon-sm' className='text-muted-foreground rounded-full' asChild>
-          <Link href={signedIn ? '/profiles' : '/sign-in'} aria-label={label}>
+          <Link href={signedIn ? '/dashboard/profiles' : '/sign-in'} aria-label={label}>
             <HeartIcon aria-hidden='true' />
           </Link>
         </Button>

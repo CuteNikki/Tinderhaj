@@ -50,7 +50,7 @@ export default async function UserSharksPage({ params }: PageProps<'/u/[username
             <div className='flex flex-wrap gap-2'>
               {own && (
                 <Button variant='outline' asChild>
-                  <Link href='/profiles'>
+                  <Link href='/dashboard/profiles'>
                     <UserRoundIcon aria-hidden='true' />
                     Manage your profiles
                   </Link>
@@ -58,7 +58,7 @@ export default async function UserSharksPage({ params }: PageProps<'/u/[username
               )}
               {moderator && !own && (
                 <Button variant='outline' asChild>
-                  <Link href={`/users/${user.id}`}>
+                  <Link href={`/moderation/users/${user.id}`}>
                     <ShieldIcon aria-hidden='true' />
                     Moderate
                   </Link>
