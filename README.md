@@ -86,7 +86,6 @@ Create a `.env` file in the project root with values similar to:
 DATABASE_URL="postgresql://username:password@localhost:5432/tinderhaj"
 RESEND_API_KEY="your_resend_api_key"
 RESEND_FROM_EMAIL="Tinderhaj <no-reply@your-domain.com>"
-NEXT_PUBLIC_APP_URL="http://localhost:3000"
 BETTER_AUTH_SECRET="a random string, e.g. from openssl rand -base64 32"
 BETTER_AUTH_URL="http://localhost:3000"
 UPLOADTHING_TOKEN="your_uploadthing_token"
@@ -115,7 +114,7 @@ Notes:
 
 - `DATABASE_URL` is required for Prisma and the app database connection.
 - `BETTER_AUTH_SECRET` signs session cookies and encrypts two-step sign-in secrets. Keep it the same across deploys, or everyone is signed out and authenticator apps stop working.
-- `BETTER_AUTH_URL` is where the site runs. Links in emails point there, and passkeys only work on its domain. Defaults to `NEXT_PUBLIC_APP_URL`.
+- `BETTER_AUTH_URL` is where the site runs, e.g. `https://tinderhaj.com`. Links in emails and sign-in provider callbacks point there, and passkeys only work on its domain. On Vercel it can be left out: production then uses the project's production domain (`VERCEL_PROJECT_PRODUCTION_URL`) and preview deployments their own address. Anywhere else it is required in production, where the server won't start without it; in development it defaults to `http://localhost:3000`.
 - UploadThing variables are required for avatar/banner uploads to work.
 - Social sign-in providers are optional. Register an app with each provider and set its redirect URL to `<BETTER_AUTH_URL>/api/auth/callback/<provider>`, e.g. `http://localhost:3000/api/auth/callback/github`. The provider ids are `google`, `apple`, `microsoft`, `github`, `discord`, `twitter` (X), `twitch`, and `facebook`.
   - Apple's client secret is a signed JWT you generate from your Apple key, and it expires after at most six months. `APPLE_APP_BUNDLE_IDENTIFIER` is only needed for signing in from an iOS app.
@@ -209,8 +208,7 @@ This app is designed for deployment on modern Node.js hosting platforms such as 
 - `DATABASE_URL`
 - `RESEND_API_KEY`
 - `RESEND_FROM_EMAIL`
-- `NEXT_PUBLIC_APP_URL`
-- `BETTER_AUTH_SECRET` and `BETTER_AUTH_URL`
+- `BETTER_AUTH_SECRET`, and `BETTER_AUTH_URL` unless Vercel's production domain is the right address
 - UploadThing credentials
 
 Better Auth rate limits sign-in, sign-up, and code requests per IP address in production. It reads the address from `x-forwarded-for`, which Vercel sets. Behind a proxy that doesn't, every visitor shares one limit.
