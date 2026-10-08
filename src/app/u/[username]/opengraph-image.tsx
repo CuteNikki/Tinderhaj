@@ -19,8 +19,8 @@ const FANS = [
   [],
   [{ left: 785, top: 150, rotate: 5 }],
   [
-    { left: 665, top: 125, rotate: -7 },
-    { left: 870, top: 160, rotate: 8 },
+    { left: 630, top: 125, rotate: -7 },
+    { left: 885, top: 160, rotate: 8 },
   ],
   [
     { left: 600, top: 165, rotate: -10 },
@@ -128,21 +128,22 @@ export default async function Image({ params }: { params: Promise<{ username: st
                 <img src={SHARK_SRC} width={AVATAR - 30} height={AVATAR - 30} alt='' />
               </div>
             )}
-            <div
-              style={{
-                display: 'block',
-                marginTop: 12,
-                padding: '0 4px',
-                fontSize: 28,
-                fontWeight: 900,
-                letterSpacing: -0.5,
-                color: '#f4f9ff',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-              }}
-            >
-              {shark.name}
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 12, padding: '0 4px' }}>
+              <div
+                style={{
+                  display: 'block',
+                  maxWidth: AVATAR - 8,
+                  fontSize: 28,
+                  fontWeight: 900,
+                  letterSpacing: -0.5,
+                  color: '#f4f9ff',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                {shark.name}
+              </div>
             </div>
           </div>
         ))
