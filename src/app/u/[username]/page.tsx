@@ -15,8 +15,23 @@ import { CardHearts } from '@/components/hearts/card-hearts';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
 import { Button } from '@/components/ui/button';
 
-// Not the username: metadata is worked out apart from who may see the page.
-export const metadata: Metadata = userPageMetadata;
+export async function generateMetadata({ params }: PageProps<'/u/[username]'>): Promise<Metadata> {
+  const { username } = await params;
+  // As anyone would see it, so a banned account's page shares like any other.
+  const page = await getUserPage(decodeURIComponent(username), null);
+  if (!page) return userPageMetadata;
+
+  const { user, sharks } = page;
+  const names = sharks.slice(0, 3).map((shark) => shark.displayName);
+  if (sharks.length > 3) names.push(`${sharks.length - 3} more`);
+
+  return {
+    title: `@${user.username}`,
+    description: names.length
+      ? `Meet ${new Intl.ListFormat('en', { type: 'conjunction' }).format(names)}: the sharks of @${user.username} on Tinderhaj.`
+      : `@${user.username} is on Tinderhaj. Their sharks show up here once they’re verified.`,
+  };
+}
 
 /** Someone's sharks, for anyone to browse and heart. */
 export default async function UserSharksPage({ params }: PageProps<'/u/[username]'>) {

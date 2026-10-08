@@ -1,327 +1,149 @@
 import { Metadata } from 'next';
 
+export const SITE_URL = 'https://tinderhaj.com';
+export const SITE_NAME = 'Tinderhaj';
+export const SITE_TAGLINE = 'The dating site for Blåhaj';
+
+/**
+ * Shared by every page. Open Graph and Twitter set no title or description of
+ * their own, so each page's are used for them, and every page shares the image
+ * from `app/opengraph-image.tsx`.
+ */
 export const layoutMetadata: Metadata = {
-  title: 'Tinderhaj - Meet Sharks',
+  metadataBase: new URL(SITE_URL),
+  title: {
+    template: `%s · ${SITE_NAME}`,
+    default: `${SITE_NAME} · Meet sharks`,
+  },
   description:
-    "A warm, weird little corner of the internet for Blåhaj looking for their person. Browse profiles, find a feeling, make it official.\nThe world's first dating site exclusively for IKEA's Blåhaj plush sharks.\nIt finds the perfect match based on color, size, and squishiness.",
+    "The world's first dating site exclusively for IKEA's Blåhaj plush sharks. Browse profiles and find the perfect match by color, size, and squishiness.",
+  applicationName: SITE_NAME,
   openGraph: {
-    url: 'https://tinderhaj.com',
-    images: [
-      {
-        url: 'https://tinderhaj.com/blahaj.webp',
-        alt: 'Blåhaj',
-        width: 128,
-        height: 128,
-      },
-    ],
+    type: 'website',
+    siteName: SITE_NAME,
+    locale: 'en_US',
+  },
+  twitter: {
+    card: 'summary_large_image',
   },
 };
 
+/** For pages only their account, or moderators, can see: kept out of search. */
+const unlisted: Metadata = { robots: { index: false, follow: false } };
+
 export const homeMetadata: Metadata = {
-  title: 'Tinderhaj - Home',
+  title: { absolute: `${SITE_NAME} · Meet sharks` },
   description:
-    "Welcome to a warm, weird little corner of the internet for Blåhaj looking for their person.\nThe world's first dating site exclusively for IKEA's Blåhaj plush sharks.\nIt finds the perfect match based on color, size, and squishiness.",
-  openGraph: {
-    url: 'https://tinderhaj.com',
-    images: [
-      {
-        url: 'https://tinderhaj.com/blahaj.webp',
-        alt: 'Blåhaj',
-        width: 128,
-        height: 128,
-      },
-    ],
-  },
+    "A warm, weird little corner of the internet for Blåhaj looking for their person. The world's first dating site for IKEA's plush sharks, matching by color, size, and squishiness.",
 };
 
 export const notFoundMetadata: Metadata = {
-  title: 'Tinderhaj - Not Found',
-  description: "Oops! The page you're looking for doesn't exist. Return to the home page to continue your Blåhaj adventure.",
-  openGraph: {
-    url: 'https://tinderhaj.com',
-    images: [
-      {
-        url: 'https://tinderhaj.com/blahaj.webp',
-        alt: 'Blåhaj',
-        width: 128,
-        height: 128,
-      },
-    ],
-  },
-};
-
-export const errorMetadata: Metadata = {
-  title: 'Tinderhaj - Error',
-  description: 'Something went wrong. Please try again later or return to the home page to continue your Blåhaj adventure.',
-  openGraph: {
-    url: 'https://tinderhaj.com',
-    images: [
-      {
-        url: 'https://tinderhaj.com/blahaj.webp',
-        alt: 'Blåhaj',
-        width: 128,
-        height: 128,
-      },
-    ],
-  },
+  title: 'Not Found',
+  description: 'This page swam off. Head back home to continue your Blåhaj adventure.',
 };
 
 export const discoveryMetadata: Metadata = {
-  title: 'Tinderhaj - Discovery',
-  description: 'Explore and discover new Blåhaj profiles. Find your perfect match based on color, size, and squishiness.',
-  openGraph: {
-    url: 'https://tinderhaj.com',
-    images: [
-      {
-        url: 'https://tinderhaj.com/blahaj.webp',
-        alt: 'Blåhaj',
-        width: 128,
-        height: 128,
-      },
-    ],
-  },
+  title: 'Discovery',
+  description: 'Browse Blåhaj profiles and find your perfect match by color, size, and squishiness.',
 };
 
 export const signInMetadata: Metadata = {
-  title: 'Tinderhaj - Sign In',
+  title: 'Sign In',
   description: 'Sign in to Tinderhaj and pick up where you left off with your plush matches.',
-  openGraph: {
-    url: 'https://tinderhaj.com',
-    images: [
-      {
-        url: 'https://tinderhaj.com/blahaj.webp',
-        alt: 'Blåhaj',
-        width: 128,
-        height: 128,
-      },
-    ],
-  },
 };
 
 export const signUpMetadata: Metadata = {
-  title: 'Tinderhaj - Sign Up',
+  title: 'Sign Up',
   description: 'Create your Tinderhaj account and find your perfect plush match.',
-  openGraph: {
-    url: 'https://tinderhaj.com',
-    images: [
-      {
-        url: 'https://tinderhaj.com/blahaj.webp',
-        alt: 'Blåhaj',
-        width: 128,
-        height: 128,
-      },
-    ],
-  },
 };
 
 export const forgotPasswordMetadata: Metadata = {
-  title: 'Tinderhaj - Recovery',
+  title: 'Recovery',
   description: 'Request a password reset link for your Tinderhaj account.',
-  openGraph: {
-    url: 'https://tinderhaj.com',
-    images: [
-      {
-        url: 'https://tinderhaj.com/blahaj.webp',
-        alt: 'Blåhaj',
-        width: 128,
-        height: 128,
-      },
-    ],
-  },
 };
 
 export const resetPasswordMetadata: Metadata = {
-  title: 'Tinderhaj - Recovery',
+  ...unlisted,
+  title: 'Recovery',
   description: 'Choose a new password for your Tinderhaj account.',
-  openGraph: {
-    url: 'https://tinderhaj.com',
-    images: [
-      {
-        url: 'https://tinderhaj.com/blahaj.webp',
-        alt: 'Blåhaj',
-        width: 128,
-        height: 128,
-      },
-    ],
-  },
-};
-
-export const profilesMetadata: Metadata = {
-  title: 'Tinderhaj - Profiles',
-  description: 'Create and manage your Tinderhaj profiles.',
-  openGraph: {
-    url: 'https://tinderhaj.com',
-    images: [
-      {
-        url: 'https://tinderhaj.com/blahaj.webp',
-        alt: 'Blåhaj',
-        width: 128,
-        height: 128,
-      },
-    ],
-  },
-};
-
-export const accountMetadata: Metadata = {
-  title: 'Tinderhaj - Settings',
-  description: 'Manage your Tinderhaj account.',
-  openGraph: {
-    url: 'https://tinderhaj.com',
-    images: [
-      {
-        url: 'https://tinderhaj.com/blahaj.webp',
-        alt: 'Blåhaj',
-        width: 128,
-        height: 128,
-      },
-    ],
-  },
-};
-
-export const privacyMetadata: Metadata = {
-  title: 'Tinderhaj - Privacy',
-  description: 'Learn how Tinderhaj collects, uses, and protects your information.',
-  openGraph: {
-    url: 'https://tinderhaj.com/privacy',
-    images: [
-      {
-        url: 'https://tinderhaj.com/blahaj.webp',
-        alt: 'Blåhaj',
-        width: 128,
-        height: 128,
-      },
-    ],
-  },
-};
-
-export const termsMetadata: Metadata = {
-  title: 'Tinderhaj - Terms',
-  description: 'Read the terms for using Tinderhaj.',
-  openGraph: {
-    url: 'https://tinderhaj.com/terms',
-    images: [
-      {
-        url: 'https://tinderhaj.com/blahaj.webp',
-        alt: 'Blåhaj',
-        width: 128,
-        height: 128,
-      },
-    ],
-  },
-};
-
-export const imprintMetadata: Metadata = {
-  title: 'Tinderhaj - Imprint',
-  description: 'Legal information and contact details for Tinderhaj.',
-  openGraph: {
-    url: 'https://tinderhaj.com/imprint',
-    images: [
-      {
-        url: 'https://tinderhaj.com/blahaj.webp',
-        alt: 'Blåhaj',
-        width: 128,
-        height: 128,
-      },
-    ],
-  },
-};
-
-export const verifyMetadata: Metadata = {
-  title: 'Tinderhaj - Verification',
-  description: 'Review and verify Tinderhaj profiles.',
-  openGraph: {
-    url: 'https://tinderhaj.com',
-    images: [
-      {
-        url: 'https://tinderhaj.com/blahaj.webp',
-        alt: 'Blåhaj',
-        width: 128,
-        height: 128,
-      },
-    ],
-  },
 };
 
 export const twoFactorMetadata: Metadata = {
-  title: 'Tinderhaj - Two-Step Sign-In',
+  ...unlisted,
+  title: 'Two-Step Sign-In',
   description: 'Finish signing in to Tinderhaj with a code.',
-  openGraph: {
-    url: 'https://tinderhaj.com/two-factor',
-    images: [
-      {
-        url: 'https://tinderhaj.com/blahaj.webp',
-        alt: 'Blåhaj',
-        width: 128,
-        height: 128,
-      },
-    ],
-  },
 };
 
 export const verifiedMetadata: Metadata = {
-  title: 'Tinderhaj - Email Verification',
+  ...unlisted,
+  title: 'Email Verification',
   description: 'Confirm the email address of your Tinderhaj account.',
-  openGraph: {
-    url: 'https://tinderhaj.com/verified',
-    images: [
-      {
-        url: 'https://tinderhaj.com/blahaj.webp',
-        alt: 'Blåhaj',
-        width: 128,
-        height: 128,
-      },
-    ],
-  },
-};
-
-export const deleteAccountMetadata: Metadata = {
-  title: 'Tinderhaj - Delete Account',
-  description: 'Confirm deleting your Tinderhaj account.',
-  openGraph: {
-    url: 'https://tinderhaj.com/account/delete',
-    images: [
-      {
-        url: 'https://tinderhaj.com/blahaj.webp',
-        alt: 'Blåhaj',
-        width: 128,
-        height: 128,
-      },
-    ],
-  },
-};
-
-export const usersMetadata: Metadata = {
-  title: 'Tinderhaj - Users',
-  description: 'See and manage the accounts on Tinderhaj.',
-  openGraph: {
-    url: 'https://tinderhaj.com/moderation/users',
-    images: [
-      {
-        url: 'https://tinderhaj.com/blahaj.webp',
-        alt: 'Blåhaj',
-        width: 128,
-        height: 128,
-      },
-    ],
-  },
-};
-
-export const userMetadata: Metadata = {
-  title: 'Tinderhaj - User',
-  description: 'A Tinderhaj account, for moderators.',
 };
 
 export const bannedMetadata: Metadata = {
-  title: 'Tinderhaj - Banned',
+  ...unlisted,
+  title: 'Banned',
   description: 'Why your Tinderhaj account can’t sign in.',
 };
 
+export const profilesMetadata: Metadata = {
+  ...unlisted,
+  title: 'Profiles',
+  description: 'Create and manage your Tinderhaj profiles.',
+};
+
 export const heartsMetadata: Metadata = {
-  title: 'Tinderhaj - Hearts',
+  ...unlisted,
+  title: 'Hearts',
   description: 'Your matches, and the hearts your sharks sent and received.',
 };
 
+export const accountMetadata: Metadata = {
+  ...unlisted,
+  title: 'Settings',
+  description: 'Manage your Tinderhaj account.',
+};
+
+export const deleteAccountMetadata: Metadata = {
+  ...unlisted,
+  title: 'Delete Account',
+  description: 'Confirm deleting your Tinderhaj account.',
+};
+
+export const verifyMetadata: Metadata = {
+  ...unlisted,
+  title: 'Verification',
+  description: 'Review and verify Tinderhaj profiles.',
+};
+
+export const usersMetadata: Metadata = {
+  ...unlisted,
+  title: 'Users',
+  description: 'See and manage the accounts on Tinderhaj.',
+};
+
+export const userMetadata: Metadata = {
+  ...unlisted,
+  title: 'User',
+  description: 'A Tinderhaj account, for moderators.',
+};
+
 export const userPageMetadata: Metadata = {
-  title: 'Tinderhaj - Sharks',
+  title: 'Sharks',
   description: 'All the sharks of someone on Tinderhaj.',
+};
+
+export const privacyMetadata: Metadata = {
+  title: 'Privacy',
+  description: 'Learn how Tinderhaj collects, uses, and protects your information.',
+};
+
+export const termsMetadata: Metadata = {
+  title: 'Terms',
+  description: 'Read the terms for using Tinderhaj.',
+};
+
+export const imprintMetadata: Metadata = {
+  title: 'Imprint',
+  description: 'Legal information and contact details for Tinderhaj.',
 };
