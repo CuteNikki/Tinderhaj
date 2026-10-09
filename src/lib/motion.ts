@@ -83,7 +83,7 @@ export function after(delay: number, transition: Transition = spring.soft): Tran
 export const hoverLift = { y: -4, rotate: -0.8, transition: spring.snappy };
 
 /** The same lift, as classes: for every card you can click, so they all answer the pointer alike. */
-export const LIFT = 'ease-bounce transition-all duration-300 hover:-translate-y-1 hover:-rotate-[0.6deg] hover:shadow-lg';
+export const LIFT = 'ease-bounce transition-all duration-300 hover:-translate-y-1 hover:rotate-[-0.6deg] hover:shadow-lg';
 
 /** Squishes a little when pressed. */
 export const press = { scale: 0.95, transition: spring.snappy };

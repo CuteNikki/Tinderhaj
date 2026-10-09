@@ -87,7 +87,6 @@ export default async function Image({ params }: { params: Promise<{ username: st
       </OgText>
 
       {shown.length === 0 ? (
-        // eslint-disable-next-line @next/next/no-img-element
         <img src={SHARK_SRC} width={560} height={560} alt='' style={{ position: 'absolute', right: -10, top: 40, transform: 'rotate(8deg)' }} />
       ) : (
         shown.map((shark, i) => (
@@ -110,7 +109,6 @@ export default async function Image({ params }: { params: Promise<{ username: st
             }}
           >
             {shark.src ? (
-              // eslint-disable-next-line @next/next/no-img-element
               <img src={shark.src} width={AVATAR} height={AVATAR} alt='' style={{ borderRadius: 18 }} />
             ) : (
               <div
@@ -124,7 +122,6 @@ export default async function Image({ params }: { params: Promise<{ username: st
                   background: 'rgba(220, 238, 255, 0.25)',
                 }}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={SHARK_SRC} width={AVATAR - 30} height={AVATAR - 30} alt='' />
               </div>
             )}

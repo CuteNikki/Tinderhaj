@@ -46,7 +46,7 @@ export function ProfileCardSkeleton({ ending = 'heart', blank = false }: { endin
               <Skeleton className='h-4 w-16' />
             </div>
             {/* Two lines, as most bios are, even on narrow cards */}
-            <div className='mt-4 flex h-[2.875rem] flex-col justify-center gap-2'>
+            <div className='mt-4 flex h-11.5 flex-col justify-center gap-2'>
               <Skeleton className='h-4 w-full' />
               <Skeleton className='h-4 w-5/6' />
             </div>
@@ -140,7 +140,7 @@ export function SettingsSectionSkeleton({ lines = 2, className }: { lines?: numb
 export function GhostText({ as: Tag = 'p', className, children }: { as?: 'p' | 'span'; className?: string; children: React.ReactNode }) {
   return (
     <Tag aria-hidden className={cn('text-sm text-pretty', className)}>
-      <span className='bg-foreground/10 animate-breathe rounded-md [box-decoration-break:clone] text-transparent [-webkit-box-decoration-break:clone] [text-shadow:none]'>
+      <span className='bg-foreground/10 animate-breathe rounded-md [box-decoration-break:clone] text-transparent [-webkit-box-decoration-break:clone] text-shadow-none'>
         {children}
       </span>
     </Tag>
@@ -173,7 +173,7 @@ export function ButtonSkeleton({
     <Skeleton
       aria-hidden
       className={cn(
-        'inline-flex w-fit shrink-0 items-center justify-center rounded-full text-sm font-medium text-transparent [text-shadow:none]',
+        'inline-flex w-fit shrink-0 items-center justify-center rounded-full text-sm font-medium text-transparent text-shadow-none',
         size === 'sm' ? 'h-8 gap-1 px-3' : 'h-9 gap-1.5 px-3.5',
         className,
       )}

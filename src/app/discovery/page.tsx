@@ -47,12 +47,15 @@ const searchParamsSchema = z.object({
 
 export default async function DiscoveryPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const { q: query, p: page, t: take, s: seedParam } = searchParamsSchema.parse(await searchParams);
-  const seed = seedParam ?? Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
-
+  // Arriving without a shuffle, e.g. from a bookmark: a fresh one, kept in the URL from here on. This renders once per
+  // request on the server, so a random seed is what's meant; 1 and up, as `s` must be positive.
   if (!seedParam) {
+    // eslint-disable-next-line react-hooks/purity
+    const seed = 1 + Math.floor(Math.random() * (Number.MAX_SAFE_INTEGER - 1));
     const params = new URLSearchParams({ q: query, p: String(page), t: String(take), s: String(seed) });
     redirect(`/discovery?${params}`);
   }
+  const seed = seedParam;
 
   const { profiles, totalProfiles } = await withTimeout(
     query?.length ? QUERIES.getProfilesWithQuery(query, page, take, seed) : QUERIES.getProfiles(page, take, seed),

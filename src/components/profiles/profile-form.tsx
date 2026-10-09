@@ -5,7 +5,7 @@ import { Loader2Icon, PlusIcon, TriangleAlertIcon, XIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -122,17 +122,20 @@ export function ProfileForm({ username, profile }: { username: string; profile?:
     const draft = readDraft(username);
     if (draft && started(draft)) {
       form.reset(draft);
+      // Only once it's on the page: the draft is in this device's storage, which the server rendering it can't see
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setInterests(draft.interests ?? []);
       setResumed(true);
     }
   }, [form, profile, username]);
 
-  const values = form.watch();
+  // Everything filled in so far, as it changes; read whole when saving the draft
+  const values = useWatch({ control: form.control });
   useEffect(() => {
     if (profile) return;
-    const draft = { ...values, interests };
+    const draft = { ...form.getValues(), interests };
     writeDraft(username, started(draft) ? draft : null);
-  }, [values, interests, profile, username]);
+  }, [values, interests, form, profile, username]);
 
   function startOver() {
     form.reset(EMPTY);
@@ -155,8 +158,8 @@ export function ProfileForm({ username, profile }: { username: string; profile?:
     if (confirmed) router.push('/dashboard/profiles');
   }
 
-  const unit = form.watch('unit');
-  const preview = form.watch();
+  const preview = values;
+  const unit = preview.unit;
   const submitting = form.formState.isSubmitting;
   // Nothing to save until something's changed: a field, or an interest added or taken away
   const interestsChanged = interests.join('\n') !== (profile?.interests ?? []).join('\n');
@@ -493,7 +496,7 @@ export function ProfileForm({ username, profile }: { username: string; profile?:
         <ScrollReveal
           delay={CONTENT_DELAY + STAGGER}
           variant='card'
-          className='w-full max-w-[26rem] lg:sticky lg:top-24 lg:col-start-2 lg:row-span-2 lg:row-start-1'
+          className='w-full max-w-104 lg:sticky lg:top-24 lg:col-start-2 lg:row-span-2 lg:row-start-1'
         >
           <Eyebrow as='h2'>Preview</Eyebrow>
           <DiscoveryProfile

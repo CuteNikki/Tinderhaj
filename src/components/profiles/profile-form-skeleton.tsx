@@ -88,7 +88,7 @@ export function ProfileFormSkeleton({ editing = false }: { editing?: boolean }) 
           </div>
         </SettingsSection>
       </div>
-      <div className='w-full max-w-[26rem] lg:col-start-2 lg:row-span-2 lg:row-start-1'>
+      <div className='w-full max-w-104 lg:col-start-2 lg:row-span-2 lg:row-start-1'>
         <Eyebrow as='h2'>Preview</Eyebrow>
         <ProfileCardSkeleton ending='none' blank={!editing} />
       </div>

@@ -61,7 +61,6 @@ export default function Image() {
         A match worth meeting
       </div>
       {/* Above the pill, peeking over it, but below the card */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={shark} width={430} height={430} alt='' style={{ position: 'absolute', left: 706, top: 84, transform: 'rotate(6deg)' }} />
 
       <div
@@ -80,7 +79,6 @@ export default function Image() {
           transform: 'rotate(12deg)',
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={heart} width={54} height={54} alt='' />
       </div>
 
@@ -112,7 +110,6 @@ export default function Image() {
             background: 'rgba(220, 238, 255, 0.25)',
           }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={hug} width={62} height={62} alt='' />
         </div>
         <div style={{ display: 'flex', fontSize: 30, fontWeight: 900, letterSpacing: -0.5 }}>It’s a match!</div>

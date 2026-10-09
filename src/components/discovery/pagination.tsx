@@ -26,10 +26,6 @@ export function DiscoveryPagination({
   query: string;
   seed: number;
 }) {
-  if (!totalUsers) {
-    return null;
-  }
-
   const router = useRouter();
   const pageHref = (targetPage: number) => {
     const params = new URLSearchParams({ q: query, p: String(targetPage), t: String(take), s: String(seed) });
@@ -56,6 +52,11 @@ export function DiscoveryPagination({
     sessionStorage.removeItem(scrollToProfilesKey);
     scrollToProfiles();
   }, [page, query, take]);
+
+  // Only after the hooks, which must run on every render
+  if (!totalUsers) {
+    return null;
+  }
 
   return (
     <div className='flex flex-col items-center gap-4 px-5 pt-8 text-center text-balance'>

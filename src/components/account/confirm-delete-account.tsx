@@ -28,6 +28,7 @@ export function ConfirmDeleteAccount({ token }: { token: string }) {
     }
 
     // A full reload, so every part of the page forgets the old session.
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
     window.location.assign('/');
   }
 

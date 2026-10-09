@@ -30,7 +30,7 @@ export function PageLoading({ eyebrow, title, description, placeholder, above, b
           {description && <PageNote>{description}</PageNote>}
           {placeholder && (
             <p aria-hidden className='mt-2 text-sm'>
-              <span className='bg-foreground/10 animate-breathe rounded-md text-transparent [text-shadow:none]'>{placeholder}</span>
+              <span className='bg-foreground/10 animate-breathe rounded-md text-transparent text-shadow-none'>{placeholder}</span>
             </p>
           )}
           {below}
