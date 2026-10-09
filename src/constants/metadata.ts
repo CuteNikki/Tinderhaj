@@ -170,6 +170,21 @@ export const contactMetadata: Metadata = {
   description: 'Get in touch with Tinderhaj by email, or find it around the internet.',
 };
 
+export const aboutMetadata: Metadata = {
+  title: 'About',
+  description: 'Why Tinderhaj exists, who makes it, and what it cares about: a free, open-source dating site for Blåhaj.',
+};
+
+export const communityMetadata: Metadata = {
+  title: 'Community',
+  description: 'Where Blåhaj and their people hang out around the internet, and the ways to join in with Tinderhaj.',
+};
+
+export const guidelinesMetadata: Metadata = {
+  title: 'Guidelines',
+  description: 'What moderators look for in a Blåhaj profile, how review works, and what happens when something isn’t right.',
+};
+
 export const imprintMetadata: Metadata = {
   title: 'Imprint',
   description: 'Legal information and contact details for Tinderhaj.',

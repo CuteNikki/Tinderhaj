@@ -8,6 +8,7 @@ import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 import { FRESH_PROFILE_WINDOW_IN_DAYS } from '@/lib/profile-status';
 
 import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
+import { IconCard } from '@/components/common/icon-card';
 import { Stagger } from '@/components/common/stagger';
 import { FreshSharks } from '@/components/sections/fresh-sharks';
 import { ReadyWhenYouAre } from '@/components/sections/ready-when-you-are';
@@ -77,17 +78,8 @@ export default function FeaturesPage() {
             className='grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4'
             itemClassName='h-full'
           >
-            {FEATURES.map(({ title, copy, icon: Icon }) => (
-              <div key={title} className='border-foreground/10 bg-card h-full rounded-2xl border p-6 shadow-sm'>
-                {/* The icon beside the title rather than above it, so it doesn't cost a row of its own */}
-                <div className='flex items-center gap-3'>
-                  <span className='bg-primary/10 text-primary flex size-9 shrink-0 items-center justify-center rounded-full'>
-                    <Icon className='size-4.5' aria-hidden='true' />
-                  </span>
-                  <h2 className='text-lg leading-tight font-bold'>{title}</h2>
-                </div>
-                <p className='text-muted-foreground mt-2 text-sm leading-relaxed text-pretty'>{copy}</p>
-              </div>
+            {FEATURES.map((feature) => (
+              <IconCard key={feature.title} {...feature} />
             ))}
           </Stagger>
         </div>

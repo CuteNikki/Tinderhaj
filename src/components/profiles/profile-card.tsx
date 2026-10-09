@@ -132,6 +132,9 @@ export function ProfileCard({ profile }: { profile: ProfileWithOwner }) {
                 <span className='font-semibold'>Note:</span> {profile.rejectionNote}
               </p>
             )}
+            <Link href='/guidelines' className='mt-2 inline-block font-semibold underline-offset-4 hover:underline'>
+              What moderators look for
+            </Link>
           </div>
         )}
 

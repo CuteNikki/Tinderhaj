@@ -4,14 +4,14 @@ import Link from 'next/link';
 import { Fragment } from 'react';
 
 import { contactMetadata } from '@/constants/metadata';
-import { CONTACT_EMAIL, GITHUB_URL, SOCIALS } from '@/constants/contact';
-import { CONTENT_DELAY, LIFT, STAGGER } from '@/lib/motion';
+import { CONTACT_EMAIL, GITHUB_URL } from '@/constants/contact';
+import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 
 import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
 import { sunlit } from '@/components/common/ocean';
 import { Stagger } from '@/components/common/stagger';
 import { CopyEmail } from '@/components/contact/copy-email';
-import { SocialIcon } from '@/components/contact/social-icon';
+import { SocialLinks } from '@/components/contact/social-links';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
 import { Questions } from '@/components/sections/questions';
 import { ReadyWhenYouAre } from '@/components/sections/ready-when-you-are';
@@ -32,8 +32,6 @@ const ANSWERS: { title: string; copy: string; link: string; href: string; icon: 
 ];
 
 export default function ContactPage() {
-  const socials = SOCIALS.filter((social) => social.href);
-
   return (
     <>
       <div data-water='band' data-tone='muted' className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'>
@@ -80,40 +78,7 @@ export default function ContactPage() {
                 </section>
               </ScrollReveal>
 
-              {socials.length > 0 && (
-                <Stagger
-                  as='ul'
-                  itemAs='li'
-                  variant='card'
-                  gap={STAGGER}
-                  delay={CONTENT_DELAY + STAGGER}
-                  className='mt-3 grid grid-cols-[repeat(auto-fit,minmax(min(100%,20rem),1fr))] gap-3'
-                  itemClassName='h-full'
-                >
-                  {socials.map((social) => (
-                    <a
-                      key={social.id}
-                      href={social.href!}
-                      target='_blank'
-                      rel='noreferrer'
-                      title={social.handle ?? undefined}
-                      className={`group/social border-foreground/10 bg-card dark:bg-accent flex h-full items-start gap-4 rounded-2xl border p-4 shadow-sm ${LIFT}`}
-                    >
-                      <span className='bg-foreground/5 ease-bounce flex size-10 shrink-0 items-center justify-center rounded-full transition-transform duration-300 group-hover/social:scale-110'>
-                        <SocialIcon id={social.id} className='group-hover/social:animate-wiggle size-5' />
-                      </span>
-                      <span className='min-w-0 flex-1'>
-                        <span className='block font-bold'>{social.name}</span>
-                        <span className='text-muted-foreground block text-sm'>{social.blurb}</span>
-                      </span>
-                      <ArrowUpRightIcon
-                        className='text-muted-foreground ease-bounce mt-1 size-4 shrink-0 transition-transform duration-300 group-hover/social:translate-x-0.5 group-hover/social:-translate-y-0.5'
-                        aria-hidden='true'
-                      />
-                    </a>
-                  ))}
-                </Stagger>
-              )}
+              <SocialLinks delay={CONTENT_DELAY + STAGGER} className='mt-3' />
             </div>
 
             <div>

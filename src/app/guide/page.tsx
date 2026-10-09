@@ -34,6 +34,7 @@ const STEPS: { title: string; copy: string; icon: LucideIcon; link?: { label: st
     title: 'Send it for review',
     copy: 'A moderator checks every profile by hand. Once it’s verified it shows up in discovery; if something needs changing, you’re told what.',
     icon: BadgeCheckIcon,
+    link: { label: 'What moderators look for', href: '/guidelines' },
   },
   {
     title: 'Browse discovery',

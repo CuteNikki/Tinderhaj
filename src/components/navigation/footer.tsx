@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import { Code2, Mail } from 'lucide-react';
 
-import { DISCORD_URL, GITHUB_URL } from '@/constants/contact';
+import { GITHUB_URL } from '@/constants/contact';
 
 import { Logo } from '@/components/common/logo';
 import { Stagger } from '@/components/common/stagger';
@@ -14,8 +14,14 @@ const productLinks = [
   { label: 'Discovery', href: '/discovery#top' },
 ];
 
-const resourceLinks = [
-  { label: 'Community', href: DISCORD_URL },
+const communityLinks = [
+  { label: 'About', href: '/about' },
+  { label: 'Community', href: '/community' },
+  { label: 'Guidelines', href: '/guidelines' },
+  { label: 'Contact', href: '/contact' },
+];
+
+const accountLinks = [
   { label: 'Create a profile', href: '/sign-up' },
   { label: 'Sign in', href: '/sign-in' },
 ];
@@ -49,14 +55,8 @@ export function Footer() {
             </div>
           </div>
           <FooterColumn title='Product' links={productLinks} />
-          <FooterColumn title='Resources' links={resourceLinks} />
-          <FooterColumn
-            title='Company'
-            links={[
-              { label: 'About', href: '/#top' },
-              { label: 'Contact', href: '/contact' },
-            ]}
-          />
+          <FooterColumn title='Community' links={communityLinks} />
+          <FooterColumn title='Account' links={accountLinks} />
         </Stagger>
         <div className='border-border mt-10 border-t pt-6'>
           <div className='flex flex-col gap-6 text-xs md:flex-row md:items-center md:justify-between'>
