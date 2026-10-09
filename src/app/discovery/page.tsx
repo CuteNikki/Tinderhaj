@@ -9,8 +9,8 @@ import { QUERIES } from '@/lib/queries';
 import { getSession } from '@/lib/session';
 import { STAGGER } from '@/lib/motion';
 
+import { Eyebrow } from '@/components/common/heading';
 import { DiscoveryFilter } from '@/components/discovery/filter';
-import { DiscoveryHero } from '@/components/discovery/hero';
 import { DiscoveryNoResults } from '@/components/discovery/no-results';
 import { DiscoveryPagination } from '@/components/discovery/pagination';
 import { DiscoveryProfile } from '@/components/discovery/profile';
@@ -76,51 +76,49 @@ export default async function DiscoveryPage({ searchParams }: { searchParams: Pr
   }
 
   return (
-    <div className='bg-background flex flex-1 flex-col'>
-      <DiscoveryHero />
-
-      <section className='bg-card text-card-foreground w-full flex-1 pb-8'>
-        <div className='container mx-auto max-w-7xl px-4 sm:px-5 lg:px-8'>
-          <div className='-mt-8 mb-4'>
-            <DiscoveryFilter page={page} query={query} seed={seed} take={take} />
-          </div>
-          {totalProfiles ? (
-            <>
-              <div id='profiles' className='flex scroll-m-40 flex-col justify-between gap-2 py-6 md:flex-row md:items-center'>
-                <p className='text-primary text-xs font-bold tracking-widest uppercase'>Fresh possibilities</p>
-              </div>
-              <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-3'>
-                {profiles.map((profile, index) => (
-                  <ScrollReveal key={profile.id} className='h-full' delay={0.5 + index * STAGGER} scrollDelay={(index % 3) * STAGGER} variant='card'>
-                    <DiscoveryProfile
-                      profile={profile}
-                      action={
-                        <CardHearts
-                          target={{ id: profile.id, displayName: profile.displayName }}
-                          states={hearts?.[profile.id] ?? null}
-                          signedIn={!!session}
-                          own={profile.userId === session?.user.id}
-                        />
-                      }
-                    />
-                  </ScrollReveal>
-                ))}
-              </div>
-              <DiscoveryPagination
-                displayedUsers={profiles.length}
-                totalUsers={totalProfiles}
-                totalPages={totalPages}
-                take={take}
-                page={page}
-                query={query}
-                seed={seed}
-              />
-            </>
-          ) : (
-            <DiscoveryNoResults />
-          )}
+    <section className='bg-card text-card-foreground w-full flex-1 px-4 pb-8 sm:px-5 lg:px-8'>
+      <div className='container mx-auto max-w-7xl'>
+        <div className='-mt-8 mb-4'>
+          <DiscoveryFilter page={page} query={query} seed={seed} take={take} />
         </div>
-      </section>
-    </div>
+        {totalProfiles ? (
+          <>
+            <ScrollReveal id='profiles' className='scroll-m-40 py-6' delay={0.4}>
+              <Eyebrow as='h2' className='mb-0'>
+                Fresh possibilities
+              </Eyebrow>
+            </ScrollReveal>
+            <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-3'>
+              {profiles.map((profile, index) => (
+                <ScrollReveal key={profile.id} className='h-full' delay={0.5 + index * STAGGER} scrollDelay={(index % 3) * STAGGER} variant='card'>
+                  <DiscoveryProfile
+                    profile={profile}
+                    action={
+                      <CardHearts
+                        target={{ id: profile.id, displayName: profile.displayName }}
+                        states={hearts?.[profile.id] ?? null}
+                        signedIn={!!session}
+                        own={profile.userId === session?.user.id}
+                      />
+                    }
+                  />
+                </ScrollReveal>
+              ))}
+            </div>
+            <DiscoveryPagination
+              displayedUsers={profiles.length}
+              totalUsers={totalProfiles}
+              totalPages={totalPages}
+              take={take}
+              page={page}
+              query={query}
+              seed={seed}
+            />
+          </>
+        ) : (
+          <DiscoveryNoResults />
+        )}
+      </div>
+    </section>
   );
 }

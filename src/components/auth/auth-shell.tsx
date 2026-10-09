@@ -7,8 +7,7 @@ import { after, popIn, reveal, spring } from '@/lib/motion';
 
 import { AUTH_HEIGHT } from '@/components/auth/height';
 import { Logo } from '@/components/common/logo';
-import { glass } from '@/components/common/ocean';
-import { Badge } from '@/components/ui/badge';
+import { HeroBadge } from '@/components/common/hero-badge';
 import { Card, CardContent } from '@/components/ui/card';
 
 export function AuthShell({
@@ -37,10 +36,7 @@ export function AuthShell({
         </motion.div>
 
         <motion.div initial='hidden' animate='visible' variants={popIn} transition={after(0.15, spring.pop)}>
-          <Badge className={`${glass} rounded-full p-4 font-semibold tracking-wide uppercase shadow-lg`}>
-            {icon}
-            {badge}
-          </Badge>
+          <HeroBadge icon={icon}>{badge}</HeroBadge>
         </motion.div>
 
         <motion.div initial='hidden' animate='visible' variants={reveal} transition={after(0.2)}>
@@ -51,7 +47,7 @@ export function AuthShell({
           <p className='text-muted-foreground mt-3 max-w-sm text-center text-sm leading-relaxed text-balance'>{description}</p>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 24, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={after(0.4)} className='mt-8 w-full'>
+        <motion.div initial='hidden' animate='visible' variants={reveal} transition={after(0.4)} className='mt-8 w-full'>
           {/* Frosted, but enough to keep the form clear of what drifts behind it */}
           <Card className='ring-glass-border bg-background/75 shadow-glass-shadow shadow-xl backdrop-blur-xl'>
             <CardContent className='pt-2'>{children}</CardContent>

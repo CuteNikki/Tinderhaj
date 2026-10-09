@@ -1,6 +1,8 @@
 import { ArrowRight, type LucideIcon, MailIcon, SearchIcon, SignpostIcon, UserRoundPlusIcon } from 'lucide-react';
 import Link from 'next/link';
 
+import { LIFT } from '@/lib/motion';
+
 import { Stagger } from '@/components/common/stagger';
 import { DiscoveryLink } from '@/components/discovery/link';
 import { Section } from '@/components/sections/section';
@@ -44,8 +46,7 @@ function Place({ title, copy, href, icon: Icon }: (typeof PLACES)[number]) {
       <span className='text-muted-foreground mt-1 text-sm leading-relaxed'>{copy}</span>
     </>
   );
-  const className =
-    'group/place border-foreground/10 bg-background ease-bounce flex h-full flex-col rounded-2xl border p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg';
+  const className = `group/place border-foreground/10 bg-background flex h-full flex-col rounded-2xl border p-5 shadow-sm ${LIFT}`;
 
   return href === '/discovery' ? (
     <DiscoveryLink className={className}>{content}</DiscoveryLink>

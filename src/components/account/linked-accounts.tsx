@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { authClient } from '@/lib/auth-client';
 import { providerLabel, SOCIAL_PROVIDERS, type SocialProviderId } from '@/lib/providers';
 
+import { useConfirm } from '@/components/common/confirm-dialog';
 import { ProviderIcon } from '@/components/common/provider-icon';
 import { Button } from '@/components/ui/button';
 
@@ -37,6 +38,7 @@ export function LinkedAccounts({
 }) {
   const router = useRouter();
   const [pending, setPending] = useState<string | null>(null);
+  const [ask, confirmDialog] = useConfirm();
 
   useEffect(() => {
     if (!error) return;
@@ -61,6 +63,15 @@ export function LinkedAccounts({
   }
 
   async function disconnect(account: { id: string; providerId: string }) {
+    const label = providerLabel(account.providerId);
+    const confirmed = await ask({
+      title: `Disconnect ${label}?`,
+      description: `You can’t sign in with ${label} anymore, until you connect it again.`,
+      action: 'Disconnect',
+      destructive: true,
+    });
+    if (!confirmed) return;
+
     setPending(account.providerId);
     const { error } = await authClient.unlinkAccount({ accountId: account.id });
     setPending(null);
@@ -80,38 +91,41 @@ export function LinkedAccounts({
   if (!shown.length) return <p className='text-muted-foreground text-sm'>No other ways to sign in are set up on Tinderhaj yet.</p>;
 
   return (
-    <ul className='divide-foreground/10 border-foreground/10 flex flex-col divide-y rounded-lg border'>
-      {shown.map((provider) => {
-        const account = connected.find((account) => account.providerId === provider);
-        const label = providerLabel(provider);
-        return (
-          <li key={provider} className='flex items-center gap-3 p-3 px-4'>
-            {SOCIAL_IDS.has(provider) ? (
-              <ProviderIcon provider={provider as SocialProviderId} className='text-muted-foreground size-5 shrink-0' />
-            ) : (
-              <LinkIcon className='text-muted-foreground size-5 shrink-0' aria-hidden='true' />
-            )}
-            <span className='flex-1 font-medium'>{label}</span>
-            {account ? (
-              <Button
-                variant='destructive'
-                size='sm'
-                disabled={pending !== null || lastWay}
-                title={lastWay ? 'Add a password first, so you can still sign in.' : undefined}
-                onClick={() => disconnect(account)}
-              >
-                {pending === provider ? <Loader2Icon className='animate-spin' aria-hidden='true' /> : <UnlinkIcon aria-hidden='true' />}
-                Disconnect
-              </Button>
-            ) : (
-              <Button size='sm' variant='outline' disabled={pending !== null} onClick={() => connect(provider)}>
-                {pending === provider ? <Loader2Icon className='animate-spin' aria-hidden='true' /> : <LinkIcon aria-hidden='true' />}
-                Connect
-              </Button>
-            )}
-          </li>
-        );
-      })}
-    </ul>
+    <>
+      <ul className='divide-foreground/10 border-foreground/10 flex flex-col divide-y rounded-xl border'>
+        {shown.map((provider) => {
+          const account = connected.find((account) => account.providerId === provider);
+          const label = providerLabel(provider);
+          return (
+            <li key={provider} className='flex items-center gap-3 p-3 px-4'>
+              {SOCIAL_IDS.has(provider) ? (
+                <ProviderIcon provider={provider as SocialProviderId} className='size-5 shrink-0' />
+              ) : (
+                <LinkIcon className='text-primary size-5 shrink-0' aria-hidden='true' />
+              )}
+              <span className='flex-1 font-medium'>{label}</span>
+              {account ? (
+                <Button
+                  variant='destructive'
+                  size='sm'
+                  disabled={pending !== null || lastWay}
+                  title={lastWay ? 'Add a password first, so you can still sign in.' : undefined}
+                  onClick={() => disconnect(account)}
+                >
+                  {pending === provider ? <Loader2Icon className='animate-spin' aria-hidden='true' /> : <UnlinkIcon aria-hidden='true' />}
+                  Disconnect
+                </Button>
+              ) : (
+                <Button size='sm' variant='outline' disabled={pending !== null} onClick={() => connect(provider)}>
+                  {pending === provider ? <Loader2Icon className='animate-spin' aria-hidden='true' /> : <LinkIcon aria-hidden='true' />}
+                  Connect
+                </Button>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+      {confirmDialog}
+    </>
   );
 }

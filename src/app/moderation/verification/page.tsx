@@ -8,6 +8,7 @@ import { QUERIES } from '@/lib/queries';
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 
+import { Eyebrow, PageTitle } from '@/components/common/heading';
 import { EmptyState } from '@/components/common/empty-state';
 import { DiscoveryProfile } from '@/components/discovery/profile';
 import { Stagger } from '@/components/common/stagger';
@@ -47,12 +48,12 @@ export default async function VerifyPage({ searchParams }: PageProps<'/moderatio
     <div data-water='band' className='flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'>
       <div className='container mx-auto max-w-7xl'>
         <Stagger id='page-header' variant='sink' className='mb-24'>
-          <p className='text-primary mb-1 text-xs font-bold tracking-widest uppercase'>Moderation</p>
-          <h1 className='text-3xl font-black tracking-tight sm:text-4xl'>Verification</h1>
+          <Eyebrow>Moderation</Eyebrow>
+          <PageTitle>Verification</PageTitle>
         </Stagger>
 
         <ScrollReveal delay={CONTENT_DELAY}>
-          <nav aria-label='Verification' className='bg-muted mb-6 grid max-w-md grid-cols-2 gap-1 rounded-xl p-1'>
+          <nav aria-label='Verification' className='bg-muted mb-6 grid max-w-md grid-cols-2 gap-1 rounded-full p-1'>
             {(Object.keys(TABS) as Tab[]).map((key) => {
               const { label, icon: Icon } = TABS[key];
               return (
@@ -61,7 +62,7 @@ export default async function VerifyPage({ searchParams }: PageProps<'/moderatio
                   href={key === 'review' ? '/moderation/verification' : '/moderation/verification?tab=recent'}
                   aria-current={key === tab ? 'page' : undefined}
                   className={cn(
-                    'flex items-center justify-center gap-2 rounded-lg px-2 py-2 text-sm font-medium transition-colors',
+                    'flex items-center justify-center gap-2 rounded-full px-2 py-2 text-sm font-medium transition-colors',
                     key === tab ? 'bg-background shadow-sm' : 'text-muted-foreground hover:text-foreground',
                   )}
                 >

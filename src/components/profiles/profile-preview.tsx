@@ -2,6 +2,7 @@ import { CakeIcon, MapPinIcon, RulerIcon } from 'lucide-react';
 
 import { calculateAge, cn } from '@/lib/utils';
 
+import { Eyebrow } from '@/components/common/heading';
 import { ProfileAvatar, ProfileBanner } from '@/components/profiles/profile-image';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -35,7 +36,7 @@ export function ProfilePreview({
 }) {
   return (
     <div className={cn('hidden w-72 shrink-0 lg:block', className)}>
-      <p className='text-muted-foreground mb-2 text-xs font-bold tracking-widest uppercase'>Preview</p>
+      <Eyebrow>Preview</Eyebrow>
       <Card className='border-foreground/10 bg-background overflow-hidden pt-0 shadow-sm'>
         <div className='relative aspect-5/2 overflow-hidden'>
           <ProfileBanner src={bannerUrl ?? null} alt='Banner preview' />

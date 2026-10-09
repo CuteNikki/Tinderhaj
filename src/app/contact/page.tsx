@@ -5,8 +5,9 @@ import { Fragment } from 'react';
 
 import { contactMetadata } from '@/constants/metadata';
 import { CONTACT_EMAIL, GITHUB_URL, SOCIALS } from '@/constants/contact';
-import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
+import { CONTENT_DELAY, LIFT, STAGGER } from '@/lib/motion';
 
+import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
 import { sunlit } from '@/components/common/ocean';
 import { Stagger } from '@/components/common/stagger';
 import { CopyEmail } from '@/components/contact/copy-email';
@@ -38,19 +39,23 @@ export default function ContactPage() {
       <div data-water='band' data-tone='muted' className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'>
         <div className='container mx-auto max-w-7xl'>
           <Stagger id='page-header' variant='sink' className='mb-24'>
-            <p className='text-primary mb-1 text-xs font-bold tracking-widest uppercase'>Contact</p>
-            <h1 className='text-3xl font-black tracking-tight sm:text-4xl'>Get in touch</h1>
-            <p className='text-muted-foreground mt-2 text-sm text-pretty'>Questions, feedback, or something not working? Here&apos;s how to reach us.</p>
+            <Eyebrow>Contact</Eyebrow>
+            <PageTitle>Get in touch</PageTitle>
+            <PageNote>Questions, feedback, or something not working? Here&apos;s how to reach us.</PageNote>
           </Stagger>
 
           {/* Ways to reach us, and beside them on wide screens, answers that might save writing at all */}
           <div className='grid gap-16 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-20'>
             <div>
-              <h2 className='text-primary mb-4 text-xs font-bold tracking-widest uppercase'>Reach us</h2>
+              <ScrollReveal delay={CONTENT_DELAY}>
+                <Eyebrow as='h2' className='mb-4'>
+                  Reach us
+                </Eyebrow>
+              </ScrollReveal>
               <ScrollReveal delay={CONTENT_DELAY} variant='card'>
                 <section
                   aria-labelledby='email'
-                  className='border-foreground/10 bg-card dark:bg-accent flex flex-col gap-5 rounded-3xl border p-5 shadow-sm sm:flex-row sm:items-center sm:p-6'
+                  className='border-foreground/10 bg-card dark:bg-accent flex flex-col gap-5 rounded-2xl border p-5 shadow-sm sm:flex-row sm:items-center sm:p-6'
                 >
                   <span className='bg-primary/10 text-primary flex size-12 shrink-0 items-center justify-center rounded-full'>
                     <MailIcon className='size-6' aria-hidden='true' />
@@ -64,7 +69,7 @@ export default function ContactPage() {
                     </a>
                   </div>
                   <div className='flex flex-wrap gap-2'>
-                    <Button className={`${sunlit} h-10 rounded-full px-5`} asChild>
+                    <Button size='lg' className={sunlit} asChild>
                       <a href={`mailto:${CONTACT_EMAIL}`}>
                         Write
                         <ArrowUpRightIcon />
@@ -92,9 +97,9 @@ export default function ContactPage() {
                       target='_blank'
                       rel='noreferrer'
                       title={social.handle ?? undefined}
-                      className='group/social border-foreground/10 bg-card dark:bg-accent ease-bounce flex h-full items-start gap-4 rounded-2xl border p-4 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg'
+                      className={`group/social border-foreground/10 bg-card dark:bg-accent flex h-full items-start gap-4 rounded-2xl border p-4 shadow-sm ${LIFT}`}
                     >
-                      <span className='bg-foreground/5 flex size-10 shrink-0 items-center justify-center rounded-full'>
+                      <span className='bg-foreground/5 ease-bounce flex size-10 shrink-0 items-center justify-center rounded-full transition-transform duration-300 group-hover/social:scale-110'>
                         <SocialIcon id={social.id} className='group-hover/social:animate-wiggle size-5' />
                       </span>
                       <span className='min-w-0 flex-1'>
@@ -113,7 +118,9 @@ export default function ContactPage() {
 
             <div>
               <ScrollReveal delay={CONTENT_DELAY}>
-                <h2 className='text-primary mb-4 text-xs font-bold tracking-widest uppercase'>Good to know</h2>
+                <Eyebrow as='h2' className='mb-4'>
+                  Good to know
+                </Eyebrow>
               </ScrollReveal>
               <Stagger
                 as='ul'

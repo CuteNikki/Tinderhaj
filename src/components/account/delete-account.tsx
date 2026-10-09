@@ -72,7 +72,7 @@ export function DeleteAccount({ hasPassword }: { hasPassword: boolean }) {
         </Button>
         <Button
           type='button'
-          variant='ghost'
+          variant='secondary'
           onClick={() => {
             setOpen(false);
             setError(undefined);

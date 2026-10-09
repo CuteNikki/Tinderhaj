@@ -12,6 +12,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { buttonVariants } from '@/components/ui/button';
 
 export type ConfirmOptions = {
   title: string;
@@ -61,14 +62,7 @@ export function useConfirm() {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction
-            className={
-              pending?.destructive
-                ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60'
-                : undefined
-            }
-            onClick={() => settle(true)}
-          >
+          <AlertDialogAction className={pending?.destructive ? buttonVariants({ variant: 'destructive' }) : undefined} onClick={() => settle(true)}>
             {pending?.action}
           </AlertDialogAction>
         </AlertDialogFooter>

@@ -8,6 +8,7 @@ import { CONTENT_DELAY } from '@/lib/motion';
 import { requireUser } from '@/lib/session';
 import { cn } from '@/lib/utils';
 
+import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
 import { EmptyState } from '@/components/common/empty-state';
 import { LocalTime } from '@/components/common/local-time';
 import { Stagger } from '@/components/common/stagger';
@@ -61,13 +62,13 @@ export default async function HeartsPage({ searchParams }: PageProps<'/dashboard
       <MarkHeartsSeen unseen={unseen} />
       <div className='container mx-auto max-w-7xl'>
         <Stagger id='page-header' variant='sink' className='mb-24'>
-          <p className='text-primary mb-1 text-xs font-bold tracking-widest uppercase'>Your sharks</p>
-          <h1 className='text-3xl font-black tracking-tight sm:text-4xl'>Hearts</h1>
-          <p className='text-muted-foreground mt-2 text-sm text-pretty'>Two sharks hearting each other is a match.</p>
+          <Eyebrow>Your sharks</Eyebrow>
+          <PageTitle>Hearts</PageTitle>
+          <PageNote>Two sharks hearting each other is a match.</PageNote>
         </Stagger>
 
         <ScrollReveal delay={CONTENT_DELAY}>
-          <nav aria-label='Hearts' className='bg-muted mb-4 grid max-w-md grid-cols-3 gap-1 rounded-xl p-1'>
+          <nav aria-label='Hearts' className='bg-muted mb-4 grid max-w-md grid-cols-3 gap-1 rounded-full p-1'>
             {(Object.keys(TABS) as Tab[]).map((key) => {
               const { label, icon: Icon } = TABS[key];
               const fresh = hearts[key].filter((row) => row.unseen).length;
@@ -77,7 +78,7 @@ export default async function HeartsPage({ searchParams }: PageProps<'/dashboard
                   href={key === 'matches' ? '/dashboard/hearts?tab=matches' : `/dashboard/hearts?tab=${key}`}
                   aria-current={key === tab ? 'page' : undefined}
                   className={cn(
-                    'flex items-center justify-center gap-2 rounded-lg px-2 py-2 text-sm font-medium transition-colors',
+                    'flex items-center justify-center gap-2 rounded-full px-2 py-2 text-sm font-medium transition-colors',
                     key === tab ? 'bg-background shadow-sm' : 'text-muted-foreground hover:text-foreground',
                   )}
                 >
@@ -95,7 +96,7 @@ export default async function HeartsPage({ searchParams }: PageProps<'/dashboard
           <Stagger
             as='ul'
             itemAs='li'
-            className='border-foreground/10 bg-card divide-foreground/10 divide-y rounded-xl border shadow-sm'
+            className='border-foreground/10 bg-card divide-foreground/10 divide-y rounded-2xl border shadow-sm'
             gap={0.05}
             delay={CONTENT_DELAY + 0.1}
           >

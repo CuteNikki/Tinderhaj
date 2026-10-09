@@ -14,7 +14,7 @@ export function DiscoveryNoResults() {
         <p className='text-muted-foreground mt-4 text-sm leading-relaxed text-pretty'>
           We couldn&apos;t find a profile for that search. A wider tide usually brings more Blåhaj back into view.
         </p>
-        <Button className='mt-7 rounded-full px-6' asChild>
+        <Button size='xl' className='mt-7' asChild>
           <DiscoveryLink>Reset discovery</DiscoveryLink>
         </Button>
       </div>

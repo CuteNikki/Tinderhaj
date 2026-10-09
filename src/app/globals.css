@@ -15,6 +15,14 @@
   --animate-sway: sway 9s ease-in-out infinite alternate;
   /* Only for something that'd better not show at all if it's soon replaced: a loading screen's header, say. */
   --animate-late: late 0.3s ease-out 0.6s both;
+  /* Placeholders, breathing gently while they wait, never fading to nothing. */
+  --animate-breathe: breathe 1.8s ease-in-out infinite;
+
+  @keyframes breathe {
+    50% {
+      opacity: 0.6;
+    }
+  }
 
   @keyframes late {
     from {

@@ -11,7 +11,7 @@ import { useConfirm } from '@/components/common/confirm-dialog';
 import { LocalTime } from '@/components/common/local-time';
 import { Button } from '@/components/ui/button';
 
-/** Sends a verified profile back to review, after asking. Shows when it was verified, if given. */
+/** Sends a verified profile back to review, after asking. Shows when it was verified, if given, on the left, with the button on the right. */
 export function UnverifyButton({ profile, verifiedAt }: { profile: { id: string; displayName: string }; verifiedAt?: string | null }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -36,13 +36,13 @@ export function UnverifyButton({ profile, verifiedAt }: { profile: { id: string;
   }
 
   return (
-    <div className='flex items-center gap-2'>
+    <div className='flex w-full items-center justify-between gap-2'>
       {verifiedAt && (
         <span className='text-muted-foreground text-xs'>
           Verified <LocalTime iso={verifiedAt} />
         </span>
       )}
-      <Button variant='outline' size='sm' disabled={pending} onClick={unverify}>
+      <Button variant='destructive' size='sm' className='ml-auto' disabled={pending} onClick={unverify}>
         {pending ? <Loader2Icon className='animate-spin' aria-hidden='true' /> : <ShieldOffIcon aria-hidden='true' />}
         Unverify
       </Button>

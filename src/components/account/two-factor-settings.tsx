@@ -11,6 +11,7 @@ import type { TwoFactorMethod } from '@/lib/account';
 import { forgetTrustedDevices } from '@/lib/actions';
 import { authClient } from '@/lib/auth-client';
 
+import { useConfirm } from '@/components/common/confirm-dialog';
 import { CodeInput } from '@/components/common/code-input';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -48,6 +49,7 @@ export function TwoFactorSettings({
   const router = useRouter();
   const [step, setStep] = useState<Step>({ kind: 'idle' });
   const [forgetting, startForgetting] = useTransition();
+  const [ask, confirmDialog] = useConfirm();
 
   function done(message: string) {
     toast.success(message, { duration: 5000, position: 'top-center' });
@@ -134,7 +136,7 @@ export function TwoFactorSettings({
 
   if (step.kind === 'codes') {
     return (
-      <div className='border-foreground/10 flex flex-col gap-4 rounded-lg border p-4'>
+      <div className='border-foreground/10 flex flex-col gap-4 rounded-xl border p-4'>
         <BackupCodes codes={step.backupCodes} />
         <p className='text-muted-foreground text-sm'>Your old backup codes don&rsquo;t work anymore.</p>
         <Button className='w-fit' onClick={() => done('Backup codes saved')}>
@@ -170,9 +172,9 @@ export function TwoFactorSettings({
 
   return (
     <div className='flex flex-col gap-3'>
-      <div className='border-foreground/10 flex flex-col gap-3 rounded-lg border p-3 px-4 sm:flex-row sm:items-center'>
+      <div className='border-foreground/10 flex flex-col gap-3 rounded-xl border p-3 px-4 sm:flex-row sm:items-center'>
         <div className='flex flex-1 items-center gap-3'>
-          <span className='bg-primary/15 text-primary flex size-9 shrink-0 items-center justify-center rounded-full'>
+          <span className='bg-primary/10 text-primary flex size-9 shrink-0 items-center justify-center rounded-full'>
             <ShieldCheckIcon className='size-5' aria-hidden />
           </span>
           <div>
@@ -204,19 +206,27 @@ export function TwoFactorSettings({
             size='sm'
             className='w-fit shrink-0'
             disabled={forgetting}
-            onClick={() =>
+            onClick={async () => {
+              const confirmed = await ask({
+                title: 'Forget trusted devices?',
+                description: 'Every device asks for a code again the next time you sign in on it.',
+                action: 'Forget',
+                destructive: true,
+              });
+              if (!confirmed) return;
               startForgetting(async () => {
                 const error = await forgetTrustedDevices();
                 if (error) toast.error(error.message, { duration: 5000, position: 'top-center' });
                 else toast.success('Every device asks for a code again.', { duration: 5000, position: 'top-center' });
-              })
-            }
+              });
+            }}
           >
             {forgetting && <Loader2Icon className='animate-spin' />}
             Forget trusted devices
           </Button>
         </div>
       )}
+      {confirmDialog}
     </div>
   );
 }
@@ -229,7 +239,7 @@ function MethodChoice({ icon: Icon, title, text, onClick }: { icon: typeof MailI
       className='ring-foreground/10 hover:bg-muted/50 focus-visible:ring-ring flex flex-col gap-2 rounded-xl p-4 text-left ring-1 transition-colors outline-none focus-visible:ring-2'
     >
       <span className='flex items-center gap-3'>
-        <span className='bg-primary/15 text-primary flex size-9 shrink-0 items-center justify-center rounded-full'>
+        <span className='bg-primary/10 text-primary flex size-9 shrink-0 items-center justify-center rounded-full'>
           <Icon className='size-5' aria-hidden />
         </span>
         <span className='font-medium'>{title}</span>
@@ -269,7 +279,7 @@ function PasswordStep({
         setPending(false);
         if (failed) setError(failed);
       }}
-      className='border-foreground/10 flex flex-col gap-3 rounded-lg border p-4'
+      className='border-foreground/10 flex flex-col gap-3 rounded-xl border p-4'
     >
       <div className='flex flex-col gap-1'>
         <Label htmlFor={id}>Your password</Label>
@@ -283,7 +293,7 @@ function PasswordStep({
           {pending && <Loader2Icon className='animate-spin' />}
           {submit}
         </Button>
-        <Button type='button' variant='ghost' onClick={onCancel}>
+        <Button type='button' variant='secondary' onClick={onCancel}>
           Cancel
         </Button>
       </div>
@@ -304,7 +314,7 @@ function AppSetup({ totpURI, backupCodes, onCancel, onDone }: { totpURI: string;
 
   if (confirmed) {
     return (
-      <div className='border-foreground/10 flex flex-col gap-4 rounded-lg border p-4'>
+      <div className='border-foreground/10 flex flex-col gap-4 rounded-xl border p-4'>
         <p className='flex items-center gap-2 font-medium'>
           <CheckIcon className='text-primary size-4' aria-hidden />
           Your authenticator app is set up
@@ -318,7 +328,7 @@ function AppSetup({ totpURI, backupCodes, onCancel, onDone }: { totpURI: string;
   }
 
   return (
-    <div className='border-foreground/10 flex flex-col gap-4 rounded-lg border p-4'>
+    <div className='border-foreground/10 flex flex-col gap-4 rounded-xl border p-4'>
       <ol className='flex list-decimal flex-col gap-1 pl-5 text-sm'>
         <li>Open your authenticator app and add a new account.</li>
         <li>Scan this code, or type in the key under it.</li>
@@ -356,7 +366,7 @@ function AppSetup({ totpURI, backupCodes, onCancel, onDone }: { totpURI: string;
             {pending && <Loader2Icon className='animate-spin' />}
             Confirm
           </Button>
-          <Button type='button' variant='ghost' onClick={onCancel}>
+          <Button type='button' variant='secondary' onClick={onCancel}>
             Cancel
           </Button>
         </div>

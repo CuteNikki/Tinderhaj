@@ -71,10 +71,10 @@ export function PasskeySettings({ passkeys }: { passkeys: Passkey[] }) {
   return (
     <div className='flex flex-col gap-3'>
       {passkeys.length > 0 && (
-        <ul className='divide-foreground/10 border-foreground/10 flex flex-col divide-y rounded-lg border'>
+        <ul className='divide-foreground/10 border-foreground/10 flex flex-col divide-y rounded-xl border'>
           {passkeys.map((passkey) => (
             <li key={passkey.id} className='flex items-center gap-3 p-3 px-4'>
-              <FingerprintIcon className='text-muted-foreground size-5 shrink-0' aria-hidden />
+              <FingerprintIcon className='text-primary size-5 shrink-0' aria-hidden />
               <div className='min-w-0 flex-1'>
                 <p className='truncate font-medium'>{passkey.name ?? 'Passkey'}</p>
                 <p className='text-muted-foreground text-xs'>

@@ -38,7 +38,7 @@ export function ConfirmDeleteAccount({ token }: { token: string }) {
         {pending ? <Loader2Icon className='animate-spin' aria-hidden='true' /> : <Trash2Icon aria-hidden='true' />}
         Delete my account
       </Button>
-      <Button variant='ghost' asChild>
+      <Button variant='secondary' asChild>
         <Link href='/dashboard/account'>Keep my account</Link>
       </Button>
     </div>

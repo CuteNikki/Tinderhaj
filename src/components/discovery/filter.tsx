@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Grid2X2Icon, Search, SearchIcon } from 'lucide-react';
 import { motion } from 'motion/react';
 
-import { after } from '@/lib/motion';
+import { after, reveal } from '@/lib/motion';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,8 +20,9 @@ export function DiscoveryFilter({ take, page, query, seed, disabled }: { take?: 
 
   return (
     <motion.form
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial='hidden'
+      whileInView='visible'
+      variants={reveal}
       viewport={{ once: true, amount: 0.45 }}
       transition={after(0.4)}
       className='border-foreground/10 bg-background/85 rounded-3xl border p-3 shadow-lg backdrop-blur-md sm:rounded-full'

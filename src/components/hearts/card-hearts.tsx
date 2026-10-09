@@ -49,7 +49,7 @@ export function CardHearts({
     const label = signedIn ? 'Get one of your sharks verified to send hearts' : `Sign in to send ${target.displayName} a heart`;
     return (
       <Hint label={label}>
-        <Button variant='outline' size='icon-sm' className='text-muted-foreground rounded-full' asChild>
+        <Button variant='outline' size='icon-sm' className='text-muted-foreground' asChild>
           <Link href={signedIn ? '/dashboard/profiles' : '/sign-in'} aria-label={label}>
             <HeartIcon aria-hidden='true' />
           </Link>

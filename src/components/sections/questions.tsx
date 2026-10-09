@@ -3,6 +3,7 @@ import { PlusIcon } from 'lucide-react';
 import { HEARTS_PER_DAY } from '@/lib/hearts';
 
 import { Stagger } from '@/components/common/stagger';
+import { PonderingShark } from '@/components/sections/pondering-shark';
 import { Section } from '@/components/sections/section';
 
 const QUESTIONS = [
@@ -26,7 +27,14 @@ const QUESTIONS = [
 /** The questions people ask most, each opening to its answer, one at a time. */
 export function Questions({ tone }: { tone?: 'muted' | 'card' | 'background' }) {
   return (
-    <Section eyebrow='FAQ' title='Questions,' highlight='answered.' note='The ones we hear most. Anything else, just ask.' tone={tone}>
+    <Section
+      eyebrow='FAQ'
+      title='Questions,'
+      highlight='answered.'
+      note='The ones we hear most. Anything else, just ask.'
+      tone={tone}
+      aside={<PonderingShark />}
+    >
       <Stagger className='border-border max-w-3xl border-t' gap={0.06} delay={0.15}>
         {QUESTIONS.map(({ question, answer }) => (
           // Sharing a name, opening one closes the others

@@ -12,12 +12,14 @@ import { after, cardReveal, reveal, spring } from '@/lib/motion';
  * only scrolled to later (see useReveal).
  */
 export function ScrollReveal({
+  id,
   children,
   className,
   delay = 0,
   scrollDelay = 0,
   variant = 'section',
 }: {
+  id?: string;
   children: React.ReactNode;
   className?: string;
   delay?: number;
@@ -28,6 +30,7 @@ export function ScrollReveal({
 
   return (
     <motion.div
+      id={id}
       ref={ref}
       className={className}
       initial='hidden'

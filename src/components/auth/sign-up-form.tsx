@@ -94,7 +94,7 @@ export function SignUpForm() {
           />
         </motion.div>
         <motion.div variants={staggerItem}>
-          <Button type='submit' className='w-full transition-transform active:scale-[0.98]' disabled={isSubmitting}>
+          <Button type='submit' className='w-full' disabled={isSubmitting}>
             {isSubmitting ? (
               <>
                 <Loader2Icon className='shrink-0 animate-spin' aria-hidden='true' />

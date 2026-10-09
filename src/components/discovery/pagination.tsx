@@ -3,6 +3,8 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, type MouseEvent } from 'react';
 
+import { ButtonSkeleton, GhostText } from '@/components/common/skeletons';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 
 const scrollToProfilesKey = 'discovery-scroll-to-profiles';
@@ -107,29 +109,17 @@ export function DiscoveryPagination({
   );
 }
 
+/** The page links while they load: placed as the real ones are, on the page itself, not in a box of their own. */
 export function DiscoveryPaginationSkeleton() {
   return (
-    <div className='bg-muted flex flex-col items-center gap-4 p-4 text-center text-balance'>
-      <p className='flex items-center gap-2 text-sm'>Showing ? of ? profiles (page ? of ?)</p>
-      <Pagination>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink>?</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink isActive>?</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink>?</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+    <div className='flex flex-col items-center gap-4 px-5 pt-8 text-center text-balance' aria-hidden>
+      <GhostText>Showing 6 of 10 profiles (page 1 of 2)</GhostText>
+      <div className='flex items-center gap-1'>
+        <ButtonSkeleton className='pl-2'>Previous</ButtonSkeleton>
+        <Skeleton className='size-9 rounded-full' />
+        <Skeleton className='size-9 rounded-full' />
+        <ButtonSkeleton className='pr-2'>Next</ButtonSkeleton>
+      </div>
     </div>
   );
 }

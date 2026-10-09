@@ -40,7 +40,7 @@ export function AccountActions({ user, sessions }: { user: { id: string; usernam
   return (
     <div className='flex flex-wrap gap-2'>
       <Button
-        variant='outline'
+        variant='destructive'
         disabled={running !== null || sessions === 0}
         title={sessions === 0 ? 'They aren’t signed in anywhere.' : undefined}
         onClick={() =>
@@ -50,6 +50,7 @@ export function AccountActions({ user, sessions }: { user: { id: string; usernam
               title: `Sign @${user.username} out everywhere?`,
               description: `Ends ${sessions === 1 ? 'their 1 session' : `all ${sessions} of their sessions`}. They can sign in again.`,
               action: 'Sign out',
+              destructive: true,
             },
             () => signOutUserEverywhere(user.id),
             `@${user.username} is signed out everywhere.`,

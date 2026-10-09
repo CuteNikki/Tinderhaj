@@ -8,6 +8,7 @@ import { extractRouterConfig } from 'uploadthing/server';
 import { layoutMetadata } from '@/constants/metadata';
 
 import { ourFileRouter } from '@/app/api/uploadthing/core';
+import { KeepScroll } from '@/components/common/keep-scroll';
 import { PageWater } from '@/components/common/page-water';
 import { Footer } from '@/components/navigation/footer';
 import { Navbar, NavbarFallback } from '@/components/navigation/navbar';
@@ -44,6 +45,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className='bg-background text-foreground flex min-h-full flex-col overflow-y-scroll'>
+        <KeepScroll />
         <NextSSRPlugin routerConfig={uploadthingRouterConfig} />
         <div id='top' />
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>

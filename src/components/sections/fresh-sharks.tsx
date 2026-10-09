@@ -39,7 +39,7 @@ export async function FreshSharks({ tone }: { tone?: 'muted' | 'card' | 'backgro
         ))}
       </div>
       <div className='mt-8 flex justify-center'>
-        <Button size='lg' variant='outline' className='h-12 rounded-full px-6' asChild>
+        <Button size='xl' variant='outline' asChild>
           <DiscoveryLink>
             See everyone
             <ArrowRight />

@@ -1,4 +1,4 @@
-import type { Transition, Variants } from 'motion/react';
+import type { TargetAndTransition, Transition, Variants } from 'motion/react';
 
 /**
  * Springs with a little overshoot, so things land rather than just stop.
@@ -38,6 +38,37 @@ export const popIn: Variants = {
   visible: { opacity: 1, scale: 1, rotate: 0 },
 };
 
+/** A big shark swimming in: rises, grows and turns upright as it comes. */
+export const swimIn: Variants = {
+  hidden: { opacity: 0, y: 40, scale: 0.85, rotate: -10 },
+  visible: { opacity: 1, y: 0, scale: 1, rotate: 0 },
+};
+
+/** The rings around a shark, growing into place. */
+export const ringIn: Variants = {
+  hidden: { opacity: 0, scale: 0.92 },
+  visible: { opacity: 1, scale: 1 },
+};
+
+/** A big shark under the pointer: grows a little and leans back. */
+export const sharkHover = { scale: 1.04, rotate: -3, transition: spring.snappy };
+
+/**
+ * Floating in place, forever, every big shark the same way. Spread into a
+ * motion element: `<motion.div {...bob.shark}>`.
+ */
+/** Floating, as spread into a motion element. */
+type Float = { animate: TargetAndTransition; transition: Transition };
+
+export const bob: { shark: Float; small: (delay?: number, rotate?: number) => Float } = {
+  shark: { animate: { y: [0, -10, 0], rotate: [-2, 2, -2] }, transition: { duration: 6, ease: 'easeInOut', repeat: Infinity } },
+  /** The little pills and cards floating around a shark; `delay` so they don't all bob together, `rotate` for one set at a slant. */
+  small: (delay = 0, rotate) => ({
+    animate: { y: [0, -5, 0], ...(rotate === undefined ? {} : { rotate: [rotate, rotate - 4, rotate] }) },
+    transition: { duration: 4, ease: 'easeInOut', repeat: Infinity, delay },
+  }),
+};
+
 /** Shows children one after another. */
 export function stagger(gap = 0.07, delay = 0.05): Variants {
   return { hidden: {}, visible: { transition: { staggerChildren: gap, delayChildren: delay } } };
@@ -50,6 +81,9 @@ export function after(delay: number, transition: Transition = spring.soft): Tran
 
 /** Lifts and tips a little under the pointer. */
 export const hoverLift = { y: -4, rotate: -0.8, transition: spring.snappy };
+
+/** The same lift, as classes: for every card you can click, so they all answer the pointer alike. */
+export const LIFT = 'ease-bounce transition-all duration-300 hover:-translate-y-1 hover:-rotate-[0.6deg] hover:shadow-lg';
 
 /** Squishes a little when pressed. */
 export const press = { scale: 0.95, transition: spring.snappy };

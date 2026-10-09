@@ -11,13 +11,13 @@ export const metadata: Metadata = privacyMetadata;
 export default function PrivacyPage() {
   return (
     <LegalPage title='Privacy Policy' lead='How Tinderhaj handles the information needed to run the service.' updated='October 7, 2026'>
-      <LegalSection delay={0.35} title='1. Introduction'>
+      <LegalSection index={0} title='1. Introduction'>
         <TypographyP>
           This Privacy Policy explains how Tinderhaj collects, uses, and protects information when you use the service. By creating an account or using
           Tinderhaj, you acknowledge the practices described here.
         </TypographyP>
       </LegalSection>
-      <LegalSection delay={0.45} title='2. Information you provide'>
+      <LegalSection index={1} title='2. Information you provide'>
         <TypographyP>We collect information you provide directly, including:</TypographyP>
         <TypographyList>
           <li>Account details such as your email address, username, and password credentials. Passwords are stored in hashed form.</li>
@@ -39,7 +39,7 @@ export default function PrivacyPage() {
           <li>Messages or requests you send to us, including privacy or support requests.</li>
         </TypographyList>
       </LegalSection>
-      <LegalSection delay={0.55} title='3. Information collected automatically'>
+      <LegalSection index={2} title='3. Information collected automatically'>
         <TypographyP>
           When you use Tinderhaj, we may receive limited technical information needed to operate and secure the service, such as your IP address, browser type,
           timestamps, and basic usage or error information provided by our hosting infrastructure.
@@ -50,7 +50,7 @@ export default function PrivacyPage() {
           also count requests per IP address for a short time to limit repeated sign-in attempts.
         </TypographyP>
       </LegalSection>
-      <LegalSection delay={0.65} title='4. How we use information'>
+      <LegalSection index={3} title='4. How we use information'>
         <TypographyP>We use information to:</TypographyP>
         <TypographyList>
           <li>Provide, operate, and maintain accounts, profiles, and discovery.</li>
@@ -62,13 +62,13 @@ export default function PrivacyPage() {
           <li>Diagnose problems, protect the service, and improve its features.</li>
         </TypographyList>
       </LegalSection>
-      <LegalSection delay={0.75} title='5. Legal bases for processing'>
+      <LegalSection index={4} title='5. Legal bases for processing'>
         <TypographyP>
           Where applicable law requires a legal basis, we process information as needed to perform our agreement with you, pursue legitimate interests such as
           security and service improvement, comply with legal obligations, or rely on consent where we request it.
         </TypographyP>
       </LegalSection>
-      <LegalSection delay={0.85} title='6. Public profiles and sharing'>
+      <LegalSection index={5} title='6. Public profiles and sharing'>
         <TypographyP>
           Verified profile information may be visible to anyone through discovery and on your user page, along with your username and when you joined. When one
           of your profiles sends a heart, the owner of the profile it goes to sees which of your profiles sent it. We do not sell personal information. We share
@@ -76,14 +76,14 @@ export default function PrivacyPage() {
           reasons.
         </TypographyP>
       </LegalSection>
-      <LegalSection delay={0.95} title='7. Third-party services'>
+      <LegalSection index={6} title='7. Third-party services'>
         <TypographyP>
           We use third-party providers for infrastructure, database hosting, email delivery, and file uploads. These providers process information only as
           needed to provide their services and may have their own privacy policies. If you choose to sign in with another service, that service learns that you
           are signing in to Tinderhaj, under its own privacy policy. You can disconnect it in Account Settings, as long as you keep another way to sign in.
         </TypographyP>
       </LegalSection>
-      <LegalSection delay={1.05} title='8. Cookies and local storage'>
+      <LegalSection index={7} title='8. Cookies and local storage'>
         <TypographyP>
           Tinderhaj uses essential httpOnly cookies to keep you signed in, and short-lived ones while you sign in with another service. If you use two-step
           sign-in, a short-lived cookie remembers that you entered your password while you enter the code, and if you choose &quot;Don&apos;t ask again on this
@@ -91,7 +91,7 @@ export default function PrivacyPage() {
           selected theme and to remember to send a sign-in code once. We do not use advertising or cross-site tracking cookies.
         </TypographyP>
       </LegalSection>
-      <LegalSection delay={1.15} title='9. Retention and deletion'>
+      <LegalSection index={8} title='9. Retention and deletion'>
         <TypographyP>
           We retain information while it is needed to provide the service, meet legal obligations, resolve disputes, and protect Tinderhaj. You can delete your
           account from Account Settings after confirming a link sent to your email. Account deletion removes your account, profiles, sessions, passkeys,
@@ -99,38 +99,38 @@ export default function PrivacyPage() {
           end when you sign out or after a few days without use, and email links expire after one to 24 hours.
         </TypographyP>
       </LegalSection>
-      <LegalSection delay={1.25} title='10. Your rights'>
+      <LegalSection index={9} title='10. Your rights'>
         <TypographyP>
           Depending on where you live, you may have rights to access, correct, export, delete, restrict, or object to certain processing of your personal
           information. You can manage your username, email, password, two-step sign-in, passkeys, sessions, and account deletion in Account Settings, or contact
           us at contact@tinderhaj.com.
         </TypographyP>
       </LegalSection>
-      <LegalSection delay={1.35} title='11. Security'>
+      <LegalSection index={10} title='11. Security'>
         <TypographyP>
           We use measures such as password hashing, protected sessions, optional two-step sign-in and passkeys, limits on repeated sign-in attempts, access
           controls, and encryption in transit to help protect information. No method of transmission or storage is completely secure, and we continue to improve
           our safeguards.
         </TypographyP>
       </LegalSection>
-      <LegalSection delay={1.45} title="12. Children's privacy">
+      <LegalSection index={11} title="12. Children's privacy">
         <TypographyP>
           Tinderhaj is not intended for children under 13, or under the minimum age required in your country. We do not knowingly collect personal information
           from children. If you believe a child has provided information, contact us so we can review and remove it where appropriate.
         </TypographyP>
       </LegalSection>
-      <LegalSection delay={1.55} title='13. International processing'>
+      <LegalSection index={12} title='13. International processing'>
         <TypographyP>
           Your information may be processed in countries other than your own by Tinderhaj or our service providers. Where required, we take steps to protect
           information in accordance with applicable law.
         </TypographyP>
       </LegalSection>
-      <LegalSection delay={1.65} title='14. Changes to this policy'>
+      <LegalSection index={13} title='14. Changes to this policy'>
         <TypographyP>
           We may update this Privacy Policy as Tinderhaj changes. The updated version will be posted on this page with a revised update date.
         </TypographyP>
       </LegalSection>
-      <LegalSection delay={1.75} title='15. Contact us'>
+      <LegalSection index={14} title='15. Contact us'>
         <TypographyP>
           Questions about this Privacy Policy or how we handle information can be sent to{' '}
           <a className='text-foreground font-medium underline' href='mailto:contact@tinderhaj.com'>

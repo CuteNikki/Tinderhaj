@@ -8,6 +8,7 @@ import { getHeartStates, getUserPage } from '@/lib/hearts';
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 import { getSession } from '@/lib/session';
 
+import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
 import { EmptyState } from '@/components/common/empty-state';
 import { Stagger } from '@/components/common/stagger';
 import { DiscoveryProfile } from '@/components/discovery/profile';
@@ -52,14 +53,14 @@ export default async function UserSharksPage({ params }: PageProps<'/u/[username
   return (
     <div data-water='band' className='flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'>
       <div className='container mx-auto max-w-7xl'>
-        <Stagger id='page-header' variant='sink' className='mb-24 flex flex-col justify-between gap-4 sm:flex-row sm:items-end'>
+        <Stagger id='page-header' variant='sink' className='mb-24 flex flex-col items-start gap-4'>
           <div>
-            <p className='text-primary mb-1 text-xs font-bold tracking-widest uppercase'>{sharks.length === 1 ? '1 shark' : `${sharks.length} sharks`}</p>
-            <h1 className='text-3xl font-black tracking-tight break-all sm:text-4xl'>@{user.username}</h1>
-            <p className='text-muted-foreground mt-2 text-sm'>
+            <Eyebrow>{sharks.length === 1 ? '1 shark' : `${sharks.length} sharks`}</Eyebrow>
+            <PageTitle className='break-all'>@{user.username}</PageTitle>
+            <PageNote>
               Joined {user.createdAt.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
               {banned && ' · Banned: only moderators see this page'}
-            </p>
+            </PageNote>
           </div>
           {(own || moderator) && (
             <div className='flex flex-wrap gap-2'>

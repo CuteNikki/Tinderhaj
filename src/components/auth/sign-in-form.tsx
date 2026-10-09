@@ -128,7 +128,7 @@ export function SignInForm({ providers, error }: { providers: SocialProviderId[]
           />
         </motion.div>
         <motion.div variants={staggerItem}>
-          <Button type='submit' className='w-full transition-transform active:scale-[0.98]' disabled={isSubmitting}>
+          <Button type='submit' className='w-full' disabled={isSubmitting}>
             {isSubmitting ? (
               <>
                 <Loader2Icon className='shrink-0 animate-spin' aria-hidden='true' />
@@ -148,7 +148,7 @@ export function SignInForm({ providers, error }: { providers: SocialProviderId[]
           <span className='bg-border h-px flex-1' />
         </motion.div>
         <motion.div variants={staggerItem} className='space-y-2'>
-          <Button type='button' variant='outline' className='w-full transition-transform active:scale-[0.98]' onClick={() => signInWithPasskey()}>
+          <Button type='button' variant='outline' className='w-full' onClick={() => signInWithPasskey()}>
             <FingerprintIcon className='shrink-0' aria-hidden='true' />
             Sign in with a passkey
           </Button>

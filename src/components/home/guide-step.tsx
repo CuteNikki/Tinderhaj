@@ -4,7 +4,7 @@ import { Heart, Search, Sparkles } from 'lucide-react';
 import { motion, useInView } from 'motion/react';
 import { useRef } from 'react';
 
-import { after, cardReveal, spring } from '@/lib/motion';
+import { after, cardReveal, spring, STAGGER } from '@/lib/motion';
 
 const icons = { sparkles: Sparkles, search: Search, heart: Heart };
 
@@ -16,15 +16,15 @@ export function GuideStep({ number, title, copy, icon }: { number: string; title
   return (
     <motion.div
       ref={elementRef}
-      className='group/step border-b border-current/20 px-4 py-4 last:border-b-0 sm:px-6 md:border-r md:border-b-0 last:md:border-r-0'
+      className='group/step border-b border-current/20 py-5 last:border-b-0 md:border-r md:border-b-0 md:px-6 md:first:pl-0 last:md:border-r-0'
       initial='hidden'
       animate={isInView ? 'visible' : 'hidden'}
       variants={cardReveal}
-      transition={after(Number(number) * 0.08, spring.pop)}
+      transition={after((Number(number) - 1) * STAGGER, spring.pop)}
     >
       <div className='mb-4 flex items-center justify-between'>
         <span className='text-muted-foreground font-mono text-sm'>{number}</span>
-        <span className='bg-background ease-bounce flex h-10 w-10 items-center justify-center rounded-full transition-transform duration-300 group-hover/step:scale-110'>
+        <span className='bg-primary/10 ease-bounce flex h-10 w-10 items-center justify-center rounded-full transition-transform duration-300 group-hover/step:scale-110'>
           <Icon className='text-primary group-hover/step:animate-wiggle h-5 w-5' />
         </span>
       </div>

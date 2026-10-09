@@ -9,13 +9,13 @@ import { providerLabel } from '@/lib/providers';
 import { QUERIES } from '@/lib/queries';
 import { canBan, canManageAccount, isAdmin, ROLE_DESCRIPTIONS, ROLE_LABELS } from '@/lib/roles';
 import { isModerator, requireUser } from '@/lib/session';
-import { cn } from '@/lib/utils';
 
+import { SettingsSection } from '@/components/common/settings-section';
+import { Eyebrow, PageTitle } from '@/components/common/heading';
 import { EmptyState } from '@/components/common/empty-state';
 import { Stagger } from '@/components/common/stagger';
 import { LocalTime } from '@/components/common/local-time';
 import { DiscoveryProfile } from '@/components/discovery/profile';
-import { ScrollReveal } from '@/components/home/scroll-reveal';
 import { Badge } from '@/components/ui/badge';
 import { AccountActions } from '@/components/users/account-actions';
 import { BanForm, UnbanButton } from '@/components/users/ban-controls';
@@ -57,8 +57,8 @@ export default async function UserPage({ params }: PageProps<'/moderation/users/
             <ArrowLeftIcon className='size-4' aria-hidden='true' />
             Users
           </Link>
-          <p className='text-primary mb-1 text-xs font-bold tracking-widest uppercase'>Moderation</p>
-          <h1 className='text-3xl font-black tracking-tight break-all sm:text-4xl'>@{user.username}</h1>
+          <Eyebrow>Moderation</Eyebrow>
+          <PageTitle className='break-all'>@{user.username}</PageTitle>
           {'email' in user && user.email && <p className='text-muted-foreground mt-1 break-all'>{user.email}</p>}
           <Stagger className='mt-3 flex flex-wrap items-center gap-1.5' itemAs='span' gap={0.03} delay={0.45}>
             <Badge variant={user.role === 'USER' ? 'outline' : 'default'}>{ROLE_LABELS[user.role]}</Badge>
@@ -97,7 +97,7 @@ export default async function UserPage({ params }: PageProps<'/moderation/users/
         </Stagger>
 
         <div className='grid gap-6'>
-          <Section
+          <SettingsSection
             title='Profiles'
             description={user.profiles.length === 1 ? '1 profile, in any state of review.' : `${user.profiles.length} profiles, in any state of review.`}
             delay={0.6}
@@ -120,9 +120,9 @@ export default async function UserPage({ params }: PageProps<'/moderation/users/
             ) : (
               <EmptyState icon={UserRoundIcon} title='No profiles.' description='They haven’t made a profile yet.' />
             )}
-          </Section>
+          </SettingsSection>
 
-          <Section title='Role' description={ROLE_DESCRIPTIONS[user.role]} delay={0.7}>
+          <SettingsSection title='Role' description={ROLE_DESCRIPTIONS[user.role]} delay={0.7}>
             {admin && !self ? (
               <RoleSelect userId={user.id} username={user.username} role={user.role} />
             ) : (
@@ -130,10 +130,10 @@ export default async function UserPage({ params }: PageProps<'/moderation/users/
                 {self ? 'You can’t change your own role.' : 'Only admins can change roles.'} {ROLE_LABELS[user.role]} is the current role.
               </p>
             )}
-          </Section>
+          </SettingsSection>
 
           {(banned || mayBan) && (
-            <Section
+            <SettingsSection
               title='Ban'
               description={banned ? undefined : 'Signs them out everywhere and stops them signing in. They see the reason, if you give one, when they try.'}
               destructive
@@ -174,42 +174,16 @@ export default async function UserPage({ params }: PageProps<'/moderation/users/
               ) : (
                 <BanForm user={user} />
               )}
-            </Section>
+            </SettingsSection>
           )}
 
           {mayManage && (
-            <Section title='Account' description='Things only admins can do. Each asks first.' delay={0.9}>
+            <SettingsSection title='Account' description='Things only admins can do. Each asks first.' delay={0.9}>
               <AccountActions user={user} sessions={user._count.sessions} />
-            </Section>
+            </SettingsSection>
           )}
         </div>
       </div>
     </div>
-  );
-}
-
-function Section({
-  title,
-  description,
-  destructive,
-  delay,
-  children,
-}: {
-  title: string;
-  description?: string;
-  destructive?: boolean;
-  delay?: number;
-  children: React.ReactNode;
-}) {
-  return (
-    <ScrollReveal delay={delay}>
-      <section className={cn('rounded-xl border p-4', destructive ? 'border-destructive/30 bg-destructive/5' : 'border-foreground/10 bg-card shadow-sm')}>
-        <div className='mb-4'>
-          <h2 className={cn('text-xl font-bold', destructive && 'text-destructive')}>{title}</h2>
-          {description && <p className='text-muted-foreground mt-1 text-sm text-pretty'>{description}</p>}
-        </div>
-        {children}
-      </section>
-    </ScrollReveal>
   );
 }

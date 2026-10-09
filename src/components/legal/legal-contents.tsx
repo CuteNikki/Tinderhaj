@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { cn } from '@/lib/utils';
+import { Eyebrow } from '@/components/common/heading';
 
 const LEGAL_PAGES = [
   { href: '/privacy', name: 'Privacy Policy' },
@@ -44,7 +45,9 @@ export function LegalContents({ sections }: { sections: { id: string; title: str
 
   return (
     <nav aria-label='On this page' className='text-sm'>
-      <p className='text-primary mb-3 text-xs font-bold tracking-widest uppercase'>On this page</p>
+      <Eyebrow as='h2' className='mb-4'>
+        On this page
+      </Eyebrow>
       <ol className='border-border border-l'>
         {sections.map(({ id, title }) => (
           <li key={id}>
@@ -62,7 +65,9 @@ export function LegalContents({ sections }: { sections: { id: string; title: str
           </li>
         ))}
       </ol>
-      <p className='text-primary mt-8 mb-3 text-xs font-bold tracking-widest uppercase'>Legal</p>
+      <Eyebrow as='h2' className='mt-8 mb-4'>
+        Legal
+      </Eyebrow>
       <ul className='space-y-1.5'>
         {LEGAL_PAGES.map(({ href, name }) => (
           <li key={href}>

@@ -22,7 +22,7 @@ export function CopyEmail() {
   }
 
   return (
-    <Button type='button' variant='outline' className='h-10 rounded-full px-5' onClick={copy}>
+    <Button type='button' size='lg' variant='outline' onClick={copy}>
       {copied ? <CheckIcon /> : <CopyIcon />}
       {copied ? 'Copied' : 'Copy'}
     </Button>

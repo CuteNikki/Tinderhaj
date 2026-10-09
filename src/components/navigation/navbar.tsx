@@ -19,6 +19,7 @@ import { QUERIES } from '@/lib/queries';
 import type { AccountRole } from '@/lib/roles';
 import { getSession, isModerator } from '@/lib/session';
 
+import { Eyebrow } from '@/components/common/heading';
 import { LogOutButton, LogOutDropdownMenuItem } from '@/components/auth/logout-button';
 import { Logo } from '@/components/common/logo';
 import { DiscoveryLink } from '@/components/discovery/link';
@@ -184,7 +185,7 @@ function NavbarContent({ user, pending, hearts, showAuthElements }: { user: NavU
                   ) : (
                     <>
                       <SheetClose asChild>
-                        <Button variant='secondary' className='w-full' asChild>
+                        <Button variant='outline' className='w-full' asChild>
                           <Link href='/sign-in'>Sign in</Link>
                         </Button>
                       </SheetClose>
@@ -240,7 +241,7 @@ function MenuLink({ link }: { link: NavLink }) {
   return (
     <DropdownMenuItem asChild>
       <Link href={link.href}>
-        <link.icon aria-hidden='true' />
+        <link.icon className='text-primary' aria-hidden='true' />
         {link.name}
         <Count count={link.count} />
       </Link>
@@ -251,13 +252,15 @@ function MenuLink({ link }: { link: NavLink }) {
 function SheetSection({ title, links }: { title: string; links: NavLink[] }) {
   return (
     <section>
-      <h2 className='text-muted-foreground mb-1 px-3 text-xs font-semibold tracking-widest uppercase'>{title}</h2>
+      <Eyebrow as='h2' className='mb-1 px-3'>
+        {title}
+      </Eyebrow>
       <ul>
         {links.map((link) => (
           <li key={link.href}>
             <SheetClose asChild>
               <SiteLink link={link} className='hover:bg-muted flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors'>
-                <link.icon className='text-muted-foreground size-4' aria-hidden='true' />
+                <link.icon className='text-primary size-4' aria-hidden='true' />
                 {link.name}
                 <Count count={link.count} />
               </SiteLink>

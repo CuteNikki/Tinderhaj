@@ -9,6 +9,7 @@ import type { ProfileWithOwner } from '@/lib/queries';
 import { deleteProfile, submitProfileForReview } from '@/lib/actions';
 import { profileFieldLabel } from '@/lib/profile-fields';
 import { PROFILE_STATUS_META } from '@/lib/profile-status';
+import { LIFT } from '@/lib/motion';
 import { calculateAge, cn } from '@/lib/utils';
 
 import { EditProfile } from '@/components/profiles/edit-profile';
@@ -64,7 +65,7 @@ export function ProfileCard({ profile }: { profile: ProfileWithOwner }) {
   if (isDeleted) return null;
 
   return (
-    <Card className='group border-foreground/10 bg-background ease-bounce h-full w-full overflow-hidden pt-0 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:-rotate-[0.6deg] hover:shadow-xl'>
+    <Card className={cn('group bg-background h-full w-full overflow-hidden pt-0 shadow-sm', LIFT)}>
       <div className='relative aspect-5/2 overflow-hidden'>
         <ProfileBanner src={profile.bannerUrl} alt={`${profile.displayName}'s banner`} />
         <Tooltip>
@@ -115,7 +116,7 @@ export function ProfileCard({ profile }: { profile: ProfileWithOwner }) {
         </div>
 
         {profile.status === 'REJECTED' && (profile.rejectedFields.length > 0 || profile.rejectionNote) && (
-          <div className='border-destructive/30 bg-destructive/10 text-destructive mt-4 rounded-md border p-3 text-sm'>
+          <div className='border-destructive/30 bg-destructive/10 text-destructive mt-4 rounded-lg border p-3 text-sm'>
             {profile.rejectedFields.length > 0 && (
               <div className='flex flex-wrap items-center gap-1.5'>
                 <span className='font-semibold'>Needs fixing:</span>
@@ -168,7 +169,7 @@ export function ProfileCard({ profile }: { profile: ProfileWithOwner }) {
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction className={cn(buttonVariants({ variant: 'destructive' }))} onClick={handleDelete}>
+                <AlertDialogAction className={buttonVariants({ variant: 'destructive' })} onClick={handleDelete}>
                   Delete
                 </AlertDialogAction>
               </AlertDialogFooter>

@@ -11,6 +11,7 @@ import { isModerator, requireUser } from '@/lib/session';
 import { CONTENT_DELAY } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 
+import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
 import { EmptyState } from '@/components/common/empty-state';
 import { Stagger } from '@/components/common/stagger';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
@@ -66,13 +67,13 @@ export default async function UsersPage({ searchParams }: PageProps<'/moderation
     <div data-water='band' className='flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'>
       <div className='container mx-auto max-w-7xl'>
         <Stagger id='page-header' variant='sink' className='mb-24'>
-          <p className='text-primary mb-1 text-xs font-bold tracking-widest uppercase'>Moderation</p>
-          <h1 className='text-3xl font-black tracking-tight sm:text-4xl'>Users</h1>
-          <p className='text-muted-foreground mt-2 text-sm text-pretty'>
+          <Eyebrow>Moderation</Eyebrow>
+          <PageTitle>Users</PageTitle>
+          <PageNote>
             {admin
               ? 'Open someone to see their profiles, change their role, ban them, or manage their account.'
               : 'Open someone to see their profiles, or ban them. Only admins change roles and manage accounts.'}
-          </p>
+          </PageNote>
         </Stagger>
 
         <nav aria-label='Filter users'>
@@ -85,7 +86,7 @@ export default async function UsersPage({ searchParams }: PageProps<'/moderation
                   href={usersHref({ query, show: filter.show, page: 1 })}
                   aria-current={active ? 'page' : undefined}
                   className={cn(
-                    'block h-full rounded-xl border p-4 transition-colors',
+                    'block h-full rounded-2xl border p-4 transition-colors',
                     active ? 'border-primary/50 bg-primary/10' : 'border-foreground/10 bg-card hover:bg-muted/50 shadow-sm',
                   )}
                 >
@@ -124,7 +125,7 @@ export default async function UsersPage({ searchParams }: PageProps<'/moderation
             <Stagger
               as='ul'
               itemAs='li'
-              className='border-foreground/10 bg-card divide-foreground/10 divide-y rounded-xl border shadow-sm'
+              className='border-foreground/10 bg-card divide-foreground/10 divide-y rounded-2xl border shadow-sm'
               // All rows at once: one list, not a cascade.
               gap={0}
               delay={0.75}
@@ -135,7 +136,7 @@ export default async function UsersPage({ searchParams }: PageProps<'/moderation
                   <Link
                     key={user.id}
                     href={`/moderation/users/${user.id}`}
-                    className='hover:bg-muted/50 flex items-center gap-3 p-4 transition-colors first:rounded-t-xl last:rounded-b-xl'
+                    className='hover:bg-muted/50 flex items-center gap-3 p-4 transition-colors first:rounded-t-2xl last:rounded-b-2xl'
                   >
                     <div className='min-w-0 flex-1'>
                       <p className='flex flex-wrap items-center gap-2 font-medium'>

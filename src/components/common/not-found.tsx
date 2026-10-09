@@ -2,12 +2,13 @@
 
 import { motion } from 'motion/react';
 
-import { after, spring } from '@/lib/motion';
+import { after, bob, popIn, reveal, sharkHover, spring, STAGGER, swimIn } from '@/lib/motion';
 import Image from 'next/image';
 import Link from 'next/link';
 
 import { ArrowLeft, Compass, Radio, Search } from 'lucide-react';
 
+import { HeroBadge } from '@/components/common/hero-badge';
 import { Ocean, glass, sunlit } from '@/components/common/ocean';
 import { DiscoveryLink } from '@/components/discovery/link';
 import { Button } from '@/components/ui/button';
@@ -22,18 +23,14 @@ export function NotFoundPage() {
 
       <div className='container mx-auto grid max-w-7xl items-center gap-10 pt-20 pb-32 md:grid-cols-[0.9fr_1.1fr] lg:gap-16 lg:pt-24 lg:pb-36'>
         <div className='on-water order-2 max-w-xl md:order-1'>
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={spring.soft}
-            className='text-primary mb-5 flex items-center gap-2 text-xs font-bold tracking-[0.24em] uppercase'
-          >
-            <Radio className='h-4 w-4 animate-pulse' /> Signal lost
+          <motion.div initial='hidden' animate='visible' variants={popIn} transition={spring.pop} className='mb-6'>
+            <HeroBadge icon={<Radio className='size-4 animate-pulse' aria-hidden='true' />}>Signal lost</HeroBadge>
           </motion.div>
           <motion.h1
-            initial={{ opacity: 0, y: 22 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={after(0.1)}
+            initial='hidden'
+            animate='visible'
+            variants={reveal}
+            transition={after(STAGGER)}
             className='text-foreground text-6xl leading-[0.9] font-black tracking-tight sm:text-8xl'
           >
             404
@@ -41,21 +38,22 @@ export function NotFoundPage() {
             <span className='text-primary'>gone fishing.</span>
           </motion.h1>
           <motion.p
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial='hidden'
+            animate='visible'
+            variants={reveal}
             transition={after(0.2)}
             className='text-muted-foreground mt-6 max-w-md text-base leading-relaxed text-pretty sm:text-lg'
           >
             This page drifted out of range. Let&apos;s get you back to the good stuff before the tide changes.
           </motion.p>
-          <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={after(0.3)} className='mt-8 flex flex-wrap gap-3'>
-            <Button size='lg' className={`${sunlit} h-12 rounded-full px-6`} asChild>
+          <motion.div initial='hidden' animate='visible' variants={reveal} transition={after(0.3)} className='mt-8 flex flex-wrap gap-3'>
+            <Button size='xl' className={sunlit} asChild>
               <Link href='/'>
                 <ArrowLeft />
                 Back home
               </Link>
             </Button>
-            <Button size='lg' variant='outline' className='dark:bg-background dark:hover:bg-muted h-12 rounded-full px-6' asChild>
+            <Button size='xl' variant='outline' asChild>
               <DiscoveryLink>
                 Find a match
                 <Search />
@@ -65,8 +63,9 @@ export function NotFoundPage() {
         </div>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
-          animate={{ opacity: 1, scale: 1, rotate: 0 }}
+          initial='hidden'
+          animate='visible'
+          variants={swimIn}
           transition={after(0.1, spring.pop)}
           className='relative order-1 mx-auto aspect-square w-full max-w-136 md:order-2'
         >
@@ -85,11 +84,7 @@ export function NotFoundPage() {
             <span className='bg-foreground/70 absolute top-1/2 -right-1.5 size-3 -translate-y-1/2 rounded-full' />
           </motion.div>
           <div className='border-primary/10 absolute top-1/2 left-1/2 aspect-square w-[42%] -translate-1/2 rounded-full border' />
-          <motion.div
-            animate={{ y: [0, -12, 0], rotate: [-2, 2, -2] }}
-            transition={{ duration: 5, ease: 'easeInOut', repeat: Infinity }}
-            className='absolute top-1/2 left-1/2 z-10 -translate-1/2'
-          >
+          <motion.div {...bob.shark} whileHover={sharkHover} className='absolute top-1/2 left-1/2 z-10 -translate-1/2'>
             <Image
               unoptimized
               src='/blahajThink.webp'
@@ -100,17 +95,12 @@ export function NotFoundPage() {
             />
           </motion.div>
           <motion.div
-            animate={{ y: [0, -5, 0] }}
-            transition={{ duration: 3.5, ease: 'easeInOut', repeat: Infinity, delay: 0.6 }}
+            {...bob.small(0.6)}
             className={`${glass} absolute top-[14%] right-[8%] z-20 flex items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold shadow-lg`}
           >
             <Compass className='h-3.5 w-3.5 text-[#ed3867]' /> Out of range
           </motion.div>
-          <motion.div
-            animate={{ y: [0, 6, 0] }}
-            transition={{ duration: 4, ease: 'easeInOut', repeat: Infinity, delay: 0.2 }}
-            className={`${glass} absolute bottom-[15%] left-[5%] z-20 rounded-xl px-4 py-3 shadow-xl`}
-          >
+          <motion.div {...bob.small(0.2)} className={`${glass} absolute bottom-[15%] left-[5%] z-20 rounded-2xl px-4 py-3 shadow-xl`}>
             <p className='text-sm font-bold'>Last known location</p>
             <p className='text-glass-muted mt-1 text-xs leading-relaxed'>Somewhere between here &amp; there</p>
           </motion.div>
