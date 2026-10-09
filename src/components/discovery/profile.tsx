@@ -42,7 +42,10 @@ export function DiscoveryProfile({
           </Badge>
         ) : (
           isFreshProfile(profile.verifiedAt, profile.createdAt) && (
-            <Badge className='bg-primary text-primary-foreground absolute top-3 right-3 rounded-full text-xs font-semibold shadow-md'>New</Badge>
+            // Solid in dark mode too, where the badge's own tint would otherwise win
+            <Badge className='bg-primary dark:bg-primary text-primary-foreground absolute top-3 right-3 rounded-full text-xs font-semibold shadow-md'>
+              New
+            </Badge>
           )
         )}
       </div>
