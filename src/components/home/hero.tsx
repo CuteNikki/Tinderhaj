@@ -11,14 +11,11 @@ import { after, popIn, reveal, spring } from '@/lib/motion';
 
 import { DiscoveryLink } from '@/components/discovery/link';
 import { AnimatedCount } from '@/components/home/animated-count';
-import { Ocean } from '@/components/home/ocean';
+import { Ocean, glass, sunlit } from '@/components/common/ocean';
 import { ScrollToElement } from '@/components/home/scroll-to-element';
 import { TypographyH1, TypographyMuted } from '@/components/typography';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-
-/** Frosted glass, as on the shared images' cards, but with the water behind actually blurred. */
-const glass = 'border-glass-border bg-glass text-glass-foreground shadow-glass-shadow border backdrop-blur-md backdrop-saturate-120';
 
 /** `profileCount` is rendered on the server, where the count comes from. */
 export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
@@ -55,12 +52,7 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
             transition={after(0.3)}
             className='mt-4 flex w-full flex-wrap items-start gap-2 sm:mt-8'
           >
-            {/* Sunlit from above, with a glint along the top like a bubble's */}
-            <Button
-              size='lg'
-              className='h-12 rounded-full bg-[linear-gradient(to_bottom,color-mix(in_oklch,var(--primary),white_15%),var(--primary))] px-6 inset-shadow-[0_1px_0_oklch(1_0_0/0.3)] hover:opacity-90'
-              asChild
-            >
+            <Button size='lg' className={`${sunlit} h-12 rounded-full px-6`} asChild>
               <Link href='/sign-up'>
                 Join
                 <ArrowRight />

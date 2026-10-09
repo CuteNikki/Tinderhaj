@@ -1,12 +1,12 @@
+import { Ocean } from '@/components/common/ocean';
 import { DiscoveryPaginationSkeleton } from '@/components/discovery/pagination';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
 function DiscoveryHeroSkeleton() {
   return (
-    <section className='relative isolate overflow-hidden pt-28 pb-12 md:pt-32 md:pb-16'>
-      <div className='pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[4rem_4rem] opacity-25' />
-      <div className='bg-primary/10 pointer-events-none absolute top-1/2 left-1/2 z-0 size-112 -translate-1/2 rounded-full blur-3xl' />
+    <section className='relative isolate overflow-hidden pt-28 pb-24 md:pt-32 md:pb-28'>
+      <Ocean into='fill-card' />
       <div className='relative z-10 container mx-auto grid max-w-7xl items-center gap-10 px-6 lg:grid-cols-[minmax(0,1fr)_22rem] lg:px-8'>
         <div className='max-w-3xl'>
           <Skeleton className='h-12 w-40 rounded-full' />

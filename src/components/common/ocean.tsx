@@ -1,3 +1,10 @@
+/** Frosted glass for what floats in the water, as on the shared images' cards, but with the water behind actually blurred. */
+export const glass = 'border-glass-border bg-glass text-glass-foreground shadow-glass-shadow border backdrop-blur-md backdrop-saturate-120';
+
+/** For the main button in the water: sunlit from above, with a glint along the top like a bubble's. */
+export const sunlit =
+  'bg-[linear-gradient(to_bottom,color-mix(in_oklch,var(--primary),white_15%),var(--primary))] inset-shadow-[0_1px_0_oklch(1_0_0/0.3)] hover:opacity-90';
+
 /**
  * Bubbles rising through the water. `left` across the hero, `rest` how high
  * it sits when motion is reduced and it stays still. Negative delays, so
@@ -48,16 +55,20 @@ function wave(y: number, height: number, swells: number) {
 
 /**
  * Waves along the bottom, from the far ones to the near one, which is the color
- * of the section that follows and deep enough for the hint to sit in, clear of the swells.
+ * of what follows (see `into`) and deep enough for something to sit in, clear of the swells.
  */
 const WAVES = [
-  { d: wave(28, 14, 6), fill: 'var(--ocean-wave)', duration: '40s', reverse: true },
-  { d: wave(48, 12, 4), fill: 'var(--ocean-wave)', duration: '30s', reverse: false },
-  { d: wave(68, 8, 6), fill: 'var(--muted)', duration: '22s', reverse: false },
+  { d: wave(28, 14, 6), duration: '40s', reverse: true },
+  { d: wave(48, 12, 4), duration: '30s', reverse: false },
+  { d: wave(68, 8, 6), duration: '22s', reverse: false },
 ];
 
-/** The water the hero is set in, as in the shared images: light from above, bubbles, and waves rolling in. */
-export function Ocean() {
+/**
+ * The water a page's top is set in, as in the shared images: light from above,
+ * bubbles, and waves rolling in. `into` fills the nearest wave, as the color of
+ * what comes after it, so the water flows into it.
+ */
+export function Ocean({ into = 'fill-muted' }: { into?: string }) {
   return (
     <div
       aria-hidden
@@ -96,7 +107,7 @@ export function Ocean() {
           className='animate-roll absolute bottom-0 left-0 h-24 w-[200%] sm:h-28'
           style={{ animationDuration: layer.duration, animationDirection: layer.reverse ? 'reverse' : 'normal' }}
         >
-          <path d={layer.d} fill={layer.fill} />
+          <path d={layer.d} className={i === WAVES.length - 1 ? into : 'fill-(--ocean-wave)'} />
         </svg>
       ))}
     </div>

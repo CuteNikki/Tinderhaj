@@ -5,7 +5,9 @@ import Link from 'next/link';
 
 import { after, popIn, reveal, spring } from '@/lib/motion';
 
+import { AUTH_HEIGHT } from '@/components/auth/height';
 import { Logo } from '@/components/common/logo';
+import { glass } from '@/components/common/ocean';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 
@@ -25,11 +27,8 @@ export function AuthShell({
   footer?: React.ReactNode;
 }) {
   return (
-    <div className='bg-background relative isolate flex flex-1 items-center justify-center overflow-hidden px-4 py-28'>
-      <div className='pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[6rem_6rem] opacity-20 dark:opacity-25' />
-      <div className='bg-primary/10 pointer-events-none absolute -top-16 -right-16 z-0 size-64 rounded-full blur-3xl lg:-top-8 lg:-right-8 lg:size-96' />
-      <div className='bg-secondary/60 pointer-events-none absolute -bottom-24 -left-16 z-0 size-72 rounded-full blur-3xl lg:-bottom-12 lg:-left-8 lg:size-96' />
-
+    // Set in the water from the layout (see PageWater), so it carries on from one of these pages to the next
+    <div className={`${AUTH_HEIGHT} relative flex flex-1 items-center justify-center px-4 py-28`}>
       <div className='relative z-10 flex w-full max-w-md flex-col items-center'>
         <motion.div initial='hidden' animate='visible' variants={popIn} transition={after(0.05, spring.pop)}>
           <Link href='/' className='hover:animate-wiggle mb-6 flex items-center gap-2'>
@@ -38,7 +37,7 @@ export function AuthShell({
         </motion.div>
 
         <motion.div initial='hidden' animate='visible' variants={popIn} transition={after(0.15, spring.pop)}>
-          <Badge variant='secondary' className='rounded-full p-4 font-semibold tracking-wide uppercase'>
+          <Badge className={`${glass} rounded-full p-4 font-semibold tracking-wide uppercase shadow-lg`}>
             {icon}
             {badge}
           </Badge>
@@ -53,7 +52,8 @@ export function AuthShell({
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 24, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={after(0.4)} className='mt-8 w-full'>
-          <Card className='ring-foreground/10 shadow-xl'>
+          {/* Frosted, but enough to keep the form clear of what drifts behind it */}
+          <Card className='ring-glass-border bg-background/75 shadow-glass-shadow shadow-xl backdrop-blur-xl'>
             <CardContent className='pt-2'>{children}</CardContent>
           </Card>
         </motion.div>

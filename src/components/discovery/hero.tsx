@@ -6,19 +6,17 @@ import { motion } from 'motion/react';
 
 import { after, popIn, reveal, spring } from '@/lib/motion';
 
+import { Ocean, glass } from '@/components/common/ocean';
 import { Badge } from '@/components/ui/badge';
 
 export function DiscoveryHero() {
   return (
-    <section className='relative isolate overflow-hidden pt-28 pb-12 md:pt-32 md:pb-16'>
-      <div className='pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[4rem_4rem] opacity-25' />
-      <div className='bg-primary/10 pointer-events-none absolute top-1/2 left-1/2 z-0 size-112 -translate-1/2 rounded-full blur-3xl' />
+    <section className='relative isolate overflow-hidden pt-28 pb-24 md:pt-32 md:pb-28'>
+      <Ocean into='fill-card' />
       <div className='relative z-10 container mx-auto grid max-w-7xl items-center gap-10 px-6 lg:grid-cols-[minmax(0,1fr)_22rem] lg:px-8'>
         <div className='max-w-3xl'>
           <motion.div initial='hidden' animate='visible' variants={popIn} transition={spring.pop}>
-            <Badge variant='secondary' className='rounded-full p-4 font-semibold tracking-wide uppercase'>
-              Discovery deck
-            </Badge>
+            <Badge className={`${glass} rounded-full p-4 font-semibold tracking-wide uppercase shadow-lg`}>Discovery deck</Badge>
           </motion.div>
           <motion.div initial='hidden' animate='visible' variants={reveal} transition={after(0.1)}>
             <h1 className='mt-6 max-w-3xl text-5xl leading-none font-black tracking-tight sm:text-7xl'>Browse the soft side of the sea.</h1>

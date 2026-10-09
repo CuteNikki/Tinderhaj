@@ -8,6 +8,7 @@ import { extractRouterConfig } from 'uploadthing/server';
 import { layoutMetadata } from '@/constants/metadata';
 
 import { ourFileRouter } from '@/app/api/uploadthing/core';
+import { PageWater } from '@/components/common/page-water';
 import { Footer } from '@/components/navigation/footer';
 import { Navbar, NavbarFallback } from '@/components/navigation/navbar';
 import { ThemeProvider } from '@/components/theme/provider';
@@ -50,7 +51,10 @@ export default function RootLayout({
             <Suspense fallback={<NavbarFallback />}>
               <Navbar />
             </Suspense>
-            <main className='flex flex-1 flex-col'>{children}</main>
+            <main className='relative isolate flex flex-1 flex-col'>
+              <PageWater />
+              {children}
+            </main>
             <Footer />
             <Toaster position='top-center' />
           </MotionProvider>

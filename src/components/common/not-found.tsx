@@ -8,6 +8,7 @@ import Link from 'next/link';
 
 import { ArrowLeft, Compass, Radio, Search } from 'lucide-react';
 
+import { Ocean, glass, sunlit } from '@/components/common/ocean';
 import { DiscoveryLink } from '@/components/discovery/link';
 import { Button } from '@/components/ui/button';
 
@@ -15,9 +16,9 @@ const orbitTransition = { duration: 18, ease: 'linear' as const, repeat: Infinit
 
 export function NotFoundPage() {
   return (
-    <section className='bg-background relative isolate flex flex-1 items-center overflow-hidden'>
-      <div className='pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[4rem_4rem] opacity-25' />
-      <div className='bg-primary/10 pointer-events-none absolute top-1/2 left-1/2 -z-10 size-112 -translate-1/2 rounded-full blur-3xl' />
+    <section className='relative isolate flex flex-1 items-center overflow-hidden'>
+      {/* Flowing into the footer below */}
+      <Ocean into='fill-muted dark:fill-background' />
 
       <div className='container mx-auto grid max-w-7xl items-center gap-10 px-6 py-20 md:grid-cols-[0.9fr_1.1fr] md:px-8 lg:gap-16 lg:py-24'>
         <div className='order-2 max-w-xl md:order-1'>
@@ -48,13 +49,13 @@ export function NotFoundPage() {
             This page drifted out of range. Let&apos;s get you back to the good stuff before the tide changes.
           </motion.p>
           <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={after(0.3)} className='mt-8 flex flex-wrap gap-3'>
-            <Button size='lg' className='h-12 rounded-full px-6' asChild>
+            <Button size='lg' className={`${sunlit} h-12 rounded-full px-6`} asChild>
               <Link href='/'>
                 <ArrowLeft />
                 Back home
               </Link>
             </Button>
-            <Button size='lg' variant='outline' className='h-12 rounded-full px-6' asChild>
+            <Button size='lg' variant='outline' className='dark:bg-background dark:hover:bg-muted h-12 rounded-full px-6' asChild>
               <DiscoveryLink>
                 Find a match
                 <Search />
@@ -101,14 +102,14 @@ export function NotFoundPage() {
           <motion.div
             animate={{ y: [0, -5, 0] }}
             transition={{ duration: 3.5, ease: 'easeInOut', repeat: Infinity, delay: 0.6 }}
-            className='border-foreground/10 bg-background/80 absolute top-[14%] right-[8%] z-20 flex items-center gap-2 rounded-full border px-3 py-2 text-xs font-semibold shadow-lg backdrop-blur-sm'
+            className={`${glass} absolute top-[14%] right-[8%] z-20 flex items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold shadow-lg`}
           >
-            <Compass className='text-primary h-3.5 w-3.5' /> Out of range
+            <Compass className='h-3.5 w-3.5 text-[#ed3867]' /> Out of range
           </motion.div>
           <motion.div
             animate={{ y: [0, 6, 0] }}
             transition={{ duration: 4, ease: 'easeInOut', repeat: Infinity, delay: 0.2 }}
-            className='border-foreground/10 bg-background/90 absolute bottom-[15%] left-[5%] z-20 rotate-2 rounded-xl border px-4 py-3 shadow-xl backdrop-blur-md'
+            className={`${glass} absolute bottom-[15%] left-[5%] z-20 rotate-2 rounded-xl px-4 py-3 shadow-xl`}
           >
             <p className='text-primary text-[0.65rem] font-bold tracking-widest uppercase'>Last known location</p>
             <p className='mt-1 text-sm font-bold'>Somewhere between here &amp; there</p>
