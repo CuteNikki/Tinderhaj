@@ -1,6 +1,4 @@
-import { ArrowLeftIcon } from 'lucide-react';
-import Link from 'next/link';
-
+import { BackLink } from '@/components/common/heading';
 import { PageLoading } from '@/components/common/page-loading';
 import { SettingsSection } from '@/components/common/settings-section';
 import { ButtonSkeleton, FieldSkeleton, GhostText, ProfileGridSkeleton } from '@/components/common/skeletons';
@@ -16,12 +14,7 @@ export default function Loading() {
     <PageLoading
       eyebrow='Moderation'
       title='User'
-      above={
-        <Link href='/moderation/users' className='text-muted-foreground hover:text-foreground mb-6 inline-flex items-center gap-1 text-sm transition-colors'>
-          <ArrowLeftIcon className='size-4' aria-hidden='true' />
-          Users
-        </Link>
-      }
+      above={<BackLink href='/moderation/users'>Users</BackLink>}
       below={
         <>
           <GhostText className='mt-1 text-base'>someone@example.com</GhostText>

@@ -34,3 +34,7 @@ export const MIN_LOCATION_LENGTH = 0;
 export const MAX_LOCATION_LENGTH = 64;
 
 export const MAX_INTEREST_LENGTH = 32;
+
+/** How many profiles one account can have, for now. */
+export const MAX_PROFILES = 5;
+export const MAX_INTERESTS = 3;

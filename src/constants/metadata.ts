@@ -86,6 +86,18 @@ export const bannedMetadata: Metadata = {
   description: 'Why your Tinderhaj account can’t sign in.',
 };
 
+export const newProfileMetadata: Metadata = {
+  ...unlisted,
+  title: 'New Profile',
+  description: 'Create a new Tinderhaj profile for one of your sharks.',
+};
+
+export const editProfileMetadata: Metadata = {
+  ...unlisted,
+  title: 'Edit Profile',
+  description: 'Change one of your Tinderhaj profiles.',
+};
+
 export const profilesMetadata: Metadata = {
   ...unlisted,
   title: 'Profiles',

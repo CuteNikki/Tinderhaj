@@ -1,3 +1,6 @@
+import { ArrowLeftIcon } from 'lucide-react';
+import Link from 'next/link';
+
 import { cn } from '@/lib/utils';
 
 /**
@@ -17,4 +20,14 @@ export function PageTitle({ className, children }: { className?: string; childre
 /** The line or two under a page's title. */
 export function PageNote({ className, children }: { className?: string; children: React.ReactNode }) {
   return <p className={cn('text-muted-foreground mt-2 text-sm text-pretty', className)}>{children}</p>;
+}
+
+/** Back to where a page belongs, above its header's label. */
+export function BackLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <Link href={href} className='text-muted-foreground hover:text-foreground mb-6 inline-flex items-center gap-1 text-sm transition-colors'>
+      <ArrowLeftIcon className='size-4' aria-hidden='true' />
+      {children}
+    </Link>
+  );
 }

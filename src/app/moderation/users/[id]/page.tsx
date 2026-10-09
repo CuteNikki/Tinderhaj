@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, BadgeCheckIcon, BanIcon, FingerprintIcon, ShieldCheckIcon, UserRoundIcon } from 'lucide-react';
+import { BadgeCheckIcon, BanIcon, FingerprintIcon, ShieldCheckIcon, UserRoundIcon } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -11,7 +11,7 @@ import { canBan, canManageAccount, isAdmin, ROLE_DESCRIPTIONS, ROLE_LABELS } fro
 import { isModerator, requireUser } from '@/lib/session';
 
 import { SettingsSection } from '@/components/common/settings-section';
-import { Eyebrow, PageTitle } from '@/components/common/heading';
+import { BackLink, Eyebrow, PageTitle } from '@/components/common/heading';
 import { EmptyState } from '@/components/common/empty-state';
 import { Stagger } from '@/components/common/stagger';
 import { LocalTime } from '@/components/common/local-time';
@@ -53,10 +53,7 @@ export default async function UserPage({ params }: PageProps<'/moderation/users/
     <div data-water='band' className='flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'>
       <div className='container mx-auto max-w-7xl'>
         <Stagger id='page-header' variant='sink' className='mb-24'>
-          <Link href='/moderation/users' className='text-muted-foreground hover:text-foreground mb-6 inline-flex items-center gap-1 text-sm transition-colors'>
-            <ArrowLeftIcon className='size-4' aria-hidden='true' />
-            Users
-          </Link>
+          <BackLink href='/moderation/users'>Users</BackLink>
           <Eyebrow>Moderation</Eyebrow>
           <PageTitle className='break-all'>@{user.username}</PageTitle>
           {'email' in user && user.email && <p className='text-muted-foreground mt-1 break-all'>{user.email}</p>}

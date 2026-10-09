@@ -10,10 +10,11 @@ import { cn } from '@/lib/utils';
 /**
  * A shark's card (see DiscoveryProfile), ending as the real one does: a
  * heart to send (`heart`), when it was verified and a button to unverify it
- * (`unverify`), or a row of buttons (`actions`): to verify or reject it (see
+ * (`unverify`), nothing (`none`, as in a preview), or a row of buttons (`actions`): to verify or reject it (see
  * VerifyProfileCard), or to edit or delete your own (see ProfileCard).
+ * `blank` for one with nothing but a name yet, as a new one's preview.
  */
-export function ProfileCardSkeleton({ ending = 'heart' }: { ending?: 'heart' | 'unverify' | 'actions' }) {
+export function ProfileCardSkeleton({ ending = 'heart', blank = false }: { ending?: 'heart' | 'unverify' | 'actions' | 'none'; blank?: boolean }) {
   const actions = ending === 'actions';
 
   return (
@@ -31,21 +32,31 @@ export function ProfileCardSkeleton({ ending = 'heart' }: { ending?: 'heart' | '
             <Skeleton className='mt-2 h-4 w-24' />
           </div>
         </div>
-        <div className='mt-5 flex h-5 flex-wrap items-center gap-x-4'>
-          <Skeleton className='h-4 w-20' />
-          <Skeleton className='h-4 w-24' />
-          <Skeleton className='h-4 w-16' />
-        </div>
-        {/* Two lines, as most bios are, even on narrow cards */}
-        <div className='mt-4 flex h-[2.875rem] flex-col justify-center gap-2'>
-          <Skeleton className='h-4 w-full' />
-          <Skeleton className='h-4 w-5/6' />
-        </div>
-        <div className='flex flex-wrap gap-1.5 pt-4'>
-          <Skeleton className='h-5 w-16 rounded-full' />
-          <Skeleton className='h-5 w-20 rounded-full' />
-          <Skeleton className='h-5 w-14 rounded-full' />
-        </div>
+        {blank ? (
+          // As an empty one is: no details, bio or interests, only the room they'd have
+          <>
+            <div className='mt-5' />
+            <div className='pt-4' />
+          </>
+        ) : (
+          <>
+            <div className='mt-5 flex h-5 flex-wrap items-center gap-x-4'>
+              <Skeleton className='h-4 w-20' />
+              <Skeleton className='h-4 w-24' />
+              <Skeleton className='h-4 w-16' />
+            </div>
+            {/* Two lines, as most bios are, even on narrow cards */}
+            <div className='mt-4 flex h-[2.875rem] flex-col justify-center gap-2'>
+              <Skeleton className='h-4 w-full' />
+              <Skeleton className='h-4 w-5/6' />
+            </div>
+            <div className='flex flex-wrap gap-1.5 pt-4'>
+              <Skeleton className='h-5 w-16 rounded-full' />
+              <Skeleton className='h-5 w-20 rounded-full' />
+              <Skeleton className='h-5 w-14 rounded-full' />
+            </div>
+          </>
+        )}
         {ending === 'heart' && (
           <div className='mt-auto flex justify-end pt-3'>
             <Skeleton className='size-8 rounded-full' />
@@ -69,7 +80,7 @@ export function ProfileCardSkeleton({ ending = 'heart' }: { ending?: 'heart' | '
 }
 
 /** Sharks' cards in the usual grid. */
-export function ProfileGridSkeleton({ count = 3, ending }: { count?: number; ending?: 'heart' | 'unverify' | 'actions' }) {
+export function ProfileGridSkeleton({ count = 3, ending }: { count?: number; ending?: 'heart' | 'unverify' | 'actions' | 'none' }) {
   return (
     <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-3'>
       {Array.from({ length: count }, (_, index) => (

@@ -2,7 +2,8 @@
 
 import { useState, useTransition } from 'react';
 
-import { CakeIcon, MapPinIcon, RulerIcon, SendIcon, Trash2Icon } from 'lucide-react';
+import { CakeIcon, MapPinIcon, PencilIcon, RulerIcon, SendIcon, Trash2Icon } from 'lucide-react';
+import Link from 'next/link';
 import { toast } from 'sonner';
 
 import type { ProfileWithOwner } from '@/lib/queries';
@@ -12,7 +13,6 @@ import { PROFILE_STATUS_META } from '@/lib/profile-status';
 import { LIFT } from '@/lib/motion';
 import { calculateAge, cn } from '@/lib/utils';
 
-import { EditProfile } from '@/components/profiles/edit-profile';
 import { ProfileAvatar, ProfileBanner } from '@/components/profiles/profile-image';
 import {
   AlertDialog,
@@ -148,7 +148,12 @@ export function ProfileCard({ profile }: { profile: ProfileWithOwner }) {
         )}
 
         <div className='mt-4 flex gap-2'>
-          <EditProfile profile={profile} />
+          <Button variant='outline' size='sm' className='flex-1' asChild>
+            <Link href={`/dashboard/profiles/${profile.id}/edit`}>
+              <PencilIcon />
+              Edit
+            </Link>
+          </Button>
           {profile.status === 'CREATED' && (
             <Button variant='outline' size='sm' className='flex-1' onClick={handleSubmitForReview} disabled={isSubmitting || isDeleting}>
               <SendIcon />

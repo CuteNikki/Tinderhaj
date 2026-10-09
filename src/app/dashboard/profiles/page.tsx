@@ -1,17 +1,19 @@
-import { UserRoundIcon } from 'lucide-react';
+import { PlusIcon, UserRoundIcon } from 'lucide-react';
+import Link from 'next/link';
 import type { Metadata } from 'next';
 
+import { MAX_PROFILES } from '@/constants/auth';
 import { profilesMetadata } from '@/constants/metadata';
 import { QUERIES } from '@/lib/queries';
 import { requireUser } from '@/lib/session';
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 
 import { Eyebrow, PageTitle } from '@/components/common/heading';
-import { CreateProfile } from '@/components/auth/create-profile';
 import { EmptyState } from '@/components/common/empty-state';
 import { Stagger } from '@/components/common/stagger';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
 import { ProfileCard } from '@/components/profiles/profile-card';
+import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = profilesMetadata;
 
@@ -27,7 +29,19 @@ export default async function ProfilesPage() {
             <Eyebrow>Your sharks</Eyebrow>
             <PageTitle>Profiles</PageTitle>
           </div>
-          <CreateProfile username={session.user.name} disableButton={profiles.length >= 5} />
+          {profiles.length < MAX_PROFILES ? (
+            <Button asChild>
+              <Link href='/dashboard/profiles/new'>
+                <PlusIcon />
+                New profile
+              </Link>
+            </Button>
+          ) : (
+            <Button disabled title={`You can have up to ${MAX_PROFILES} profiles.`}>
+              <PlusIcon />
+              New profile
+            </Button>
+          )}
         </Stagger>
 
         {profiles.length ? (

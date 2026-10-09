@@ -115,6 +115,11 @@ export const QUERIES = {
     return prisma.profile.findMany({ where: { userId }, include: PROFILE_OWNER, orderBy: { createdAt: 'asc' } });
   },
 
+  /** One of someone's own profiles, or null if it isn't theirs. */
+  getOwnProfile: async (userId: string, id: string) => {
+    return prisma.profile.findFirst({ where: { id, userId }, include: PROFILE_OWNER });
+  },
+
   getProfilesWithQuery: async (query: string, page: number, take: number, seed: number) => {
     const normalizedQuery = query.trim();
 

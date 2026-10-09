@@ -8,6 +8,7 @@ import { z } from 'zod';
 
 import { auth, forgetTrustedDevices as forget } from '@/lib/auth';
 import prisma from '@/lib/prisma';
+import { MAX_PROFILES } from '@/constants/auth';
 import { PROFILE_COUNT_TAG, QUERIES } from '@/lib/queries';
 import { BAN_REASON_MAX, banExpiry, isBanDuration, isBanned } from '@/lib/bans';
 import { HEARTS_PER_DAY, liveProfileWhere } from '@/lib/hearts';
@@ -216,9 +217,8 @@ export async function createProfile(unsafeData: z.infer<typeof createProfileSche
 
   const profileCount = await prisma.profile.count({ where: { userId: session.user.id } });
 
-  // Temporary MAX_PROFILES limit = 5
-  if (profileCount >= 5) {
-    return { message: `You have reached the maximum number of profiles (5)!` };
+  if (profileCount >= MAX_PROFILES) {
+    return { message: `You have reached the maximum number of profiles (${MAX_PROFILES})!` };
   }
 
   await prisma.profile.create({

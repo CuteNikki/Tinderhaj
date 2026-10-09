@@ -12,8 +12,15 @@ import { cn } from '@/lib/utils';
 
 import { Badge } from '@/components/ui/badge';
 
+/**
+ * A picture to upload, change or remove. `bare` leaves out its label and size
+ * hint, for when they're shown once for several (see ProfileForm), and
+ * `className` sizes it there.
+ */
 export function ImageUploadField({
   label,
+  bare,
+  className,
   endpoint,
   value,
   onChange,
@@ -26,20 +33,24 @@ export function ImageUploadField({
   onChange: (url: string | null) => void;
   shape: 'circle' | 'banner';
   flagged?: boolean;
+  bare?: boolean;
+  className?: string;
 }) {
   const [progress, setProgress] = useState<number | null>(null);
 
   return (
-    <div className='space-y-2'>
-      <p className='flex items-center gap-1.5 text-sm leading-none font-medium'>
-        {label}
-        {flagged && (
-          <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
-            Needs update
-          </Badge>
-        )}
-      </p>
-      <div className={cn('group relative', shape === 'circle' ? 'h-20 w-20' : 'aspect-5/2 w-full')}>
+    <div className={cn(!bare && 'space-y-2')}>
+      {!bare && (
+        <p className='flex items-center gap-1.5 text-sm leading-none font-medium'>
+          {label}
+          {flagged && (
+            <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
+              Needs update
+            </Badge>
+          )}
+        </p>
+      )}
+      <div className={cn('group relative', shape === 'circle' ? 'h-20 w-20' : 'aspect-5/2 w-full', className)}>
         <div className={cn('bg-muted border-input absolute inset-0 overflow-hidden border', shape === 'circle' ? 'rounded-full' : 'rounded-md')}>
           {value && <Image unoptimized src={value} alt={label} fill className='object-cover' />}
 
@@ -87,18 +98,24 @@ export function ImageUploadField({
           <button
             type='button'
             onClick={() => onChange(null)}
-            className='bg-background text-foreground ring-foreground/10 hover:bg-destructive hover:text-destructive-foreground absolute -top-1.5 -right-1.5 z-20 flex h-6 w-6 items-center justify-center rounded-full shadow-md ring-1 transition-colors'
+            className={cn(
+              'bg-background text-foreground ring-foreground/10 hover:bg-destructive hover:text-destructive-foreground absolute z-20 flex h-6 w-6 items-center justify-center rounded-full shadow-md ring-1 transition-colors',
+              // On a circle, on its edge where it meets the corner, rather than out past it
+              shape === 'circle' ? 'top-0.5 right-0.5' : '-top-1.5 -right-1.5',
+            )}
             aria-label={`Remove ${label.toLowerCase()}`}
           >
             <XIcon className='h-3.5 w-3.5' />
           </button>
         )}
       </div>
-      <p className='text-muted-foreground text-xs'>
-        {shape === 'circle'
-          ? `Recommended: square image, 512\u00d7512px. Max ${MAX_AVATAR_SIZE_MB}MB.`
-          : `Recommended: 5:2 aspect ratio, 1200\u00d7480px. Max ${MAX_BANNER_SIZE_MB}MB.`}
-      </p>
+      {!bare && (
+        <p className='text-muted-foreground text-xs'>
+          {shape === 'circle'
+            ? `Recommended: square image, 512\u00d7512px. Max ${MAX_AVATAR_SIZE_MB}MB.`
+            : `Recommended: 5:2 aspect ratio, 1200\u00d7480px. Max ${MAX_BANNER_SIZE_MB}MB.`}
+        </p>
+      )}
     </div>
   );
 }
