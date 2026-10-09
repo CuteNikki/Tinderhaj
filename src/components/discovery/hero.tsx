@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 import { motion } from 'motion/react';
 
-import { after, bob, reveal, ringIn, sharkHover, spring, swimIn } from '@/lib/motion';
+import { after, bob, ringIn, sharkHover, sink, spring, swimIn } from '@/lib/motion';
 
 import { HeroBadge } from '@/components/common/hero-badge';
 import { Ocean } from '@/components/common/ocean';
@@ -21,12 +21,12 @@ export function DiscoveryHero() {
       <div className='relative z-10 container mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[minmax(0,1fr)_22rem]'>
         <div className='on-water max-w-3xl'>
           <HeroBadge>Discovery deck</HeroBadge>
-          <motion.div initial='hidden' animate='visible' variants={reveal} transition={after(0.1)}>
+          <motion.div initial='hidden' animate='visible' variants={sink} transition={after(0.1)}>
             <h1 className='mt-6 max-w-3xl text-5xl leading-none font-black tracking-tight sm:text-7xl'>
               Browse the soft side <span className='text-primary'>of the sea.</span>
             </h1>
           </motion.div>
-          <motion.div initial='hidden' animate='visible' variants={reveal} transition={after(0.2)}>
+          <motion.div initial='hidden' animate='visible' variants={sink} transition={after(0.2)}>
             <p className='text-muted-foreground mt-6 max-w-2xl text-base leading-relaxed text-pretty sm:text-lg'>
               Search by name, location, pronouns, interests, or anything else that makes a profile feel like your kind of tide.
             </p>

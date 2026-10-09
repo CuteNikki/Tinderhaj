@@ -3,7 +3,7 @@
 import { motion } from 'motion/react';
 import Link from 'next/link';
 
-import { after, popIn, reveal, spring } from '@/lib/motion';
+import { after, popIn, reveal, sink, spring } from '@/lib/motion';
 
 import { AUTH_HEIGHT } from '@/components/auth/height';
 import { Logo } from '@/components/common/logo';
@@ -39,11 +39,11 @@ export function AuthShell({
           {badge}
         </HeroBadge>
 
-        <motion.div initial='hidden' animate='visible' variants={reveal} transition={after(0.2)}>
+        <motion.div initial='hidden' animate='visible' variants={sink} transition={after(0.2)}>
           <h1 className='mt-4 text-center text-3xl leading-none font-black tracking-tight sm:text-4xl'>{title}</h1>
         </motion.div>
 
-        <motion.div initial='hidden' animate='visible' variants={reveal} transition={after(0.3)}>
+        <motion.div initial='hidden' animate='visible' variants={sink} transition={after(0.3)}>
           <p className='text-muted-foreground mt-3 max-w-sm text-center text-sm leading-relaxed text-balance'>{description}</p>
         </motion.div>
 

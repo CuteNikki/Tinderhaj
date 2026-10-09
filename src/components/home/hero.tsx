@@ -7,7 +7,7 @@ import { Suspense } from 'react';
 
 import { ArrowDown, ArrowRight, Search, Sparkles, Users2Icon, ZapIcon } from 'lucide-react';
 
-import { after, bob, popIn, reveal, ringIn, sharkHover, spring, swimIn } from '@/lib/motion';
+import { after, bob, popIn, ringIn, sharkHover, sink, spring, swimIn } from '@/lib/motion';
 
 import { DiscoveryLink } from '@/components/discovery/link';
 import { AnimatedCount } from '@/components/home/animated-count';
@@ -39,14 +39,14 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
           >
             The plush dating club
           </HeroBadge>
-          <motion.div initial='hidden' animate='visible' variants={reveal} transition={after(0.1)}>
+          <motion.div initial='hidden' animate='visible' variants={sink} transition={after(0.1)}>
             <TypographyH1 className='xs:text-5xl mt-6 max-w-3xl text-4xl leading-none font-black tracking-tight md:text-7xl xl:text-8xl'>
               Make a splash.
               <br />
               <span className='text-primary'>Meet your match.</span>
             </TypographyH1>
           </motion.div>
-          <motion.div initial='hidden' animate='visible' variants={reveal} transition={after(0.2)}>
+          <motion.div initial='hidden' animate='visible' variants={sink} transition={after(0.2)}>
             <TypographyMuted className='mt-2 max-w-lg text-base leading-relaxed text-pretty sm:mt-6 sm:text-lg'>
               A warm, weird little corner of the internet for Blåhaj looking for their person. Browse profiles, find a feeling, make it official.
             </TypographyMuted>
@@ -54,7 +54,7 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
           <motion.div
             initial='hidden'
             animate='visible'
-            variants={reveal}
+            variants={sink}
             transition={after(0.3)}
             className='mt-4 flex w-full flex-wrap items-start gap-2 sm:mt-8'
           >
@@ -74,7 +74,7 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
           <motion.div
             initial='hidden'
             animate='visible'
-            variants={reveal}
+            variants={sink}
             transition={after(0.4)}
             className='border-foreground/10 mt-4 flex flex-wrap gap-x-4 gap-y-2 sm:mt-6'
           >

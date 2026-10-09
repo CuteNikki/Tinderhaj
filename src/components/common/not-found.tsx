@@ -2,7 +2,7 @@
 
 import { motion } from 'motion/react';
 
-import { after, bob, popIn, reveal, sharkHover, spring, STAGGER, swimIn } from '@/lib/motion';
+import { after, bob, popIn, sharkHover, sink, spring, STAGGER, swimIn } from '@/lib/motion';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -29,7 +29,7 @@ export function NotFoundPage() {
           <motion.h1
             initial='hidden'
             animate='visible'
-            variants={reveal}
+            variants={sink}
             transition={after(STAGGER)}
             className='text-foreground text-6xl leading-[0.9] font-black tracking-tight sm:text-8xl'
           >
@@ -40,13 +40,13 @@ export function NotFoundPage() {
           <motion.p
             initial='hidden'
             animate='visible'
-            variants={reveal}
+            variants={sink}
             transition={after(0.2)}
             className='text-muted-foreground mt-6 max-w-md text-base leading-relaxed text-pretty sm:text-lg'
           >
             This page drifted out of range. Let&apos;s get you back to the good stuff before the tide changes.
           </motion.p>
-          <motion.div initial='hidden' animate='visible' variants={reveal} transition={after(0.3)} className='mt-8 flex flex-wrap gap-3'>
+          <motion.div initial='hidden' animate='visible' variants={sink} transition={after(0.3)} className='mt-8 flex flex-wrap gap-3'>
             <Button size='xl' className={sunlit} asChild>
               <Link href='/'>
                 <ArrowLeft />
