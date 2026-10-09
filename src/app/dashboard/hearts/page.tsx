@@ -70,7 +70,8 @@ export default async function HeartsPage({ searchParams }: PageProps<'/dashboard
         </Stagger>
 
         <ScrollReveal delay={CONTENT_DELAY}>
-          <nav aria-label='Hearts' className='bg-muted mb-4 grid max-w-md grid-cols-3 gap-1 rounded-full p-1'>
+          {/* On phones three labels don't fit: the open tab shows its label, the others only their icon and count */}
+          <nav aria-label='Hearts' className='bg-muted mb-4 flex max-w-md gap-1 rounded-full p-1 sm:grid sm:grid-cols-3'>
             {(Object.keys(TABS) as Tab[]).map((key) => {
               const { label, icon: Icon } = TABS[key];
               const fresh = hearts[key].filter((row) => row.unseen).length;
@@ -80,12 +81,12 @@ export default async function HeartsPage({ searchParams }: PageProps<'/dashboard
                   href={key === 'matches' ? '/dashboard/hearts?tab=matches' : `/dashboard/hearts?tab=${key}`}
                   aria-current={key === tab ? 'page' : undefined}
                   className={cn(
-                    'flex items-center justify-center gap-2 rounded-full px-2 py-2 text-sm font-medium transition-colors',
-                    key === tab ? 'bg-background shadow-sm' : 'text-muted-foreground hover:text-foreground',
+                    'flex items-center justify-center gap-2 rounded-full py-2 text-sm font-medium transition-colors sm:px-2',
+                    key === tab ? 'bg-background min-w-0 flex-1 px-2 shadow-sm' : 'text-muted-foreground hover:text-foreground px-3',
                   )}
                 >
                   <Icon className='size-4 shrink-0' aria-hidden='true' />
-                  <span className='truncate'>{label}</span>
+                  <span className={cn('truncate', key !== tab && 'max-sm:sr-only')}>{label}</span>
                   <span className='text-muted-foreground text-xs tabular-nums'>{hearts[key].length}</span>
                   {fresh > 0 && <span className='bg-primary size-2 shrink-0 rounded-full' aria-label={`${fresh} new`} />}
                 </Link>

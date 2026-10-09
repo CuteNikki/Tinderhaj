@@ -94,12 +94,21 @@ export function ProfileGridSkeleton({ count = 3, ending }: { count?: number; end
   );
 }
 
-/** The tabs above a list (see Hearts and Verification). */
-export function TabsSkeleton({ count, className }: { count: number; className?: string }) {
+/**
+ * The tabs above a list (see Hearts and Verification). `compact` for tabs
+ * that, on phones, show only the open one's label (see Hearts).
+ */
+export function TabsSkeleton({ count, compact = false, className }: { count: number; compact?: boolean; className?: string }) {
   return (
-    <div className={cn('bg-muted grid max-w-md gap-1 rounded-full p-1', className)} style={{ gridTemplateColumns: `repeat(${count}, minmax(0, 1fr))` }}>
+    <div
+      className={cn('bg-muted grid max-w-md gap-1 rounded-full p-1', compact && 'max-sm:flex', className)}
+      style={{ gridTemplateColumns: `repeat(${count}, minmax(0, 1fr))` }}
+    >
       {Array.from({ length: count }, (_, index) => (
-        <Skeleton key={index} className={cn('h-9 rounded-full', index === 0 ? 'bg-background' : 'bg-transparent')} />
+        <Skeleton
+          key={index}
+          className={cn('h-9 rounded-full', index === 0 ? 'bg-background' : 'bg-transparent', compact && (index === 0 ? 'max-sm:flex-1' : 'max-sm:w-14'))}
+        />
       ))}
     </div>
   );
