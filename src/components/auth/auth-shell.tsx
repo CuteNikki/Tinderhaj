@@ -28,8 +28,8 @@ export function AuthShell({
 }) {
   return (
     // Set in the water from the layout (see PageWater), so it carries on from one of these pages to the next
-    <div className={`${AUTH_HEIGHT} relative flex flex-1 items-center justify-center px-4 py-28`}>
-      <div className='relative z-10 flex w-full max-w-md flex-col items-center'>
+    <div data-water='full' className={`${AUTH_HEIGHT} relative flex flex-1 items-center justify-center px-4 py-28`}>
+      <div className='on-water relative z-10 flex w-full max-w-md flex-col items-center'>
         <motion.div initial='hidden' animate='visible' variants={popIn} transition={after(0.05, spring.pop)}>
           <Link href='/' className='hover:animate-wiggle mb-6 flex items-center gap-2'>
             <Logo className='h-8 w-8' />

@@ -14,7 +14,7 @@ export function DiscoveryHero() {
     <section className='relative isolate overflow-hidden pt-28 pb-24 md:pt-32 md:pb-28'>
       <Ocean into='fill-card' />
       <div className='relative z-10 container mx-auto grid max-w-7xl items-center gap-10 px-6 lg:grid-cols-[minmax(0,1fr)_22rem] lg:px-8'>
-        <div className='max-w-3xl'>
+        <div className='on-water max-w-3xl'>
           <motion.div initial='hidden' animate='visible' variants={popIn} transition={spring.pop}>
             <Badge className={`${glass} rounded-full p-4 font-semibold tracking-wide uppercase shadow-lg`}>Discovery deck</Badge>
           </motion.div>

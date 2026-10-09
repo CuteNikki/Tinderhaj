@@ -57,10 +57,10 @@ export default async function HeartsPage({ searchParams }: PageProps<'/dashboard
   const rows = hearts[tab];
 
   return (
-    <div className='bg-background flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'>
+    <div data-water='band' className='flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'>
       <MarkHeartsSeen unseen={unseen} />
       <div className='container mx-auto max-w-7xl'>
-        <Stagger className='mb-8'>
+        <Stagger id='page-header' variant='sink' className='mb-24'>
           <p className='text-primary mb-1 text-xs font-bold tracking-widest uppercase'>Your sharks</p>
           <h1 className='text-3xl font-black tracking-tight sm:text-4xl'>Hearts</h1>
           <p className='text-muted-foreground mt-2 text-sm text-pretty'>Two sharks hearting each other is a match.</p>

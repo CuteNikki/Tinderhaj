@@ -66,39 +66,40 @@ const WAVES = [
 /**
  * The water a page's top is set in, as in the shared images: light from above,
  * bubbles, and waves rolling in. `into` fills the nearest wave, as the color of
- * what comes after it, so the water flows into it.
+ * what comes after it, so the water flows into it. `depth` is how deep the
+ * water behind the waves is, when it shouldn't stretch with them: as they
+ * move, the light and bubbles hold still and only more or less of it shows.
  */
-export function Ocean({ into = 'fill-muted' }: { into?: string }) {
+export function Ocean({ into = 'fill-muted', depth = 'bottom-0' }: { into?: string; depth?: string }) {
   return (
-    <div
-      aria-hidden
-      className='pointer-events-none absolute inset-0 -z-10 overflow-hidden bg-[linear-gradient(135deg,var(--ocean-from)_0%,var(--ocean-to)_100%)]'
-    >
-      {/* Light falling through the water, behind the shark */}
-      <div className='absolute inset-0 bg-[radial-gradient(circle_at_75%_30%,var(--ocean-light)_0%,transparent_45%)]' />
-      {RAYS.map((ray, i) => (
-        <div
-          key={i}
-          className='animate-sway absolute -top-16 h-[85%] origin-top bg-[linear-gradient(to_bottom,var(--ocean-ray),transparent)] blur-md'
-          style={{ left: `${ray.left}%`, width: `${ray.width}%`, animationDelay: `${ray.delay}s`, transform: 'skewX(-18deg)' }}
-        />
-      ))}
-      {BUBBLES.map((bubble, i) => (
-        <span
-          key={i}
-          className='animate-rise absolute -bottom-8 rounded-full border-2 border-(--ocean-bubble) bg-(--ocean-bubble)/30 motion-reduce:bottom-(--rest)'
-          style={
-            {
-              left: `${bubble.left}%`,
-              width: bubble.size,
-              height: bubble.size,
-              animationDuration: `${bubble.duration}s`,
-              animationDelay: `${bubble.delay}s`,
-              '--rest': `${bubble.rest}%`,
-            } as React.CSSProperties
-          }
-        />
-      ))}
+    <div aria-hidden className='pointer-events-none absolute inset-0 -z-10 overflow-hidden'>
+      <div className={`${depth} absolute inset-x-0 top-0 bg-[linear-gradient(135deg,var(--ocean-from)_0%,var(--ocean-to)_100%)]`}>
+        {/* Light falling through the water, behind the shark */}
+        <div className='absolute inset-0 bg-[radial-gradient(circle_at_75%_30%,var(--ocean-light)_0%,transparent_45%)]' />
+        {RAYS.map((ray, i) => (
+          <div
+            key={i}
+            className='animate-sway absolute -top-16 h-[85%] origin-top bg-[linear-gradient(to_bottom,var(--ocean-ray),transparent)] blur-md'
+            style={{ left: `${ray.left}%`, width: `${ray.width}%`, animationDelay: `${ray.delay}s`, transform: 'skewX(-18deg)' }}
+          />
+        ))}
+        {BUBBLES.map((bubble, i) => (
+          <span
+            key={i}
+            className='animate-rise absolute -bottom-8 rounded-full border-2 border-(--ocean-bubble) bg-(--ocean-bubble)/30 motion-reduce:bottom-(--rest)'
+            style={
+              {
+                left: `${bubble.left}%`,
+                width: bubble.size,
+                height: bubble.size,
+                animationDuration: `${bubble.duration}s`,
+                animationDelay: `${bubble.delay}s`,
+                '--rest': `${bubble.rest}%`,
+              } as React.CSSProperties
+            }
+          />
+        ))}
+      </div>
       {WAVES.map((layer, i) => (
         <svg
           key={i}

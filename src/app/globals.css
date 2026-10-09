@@ -13,6 +13,14 @@
   --animate-rise: rise 14s linear infinite;
   --animate-roll: roll 24s linear infinite;
   --animate-sway: sway 9s ease-in-out infinite alternate;
+  /* Only for something that'd better not show at all if it's soon replaced: a loading screen's header, say. */
+  --animate-late: late 0.3s ease-out 0.6s both;
+
+  @keyframes late {
+    from {
+      opacity: 0;
+    }
+  }
 
   @keyframes rise {
     0% {
@@ -130,7 +138,7 @@
   --secondary: oklch(0.95 0.008 240);
   --secondary-foreground: oklch(0.24 0.025 245);
   --muted: oklch(0.965 0.006 245);
-  --muted-foreground: oklch(0.46 0.025 245);
+  --muted-foreground: oklch(0.42 0.03 245);
   --accent: oklch(0.965 0.006 245);
   --accent-foreground: oklch(0.24 0.025 245);
   --destructive: oklch(0.577 0.245 27.325);
@@ -160,13 +168,14 @@
   --ocean-ray: oklch(1 0 0 / 0.55);
   --ocean-bubble: oklch(0.52 0.18 245 / 0.3);
   --ocean-wave: oklch(0.6 0.14 245 / 0.08);
+  --ocean-shade: oklch(0.985 0.012 235 / 0.9);
 
   /* Frosted glass for what floats in the water, like the cards in the shared
      images: bright white in the shallows, pale blue over the deep. */
   --glass: oklch(1 0 0 / 0.35);
   --glass-border: oklch(1 0 0 / 0.7);
   --glass-foreground: oklch(0.19 0.04 255);
-  --glass-muted: oklch(0.42 0.04 250);
+  --glass-muted: oklch(0.38 0.04 250);
   --glass-shadow: oklch(0.5 0.12 250 / 0.12);
 }
 
@@ -182,7 +191,7 @@
   --secondary: oklch(0.26 0.05 252);
   --secondary-foreground: oklch(0.975 0.01 245);
   --muted: oklch(0.2 0.045 255);
-  --muted-foreground: oklch(0.76 0.04 245);
+  --muted-foreground: oklch(0.84 0.035 245);
   --accent: oklch(0.24 0.05 252);
   --accent-foreground: oklch(0.975 0.01 245);
   --destructive: oklch(0.704 0.191 22.216);
@@ -209,11 +218,12 @@
   --ocean-ray: oklch(0.81 0.09 245 / 0.1);
   --ocean-bubble: oklch(0.94 0.03 245 / 0.45);
   --ocean-wave: oklch(0.81 0.09 245 / 0.08);
+  --ocean-shade: oklch(0.2 0.06 255 / 0.85);
 
   --glass: oklch(0.83 0.085 243 / 0.12);
   --glass-border: oklch(0.94 0.03 245 / 0.28);
   --glass-foreground: oklch(0.985 0.008 245);
-  --glass-muted: oklch(0.985 0.008 245 / 0.78);
+  --glass-muted: oklch(0.985 0.008 245 / 0.88);
   --glass-shadow: oklch(0.15 0.05 255 / 0.3);
 }
 
@@ -280,6 +290,64 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/*
+ * The band of water behind a page's header (see PageWater), down to just
+ * below the header: the waves' height below it, less a little so the tallest
+ * swell stays clear of it. It follows whichever header is showing, so it
+ * changes with the page. Where that can't be followed, as tall as under a
+ * short header.
+ */
+#page-header {
+  anchor-name: --page-header;
+}
+
+/*
+ * Text set straight on the water (see Ocean): a soft halo the color of the
+ * water, unseen against it, that keeps the letters clear when a bubble or a
+ * ray passes behind them. Not for what has a background of its own.
+ */
+.on-water,
+#page-header {
+  text-shadow:
+    0 0 2px var(--ocean-shade),
+    0 1px 12px var(--ocean-shade);
+}
+
+:is(.on-water, #page-header) :is([data-slot='button'], [data-slot='badge'], [data-slot='card']) {
+  text-shadow: none;
+}
+
+/* Shown as the page asks (see PageWater): the page showing, that is, not one Next keeps hidden to go back to. */
+.water-full,
+.page-band {
+  display: none;
+}
+
+main:has([data-water='full']:not([style*='display: none'] *)) > .water-full,
+main:has([data-water='band']:not([style*='display: none'] *)) > .page-band {
+  display: block;
+}
+
+.page-band {
+  --waves: 5.5rem;
+  top: 0;
+  height: 19rem;
+}
+
+@media (width >= 40rem) {
+  .page-band {
+    --waves: 6.5rem;
+  }
+}
+
+@supports (bottom: anchor(--page-header bottom)) {
+  .page-band {
+    height: auto;
+    bottom: anchor(--page-header bottom, calc(100% - 19rem + var(--waves)));
+    margin-bottom: calc(-1 * var(--waves));
   }
 }
 

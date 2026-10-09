@@ -20,6 +20,12 @@ export const reveal: Variants = {
   visible: { opacity: 1, y: 0, scale: 1 },
 };
 
+/** Settles down into place from just above, so it never dips below where it rests. For headers just above the water. */
+export const sink: Variants = {
+  hidden: { opacity: 0, y: -16, scale: 0.97 },
+  visible: { opacity: 1, y: 0, scale: 1 },
+};
+
 /** Tips up from a slight tilt, like a card being set down. */
 export const cardReveal: Variants = {
   hidden: { opacity: 0, y: 28, scale: 0.94, rotate: -1.5 },

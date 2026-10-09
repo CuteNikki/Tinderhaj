@@ -4,17 +4,19 @@ import { motion } from 'motion/react';
 import { Children } from 'react';
 
 import { useReveal } from '@/components/common/use-reveal';
-import { cardReveal, popIn, reveal, spring, STAGGER, stagger } from '@/lib/motion';
+import { cardReveal, popIn, reveal, sink, spring, STAGGER, stagger } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 
-const variants = { section: reveal, card: cardReveal, pop: popIn };
+const variants = { section: reveal, sink, card: cardReveal, pop: popIn };
 
 /**
  * Shows its children one after another once scrolled into view, each
  * wrapped in an `itemAs` element: `li` inside a `ul`, `span` in a line of
- * badges. `section` rises, `card` tips up, `pop` grows with a wobble.
+ * badges. `section` rises, `sink` settles from above, `card` tips up, `pop`
+ * grows with a wobble.
  */
 export function Stagger({
+  id,
   children,
   className,
   itemClassName,
@@ -24,6 +26,7 @@ export function Stagger({
   gap = STAGGER,
   delay = 0,
 }: {
+  id?: string;
   children: React.ReactNode;
   className?: string;
   itemClassName?: string;
@@ -40,6 +43,7 @@ export function Stagger({
 
   return (
     <Container
+      id={id}
       ref={ref as React.Ref<never>}
       className={className}
       initial='hidden'
@@ -52,7 +56,7 @@ export function Stagger({
           <Item
             className={cn(itemAs === 'span' && 'inline-flex', itemClassName)}
             variants={variants[variant]}
-            transition={variant === 'section' ? spring.soft : spring.pop}
+            transition={variant === 'section' || variant === 'sink' ? spring.soft : spring.pop}
           >
             {child}
           </Item>

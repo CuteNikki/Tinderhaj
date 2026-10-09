@@ -50,9 +50,9 @@ export default async function UserPage({ params }: PageProps<'/moderation/users/
   const providers = user.accounts.map((account) => account.providerId).filter((id) => id !== 'credential');
 
   return (
-    <div className='bg-background flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'>
+    <div data-water='band' className='flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'>
       <div className='container mx-auto max-w-7xl'>
-        <Stagger className='mb-8'>
+        <Stagger id='page-header' variant='sink' className='mb-24'>
           <Link href='/moderation/users' className='text-muted-foreground hover:text-foreground mb-6 inline-flex items-center gap-1 text-sm transition-colors'>
             <ArrowLeftIcon className='size-4' aria-hidden='true' />
             Users

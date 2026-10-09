@@ -21,7 +21,7 @@ export function NotFoundPage() {
       <Ocean into='fill-muted dark:fill-background' />
 
       <div className='container mx-auto grid max-w-7xl items-center gap-10 px-6 py-20 md:grid-cols-[0.9fr_1.1fr] md:px-8 lg:gap-16 lg:py-24'>
-        <div className='order-2 max-w-xl md:order-1'>
+        <div className='on-water order-2 max-w-xl md:order-1'>
           <motion.div
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
@@ -109,10 +109,10 @@ export function NotFoundPage() {
           <motion.div
             animate={{ y: [0, 6, 0] }}
             transition={{ duration: 4, ease: 'easeInOut', repeat: Infinity, delay: 0.2 }}
-            className={`${glass} absolute bottom-[15%] left-[5%] z-20 rotate-2 rounded-xl px-4 py-3 shadow-xl`}
+            className={`${glass} absolute bottom-[15%] left-[5%] z-20 rounded-xl px-4 py-3 shadow-xl`}
           >
-            <p className='text-primary text-[0.65rem] font-bold tracking-widest uppercase'>Last known location</p>
-            <p className='mt-1 text-sm font-bold'>Somewhere between here &amp; there</p>
+            <p className='text-sm font-bold'>Last known location</p>
+            <p className='text-glass-muted mt-1 text-xs leading-relaxed'>Somewhere between here &amp; there</p>
           </motion.div>
         </motion.div>
       </div>

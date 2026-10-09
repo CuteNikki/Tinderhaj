@@ -63,9 +63,9 @@ export default async function UsersPage({ searchParams }: PageProps<'/moderation
   const shownLabel = show === 'BANNED' ? 'banned accounts' : show ? `${ROLE_LABELS[show].toLowerCase()}s` : 'accounts';
 
   return (
-    <div className='bg-background flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'>
+    <div data-water='band' className='flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'>
       <div className='container mx-auto max-w-7xl'>
-        <Stagger className='mb-8'>
+        <Stagger id='page-header' variant='sink' className='mb-24'>
           <p className='text-primary mb-1 text-xs font-bold tracking-widest uppercase'>Moderation</p>
           <h1 className='text-3xl font-black tracking-tight sm:text-4xl'>Users</h1>
           <p className='text-muted-foreground mt-2 text-sm text-pretty'>

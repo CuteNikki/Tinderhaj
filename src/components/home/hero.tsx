@@ -23,7 +23,7 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
     <section id='hero' className='relative isolate overflow-hidden'>
       <Ocean />
       <div className='relative z-10 container mx-auto grid min-h-screen max-w-7xl items-center gap-4 px-6 pt-24 pb-16 md:px-8 lg:grid-cols-2 lg:gap-8'>
-        <div className='relative z-10 flex max-w-2xl flex-col items-start'>
+        <div className='on-water relative z-10 flex max-w-2xl flex-col items-start'>
           <motion.div initial='hidden' animate='visible' variants={popIn} transition={spring.pop}>
             <Badge className={`${glass} rounded-full p-4 font-semibold tracking-wide uppercase shadow-lg`}>
               <span className='relative mr-2 flex h-2 w-2'>
@@ -139,7 +139,7 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
             <motion.div
               animate={{ y: [0, 6, 0] }}
               transition={{ duration: 4, ease: 'easeInOut', repeat: Infinity, delay: 0.2 }}
-              className={`${glass} flex max-w-64 -rotate-3 items-center gap-3 rounded-xl p-3 shadow-xl`}
+              className={`${glass} flex max-w-64 items-center gap-3 rounded-xl p-3 shadow-xl`}
             >
               <Image
                 unoptimized
@@ -186,7 +186,7 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
             className={`${glass} group/hint flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold whitespace-nowrap shadow-lg transition-[filter] hover:brightness-110`}
           >
             See how it works
-            <ArrowDown className='text-primary ease-bounce h-3.5 w-3.5 transition-transform duration-300 group-hover/hint:translate-y-0.5' />
+            <ArrowDown className='text-glass-muted ease-bounce h-3.5 w-3.5 transition-transform duration-300 group-hover/hint:translate-y-0.5' />
           </ScrollToElement>
         </motion.div>
       </motion.div>
