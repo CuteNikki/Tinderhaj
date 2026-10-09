@@ -332,25 +332,6 @@
   text-shadow: none;
 }
 
-/* An answer sliding open and shut (see Questions), where browsers can; elsewhere it just appears. */
-@supports (interpolate-size: allow-keywords) {
-  details.question {
-    interpolate-size: allow-keywords;
-  }
-
-  details.question::details-content {
-    height: 0;
-    overflow: clip;
-    transition:
-      height 0.3s ease,
-      content-visibility 0.3s allow-discrete;
-  }
-
-  details.question[open]::details-content {
-    height: auto;
-  }
-}
-
 /* Shown as the page asks (see PageWater): the page showing, that is, not one Next keeps hidden to go back to. */
 .water-full,
 .page-band {

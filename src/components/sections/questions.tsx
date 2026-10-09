@@ -1,9 +1,7 @@
-import { PlusIcon } from 'lucide-react';
-
 import { HEARTS_PER_DAY } from '@/lib/hearts';
 
-import { Stagger } from '@/components/common/stagger';
 import { PonderingShark } from '@/components/sections/pondering-shark';
+import { QuestionList } from '@/components/sections/question-list';
 import { Section } from '@/components/sections/section';
 
 const QUESTIONS = [
@@ -35,18 +33,7 @@ export function Questions({ tone }: { tone?: 'muted' | 'card' | 'background' }) 
       tone={tone}
       aside={<PonderingShark />}
     >
-      <Stagger className='border-border max-w-3xl border-t' gap={0.06} delay={0.15}>
-        {QUESTIONS.map(({ question, answer }) => (
-          // Sharing a name, opening one closes the others
-          <details key={question} name='questions' className='question group border-border border-b'>
-            <summary className='hover:text-primary flex cursor-pointer list-none items-center justify-between gap-4 py-5 font-bold transition-colors [&::-webkit-details-marker]:hidden'>
-              {question}
-              <PlusIcon className='text-primary ease-bounce size-5 shrink-0 transition-transform duration-300 group-open:rotate-45' aria-hidden='true' />
-            </summary>
-            <p className='text-muted-foreground max-w-2xl pb-5 text-sm leading-relaxed'>{answer}</p>
-          </details>
-        ))}
-      </Stagger>
+      <QuestionList questions={QUESTIONS} />
     </Section>
   );
 }
