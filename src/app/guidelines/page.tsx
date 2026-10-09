@@ -91,7 +91,7 @@ const CONSEQUENCES: { title: string; copy: string; icon: LucideIcon }[] = [
 export default function GuidelinesPage() {
   return (
     <>
-      <div data-water='band' className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'>
+      <div data-water='band' data-tone='muted' className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'>
         <div className='container mx-auto max-w-7xl'>
           <Stagger id='page-header' variant='sink' className='mb-24'>
             <Eyebrow>Guidelines</Eyebrow>
@@ -129,7 +129,7 @@ export default function GuidelinesPage() {
         </div>
       </div>
 
-      <Section eyebrow='Review' title='From draft' highlight='to discovery.' note='Every shark goes through the same three steps.'>
+      <Section eyebrow='Review' title='From draft' highlight='to discovery.' note='Every shark goes through the same three steps.' tone='background'>
         <Stagger as='ul' itemAs='li' variant='card' gap={STAGGER} delay={0.1} className='grid gap-4 md:grid-cols-3' itemClassName='h-full'>
           {REVIEW.map((step, index) => (
             <IconCard key={step.title} {...step} step={index + 1} heading='h3' />
@@ -142,7 +142,6 @@ export default function GuidelinesPage() {
         title='Fixed, mostly.'
         highlight='Banned, rarely.'
         note='Most profiles that come back need a small change, nothing more.'
-        tone='background'
       >
         <Stagger as='ul' itemAs='li' variant='card' gap={STAGGER} delay={0.1} className='grid gap-4 md:grid-cols-3' itemClassName='h-full'>
           {CONSEQUENCES.map((item) => (

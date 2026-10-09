@@ -45,7 +45,7 @@ const WAYS_IN: { title: string; copy: string; icon: LucideIcon; link: { label: s
 export default function CommunityPage() {
   return (
     <>
-      <div data-water='band' className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'>
+      <div data-water='band' data-tone='muted' className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'>
         <div className='container mx-auto max-w-7xl'>
           <Stagger id='page-header' variant='sink' className='mb-24'>
             <Eyebrow>Community</Eyebrow>
@@ -62,7 +62,13 @@ export default function CommunityPage() {
         </div>
       </div>
 
-      <Section eyebrow='Join in' title='More than' highlight='sending hearts.' note='A few ways to be part of it, beyond your sharks’ profiles.'>
+      <Section
+        eyebrow='Join in'
+        title='More than'
+        highlight='sending hearts.'
+        note='A few ways to be part of it, beyond your sharks’ profiles.'
+        tone='background'
+      >
         <Stagger as='ul' itemAs='li' variant='card' gap={STAGGER} delay={0.1} className='grid gap-4 sm:grid-cols-2 xl:grid-cols-4' itemClassName='h-full'>
           {WAYS_IN.map((way) => (
             <IconCard key={way.title} {...way} heading='h3' />

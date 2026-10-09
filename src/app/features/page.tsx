@@ -61,7 +61,7 @@ const FEATURES: { title: string; copy: string; icon: LucideIcon }[] = [
 export default function FeaturesPage() {
   return (
     <>
-      <div data-water='band' className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'>
+      <div data-water='band' data-tone='muted' className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'>
         <div className='container mx-auto max-w-7xl'>
           <Stagger id='page-header' variant='sink' className='mb-24'>
             <Eyebrow>Features</Eyebrow>
@@ -84,7 +84,7 @@ export default function FeaturesPage() {
           </Stagger>
         </div>
       </div>
-      <FreshSharks tone='muted' />
+      <FreshSharks tone='background' />
       <ReadyWhenYouAre />
     </>
   );

@@ -20,7 +20,7 @@ export function LegalPage({ title, lead, updated, children }: { title: string; l
     });
 
   return (
-    <div data-water='band' className='flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'>
+    <div data-water='band' data-tone='muted' className='flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'>
       <article className='container mx-auto max-w-7xl lg:grid lg:grid-cols-[minmax(10rem,1fr)_minmax(0,56rem)_minmax(0,1fr)] lg:gap-x-12'>
         <Stagger id='page-header' variant='sink' as='header' className='mx-auto mb-24 max-w-4xl lg:col-start-2 lg:mx-0 lg:max-w-none'>
           <Eyebrow>Legal</Eyebrow>

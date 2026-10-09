@@ -54,7 +54,7 @@ const VALUES: { title: string; copy: string; icon: LucideIcon; link?: { label: s
 export default function AboutPage() {
   return (
     <>
-      <div data-water='band' className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'>
+      <div data-water='band' data-tone='muted' className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'>
         <div className='container mx-auto max-w-7xl'>
           <Stagger id='page-header' variant='sink' className='mb-24'>
             <Eyebrow>About</Eyebrow>
@@ -115,7 +115,13 @@ export default function AboutPage() {
         </div>
       </div>
 
-      <Section eyebrow='What we care about' title='Soft sharks,' highlight='kind waters.' note='The few things everything else here is built around.'>
+      <Section
+        eyebrow='What we care about'
+        title='Soft sharks,'
+        highlight='kind waters.'
+        note='The few things everything else here is built around.'
+        tone='background'
+      >
         <Stagger as='ul' itemAs='li' variant='card' gap={STAGGER} delay={0.1} className='grid gap-4 md:grid-cols-3' itemClassName='h-full'>
           {VALUES.map((value) => (
             <IconCard key={value.title} {...value} heading='h3' />
