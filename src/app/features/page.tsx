@@ -79,11 +79,14 @@ export default function FeaturesPage() {
           >
             {FEATURES.map(({ title, copy, icon: Icon }) => (
               <div key={title} className='border-foreground/10 bg-card h-full rounded-2xl border p-6 shadow-sm'>
-                <span className='bg-primary/10 text-primary flex size-11 items-center justify-center rounded-full'>
-                  <Icon className='size-5' aria-hidden='true' />
-                </span>
-                <h2 className='mt-4 text-lg font-bold'>{title}</h2>
-                <p className='text-muted-foreground mt-1 text-sm leading-relaxed text-pretty'>{copy}</p>
+                {/* The icon beside the title rather than above it, so it doesn't cost a row of its own */}
+                <div className='flex items-center gap-3'>
+                  <span className='bg-primary/10 text-primary flex size-9 shrink-0 items-center justify-center rounded-full'>
+                    <Icon className='size-4.5' aria-hidden='true' />
+                  </span>
+                  <h2 className='text-lg leading-tight font-bold'>{title}</h2>
+                </div>
+                <p className='text-muted-foreground mt-2 text-sm leading-relaxed text-pretty'>{copy}</p>
               </div>
             ))}
           </Stagger>
