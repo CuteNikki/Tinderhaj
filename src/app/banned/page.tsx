@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 
+import { CONTACT_EMAIL } from '@/constants/contact';
 import { bannedMetadata } from '@/constants/metadata';
 import { BAN_NOTICE_COOKIE, readBanNotice } from '@/lib/ban-notice';
 import { isBanned } from '@/lib/bans';
@@ -39,8 +40,8 @@ export default async function BannedPage() {
           {user.banReason && <p className='bg-muted rounded-lg px-3 py-2 wrap-break-word whitespace-pre-line'>{user.banReason}</p>}
           <p className='text-muted-foreground text-center text-pretty'>
             Think this is a mistake? Contact us at{' '}
-            <a href='mailto:contact@tinderhaj.com' className='text-foreground font-medium underline'>
-              contact@tinderhaj.com
+            <a href={`mailto:${CONTACT_EMAIL}`} className='text-foreground font-medium underline'>
+              {CONTACT_EMAIL}
             </a>
             .
           </p>

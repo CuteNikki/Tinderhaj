@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 
+import { CONTACT_EMAIL } from '@/constants/contact';
 import { imprintMetadata } from '@/constants/metadata';
 
 import { LegalPage } from '@/components/legal/legal-page';
@@ -27,8 +28,8 @@ export default function ImprintPage() {
       <LegalSection index={1} title='Contact'>
         <TypographyP>
           Email:{' '}
-          <a className='text-foreground font-medium underline' href='mailto:contact@tinderhaj.com'>
-            contact@tinderhaj.com
+          <a className='text-foreground font-medium underline' href={`mailto:${CONTACT_EMAIL}`}>
+            {CONTACT_EMAIL}
           </a>
         </TypographyP>
         <TypographyP>Phone: +49 176 46236314</TypographyP>

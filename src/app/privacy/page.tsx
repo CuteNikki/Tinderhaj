@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
+import { CONTACT_EMAIL } from '@/constants/contact';
 import { privacyMetadata } from '@/constants/metadata';
 
 import { LegalPage } from '@/components/legal/legal-page';
@@ -21,8 +22,8 @@ export default function PrivacyPage() {
       <LegalSection index={1} title='2. Who is responsible'>
         <TypographyP>
           The controller responsible for processing your information is Nikki Sophie Berthold, Friedrich-Karl-Straße 28, 32584 Löhne, Germany, reachable at{' '}
-          <a className='text-foreground font-medium underline' href='mailto:contact@tinderhaj.com'>
-            contact@tinderhaj.com
+          <a className='text-foreground font-medium underline' href={`mailto:${CONTACT_EMAIL}`}>
+            {CONTACT_EMAIL}
           </a>
           . Full contact details are in the{' '}
           <Link className='text-foreground font-medium underline' href='/imprint'>
@@ -168,8 +169,8 @@ export default function PrivacyPage() {
           portable format, and to object to processing based on our legitimate interests. Where we rely on your consent, you can withdraw it at any time.
         </TypographyP>
         <TypographyP>
-          You can manage your username, email, password, two-step sign-in, passkeys, sessions, profiles, and account deletion in the app, or contact us at
-          contact@tinderhaj.com for anything else.
+          You can manage your username, email, password, two-step sign-in, passkeys, sessions, profiles, and account deletion in the app, or contact us at{' '}
+          {CONTACT_EMAIL} for anything else.
         </TypographyP>
         <TypographyP>
           You also have the right to lodge a complaint with a data protection supervisory authority, for example the one where you live, or the one responsible
@@ -203,8 +204,8 @@ export default function PrivacyPage() {
       <LegalSection index={15} title='16. Contact us'>
         <TypographyP>
           Questions about this Privacy Policy or how we handle information can be sent to{' '}
-          <a className='text-foreground font-medium underline' href='mailto:contact@tinderhaj.com'>
-            contact@tinderhaj.com
+          <a className='text-foreground font-medium underline' href={`mailto:${CONTACT_EMAIL}`}>
+            {CONTACT_EMAIL}
           </a>
           .
         </TypographyP>

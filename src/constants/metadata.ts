@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 
+import { SOCIALS } from '@/constants/contact';
+
 export const SITE_URL = 'https://tinderhaj.com';
 export const SITE_NAME = 'Tinderhaj';
 export const SITE_TAGLINE = 'The dating site for Blåhaj';
@@ -25,6 +27,8 @@ export const layoutMetadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
+    // Credited on the card when a link is shared on X (see SOCIALS)
+    site: SOCIALS.find((social) => social.id === 'x')?.handle ?? undefined,
   },
 };
 

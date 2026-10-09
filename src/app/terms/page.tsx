@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import { MAX_PROFILES } from '@/constants/auth';
+import { CONTACT_EMAIL } from '@/constants/contact';
 import { termsMetadata } from '@/constants/metadata';
 import { HEARTS_PER_DAY } from '@/lib/hearts';
 
@@ -101,8 +102,8 @@ export default function TermsPage() {
         </TypographyP>
         <TypographyP>
           For anything else, or to hear what we decided, email{' '}
-          <a className='text-foreground font-medium underline' href='mailto:contact@tinderhaj.com'>
-            contact@tinderhaj.com
+          <a className='text-foreground font-medium underline' href={`mailto:${CONTACT_EMAIL}`}>
+            {CONTACT_EMAIL}
           </a>{' '}
           with a link to it and why you think so.
         </TypographyP>
@@ -153,8 +154,8 @@ export default function TermsPage() {
       <LegalSection index={13} title='14. Contact'>
         <TypographyP>
           Questions about these terms can be sent to{' '}
-          <a className='text-foreground font-medium underline' href='mailto:contact@tinderhaj.com'>
-            contact@tinderhaj.com
+          <a className='text-foreground font-medium underline' href={`mailto:${CONTACT_EMAIL}`}>
+            {CONTACT_EMAIL}
           </a>
           .
         </TypographyP>
