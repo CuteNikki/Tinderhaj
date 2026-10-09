@@ -44,7 +44,7 @@ export function PonderingShark() {
         className='relative z-10'
       >
         <motion.div {...bob.shark}>
-          <Image unoptimized src='/blahajThink.webp' width={320} height={320} alt='' className='h-auto w-40 drop-shadow-2xl xl:w-48' />
+          <Image unoptimized src='/blahajThink.webp' width={320} height={320} alt='' className='h-auto w-32 drop-shadow-2xl xl:w-40' />
         </motion.div>
       </motion.div>
       {/* The glass pops in on itself, inside what bobs, so it's frosted from the start (see glass) */}
