@@ -2,15 +2,20 @@ import 'server-only';
 
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { connection } from 'next/server';
 import { cache } from 'react';
 
 import { auth } from '@/lib/auth';
 
 /**
  * The signed-in session, looked up once per request however often asked.
- * `user.name` is the username.
+ * `user.name` is the username. Never prerendered: checking a session, and
+ * what's shown with it, goes by the clock.
  */
-export const getSession = cache(async () => auth.api.getSession({ headers: await headers() }));
+export const getSession = cache(async () => {
+  await connection();
+  return auth.api.getSession({ headers: await headers() });
+});
 
 /** Redirects to sign in if signed out. */
 export async function requireUser() {

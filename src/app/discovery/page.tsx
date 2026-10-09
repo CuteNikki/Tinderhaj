@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { SearchParams } from 'next/dist/server/request/search-params';
 import { redirect } from 'next/navigation';
+import { connection } from 'next/server';
 import { z } from 'zod';
 
 import { discoveryMetadata } from '@/constants/metadata';
@@ -46,6 +47,9 @@ const searchParamsSchema = z.object({
 });
 
 export default async function DiscoveryPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
+  // A fresh shuffle, and new sharks boosted by today's date: never prerendered, even when the URL is all there is.
+  await connection();
+
   const { q: query, p: page, t: take, s: seedParam } = searchParamsSchema.parse(await searchParams);
   // Arriving without a shuffle, e.g. from a bookmark: a fresh one, kept in the URL from here on. This renders once per
   // request on the server, so a random seed is what's meant; 1 and up, as `s` must be positive.
