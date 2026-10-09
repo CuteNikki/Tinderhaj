@@ -46,9 +46,9 @@ jobs:
         run: bun run lint:classes
 
   build:
-    name: Build
+    name: Build and end-to-end tests
     runs-on: ubuntu-latest
-    # The home page is prerendered with the newest sharks, so the build needs a database.
+    # The home page is prerendered with the newest sharks, so the build needs a database. The tests then use it too.
     services:
       postgres:
         image: postgres:17
@@ -65,6 +65,7 @@ jobs:
     env:
       # Random, but public: CI's sessions don't need to stay private.
       BETTER_AUTH_SECRET: 1tDU8P7/JvOmJ5j7WpZj6lSDq9XkhG5Cma+GpbIp3+Q=
+      E2E_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/tinderhaj
     steps:
       - uses: actions/checkout@v7
       - uses: oven-sh/setup-bun@v2
@@ -80,3 +81,15 @@ jobs:
         run: bun --bun run prisma migrate deploy
       - name: Build
         run: bun run build
+
+      - name: Browser
+        run: bunx playwright install --with-deps chromium
+      - name: End-to-end tests
+        run: bun run test:e2e
+      - name: Test report
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14

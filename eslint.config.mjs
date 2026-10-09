@@ -10,6 +10,8 @@ const eslintConfig = defineConfig([
   { settings: { react: { version: '19.3' } } },
   // Leaving a field out by destructuring the rest, e.g. `const { id, ...data } = input`, isn't an unused variable.
   { rules: { '@typescript-eslint/no-unused-vars': ['warn', { ignoreRestSiblings: true }] } },
+  // Playwright fixtures hand their value on with `use`, which isn't React's.
+  { files: ['e2e/**'], rules: { 'react-hooks/rules-of-hooks': 'off' } },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:

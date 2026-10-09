@@ -2,6 +2,7 @@
   "name": "tinderhaj",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -11,6 +12,7 @@
     "lint:classes": "node scripts/check-classes.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "test:e2e": "playwright test",
     "postinstall": "bun --bun --env-file=.env run prisma generate"
   },
   "prettier": {
@@ -55,6 +57,7 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.0",
     "@tailwindcss/node": "^4.3.3",
     "@tailwindcss/oxide": "^4.3.3",
     "@tailwindcss/postcss": "^4.3.3",

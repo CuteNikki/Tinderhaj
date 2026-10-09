@@ -195,9 +195,27 @@ npm run lint:classes   # classes Tailwind would write another way, e.g. w-[16px]
 npm run typecheck      # TypeScript, after generating Next's route types
 npm run format         # Prettier formatting
 npm run format:check   # Prettier, without changing files
+npm run test:e2e       # Playwright end-to-end tests, see below
 ```
 
-GitHub Actions runs the four checks and a production build, against a fresh PostgreSQL database, on every push and pull request (`.github/workflows/ci.yml`).
+GitHub Actions runs the four checks, a production build and the end-to-end tests, against a fresh PostgreSQL database, on every push and pull request (`.github/workflows/ci.yml`).
+
+## End-to-End Tests
+
+The Playwright tests in `e2e/` sign up, create a profile and send it for review, and send a heart that becomes a match. They run against a production build in Chromium.
+
+They make accounts, so they need a database of their own in `E2E_DATABASE_URL`, never the one in `.env`. A throwaway one in Docker works:
+
+```bash
+docker run -d --rm --name tinderhaj-e2e -e POSTGRES_PASSWORD=postgres -p 55432:5432 postgres:17-alpine
+DATABASE_URL=postgresql://postgres:postgres@localhost:55432/postgres npx prisma migrate deploy
+
+npx playwright install chromium
+npm run build
+E2E_DATABASE_URL=postgresql://postgres:postgres@localhost:55432/postgres npm run test:e2e
+```
+
+The server runs on port 3100 and sends its emails to a stand-in for Resend on port 3199, so nothing leaves your machine. Accounts the tests make have `@e2e.test` addresses and are removed when the run ends.
 
 ## Authentication and Session Flow
 
@@ -249,7 +267,7 @@ Better Auth rate limits sign-in, sign-up, and code requests per IP address in pr
 
 1. Create a feature branch.
 2. Make your changes.
-3. Run `typecheck`, `lint`, `lint:classes`, and `format:check`, which CI runs too.
+3. Run `typecheck`, `lint`, `lint:classes`, `format:check`, and `test:e2e`, which CI runs too.
 4. Submit a pull request with a short summary of the changes.
 
 ## License
