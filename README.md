@@ -1,6 +1,8 @@
+[![Tinderhaj: The dating site for Blåhaj. A Blåhaj plush shark next to the words “Meet sharks”.](https://tinderhaj.com/opengraph-image)](https://tinderhaj.com)
+
 # Tinderhaj
 
-Tinderhaj is a Next.js dating/profile platform built around profile discovery, account management, moderation, and verified user onboarding. The app includes sign-up and authentication flows, password reset emails, profile creation and review, and a discovery experience that surfaces verified profiles to users.
+Tinderhaj is a dating site for IKEA's Blåhaj plush sharks, built with Next.js. Owners create a profile for each of their sharks, a moderator checks it by hand, and once it's verified other sharks can find it in discovery and send it a heart. Two sharks that heart each other are a match.
 
 ## Overview
 
@@ -14,9 +16,27 @@ This project combines:
 - Tailwind CSS and shadcn/ui-inspired components for the UI
 - Zod validation for server-side input safety
 
-The product flow is centered on creating a personal profile, submitting it for review, and then discovering other approved profiles.
+The product flow is centered on creating a profile for a shark, submitting it for review, and then discovering and hearting other verified sharks.
 
 ## Features
+
+### Sharks and discovery
+
+- Up to 5 shark profiles per account, each with its own avatar, banner, and details, created, edited, and deleted from the dashboard
+- Discovery of every verified shark, searchable by name, location, pronouns, or interests, in a fresh shuffle each visit, with newly verified sharks boosted for their first 3 days
+- Hearts: each verified shark can heart up to 50 others a day, and two sharks that heart each other are a match
+- A Hearts page with matches, hearts received, and hearts sent, and a count of unseen hearts in the navbar
+- A public page for every account at `/u/<username>` with all its verified sharks, and a preview picture of them when the link is shared
+
+### Moderation
+
+- Every profile is reviewed before anyone else can see it: created, pending, rejected, or verified
+- Rejections name the fields that need fixing and can carry a note from the moderator
+- A users page for moderators, with roles: users, moderators, and admins
+- Bans for a day, three days, a week, a month, or until lifted, with a reason the banned person sees when they try to sign in. Moderators ban users; admins also ban moderators.
+- Admins change roles, sign accounts out everywhere, send password reset links, and delete accounts
+
+### Accounts and sign-in
 
 - User registration and sign-in with [Better Auth](https://www.better-auth.com)
 - Email verification, and email changes confirmed from the old address first
@@ -26,12 +46,14 @@ The product flow is centered on creating a personal profile, submitting it for r
 - A list of active sessions, with signing out other devices
 - Password change and password reset flow with email delivery
 - Account deletion confirmed by an email link
-- Profile creation, editing, and deletion
-- Avatar and banner uploads
-- Profile moderation states: created, pending, rejected, and verified
-- Discovery feed for verified profiles
 - Account settings: username, email, password, two-step sign-in, passkeys, sessions
-- Moderator verification tools
+
+### Pages and the rest
+
+- About, Features, Guide, Community, and Contact pages, and the Guidelines moderators review profiles by
+- Privacy policy, Terms, and Imprint
+- Open Graph images for sharing, a sitemap, and a robots.txt that keeps private pages out of search engines
+- Light and dark themes, following the device or chosen by hand
 
 ## Tech Stack
 
@@ -50,6 +72,7 @@ The product flow is centered on creating a personal profile, submitting it for r
 
 ```text
 .
+├── generated/          # Prisma client, made by `prisma generate`
 ├── prisma/
 │   ├── schema.prisma
 │   ├── seed.ts
@@ -58,8 +81,7 @@ The product flow is centered on creating a personal profile, submitting it for r
 │   ├── app/
 │   ├── components/
 │   ├── constants/
-│   ├── lib/
-│   └── generated/
+│   └── lib/
 ├── .env
 ├── next.config.ts
 ├── package.json
@@ -186,13 +208,16 @@ Emails (verification, email changes, password resets, sign-in codes, and account
 
 The Prisma schema defines the core models:
 
-- `User`: username, email, role, and whether two-step sign-in is on
+- `User`: username, email, role, whether two-step sign-in is on, and any ban (reason, expiry, and who gave it)
 - `Account`: ways to sign in; holds the password
 - `Session`: active sessions, with IP address and browser
 - `Verification`: email links and trusted devices
 - `TwoFactor`: authenticator app secrets and backup codes
 - `Passkey`: passkeys
-- `Profile`: user profile content, moderation status, verification timestamps
+- `Profile`: a shark's profile content, moderation status, rejection feedback, and submission and verification timestamps
+- `Heart`: a heart from one shark to another, and when its receiver saw it. A heart each way is a match.
+
+Roles are `USER`, `MODERATOR`, and `ADMIN`; what each can do is in `src/lib/roles.ts`.
 
 Profile states include:
 
@@ -200,6 +225,8 @@ Profile states include:
 - `PENDING`
 - `REJECTED`
 - `VERIFIED`
+
+Only verified profiles from accounts that aren't banned show up in discovery, on user pages, and in hearts.
 
 ## Deployment
 
