@@ -24,7 +24,7 @@ export function FeatureContent() {
       variants={reveal}
       transition={spring.soft}
     >
-      <div className='flex flex-col items-start justify-between gap-10 px-2 sm:px-4 md:flex-row md:items-center'>
+      <div className='flex flex-col items-start justify-between gap-10 md:flex-row md:items-center'>
         <div>
           <p className='mb-3 text-xs font-bold tracking-widest uppercase opacity-60'>Ready when you are</p>
           <h2 className='max-w-2xl text-4xl font-black tracking-tight sm:text-5xl'>Your next great connection is probably very soft.</h2>

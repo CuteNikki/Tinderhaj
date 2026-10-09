@@ -65,7 +65,7 @@ export function PageBand() {
   return (
     <div ref={band} className='page-band pointer-events-none absolute inset-x-0 -z-10'>
       {/* Deeper than it usually shows, so moving to a page whose header is taller or shorter moves only the waves */}
-      <Ocean into='fill-background' depth='h-96 min-h-full' />
+      <Ocean into='fill-(--band-floor)' depth='h-96 min-h-full' />
     </div>
   );
 }

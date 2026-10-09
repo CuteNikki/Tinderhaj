@@ -24,9 +24,10 @@ export function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className={cn('text-foreground py-18', TONES[tone])}>
+    // Inset like the pages they follow, so their edges line up
+    <section className={cn('text-foreground px-4 py-18 sm:px-5 lg:px-8', TONES[tone])}>
       <ScrollReveal>
-        <div className='container mx-auto max-w-7xl px-5 lg:px-8'>
+        <div className='container mx-auto max-w-7xl'>
           <div className='mb-8 flex flex-col justify-between gap-4 md:mb-10 md:flex-row md:items-end'>
             <div>
               <p className='text-primary mb-3 text-xs font-bold tracking-widest uppercase'>{eyebrow}</p>

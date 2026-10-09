@@ -2,11 +2,11 @@ import { Metadata } from 'next';
 
 import { homeMetadata } from '@/constants/metadata';
 
-import { FeatureContent } from '@/components/home/feature-content';
 import { GuideStep } from '@/components/home/guide-step';
 import { Hero } from '@/components/home/hero';
 import { ProfileCount } from '@/components/home/profile-count';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
+import { ReadyWhenYouAre } from '@/components/sections/ready-when-you-are';
 
 export const metadata: Metadata = homeMetadata;
 
@@ -42,9 +42,7 @@ export default function Home() {
           </div>
         </ScrollReveal>
       </section>
-      <section id='features' className='bg-card text-card-foreground scroll-m-16 px-4 py-18'>
-        <FeatureContent />
-      </section>
+      <ReadyWhenYouAre id='features' />
     </>
   );
 }

@@ -324,6 +324,25 @@
   text-shadow: none;
 }
 
+/* An answer sliding open and shut (see Questions), where browsers can; elsewhere it just appears. */
+@supports (interpolate-size: allow-keywords) {
+  details.question {
+    interpolate-size: allow-keywords;
+  }
+
+  details.question::details-content {
+    height: 0;
+    overflow: clip;
+    transition:
+      height 0.3s ease,
+      content-visibility 0.3s allow-discrete;
+  }
+
+  details.question[open]::details-content {
+    height: auto;
+  }
+}
+
 /* Shown as the page asks (see PageWater): the page showing, that is, not one Next keeps hidden to go back to. */
 .water-full,
 .page-band {
@@ -333,6 +352,23 @@
 main:has([data-water='full']:not([style*='display: none'] *)) > .water-full,
 main:has([data-water='band']:not([style*='display: none'] *)) > .page-band {
   display: block;
+}
+
+/*
+ * A band page set on muted (`data-tone`), and the band's waves flowing into
+ * it. On main rather than the page, as main draws its background beneath the
+ * band, where the page's own would cover it.
+ */
+.page-band {
+  --band-floor: var(--background);
+}
+
+main:has([data-water='band'][data-tone='muted']:not([style*='display: none'] *)) {
+  background-color: var(--muted);
+
+  > .page-band {
+    --band-floor: var(--muted);
+  }
 }
 
 .page-band {
