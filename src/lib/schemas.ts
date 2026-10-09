@@ -8,6 +8,7 @@ import {
   MAX_EMAIL_LENGTH,
   MAX_INTEREST_LENGTH,
   MAX_LOCATION_LENGTH,
+  MAX_MATCH_CONTACT_LENGTH,
   MAX_PASSWORD_LENGTH,
   MAX_PRONOUNS_LENGTH,
   MAX_SIZE_CM,
@@ -88,6 +89,15 @@ export const signUpSchema = z.object({
 
 export const updateUsernameSchema = z.object({
   username: usernameSchema,
+});
+
+/** Empty clears it. One line, as it's shown in one. */
+export const updateMatchContactSchema = z.object({
+  contact: z
+    .string()
+    .trim()
+    .max(MAX_MATCH_CONTACT_LENGTH, `Keep it to ${MAX_MATCH_CONTACT_LENGTH} characters.`)
+    .regex(/^[^\r\n]*$/, 'Keep it to one line.'),
 });
 
 export const forgotPasswordSchema = z.object({

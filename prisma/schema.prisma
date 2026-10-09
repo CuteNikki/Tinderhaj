@@ -38,6 +38,10 @@ model User {
 
   role AccountRole @default(USER)
 
+  /// How the owners of sharks that match one of theirs can reach them, e.g.
+  /// "Discord: nikki". Only shown on matches.
+  matchContact String?
+
   /// Banned accounts can't sign in. Check banExpires too (see lib/bans.ts):
   /// an expired ban is only cleared at their next sign-in.
   banned      Boolean   @default(false)

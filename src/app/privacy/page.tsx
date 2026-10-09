@@ -49,6 +49,7 @@ export default function PrivacyPage() {
             interests, and biography.
           </li>
           <li>Hearts your profiles send and receive, when they were sent, and when you saw the ones you received.</li>
+          <li>A way for your matches to reach you, such as a username or link elsewhere, if you choose to add one.</li>
           <li>
             Moderation information such as verification status, which parts of a profile need fixing and a moderator&apos;s note about it, and, if your account
             is banned, the reason, when the ban ends, and which moderator banned you.
@@ -101,7 +102,7 @@ export default function PrivacyPage() {
         </TypographyP>
         <TypographyP>
           When one of your profiles sends a heart, the owner of the profile it goes to sees which of your profiles sent it. When two profiles heart each other,
-          both owners see the match.
+          both owners see the match, and each sees the way to reach the other that they added, if any. It isn&apos;t shown anywhere else.
         </TypographyP>
         <TypographyP>
           Moderators and admins can see profiles waiting for review and the moderation information about them, along with your username, role, and any ban.

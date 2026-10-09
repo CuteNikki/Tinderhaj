@@ -13,7 +13,7 @@ import { PROFILE_COUNT_TAG, QUERIES } from '@/lib/queries';
 import { BAN_REASON_MAX, banExpiry, isBanDuration, isBanned } from '@/lib/bans';
 import { HEARTS_PER_DAY, liveProfileWhere } from '@/lib/hearts';
 import { canBan, canManageAccount, isAdmin, isRole } from '@/lib/roles';
-import { createProfileSchema, rejectProfileSchema, updateProfileSchema, updateUsernameSchema } from '@/lib/schemas';
+import { createProfileSchema, rejectProfileSchema, updateMatchContactSchema, updateProfileSchema, updateUsernameSchema } from '@/lib/schemas';
 import { getSession, isModerator, requireUser } from '@/lib/session';
 
 export async function logOut() {
@@ -48,6 +48,20 @@ export async function updateUsername(unsafeData: z.infer<typeof updateUsernameSc
   revalidatePath('/moderation/verification');
   // Their sharks' cards show it
   updateTag(PROFILE_COUNT_TAG);
+}
+
+/** What the owners of sharks that match one of theirs see, to reach them. Empty shares nothing. */
+export async function updateMatchContact(unsafeData: z.infer<typeof updateMatchContactSchema>) {
+  const { success, data, error } = updateMatchContactSchema.safeParse(unsafeData);
+
+  if (!success) return { message: error.issues[0]?.message ?? 'Unable to save how matches can reach you!' };
+
+  const session = await requireUser();
+
+  await prisma.user.update({ where: { id: session.user.id }, data: { matchContact: data.contact || null } });
+
+  revalidatePath('/dashboard/account');
+  revalidatePath('/dashboard/hearts');
 }
 
 /** For accounts without a password yet, e.g. signed up with a provider. */

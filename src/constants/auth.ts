@@ -38,3 +38,6 @@ export const MAX_INTEREST_LENGTH = 32;
 /** How many profiles one account can have, for now. */
 export const MAX_PROFILES = 5;
 export const MAX_INTERESTS = 3;
+
+/** The note an account shares with its matches, e.g. "Discord: nikki". */
+export const MAX_MATCH_CONTACT_LENGTH = 100;

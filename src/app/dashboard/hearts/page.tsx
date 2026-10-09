@@ -1,4 +1,4 @@
-import { HeartHandshakeIcon, HeartIcon, InboxIcon, SendIcon } from 'lucide-react';
+import { HeartHandshakeIcon, HeartIcon, InboxIcon, MessageCircleIcon, SendIcon } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 
 import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
 import { EmptyState } from '@/components/common/empty-state';
+import { LinkedText } from '@/components/common/linked-text';
 import { LocalTime } from '@/components/common/local-time';
 import { Stagger } from '@/components/common/stagger';
 import { HeartButton } from '@/components/hearts/heart-button';
@@ -92,6 +93,18 @@ export default async function HeartsPage({ searchParams }: PageProps<'/dashboard
           </nav>
         </ScrollReveal>
 
+        {tab === 'matches' && rows.length > 0 && !hearts.sharesContact && (
+          <ScrollReveal delay={CONTENT_DELAY}>
+            <p className='text-muted-foreground mb-4 text-sm'>
+              Your matches can’t see a way to reach you yet.{' '}
+              <Link href='/dashboard/account#top' className='text-foreground font-medium underline'>
+                Add one in Settings
+              </Link>
+              .
+            </p>
+          </ScrollReveal>
+        )}
+
         {rows.length ? (
           <Stagger
             as='ul'
@@ -124,32 +137,54 @@ function HeartListRow({ row, tab }: { row: HeartRow; tab: Tab }) {
         : `Your ${mine.displayName} sent a heart`;
 
   return (
-    <div className='flex items-center gap-3 p-4'>
-      <SharkDialog shark={theirs}>
-        <button type='button' className='group flex min-w-0 flex-1 items-center gap-3 text-left'>
-          <span className='relative shrink-0'>
-            <SharkAvatar shark={theirs} className='size-12' />
-            <SharkAvatar shark={mine} className='border-card absolute -right-1 -bottom-1 size-6 border-2' />
-          </span>
-          <span className='min-w-0'>
-            <span className='flex flex-wrap items-center gap-x-2'>
-              <span className='truncate font-semibold group-hover:underline'>{theirs.displayName}</span>
-              {row.unseen && <Badge className='shrink-0'>New</Badge>}
+    <div className='p-4'>
+      <div className='flex items-center gap-3'>
+        <SharkDialog shark={theirs}>
+          <button type='button' className='group flex min-w-0 flex-1 items-center gap-3 text-left'>
+            <span className='relative shrink-0'>
+              <SharkAvatar shark={theirs} className='size-12' />
+              <SharkAvatar shark={mine} className='border-card absolute -right-1 -bottom-1 size-6 border-2' />
             </span>
-            <span className='text-muted-foreground block truncate text-xs'>
-              @{theirs.user.username} · {what} <LocalTime iso={row.at.toISOString()} />
+            <span className='min-w-0'>
+              <span className='flex flex-wrap items-center gap-x-2'>
+                <span className='truncate font-semibold group-hover:underline'>{theirs.displayName}</span>
+                {row.unseen && <Badge className='shrink-0'>New</Badge>}
+              </span>
+              <span className='text-muted-foreground block truncate text-xs'>
+                @{theirs.user.username} · {what} <LocalTime iso={row.at.toISOString()} />
+              </span>
             </span>
-          </span>
-        </button>
-      </SharkDialog>
-      {tab === 'received' && <HeartButton from={mine} to={{ id: theirs.id, displayName: theirs.displayName }} sent={false} received />}
-      {tab === 'sent' && <HeartButton from={mine} to={{ id: theirs.id, displayName: theirs.displayName }} sent received={false} />}
-      {tab === 'matches' && (
-        <Badge className='shrink-0'>
-          <HeartIcon className='fill-current' aria-hidden='true' />
-          Match
-        </Badge>
-      )}
+          </button>
+        </SharkDialog>
+        {tab === 'received' && <HeartButton from={mine} to={{ id: theirs.id, displayName: theirs.displayName }} sent={false} received />}
+        {tab === 'sent' && <HeartButton from={mine} to={{ id: theirs.id, displayName: theirs.displayName }} sent received={false} />}
+        {tab === 'matches' && (
+          <Badge className='shrink-0'>
+            <HeartIcon className='fill-current' aria-hidden='true' />
+            Match
+          </Badge>
+        )}
+      </div>
+      {tab === 'matches' && <MatchContact username={theirs.user.username} contact={row.contact ?? null} />}
     </div>
+  );
+}
+
+/** How to reach a match's owner, under its row and lined up with its text. */
+function MatchContact({ username, contact }: { username: string; contact: string | null }) {
+  return (
+    <p className='text-muted-foreground mt-3 flex items-start gap-2 pl-15 text-sm'>
+      <MessageCircleIcon className='mt-0.5 size-4 shrink-0' aria-hidden='true' />
+      {contact ? (
+        <span className='min-w-0 wrap-break-word'>
+          <span className='sr-only'>Reach @{username}: </span>
+          <span className='text-foreground'>
+            <LinkedText text={contact} />
+          </span>
+        </span>
+      ) : (
+        <span>@{username} hasn’t shared a way to reach them yet.</span>
+      )}
+    </p>
   );
 }

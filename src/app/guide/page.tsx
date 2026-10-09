@@ -44,7 +44,7 @@ const STEPS: { title: string; copy: string; icon: LucideIcon; link?: { label: st
   },
   {
     title: 'Send hearts, find matches',
-    copy: `Heart a shark you like, up to ${HEARTS_PER_DAY} a day for each of yours. When it hearts one of yours back, that’s a match, and both of you can see it.`,
+    copy: `Heart a shark you like, up to ${HEARTS_PER_DAY} a day for each of yours. When it hearts one of yours back, that’s a match, and both of you see how to reach the other, if you’ve added a way in Settings.`,
     icon: HeartIcon,
   },
 ];

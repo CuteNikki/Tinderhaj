@@ -26,6 +26,7 @@ The product flow is centered on creating a profile for a shark, submitting it fo
 - Discovery of every verified shark, searchable by name, location, pronouns, or interests, in a fresh shuffle each visit, with newly verified sharks boosted for their first 3 days
 - Hearts: each verified shark can heart up to 50 others a day, and two sharks that heart each other are a match
 - A Hearts page with matches, hearts received, and hearts sent, and a count of unseen hearts in the navbar
+- A way to be reached, set in Account Settings, that only the owners of matching sharks see
 - A public page for every account at `/u/<username>` with all its verified sharks, and a preview picture of them when the link is shared
 
 ### Moderation
@@ -231,7 +232,7 @@ Emails (verification, email changes, password resets, sign-in codes, and account
 
 The Prisma schema defines the core models:
 
-- `User`: username, email, role, whether two-step sign-in is on, and any ban (reason, expiry, and who gave it)
+- `User`: username, email, role, whether two-step sign-in is on, how matches can reach them, and any ban (reason, expiry, and who gave it)
 - `Account`: ways to sign in; holds the password
 - `Session`: active sessions, with IP address and browser
 - `Verification`: email links and trusted devices

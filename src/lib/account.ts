@@ -25,7 +25,7 @@ export async function getAccountSettings(current: { userId: string; sessionId: s
     }),
     prisma.user.findUniqueOrThrow({
       where: { id: current.userId },
-      select: { twoFactorEnabled: true },
+      select: { twoFactorEnabled: true, matchContact: true },
     }),
     // An authenticator app counts once its first code confirmed it.
     prisma.twoFactor.findFirst({
@@ -48,6 +48,7 @@ export async function getAccountSettings(current: { userId: string; sessionId: s
     /** Connected providers, plus `credential` for a password. */
     accounts,
     hasPassword: accounts.some((account) => account.providerId === 'credential'),
+    matchContact: user.matchContact,
     twoFactor,
     trustedDevices,
     passkeys: passkeys.map((passkey) => ({ ...passkey, createdAt: passkey.createdAt?.toISOString() ?? null })),

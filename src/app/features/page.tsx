@@ -23,7 +23,7 @@ const FEATURES: { title: string; copy: string; icon: LucideIcon }[] = [
   },
   {
     title: 'Hearts and matches',
-    copy: `Heart the sharks you like, up to ${HEARTS_PER_DAY} a day for each of yours. A heart sent back is a match, and all of them wait on your Hearts page.`,
+    copy: `Heart the sharks you like, up to ${HEARTS_PER_DAY} a day for each of yours. A heart sent back is a match, and you see how to reach each other.`,
     icon: HeartIcon,
   },
   {

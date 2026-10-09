@@ -23,6 +23,16 @@ export default function Loading() {
               <ButtonSkeleton>Change</ButtonSkeleton>
             </div>
           </SettingsSection>
+          <SettingsSection
+            still
+            title='Reach me'
+            description='Shown only to the owners of sharks that match one of yours, so you can talk. Leave it empty to share nothing.'
+          >
+            <div className='flex flex-col gap-2 sm:flex-row sm:items-end'>
+              <FieldSkeleton className='flex-1' />
+              <ButtonSkeleton>Save</ButtonSkeleton>
+            </div>
+          </SettingsSection>
           <SettingsSection still title='Email' description='Where we send sign-in codes and links to reset your password.'>
             <div className='space-y-4'>
               <div className='flex flex-wrap items-center gap-x-3 gap-y-2'>

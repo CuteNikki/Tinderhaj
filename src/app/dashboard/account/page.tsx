@@ -11,6 +11,7 @@ import { Eyebrow, PageTitle } from '@/components/common/heading';
 import { DeleteAccount } from '@/components/account/delete-account';
 import { EmailSettings } from '@/components/account/email-settings';
 import { LinkedAccounts } from '@/components/account/linked-accounts';
+import { MatchContactForm } from '@/components/account/match-contact-form';
 import { PasskeySettings } from '@/components/account/passkey-settings';
 import { PasswordForm } from '@/components/account/password-form';
 import { SessionList } from '@/components/account/session-list';
@@ -23,7 +24,10 @@ export const metadata: Metadata = accountMetadata;
 export default async function AccountPage({ searchParams }: PageProps<'/dashboard/account'>) {
   const { user, session } = await requireUser();
   const { error } = await searchParams;
-  const { accounts, hasPassword, twoFactor, trustedDevices, passkeys, sessions } = await getAccountSettings({ userId: user.id, sessionId: session.id });
+  const { accounts, hasPassword, matchContact, twoFactor, trustedDevices, passkeys, sessions } = await getAccountSettings({
+    userId: user.id,
+    sessionId: session.id,
+  });
 
   return (
     <div data-water='band' className='flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'>
@@ -37,13 +41,20 @@ export default async function AccountPage({ searchParams }: PageProps<'/dashboar
             <SettingsSection title='Username' description='Choose the name people will see across Tinderhaj.' delay={CONTENT_DELAY}>
               <UsernameForm username={user.name} />
             </SettingsSection>
-            <SettingsSection title='Email' description='Where we send sign-in codes and links to reset your password.' delay={CONTENT_DELAY + STAGGER}>
+            <SettingsSection
+              title='Reach me'
+              description='Shown only to the owners of sharks that match one of yours, so you can talk. Leave it empty to share nothing.'
+              delay={CONTENT_DELAY + STAGGER}
+            >
+              <MatchContactForm contact={matchContact} />
+            </SettingsSection>
+            <SettingsSection title='Email' description='Where we send sign-in codes and links to reset your password.' delay={CONTENT_DELAY + 2 * STAGGER}>
               <EmailSettings email={user.email} verified={user.emailVerified} />
             </SettingsSection>
             <SettingsSection
               title='Password'
               description={hasPassword ? undefined : 'You sign in with another account. Add a password to also sign in with your email.'}
-              delay={CONTENT_DELAY + 2 * STAGGER}
+              delay={CONTENT_DELAY + 3 * STAGGER}
             >
               <PasswordForm hasPassword={hasPassword} />
             </SettingsSection>

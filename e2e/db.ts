@@ -18,10 +18,10 @@ export function newAccount() {
 }
 
 /**
- * An account to sign in to with PASSWORD, its email already verified, and a
- * verified shark for each name in `sharks`.
+ * An account to sign in to with PASSWORD, its email already verified, a
+ * verified shark for each name in `sharks`, and `contact` for its matches.
  */
-export async function createUser({ sharks = [] }: { sharks?: string[] } = {}) {
+export async function createUser({ sharks = [], contact }: { sharks?: string[]; contact?: string } = {}) {
   const { username, email } = newAccount();
   const now = new Date();
 
@@ -30,6 +30,7 @@ export async function createUser({ sharks = [] }: { sharks?: string[] } = {}) {
       username,
       email,
       emailVerified: true,
+      matchContact: contact,
       profiles: { create: sharks.map((displayName) => ({ displayName, unit: 'CM', status: 'VERIFIED', submittedAt: now, verifiedAt: now })) },
     },
   });
