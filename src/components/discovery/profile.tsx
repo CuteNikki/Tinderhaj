@@ -14,13 +14,25 @@ import { Card, CardContent } from '@/components/ui/card';
 
 /**
  * A shark's card. `showStatus` shows where it is in review instead of whether
- * it's new, for moderators; `action` floats in the bottom-right corner, e.g. a heart.
+ * it's new, for moderators; `action` floats in the bottom-right corner, e.g. a
+ * heart. `lift: false` keeps it still under the pointer, for a card that's a
+ * popup of its own rather than one among many.
  */
-export function DiscoveryProfile({ profile, showStatus = false, action }: { profile: PublicProfile; showStatus?: boolean; action?: React.ReactNode }) {
+export function DiscoveryProfile({
+  profile,
+  showStatus = false,
+  action,
+  lift = true,
+}: {
+  profile: PublicProfile;
+  showStatus?: boolean;
+  action?: React.ReactNode;
+  lift?: boolean;
+}) {
   const status = PROFILE_STATUS_META[profile.status];
 
   return (
-    <Card className={cn('group bg-background h-full w-full overflow-hidden pt-0 pb-0 shadow-sm', LIFT)}>
+    <Card className={cn('group bg-background h-full w-full overflow-hidden pt-0 pb-0 shadow-sm', lift && LIFT)}>
       <div className='relative aspect-5/2 overflow-hidden'>
         <ProfileBanner src={profile.bannerUrl} alt={`${profile.user.username}'s banner`} />
         {showStatus ? (

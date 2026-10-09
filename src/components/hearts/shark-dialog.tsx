@@ -10,10 +10,10 @@ export function SharkDialog({ shark, children }: { shark: PublicProfile; childre
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      {/* The card is the dialog: no frame around it. */}
+      {/* The card is the dialog: no frame around it, and still, as lifting it would tip it past the dialog's edges and bring up scrollbars. */}
       <DialogContent className='max-w-sm bg-transparent p-0 shadow-none ring-0 sm:max-w-sm' showCloseButton={false}>
         <DialogTitle className='sr-only'>{shark.displayName}</DialogTitle>
-        <DiscoveryProfile profile={shark} />
+        <DiscoveryProfile profile={shark} lift={false} />
       </DialogContent>
     </Dialog>
   );
