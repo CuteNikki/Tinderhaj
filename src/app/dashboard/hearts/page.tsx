@@ -15,6 +15,7 @@ import { LocalTime } from '@/components/common/local-time';
 import { Stagger } from '@/components/common/stagger';
 import { HeartButton } from '@/components/hearts/heart-button';
 import { MarkHeartsSeen } from '@/components/hearts/mark-hearts-seen';
+import { ReportDialog } from '@/components/reports/report-dialog';
 import { SharkAvatar } from '@/components/hearts/shark-avatar';
 import { SharkDialog } from '@/components/hearts/shark-dialog';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
@@ -165,23 +166,33 @@ function HeartListRow({ row, tab }: { row: HeartRow; tab: Tab }) {
           </Badge>
         )}
       </div>
-      {tab === 'matches' && <MatchContact username={theirs.user.username} contact={row.contact ?? null} />}
+      {tab === 'matches' && (
+        <MatchContact shark={{ id: theirs.id, displayName: theirs.displayName }} username={theirs.user.username} contact={row.contact ?? null} />
+      )}
     </div>
   );
 }
 
-/** How to reach a match's owner, under its row and lined up with its text. */
-function MatchContact({ username, contact }: { username: string; contact: string | null }) {
+/** How to reach a match's owner, under its row and lined up with its text, with a way to report it. */
+function MatchContact({ shark, username, contact }: { shark: { id: string; displayName: string }; username: string; contact: string | null }) {
   return (
     <p className='text-muted-foreground mt-3 flex items-start gap-2 pl-15 text-sm'>
       <MessageCircleIcon className='mt-0.5 size-4 shrink-0' aria-hidden='true' />
       {contact ? (
-        <span className='min-w-0 wrap-break-word'>
-          <span className='sr-only'>Reach @{username}: </span>
-          <span className='text-foreground'>
-            <LinkedText text={contact} />
+        <>
+          <span className='min-w-0 flex-1 wrap-break-word'>
+            <span className='sr-only'>Reach @{username}: </span>
+            <span className='text-foreground'>
+              <LinkedText text={contact} />
+            </span>
           </span>
-        </span>
+          {/* Moderators never see these otherwise, so their matches are the ones to say */}
+          <ReportDialog shark={shark} contact>
+            <button type='button' className='hover:text-foreground shrink-0 text-xs underline-offset-4 hover:underline'>
+              Report
+            </button>
+          </ReportDialog>
+        </>
       ) : (
         <span>@{username} hasn’t shared a way to reach them yet.</span>
       )}

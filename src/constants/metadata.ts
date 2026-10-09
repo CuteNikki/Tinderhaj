@@ -128,6 +128,12 @@ export const verifyMetadata: Metadata = {
   description: 'Review and verify Tinderhaj profiles.',
 };
 
+export const reportsMetadata: Metadata = {
+  ...unlisted,
+  title: 'Reports',
+  description: 'Sharks people reported, for moderators to look at.',
+};
+
 export const usersMetadata: Metadata = {
   ...unlisted,
   title: 'Users',

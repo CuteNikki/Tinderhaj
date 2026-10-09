@@ -25,6 +25,24 @@ enum SizeUnit {
   INCH
 }
 
+/// Why someone reported a shark. Labels in lib/reports.ts.
+enum ReportReason {
+  NOT_A_SHARK
+  INAPPROPRIATE
+  PERSONAL_INFO
+  HARASSMENT
+  SPAM
+  OTHER
+}
+
+enum ReportStatus {
+  OPEN
+  /// A moderator dealt with it, e.g. rejected the profile or banned its owner.
+  RESOLVED
+  /// A moderator found nothing wrong.
+  DISMISSED
+}
+
 /// Someone with a Tinderhaj account. Better Auth calls this the user and
 /// knows `username` as its `name`.
 model User {
@@ -54,6 +72,9 @@ model User {
   bannedBy    User?     @relation("BannedBy", fields: [bannedById], references: [id], onDelete: SetNull)
   /// Accounts this moderator or admin banned.
   usersBanned User[]    @relation("BannedBy")
+
+  reportsMade    Report[] @relation("ReportsMade")
+  reportsHandled Report[] @relation("ReportsHandled")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -181,8 +202,9 @@ model Profile {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  heartsSent     Heart[] @relation("HeartsSent")
-  heartsReceived Heart[] @relation("HeartsReceived")
+  heartsSent     Heart[]  @relation("HeartsSent")
+  heartsReceived Heart[]  @relation("HeartsReceived")
+  reports        Report[]
 
   @@index([userId])
 }
@@ -203,4 +225,33 @@ model Heart {
 
   @@unique([fromProfileId, toProfileId])
   @@index([toProfileId])
+}
+
+/// A signed-in user telling moderators a shark breaks the rules, or the way
+/// to reach its owner does, for a match.
+model Report {
+  id        String  @id @default(cuid(2))
+  profileId String
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  /// Kept when they delete their account, without saying who it was.
+  reporterId String?
+  reporter   User?   @relation("ReportsMade", fields: [reporterId], references: [id], onDelete: SetNull)
+
+  reason      ReportReason
+  details     String?
+  /// The owner's way to be reached as it was when a match reported it, so
+  /// changing it afterwards doesn't hide what was reported. Null when the
+  /// report is about the shark itself.
+  contactNote String?
+
+  status      ReportStatus @default(OPEN)
+  handledAt   DateTime?
+  handledById String?
+  handledBy   User?        @relation("ReportsHandled", fields: [handledById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@index([status, createdAt])
+  @@index([reporterId, createdAt])
 }

@@ -96,11 +96,15 @@ export default function TermsPage() {
 
       <LegalSection index={7} title='8. Reporting content'>
         <TypographyP>
-          If you come across content you believe is illegal or breaks these terms, email{' '}
+          If you come across a profile you believe is illegal or breaks these terms, report it with the flag on its card, or, for the way to reach a
+          match&apos;s owner, with Report beside it. A moderator reviews every report. Who made a report is never shared with the person reported.
+        </TypographyP>
+        <TypographyP>
+          For anything else, or to hear what we decided, email{' '}
           <a className='text-foreground font-medium underline' href='mailto:contact@tinderhaj.com'>
             contact@tinderhaj.com
           </a>{' '}
-          with a link to it and why you think so. A person reviews every report, and we let you know what we decided.
+          with a link to it and why you think so.
         </TypographyP>
       </LegalSection>
 

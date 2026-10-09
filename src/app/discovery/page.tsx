@@ -16,6 +16,7 @@ import { DiscoveryNoResults } from '@/components/discovery/no-results';
 import { DiscoveryPagination } from '@/components/discovery/pagination';
 import { DiscoveryProfile } from '@/components/discovery/profile';
 import { CardHearts } from '@/components/hearts/card-hearts';
+import { ReportButton } from '@/components/reports/report-dialog';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
 
 const DISCOVERY_QUERY_TIMEOUT_MS = 8_000;
@@ -101,12 +102,19 @@ export default async function DiscoveryPage({ searchParams }: { searchParams: Pr
                   <DiscoveryProfile
                     profile={profile}
                     action={
-                      <CardHearts
-                        target={{ id: profile.id, displayName: profile.displayName }}
-                        states={hearts?.[profile.id] ?? null}
-                        signedIn={!!session}
-                        own={profile.userId === session?.user.id}
-                      />
+                      <div className='flex items-center gap-1'>
+                        <ReportButton
+                          shark={{ id: profile.id, displayName: profile.displayName }}
+                          signedIn={!!session}
+                          own={profile.userId === session?.user.id}
+                        />
+                        <CardHearts
+                          target={{ id: profile.id, displayName: profile.displayName }}
+                          states={hearts?.[profile.id] ?? null}
+                          signedIn={!!session}
+                          own={profile.userId === session?.user.id}
+                        />
+                      </div>
                     }
                   />
                 </ScrollReveal>

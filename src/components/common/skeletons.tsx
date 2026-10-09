@@ -58,7 +58,11 @@ export function ProfileCardSkeleton({ ending = 'heart', blank = false }: { endin
           </>
         )}
         {ending === 'heart' && (
-          <div className='mt-auto flex justify-end pt-3'>
+          <div className='mt-auto flex items-center justify-end gap-1 pt-3'>
+            {/* The report flag: a bare icon, so only the icon's size */}
+            <span className='flex size-8 items-center justify-center'>
+              <Skeleton className='size-4 rounded-sm' />
+            </span>
             <Skeleton className='size-8 rounded-full' />
           </div>
         )}

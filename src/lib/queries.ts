@@ -258,4 +258,36 @@ export const QUERIES = {
   getPendingProfiles: async () => {
     return prisma.profile.findMany({ where: { status: ProfileStatus.PENDING }, include: PROFILE_OWNER, orderBy: { submittedAt: 'asc' } });
   },
+
+  /** How many reports wait for a moderator, for the moderation menu. */
+  getOpenReportCount: async () => {
+    return prisma.report.count({ where: { status: 'OPEN' } });
+  },
+
+  /**
+   * Open reports, oldest first so none waits forever, or the latest handled
+   * ones, newest first: with the shark, its owner, who reported it and who
+   * handled it.
+   */
+  getReports: async (open: boolean) => {
+    return prisma.report.findMany({
+      where: open ? { status: 'OPEN' } : { status: { not: 'OPEN' } },
+      select: {
+        id: true,
+        reason: true,
+        details: true,
+        contactNote: true,
+        status: true,
+        createdAt: true,
+        handledAt: true,
+        profile: { select: { ...PUBLIC_PROFILE, user: { select: { id: true, username: true } } } },
+        reporter: { select: { id: true, username: true } },
+        handledBy: { select: { username: true } },
+      },
+      orderBy: open ? { createdAt: 'asc' } : { handledAt: 'desc' },
+      take: open ? undefined : 30,
+    });
+  },
 };
+
+export type ReportRow = Awaited<ReturnType<typeof QUERIES.getReports>>[number];

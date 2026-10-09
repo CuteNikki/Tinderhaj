@@ -13,6 +13,7 @@ import { EmptyState } from '@/components/common/empty-state';
 import { Stagger } from '@/components/common/stagger';
 import { DiscoveryProfile } from '@/components/discovery/profile';
 import { CardHearts } from '@/components/hearts/card-hearts';
+import { ReportButton } from '@/components/reports/report-dialog';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
 import { Button } from '@/components/ui/button';
 
@@ -91,7 +92,15 @@ export default async function UserSharksPage({ params }: PageProps<'/u/[username
                 <DiscoveryProfile
                   profile={shark}
                   action={
-                    <CardHearts target={{ id: shark.id, displayName: shark.displayName }} states={hearts?.[shark.id] ?? null} signedIn={!!session} own={own} />
+                    <div className='flex items-center gap-1'>
+                      <ReportButton shark={{ id: shark.id, displayName: shark.displayName }} signedIn={!!session} own={own} />
+                      <CardHearts
+                        target={{ id: shark.id, displayName: shark.displayName }}
+                        states={hearts?.[shark.id] ?? null}
+                        signedIn={!!session}
+                        own={own}
+                      />
+                    </div>
                   }
                 />
               </ScrollReveal>

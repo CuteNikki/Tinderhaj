@@ -7,8 +7,8 @@ import {
   CopyXIcon,
   EyeOffIcon,
   FilePenLineIcon,
+  FlagIcon,
   type LucideIcon,
-  MailIcon,
   SmileIcon,
   UndoIcon,
 } from 'lucide-react';
@@ -83,8 +83,8 @@ const CONSEQUENCES: { title: string; copy: string; icon: LucideIcon }[] = [
   },
   {
     title: 'Seen something wrong?',
-    copy: `A shark that breaks these, or a ban you think was a mistake: write to ${CONTACT_EMAIL} and a person will look.`,
-    icon: MailIcon,
+    copy: `A shark that breaks these: report it with the flag on its card, and a moderator will look. A ban you think was a mistake: write to ${CONTACT_EMAIL}.`,
+    icon: FlagIcon,
   },
 ];
 

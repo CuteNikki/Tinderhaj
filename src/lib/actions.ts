@@ -12,6 +12,7 @@ import { MAX_PROFILES } from '@/constants/auth';
 import { PROFILE_COUNT_TAG, QUERIES } from '@/lib/queries';
 import { BAN_REASON_MAX, banExpiry, isBanDuration, isBanned } from '@/lib/bans';
 import { HEARTS_PER_DAY, liveProfileWhere } from '@/lib/hearts';
+import { REPORTS_PER_DAY, reportSchema } from '@/lib/reports';
 import { canBan, canManageAccount, isAdmin, isRole } from '@/lib/roles';
 import { createProfileSchema, rejectProfileSchema, updateMatchContactSchema, updateProfileSchema, updateUsernameSchema } from '@/lib/schemas';
 import { getSession, isModerator, requireUser } from '@/lib/session';
@@ -412,4 +413,65 @@ export async function markHeartsSeen() {
   const session = await requireUser();
 
   await prisma.heart.updateMany({ where: { seenAt: null, to: { userId: session.user.id } }, data: { seenAt: new Date() } });
+}
+
+/**
+ * Tells moderators a shark breaks the rules, or, for a match, the way to
+ * reach its owner does.
+ */
+export async function reportProfile(unsafeData: z.input<typeof reportSchema>) {
+  const { success, data, error } = reportSchema.safeParse(unsafeData);
+  if (!success) return { message: error.issues[0]?.message ?? 'Unable to send the report!' };
+
+  const session = await requireUser();
+
+  const profile = await prisma.profile.findFirst({
+    where: { id: data.profileId, ...liveProfileWhere() },
+    select: { userId: true, user: { select: { matchContact: true } } },
+  });
+  if (!profile) return { message: 'That shark isn’t around anymore.' };
+  if (profile.userId === session.user.id) return { message: 'You can’t report your own shark.' };
+
+  // Only a match sees how to reach the owner, so only a match can report it,
+  // and the copy for moderators comes from here rather than the browser.
+  let contactNote: string | null = null;
+  if (data.contact) {
+    const match = await prisma.heart.findFirst({
+      where: { fromProfileId: data.profileId, to: { userId: session.user.id, heartsSent: { some: { toProfileId: data.profileId } } } },
+      select: { id: true },
+    });
+    if (!match || !profile.user.matchContact) return { message: 'Only a match can report how to reach this shark’s owner.' };
+    contactNote = profile.user.matchContact;
+  }
+
+  const [open, today] = await Promise.all([
+    prisma.report.count({
+      where: { reporterId: session.user.id, profileId: data.profileId, status: 'OPEN', contactNote: data.contact ? { not: null } : null },
+    }),
+    prisma.report.count({ where: { reporterId: session.user.id, createdAt: { gt: new Date(Date.now() - 24 * 60 * 60 * 1000) } } }),
+  ]);
+  if (open) return { message: 'You’ve reported this already. A moderator will look at it soon.' };
+  if (today >= REPORTS_PER_DAY) return { message: `That’s ${REPORTS_PER_DAY} reports today. Try again tomorrow, or write to us.` };
+
+  await prisma.report.create({
+    data: { profileId: data.profileId, reporterId: session.user.id, reason: data.reason, details: data.details || null, contactNote },
+  });
+
+  revalidatePath('/moderation/reports');
+}
+
+/** Closes a report: dealt with (`RESOLVED`), or nothing wrong (`DISMISSED`). */
+export async function handleReport({ reportId, outcome }: { reportId: string; outcome: 'RESOLVED' | 'DISMISSED' }) {
+  const session = await requireUser();
+
+  if (!isModerator(session.user.role)) return { message: 'You need moderator access to handle reports.' };
+  if (outcome !== 'RESOLVED' && outcome !== 'DISMISSED') return { message: 'Unknown outcome.' };
+
+  const { count } = await prisma.report.updateMany({
+    where: { id: reportId, status: 'OPEN' },
+    data: { status: outcome, handledAt: new Date(), handledById: session.user.id },
+  });
+  if (!count) return { message: 'Someone already handled this report.' };
+
+  revalidatePath('/moderation/reports');
 }

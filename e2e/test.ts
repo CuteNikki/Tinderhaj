@@ -1,17 +1,17 @@
 import { test as base, expect, type Locator, type Page } from '@playwright/test';
+import { randomInt } from 'node:crypto';
 
 import { PASSWORD } from './db';
 
 export { expect };
 
-let count = 0;
-
 export const test = base.extend({
   // Better Auth allows 3 sign-ins from an address in 10 seconds. As if behind
   // a proxy, each test comes from an address of its own, so tests running at
-  // the same time don't share the limit.
-  extraHTTPHeaders: async ({}, use, testInfo) => {
-    await use({ 'x-forwarded-for': `10.${testInfo.parallelIndex % 256}.${testInfo.retry % 256}.${++count % 256}` });
+  // the same time don't share the limit. Random rather than counted: Playwright
+  // replaces worker processes, and a count would start over in the new one.
+  extraHTTPHeaders: async ({}, use) => {
+    await use({ 'x-forwarded-for': `10.${randomInt(256)}.${randomInt(256)}.${randomInt(1, 255)}` });
   },
 });
 

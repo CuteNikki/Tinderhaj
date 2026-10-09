@@ -36,6 +36,7 @@ The product flow is centered on creating a profile for a shark, submitting it fo
 - A users page for moderators, with roles: users, moderators, and admins
 - Bans for a day, three days, a week, a month, or until lifted, with a reason the banned person sees when they try to sign in. Moderators ban users; admins also ban moderators.
 - Admins change roles, sign accounts out everywhere, send password reset links, and delete accounts
+- Reports: signed-in users flag a shark from its card, or a match's way to be reached, with a reason. Moderators see them in a queue and mark them dealt with or dismissed, with a count in the navbar.
 
 ### Accounts and sign-in
 
@@ -240,6 +241,7 @@ The Prisma schema defines the core models:
 - `Passkey`: passkeys
 - `Profile`: a shark's profile content, moderation status, rejection feedback, and submission and verification timestamps
 - `Heart`: a heart from one shark to another, and when its receiver saw it. A heart each way is a match.
+- `Report`: a shark, or its owner's way to be reached, reported to moderators: the reason, who reported it, and who handled it.
 
 Roles are `USER`, `MODERATOR`, and `ADMIN`; what each can do is in `src/lib/roles.ts`.
 

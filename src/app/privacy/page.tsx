@@ -51,6 +51,10 @@ export default function PrivacyPage() {
           <li>Hearts your profiles send and receive, when they were sent, and when you saw the ones you received.</li>
           <li>A way for your matches to reach you, such as a username or link elsewhere, if you choose to add one.</li>
           <li>
+            Reports you make: which profile, the reason and any details you give, and when. Reporting the way to reach a match&apos;s owner keeps a copy of it
+            as it was.
+          </li>
+          <li>
             Moderation information such as verification status, which parts of a profile need fixing and a moderator&apos;s note about it, and, if your account
             is banned, the reason, when the ban ends, and which moderator banned you.
           </li>
@@ -105,9 +109,9 @@ export default function PrivacyPage() {
           both owners see the match, and each sees the way to reach the other that they added, if any. It isn&apos;t shown anywhere else.
         </TypographyP>
         <TypographyP>
-          Moderators and admins can see profiles waiting for review and the moderation information about them, along with your username, role, and any ban.
-          Admins can also see your email address, whether it&apos;s verified, and how many sessions you have, and can sign you out everywhere, send you a
-          password reset link, or delete your account.
+          Moderators and admins can see profiles waiting for review and the moderation information about them, along with your username, role, and any ban. They
+          also see reports, including who made them; the person reported is never told. Admins can also see your email address, whether it&apos;s verified, and
+          how many sessions you have, and can sign you out everywhere, send you a password reset link, or delete your account.
         </TypographyP>
         <TypographyP>
           We do not sell personal information. We share information only with service providers needed to host, operate, secure, store, or deliver parts of the
