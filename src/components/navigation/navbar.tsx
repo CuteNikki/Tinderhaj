@@ -1,10 +1,13 @@
 import Link from 'next/link';
 
 import {
+  ChevronDownIcon,
   HeartIcon,
-  HomeIcon,
   type LucideIcon,
+  MailIcon,
   MenuIcon,
+  MessagesSquareIcon,
+  ScrollTextIcon,
   SearchIcon,
   SettingsIcon,
   SignpostIcon,
@@ -18,6 +21,7 @@ import { countUnseenHearts } from '@/lib/hearts';
 import { QUERIES } from '@/lib/queries';
 import type { AccountRole } from '@/lib/roles';
 import { getSession, isModerator } from '@/lib/session';
+import { cn } from '@/lib/utils';
 
 import { Eyebrow } from '@/components/common/heading';
 import { LogOutButton, LogOutDropdownMenuItem } from '@/components/auth/logout-button';
@@ -37,16 +41,26 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
-type NavLink = { name: string; href: string; icon: LucideIcon; /** Shown as a count next to the link, when above 0. */ count?: number };
+type NavLink = {
+  name: string;
+  href: string;
+  icon: LucideIcon;
+  /** Shown as a count next to the link, when above 0. */
+  count?: number;
+  /** On the bar only from large screens up, there being no room for it beside the rest before; always in the menu. */
+  wide?: boolean;
+};
 
 type NavUser = { role: AccountRole };
 
-/** The site's pages, on the bar on wide screens and in the menu on narrow ones. */
+/** The site's pages, on the bar on wide screens and in the menu on narrow ones. Home is the logo. */
 const siteLinks: NavLink[] = [
-  { name: 'Home', href: '/#top', icon: HomeIcon },
   { name: 'Guide', href: '/guide#top', icon: SignpostIcon },
   { name: 'Features', href: '/features#top', icon: SparklesIcon },
   { name: 'Discovery', href: '/discovery#top', icon: SearchIcon },
+  { name: 'Community', href: '/community#top', icon: MessagesSquareIcon, wide: true },
+  { name: 'Guidelines', href: '/guidelines#top', icon: ScrollTextIcon, wide: true },
+  { name: 'Contact', href: '/contact#top', icon: MailIcon, wide: true },
 ];
 
 /** Each group here is a page's eyebrow: "Your sharks", "Moderation", "Your account". */
@@ -88,14 +102,33 @@ function NavbarContent({ user, pending, hearts, showAuthElements }: { user: NavU
   return (
     <header className='bg-background/60 fixed top-0 z-50 w-svw backdrop-blur-lg'>
       <nav className='container mx-auto flex h-16 max-w-7xl items-center gap-4 px-5 md:gap-6 lg:px-8'>
-        <Link href='#top' className='group mr-4 flex items-center gap-2'>
+        {/* Home, there being no link for it on the bar */}
+        <Link href='/#top' aria-label='Tinderhaj, home' className='group mr-4 flex items-center gap-2'>
           <Logo className='group-hover:animate-wiggle h-6 w-6' />
           <TypographyLarge className='font-bold'>Tinderhaj</TypographyLarge>
         </Link>
         <div className='hidden flex-1 items-center gap-4 text-sm font-medium md:flex md:gap-6'>
           {siteLinks.map((link) => (
-            <SiteLink key={link.href} link={link} className='text-muted-foreground hover:text-foreground transition-colors duration-150' />
+            <SiteLink
+              key={link.href}
+              link={link}
+              className={cn('text-muted-foreground hover:text-foreground transition-colors duration-150', link.wide && 'hidden lg:inline')}
+            />
           ))}
+          {/* Until there's room for them on the bar, the rest of the pages are a click away */}
+          <DropdownMenu>
+            <DropdownMenuTrigger className='text-muted-foreground hover:text-foreground data-open:text-foreground flex items-center gap-1 transition-colors duration-150 lg:hidden [&[data-state=open]>svg]:rotate-180'>
+              More
+              <ChevronDownIcon className='size-4 transition-transform duration-150' aria-hidden='true' />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent side='bottom' align='start' className='w-44'>
+              {siteLinks
+                .filter((link) => link.wide)
+                .map((link) => (
+                  <MenuLink key={link.href} link={link} />
+                ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
         <div className='ml-auto flex items-center gap-2'>
           <ThemeButton />
