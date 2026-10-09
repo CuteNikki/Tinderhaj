@@ -4,6 +4,7 @@ import {
   ChevronDownIcon,
   FlagIcon,
   HeartIcon,
+  InfoIcon,
   type LucideIcon,
   MailIcon,
   MenuIcon,
@@ -22,7 +23,6 @@ import { countUnseenHearts } from '@/lib/hearts';
 import { QUERIES } from '@/lib/queries';
 import type { AccountRole } from '@/lib/roles';
 import { getSession, isModerator } from '@/lib/session';
-import { cn } from '@/lib/utils';
 
 import { Eyebrow } from '@/components/common/heading';
 import { LogOutButton, LogOutDropdownMenuItem } from '@/components/auth/logout-button';
@@ -48,20 +48,21 @@ type NavLink = {
   icon: LucideIcon;
   /** Shown as a count next to the link, when above 0. */
   count?: number;
-  /** On the bar only from large screens up, there being no room for it beside the rest before; always in the menu. */
-  wide?: boolean;
+  /** In the More menu on the bar rather than on it, to keep the bar to the main pages; in the menu on phones like the rest. */
+  more?: boolean;
 };
 
 type NavUser = { role: AccountRole };
 
-/** The site's pages, on the bar on wide screens and in the menu on narrow ones. Home is the logo. */
+/** The site's pages, on the bar (or its More menu) on wide screens and in the menu on narrow ones. Home is the logo. */
 const siteLinks: NavLink[] = [
   { name: 'Guide', href: '/guide#top', icon: SignpostIcon },
   { name: 'Features', href: '/features#top', icon: SparklesIcon },
   { name: 'Discovery', href: '/discovery#top', icon: SearchIcon },
-  { name: 'Community', href: '/community#top', icon: MessagesSquareIcon, wide: true },
-  { name: 'Guidelines', href: '/guidelines#top', icon: ScrollTextIcon, wide: true },
-  { name: 'Contact', href: '/contact#top', icon: MailIcon, wide: true },
+  { name: 'Community', href: '/community#top', icon: MessagesSquareIcon, more: true },
+  { name: 'Guidelines', href: '/guidelines#top', icon: ScrollTextIcon, more: true },
+  { name: 'About', href: '/about#top', icon: InfoIcon, more: true },
+  { name: 'Contact', href: '/contact#top', icon: MailIcon, more: true },
 ];
 
 /** Each group here is a page's eyebrow: "Your sharks", "Moderation", "Your account". */
@@ -123,22 +124,20 @@ function NavbarContent({
           <TypographyLarge className='font-bold'>Tinderhaj</TypographyLarge>
         </Link>
         <div className='hidden flex-1 items-center gap-4 text-sm font-medium md:flex md:gap-6'>
-          {siteLinks.map((link) => (
-            <SiteLink
-              key={link.href}
-              link={link}
-              className={cn('text-muted-foreground hover:text-foreground transition-colors duration-150', link.wide && 'hidden lg:inline')}
-            />
-          ))}
-          {/* Until there's room for them on the bar, the rest of the pages are a click away */}
+          {siteLinks
+            .filter((link) => !link.more)
+            .map((link) => (
+              <SiteLink key={link.href} link={link} className='text-muted-foreground hover:text-foreground transition-colors duration-150' />
+            ))}
+          {/* The rest of the pages, a click away */}
           <DropdownMenu>
-            <DropdownMenuTrigger className='text-muted-foreground hover:text-foreground data-open:text-foreground flex items-center gap-1 transition-colors duration-150 lg:hidden [&[data-state=open]>svg]:rotate-180'>
+            <DropdownMenuTrigger className='text-muted-foreground hover:text-foreground data-open:text-foreground flex items-center gap-1 transition-colors duration-150 [&[data-state=open]>svg]:rotate-180'>
               More
               <ChevronDownIcon className='size-4 transition-transform duration-150' aria-hidden='true' />
             </DropdownMenuTrigger>
             <DropdownMenuContent side='bottom' align='start' className='w-44'>
               {siteLinks
-                .filter((link) => link.wide)
+                .filter((link) => link.more)
                 .map((link) => (
                   <MenuLink key={link.href} link={link} />
                 ))}
