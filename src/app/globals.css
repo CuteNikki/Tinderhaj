@@ -397,6 +397,23 @@ main:has([data-water='band'][data-tone='muted']:not([style*='display: none'] *))
     bottom: anchor(--page-header bottom, calc(100% - 19rem + var(--waves)));
     margin-bottom: calc(-1 * var(--waves));
   }
+
+  /* Heroes that take the band where it can follow them (Home, Discovery) keep water of their own only for where it can't */
+  .own-water {
+    display: none;
+  }
+}
+
+/*
+ * The color the band's waves flow into, for a hero followed by a section of
+ * another color (Home, Discovery). Unlike data-tone, the page stays as it is.
+ */
+main:has([data-water='band'][data-floor='muted']:not([style*='display: none'] *)) > .page-band {
+  --band-floor: var(--muted);
+}
+
+main:has([data-water='band'][data-floor='card']:not([style*='display: none'] *)) > .page-band {
+  --band-floor: var(--card);
 }
 
 /* Center sonner's toast close button vertically, inset on the right edge, instead of hanging off the top-left corner */

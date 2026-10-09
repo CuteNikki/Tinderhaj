@@ -6,7 +6,7 @@ import { DiscoveryHero } from '@/components/discovery/hero';
  */
 export default function DiscoveryLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className='bg-background flex flex-1 flex-col'>
+    <div className='flex flex-1 flex-col'>
       <DiscoveryHero />
       {children}
     </div>
