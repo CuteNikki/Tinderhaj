@@ -88,7 +88,7 @@ export default function ContactPage() {
                     target='_blank'
                     rel='noreferrer'
                     title={social.handle ?? undefined}
-                    className='group/social border-foreground/10 bg-card ease-bounce flex h-full items-center gap-4 rounded-2xl border p-4 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg'
+                    className='group/social border-foreground/10 bg-card ease-bounce flex h-full items-start gap-4 rounded-2xl border p-4 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg'
                   >
                     <span className='bg-foreground/5 flex size-10 shrink-0 items-center justify-center rounded-full'>
                       <SocialIcon id={social.id} className='group-hover/social:animate-wiggle size-5' />
@@ -98,7 +98,7 @@ export default function ContactPage() {
                       <span className='text-muted-foreground block text-sm'>{social.blurb}</span>
                     </span>
                     <ArrowUpRightIcon
-                      className='text-muted-foreground ease-bounce size-4 shrink-0 transition-transform duration-300 group-hover/social:translate-x-0.5 group-hover/social:-translate-y-0.5'
+                      className='text-muted-foreground ease-bounce mt-1 size-4 shrink-0 transition-transform duration-300 group-hover/social:translate-x-0.5 group-hover/social:-translate-y-0.5'
                       aria-hidden='true'
                     />
                   </a>
