@@ -100,12 +100,13 @@ export function Ocean({ into = 'fill-muted', depth = 'bottom-0' }: { into?: stri
           />
         ))}
       </div>
+      {/* Twice as wide as the water, so rolling by half of it comes back around; at least so wide on narrow screens, or the swells bunch up */}
       {WAVES.map((layer, i) => (
         <svg
           key={i}
           viewBox='0 0 2880 120'
           preserveAspectRatio='none'
-          className='animate-roll absolute bottom-0 left-0 h-24 w-[200%] sm:h-28'
+          className='animate-roll absolute bottom-0 left-0 h-24 w-[max(200%,100rem)] sm:h-28'
           style={{ animationDuration: layer.duration, animationDirection: layer.reverse ? 'reverse' : 'normal' }}
         >
           <path d={layer.d} className={i === WAVES.length - 1 ? into : 'fill-(--ocean-wave)'} />
