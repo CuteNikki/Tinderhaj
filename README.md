@@ -2,7 +2,7 @@
 
 # Tinderhaj
 
-Tinderhaj is a dating site for IKEA's Blåhaj plush sharks, built with Next.js. Owners create a profile for each of their sharks, a moderator checks it by hand, and once it's verified other sharks can find it in discovery and send it a heart. Two sharks that heart each other are a match.
+Tinderhaj is a dating site for plush sharks, named after IKEA's Blåhaj and built with Next.js. Owners create a profile for each of their sharks, a moderator checks it by hand, and once it's verified other sharks can find it in discovery and send it a heart. Two sharks that heart each other are a match.
 
 ## Overview
 
