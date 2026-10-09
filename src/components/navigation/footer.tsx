@@ -1,6 +1,8 @@
 import Link from 'next/link';
 
-import { Code2, Mail, MessageCircle } from 'lucide-react';
+import { Code2, Mail } from 'lucide-react';
+
+import { GITHUB_URL } from '@/constants/contact';
 
 import { Logo } from '@/components/common/logo';
 import { Stagger } from '@/components/common/stagger';
@@ -20,7 +22,7 @@ const resourceLinks = [
 
 export function Footer() {
   return (
-    <footer className='bg-muted text-foreground dark:bg-background'>
+    <footer className='bg-floor text-foreground'>
       <div className='xs:pt-12 container mx-auto max-w-7xl px-6 py-6'>
         <Stagger className='xs:grid-cols-2 grid gap-8 md:grid-cols-[1.75fr_repeat(3,1fr)]' gap={0.08}>
           <div>
@@ -32,13 +34,16 @@ export function Footer() {
               The world&apos;s first dating site exclusively for plush sharks.
             </p>
             <div className='mt-4 flex items-center gap-4'>
-              <Link href='/#guide' aria-label='Tinderhaj community' className='text-muted-foreground hover:text-foreground transition-colors'>
-                <MessageCircle className='h-4 w-4' />
-              </Link>
-              <DiscoveryLink aria-label='Tinderhaj discovery' className='text-muted-foreground hover:text-foreground transition-colors'>
+              <a
+                href={GITHUB_URL}
+                target='_blank'
+                rel='noreferrer'
+                aria-label='Tinderhaj on GitHub'
+                className='text-muted-foreground hover:text-foreground transition-colors'
+              >
                 <Code2 className='h-4 w-4' />
-              </DiscoveryLink>
-              <Link href='mailto:contact@tinderhaj.com' aria-label='Email Tinderhaj' className='text-muted-foreground hover:text-foreground transition-colors'>
+              </a>
+              <Link href='/contact' aria-label='Contact Tinderhaj' className='text-muted-foreground hover:text-foreground transition-colors'>
                 <Mail className='h-4 w-4' />
               </Link>
             </div>
@@ -49,7 +54,7 @@ export function Footer() {
             title='Company'
             links={[
               { label: 'About', href: '/#top' },
-              { label: 'Contact', href: 'mailto:contact@tinderhaj.com' },
+              { label: 'Contact', href: '/contact' },
             ]}
           />
         </Stagger>

@@ -45,6 +45,8 @@ export async function updateUsername(unsafeData: z.infer<typeof updateUsernameSc
   revalidatePath('/dashboard/profiles');
   revalidatePath('/discovery');
   revalidatePath('/moderation/verification');
+  // Their sharks' cards show it
+  updateTag(PROFILE_COUNT_TAG);
 }
 
 /** For accounts without a password yet, e.g. signed up with a provider. */

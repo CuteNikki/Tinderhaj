@@ -79,6 +79,7 @@
     }
   }
   --color-background: var(--background);
+  --color-floor: var(--floor);
   --color-glass: var(--glass);
   --color-glass-border: var(--glass-border);
   --color-glass-foreground: var(--glass-foreground);
@@ -169,6 +170,8 @@
   --ocean-bubble: oklch(0.52 0.18 245 / 0.3);
   --ocean-wave: oklch(0.6 0.14 245 / 0.08);
   --ocean-shade: oklch(0.985 0.012 235 / 0.9);
+  /* The footer, where every page comes to rest: set apart from the page above it. */
+  --floor: var(--muted);
 
   /* Frosted glass for what floats in the water, like the cards in the shared
      images: bright white in the shallows, pale blue over the deep. */
@@ -219,6 +222,7 @@
   --ocean-bubble: oklch(0.94 0.03 245 / 0.45);
   --ocean-wave: oklch(0.81 0.09 245 / 0.08);
   --ocean-shade: oklch(0.2 0.06 255 / 0.85);
+  --floor: oklch(0.12 0.03 255);
 
   --glass: oklch(0.83 0.085 243 / 0.12);
   --glass-border: oklch(0.94 0.03 245 / 0.28);

@@ -143,6 +143,11 @@ export const termsMetadata: Metadata = {
   description: 'Read the terms for using Tinderhaj.',
 };
 
+export const contactMetadata: Metadata = {
+  title: 'Contact',
+  description: 'Get in touch with Tinderhaj by email, or find it around the internet.',
+};
+
 export const imprintMetadata: Metadata = {
   title: 'Imprint',
   description: 'Legal information and contact details for Tinderhaj.',

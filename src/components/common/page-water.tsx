@@ -16,7 +16,7 @@ export function PageWater() {
     <>
       {/* Flowing into the footer below */}
       <div className='water-full pointer-events-none absolute inset-0 -z-10'>
-        <Ocean into='fill-muted dark:fill-background' />
+        <Ocean into='fill-floor' />
       </div>
       <PageBand />
     </>

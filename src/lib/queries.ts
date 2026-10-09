@@ -77,7 +77,7 @@ async function getRankedDiscoveryProfiles(where: Prisma.ProfileWhereInput, page:
   };
 }
 
-/** Refreshed by the actions that change which profiles discovery shows (see lib/actions.ts). */
+/** Refreshed by the actions that change which profiles discovery shows, or how they look (see lib/actions.ts). */
 export const PROFILE_COUNT_TAG = 'profile-count';
 
 /**
@@ -90,6 +90,20 @@ export async function getDiscoverableProfileCount() {
   cacheTag(PROFILE_COUNT_TAG);
 
   return prisma.profile.count({ where: { status: ProfileStatus.VERIFIED, user: notBannedWhere() } });
+}
+
+/** The newest profiles discovery shows, newest first. Cached, like the count. */
+export async function getNewestSharks(take = 3) {
+  'use cache';
+  cacheLife('hours');
+  cacheTag(PROFILE_COUNT_TAG);
+
+  return prisma.profile.findMany({
+    where: { status: ProfileStatus.VERIFIED, user: notBannedWhere() },
+    select: PUBLIC_PROFILE,
+    orderBy: { verifiedAt: 'desc' },
+    take,
+  });
 }
 
 export const QUERIES = {

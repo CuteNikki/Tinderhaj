@@ -16,11 +16,11 @@ const orbitTransition = { duration: 18, ease: 'linear' as const, repeat: Infinit
 
 export function NotFoundPage() {
   return (
-    <section className='relative isolate flex flex-1 items-center overflow-hidden'>
-      {/* Flowing into the footer below */}
-      <Ocean into='fill-muted dark:fill-background' />
+    <section className='relative isolate overflow-hidden'>
+      {/* Flowing into the sections below (see app/not-found.tsx) */}
+      <Ocean into='fill-muted' />
 
-      <div className='container mx-auto grid max-w-7xl items-center gap-10 px-6 py-20 md:grid-cols-[0.9fr_1.1fr] md:px-8 lg:gap-16 lg:py-24'>
+      <div className='container mx-auto grid max-w-7xl items-center gap-10 px-6 pt-20 pb-32 md:grid-cols-[0.9fr_1.1fr] md:px-8 lg:gap-16 lg:pt-24 lg:pb-36'>
         <div className='on-water order-2 max-w-xl md:order-1'>
           <motion.div
             initial={{ opacity: 0, y: 18 }}
