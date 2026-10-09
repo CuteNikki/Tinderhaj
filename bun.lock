@@ -38,6 +38,8 @@
         "zod": "^4.6.5",
       },
       "devDependencies": {
+        "@tailwindcss/node": "^4.3.3",
+        "@tailwindcss/oxide": "^4.3.3",
         "@tailwindcss/postcss": "^4.3.3",
         "@types/node": "^26.6.4",
         "@types/pg": "^8.23.1",

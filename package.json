@@ -6,8 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "typecheck": "next typegen && tsc --noEmit",
     "lint": "eslint",
+    "lint:classes": "node scripts/check-classes.mjs",
     "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "postinstall": "bun --bun --env-file=.env run prisma generate"
   },
   "prettier": {
@@ -52,6 +55,8 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@tailwindcss/node": "^4.3.3",
+    "@tailwindcss/oxide": "^4.3.3",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^26.6.4",
     "@types/pg": "^8.23.1",

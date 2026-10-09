@@ -187,12 +187,17 @@ http://localhost:3000
 ## Available Scripts
 
 ```bash
-npm run dev      # start the Next.js dev server
-npm run build    # production build
-npm run start    # start the production server
-npm run lint     # ESLint checks
-npm run format   # Prettier formatting
+npm run dev            # start the Next.js dev server
+npm run build          # production build
+npm run start          # start the production server
+npm run lint           # ESLint checks
+npm run lint:classes   # classes Tailwind would write another way, e.g. w-[16px] for w-4
+npm run typecheck      # TypeScript, after generating Next's route types
+npm run format         # Prettier formatting
+npm run format:check   # Prettier, without changing files
 ```
+
+GitHub Actions runs the four checks and a production build, against a fresh PostgreSQL database, on every push and pull request (`.github/workflows/ci.yml`).
 
 ## Authentication and Session Flow
 
@@ -244,7 +249,7 @@ Better Auth rate limits sign-in, sign-up, and code requests per IP address in pr
 
 1. Create a feature branch.
 2. Make your changes.
-3. Run linting and build checks.
+3. Run `typecheck`, `lint`, `lint:classes`, and `format:check`, which CI runs too.
 4. Submit a pull request with a short summary of the changes.
 
 ## License

@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+# A newer push to the same branch makes the older run moot.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# The build job's database. Installing needs the address too, since Prisma's config asks for it before generating the
+# client, though nothing connects there.
+env:
+  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/tinderhaj
+
+jobs:
+  checks:
+    name: Checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+
+      - name: Install
+        id: install
+        run: bun install --frozen-lockfile
+
+      # Each check runs even when one before it failed, so one run shows everything to fix.
+      - name: Types
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: bun run typecheck
+      - name: ESLint
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: bun run lint
+      - name: Prettier
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: bun run format:check
+      - name: Tailwind classes
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: bun run lint:classes
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    # The home page is prerendered with the newest sharks, so the build needs a database.
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: tinderhaj
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      # Random, but public: CI's sessions don't need to stay private.
+      BETTER_AUTH_SECRET: 1tDU8P7/JvOmJ5j7WpZj6lSDq9XkhG5Cma+GpbIp3+Q=
+    steps:
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+
+      - name: Install
+        run: bun install --frozen-lockfile
+      - name: Database
+        run: bun --bun run prisma migrate deploy
+      - name: Build
+        run: bun run build
