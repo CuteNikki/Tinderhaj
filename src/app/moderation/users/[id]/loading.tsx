@@ -27,7 +27,7 @@ export default function Loading() {
         </>
       }
     >
-      <div className='grid gap-6'>
+      <div className='grid grid-cols-1 gap-6'>
         <SettingsSection still title='Profiles' description={<GhostText as='span'>3 profiles, in any state of review.</GhostText>}>
           <ProfileGridSkeleton ending='unverify' />
         </SettingsSection>

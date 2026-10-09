@@ -252,7 +252,7 @@ function MenuLink({ link }: { link: NavLink }) {
 function SheetSection({ title, links }: { title: string; links: NavLink[] }) {
   return (
     <section>
-      <Eyebrow as='h2' className='mb-1 px-3'>
+      <Eyebrow as='h2' muted className='mb-1 px-3'>
         {title}
       </Eyebrow>
       <ul>

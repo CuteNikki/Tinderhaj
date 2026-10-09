@@ -132,7 +132,7 @@ export default function ContactPage() {
               >
                 {ANSWERS.map(({ title, copy, link, href, icon: Icon }) => (
                   <Fragment key={title}>
-                    <Icon className='text-primary mt-0.5 size-5 shrink-0' aria-hidden='true' />
+                    <Icon className='text-muted-foreground mt-0.5 size-5 shrink-0' aria-hidden='true' />
                     <div className='flex min-w-0 flex-1 flex-col items-start gap-1'>
                       <div>
                         <h3 className='font-bold'>{title}</h3>

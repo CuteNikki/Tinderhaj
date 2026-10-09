@@ -93,7 +93,7 @@ export default async function UserPage({ params }: PageProps<'/moderation/users/
           </Stagger>
         </Stagger>
 
-        <div className='grid gap-6'>
+        <div className='grid grid-cols-1 gap-6'>
           <SettingsSection
             title='Profiles'
             description={user.profiles.length === 1 ? '1 profile, in any state of review.' : `${user.profiles.length} profiles, in any state of review.`}

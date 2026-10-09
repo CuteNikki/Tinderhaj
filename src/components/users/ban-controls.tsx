@@ -74,9 +74,10 @@ export function BanForm({ user }: { user: BanTarget }) {
             </SelectContent>
           </Select>
         </div>
-        <Button type='submit' variant='destructive' disabled={pending}>
+        {/* A long username shortens rather than pushing the button past the card */}
+        <Button type='submit' variant='destructive' className='max-w-full min-w-0' disabled={pending}>
           {pending ? <Loader2Icon className='animate-spin' aria-hidden='true' /> : <BanIcon aria-hidden='true' />}
-          Ban @{user.username}
+          <span className='truncate'>Ban @{user.username}</span>
         </Button>
       </div>
       {confirmDialog}

@@ -4,12 +4,24 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
 /**
- * The small blue label above a heading, the same everywhere but the big
- * heroes (see HeroBadge). Above a title it sits close (`mb-2`); as a heading
+ * The small label above a heading, the same everywhere but the big heroes
+ * (see HeroBadge). Blue, unless what it heads has its own blue already (a
+ * section's blue second line, a menu's blue icons): `muted` then, so there's
+ * one accent, not two. Above a title it sits close (`mb-2`); as a heading
  * of its own, over a list or cards, pass `as='h2'` and more room.
  */
-export function Eyebrow({ as: Tag = 'p', className, children }: { as?: 'p' | 'h2' | 'h3'; className?: string; children: React.ReactNode }) {
-  return <Tag className={cn('text-primary mb-2 text-xs font-bold tracking-widest uppercase', className)}>{children}</Tag>;
+export function Eyebrow({
+  as: Tag = 'p',
+  muted,
+  className,
+  children,
+}: {
+  as?: 'p' | 'h2' | 'h3';
+  muted?: boolean;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return <Tag className={cn('mb-2 text-xs font-bold tracking-widest uppercase', muted ? 'text-muted-foreground' : 'text-primary', className)}>{children}</Tag>;
 }
 
 /** A page's own title, at the top of its header. */

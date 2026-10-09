@@ -15,8 +15,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 export default function Loading() {
   return (
     <PageLoading eyebrow='Your account' title='Settings'>
-      <div className='grid items-start gap-6 lg:grid-cols-2'>
-        <div className='grid gap-6'>
+      <div className='grid grid-cols-1 items-start gap-6 lg:grid-cols-2'>
+        <div className='grid grid-cols-1 gap-6'>
           <SettingsSection still title='Username' description='Choose the name people will see across Tinderhaj.'>
             <div className='flex flex-col gap-2 sm:flex-row sm:items-end'>
               <FieldSkeleton className='flex-1' />
@@ -55,7 +55,7 @@ export default function Loading() {
             </div>
           </SettingsSection>
         </div>
-        <div className='grid gap-6'>
+        <div className='grid grid-cols-1 gap-6'>
           <SettingsSection still title='Sign-in methods' description='Connect other accounts to sign in with them too.'>
             <div className='divide-foreground/10 border-foreground/10 flex flex-col divide-y rounded-xl border'>
               {enabledProviders.map((provider) => (

@@ -19,7 +19,7 @@ export function ReadyWhenYouAre({ id }: { id?: string }) {
       id={id}
       eyebrow='Ready when you are'
       title='Your next great connection'
-      highlight='is probably very soft.'
+      highlight='is one heart away.'
       tone='card'
       aside={
         <Button size='xl' className={sunlit} asChild>

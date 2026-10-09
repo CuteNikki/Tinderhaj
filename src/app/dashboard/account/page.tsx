@@ -32,8 +32,8 @@ export default async function AccountPage({ searchParams }: PageProps<'/dashboar
           <Eyebrow>Your account</Eyebrow>
           <PageTitle>Settings</PageTitle>
         </Stagger>
-        <div className='grid items-start gap-6 lg:grid-cols-2'>
-          <div className='grid gap-6'>
+        <div className='grid grid-cols-1 items-start gap-6 lg:grid-cols-2'>
+          <div className='grid grid-cols-1 gap-6'>
             <SettingsSection title='Username' description='Choose the name people will see across Tinderhaj.' delay={CONTENT_DELAY}>
               <UsernameForm username={user.name} />
             </SettingsSection>
@@ -48,7 +48,7 @@ export default async function AccountPage({ searchParams }: PageProps<'/dashboar
               <PasswordForm hasPassword={hasPassword} />
             </SettingsSection>
           </div>
-          <div className='grid gap-6'>
+          <div className='grid grid-cols-1 gap-6'>
             <SettingsSection title='Sign-in methods' description='Connect other accounts to sign in with them too.' delay={CONTENT_DELAY + STAGGER}>
               <LinkedAccounts providers={enabledProviders} accounts={accounts} error={typeof error === 'string' ? error : undefined} />
             </SettingsSection>

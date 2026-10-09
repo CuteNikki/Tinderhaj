@@ -33,7 +33,7 @@ export function Section({
   const content = (
     <>
       <div className='mb-8 md:mb-10'>
-        <Eyebrow>{eyebrow}</Eyebrow>
+        <Eyebrow muted={!!highlight}>{eyebrow}</Eyebrow>
         <h2 className='max-w-2xl text-3xl leading-tight font-black tracking-tight sm:text-4xl'>
           {title}
           {highlight && (
