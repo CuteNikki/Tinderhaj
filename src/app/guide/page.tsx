@@ -63,14 +63,20 @@ export default function GuidePage() {
           <div className='grid grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-16'>
             <Stagger as='ul' itemAs='li' variant='card' gap={STAGGER} delay={CONTENT_DELAY} className='grid gap-4'>
               {STEPS.map(({ title, copy, icon: Icon, link }, index) => (
-                <div key={title} className='border-foreground/10 bg-card flex gap-4 rounded-2xl border p-5 shadow-sm sm:gap-5 sm:p-6'>
-                  <span className='bg-primary/10 text-primary flex size-11 shrink-0 items-center justify-center rounded-full'>
+                // On phones the icon sits beside the title only, so the text below has the card's full width; wider, it has a column of its own
+                <div
+                  key={title}
+                  className='border-foreground/10 bg-card grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-4 rounded-2xl border p-5 shadow-sm sm:items-start sm:gap-x-5 sm:p-6'
+                >
+                  <span className='bg-primary/10 text-primary flex size-11 shrink-0 items-center justify-center rounded-full sm:row-span-2'>
                     <Icon className='size-5' aria-hidden='true' />
                   </span>
-                  <div className='min-w-0'>
+                  <div>
                     <p className='text-muted-foreground font-mono text-xs'>Step {index + 1}</p>
                     <h2 className='mt-1 text-lg font-bold'>{title}</h2>
-                    <p className='text-muted-foreground mt-1 text-sm leading-relaxed text-pretty'>{copy}</p>
+                  </div>
+                  <div className='col-span-2 mt-3 sm:col-span-1 sm:col-start-2 sm:mt-1'>
+                    <p className='text-muted-foreground text-sm leading-relaxed text-pretty'>{copy}</p>
                     {link && (
                       <Link href={link.href} className='text-primary mt-2 inline-flex items-center gap-1 text-sm font-semibold hover:underline'>
                         {link.label}
