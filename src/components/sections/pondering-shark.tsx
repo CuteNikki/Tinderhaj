@@ -47,30 +47,30 @@ export function PonderingShark() {
           <Image unoptimized src='/blahajThink.webp' width={320} height={320} alt='' className='h-auto w-40 drop-shadow-2xl xl:w-48' />
         </motion.div>
       </motion.div>
+      {/* The glass pops in on itself, inside what bobs, so it's frosted from the start (see glass) */}
       {MARKS.map(({ className, delay, rotate }) => (
-        <motion.span
-          key={className}
-          initial='hidden'
-          whileInView='visible'
-          viewport={{ once: true }}
-          variants={popIn}
-          transition={after(0.4 + delay / 4, spring.pop)}
-          className={`absolute ${className}`}
-        >
-          <motion.span {...bob.small(delay, rotate)} className={`${glass} flex size-full items-center justify-center rounded-full font-black shadow-lg`}>
+        <motion.span key={className} {...bob.small(delay, rotate)} className={`absolute ${className}`}>
+          <motion.span
+            initial='hidden'
+            whileInView='visible'
+            viewport={{ once: true }}
+            variants={popIn}
+            transition={after(0.4 + delay / 4, spring.pop)}
+            className={`${glass} flex size-full items-center justify-center rounded-full font-black shadow-lg`}
+          >
             <span className='text-[#ed3867]'>?</span>
           </motion.span>
         </motion.span>
       ))}
-      <motion.div
-        initial='hidden'
-        whileInView='visible'
-        viewport={{ once: true }}
-        variants={popIn}
-        transition={after(0.7, spring.pop)}
-        className='absolute bottom-[8%] left-[10%] z-20'
-      >
-        <motion.div {...bob.small(0.4)} className={`${glass} rounded-full px-3 py-2 text-xs font-semibold whitespace-nowrap shadow-lg`}>
+      <motion.div {...bob.small(0.4)} className='absolute bottom-[8%] left-[10%] z-20'>
+        <motion.div
+          initial='hidden'
+          whileInView='visible'
+          viewport={{ once: true }}
+          variants={popIn}
+          transition={after(0.7, spring.pop)}
+          className={`${glass} rounded-full px-3 py-2 text-xs font-semibold whitespace-nowrap shadow-lg`}
+        >
           Good question!
         </motion.div>
       </motion.div>

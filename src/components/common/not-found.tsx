@@ -23,9 +23,9 @@ export function NotFoundPage() {
 
       <div className='container mx-auto grid max-w-7xl items-center gap-10 pt-20 pb-32 md:grid-cols-[0.9fr_1.1fr] lg:gap-16 lg:pt-24 lg:pb-36'>
         <div className='on-water order-2 max-w-xl md:order-1'>
-          <motion.div initial='hidden' animate='visible' variants={popIn} transition={spring.pop} className='mb-6'>
-            <HeroBadge icon={<Radio className='size-4 animate-pulse' aria-hidden='true' />}>Signal lost</HeroBadge>
-          </motion.div>
+          <HeroBadge icon={<Radio className='size-4 animate-pulse' aria-hidden='true' />} className='mb-6'>
+            Signal lost
+          </HeroBadge>
           <motion.h1
             initial='hidden'
             animate='visible'
@@ -62,49 +62,59 @@ export function NotFoundPage() {
           </motion.div>
         </div>
 
-        <motion.div
-          initial='hidden'
-          animate='visible'
-          variants={swimIn}
-          transition={after(0.1, spring.pop)}
-          className='relative order-1 mx-auto aspect-square w-full max-w-136 md:order-2'
-        >
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={orbitTransition}
-            className='border-primary/20 absolute top-1/2 left-1/2 aspect-square w-[82%] -translate-1/2 rounded-full border border-dashed'
-          >
-            <span className='bg-primary absolute -top-1.5 left-1/2 size-3 -translate-x-1/2 rounded-full shadow-[0_0_1rem_var(--primary)]' />
+        <div className='relative order-1 mx-auto aspect-square w-full max-w-136 md:order-2'>
+          <motion.div initial='hidden' animate='visible' variants={swimIn} transition={after(0.1, spring.pop)} className='absolute inset-0'>
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={orbitTransition}
+              className='border-primary/20 absolute top-1/2 left-1/2 aspect-square w-[82%] -translate-1/2 rounded-full border border-dashed'
+            >
+              <span className='bg-primary absolute -top-1.5 left-1/2 size-3 -translate-x-1/2 rounded-full shadow-[0_0_1rem_var(--primary)]' />
+            </motion.div>
+            <motion.div
+              animate={{ rotate: -360 }}
+              transition={{ ...orbitTransition, duration: 26 }}
+              className='border-primary/15 absolute top-1/2 left-1/2 aspect-square w-[62%] -translate-1/2 rounded-full border'
+            >
+              <span className='bg-foreground/70 absolute top-1/2 -right-1.5 size-3 -translate-y-1/2 rounded-full' />
+            </motion.div>
+            <div className='border-primary/10 absolute top-1/2 left-1/2 aspect-square w-[42%] -translate-1/2 rounded-full border' />
+            <motion.div {...bob.shark} whileHover={sharkHover} className='absolute top-1/2 left-1/2 z-10 -translate-1/2'>
+              <Image
+                unoptimized
+                src='/blahajThink.webp'
+                width={320}
+                height={320}
+                alt='A Blåhaj looking for the missing page'
+                className='h-32 w-32 drop-shadow-2xl'
+              />
+            </motion.div>
           </motion.div>
-          <motion.div
-            animate={{ rotate: -360 }}
-            transition={{ ...orbitTransition, duration: 26 }}
-            className='border-primary/15 absolute top-1/2 left-1/2 aspect-square w-[62%] -translate-1/2 rounded-full border'
-          >
-            <span className='bg-foreground/70 absolute top-1/2 -right-1.5 size-3 -translate-y-1/2 rounded-full' />
+          {/* Popping in on their own once the shark's in, not swimming in with it, so they're frosted from the start (see glass) */}
+          <motion.div {...bob.small(0.6)} className='absolute top-[14%] right-[8%] z-20'>
+            <motion.div
+              initial='hidden'
+              animate='visible'
+              variants={popIn}
+              transition={after(0.45, spring.pop)}
+              className={`${glass} flex items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold shadow-lg`}
+            >
+              <Compass className='h-3.5 w-3.5 text-[#ed3867]' /> Out of range
+            </motion.div>
           </motion.div>
-          <div className='border-primary/10 absolute top-1/2 left-1/2 aspect-square w-[42%] -translate-1/2 rounded-full border' />
-          <motion.div {...bob.shark} whileHover={sharkHover} className='absolute top-1/2 left-1/2 z-10 -translate-1/2'>
-            <Image
-              unoptimized
-              src='/blahajThink.webp'
-              width={320}
-              height={320}
-              alt='A Blåhaj looking for the missing page'
-              className='h-32 w-32 drop-shadow-2xl'
-            />
+          <motion.div {...bob.small(0.2)} className='absolute bottom-[15%] left-[5%] z-20'>
+            <motion.div
+              initial='hidden'
+              animate='visible'
+              variants={popIn}
+              transition={after(0.6, spring.pop)}
+              className={`${glass} rounded-2xl px-4 py-3 shadow-xl`}
+            >
+              <p className='text-sm font-bold'>Last known location</p>
+              <p className='text-glass-muted mt-1 text-xs leading-relaxed'>Somewhere between here &amp; there</p>
+            </motion.div>
           </motion.div>
-          <motion.div
-            {...bob.small(0.6)}
-            className={`${glass} absolute top-[14%] right-[8%] z-20 flex items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold shadow-lg`}
-          >
-            <Compass className='h-3.5 w-3.5 text-[#ed3867]' /> Out of range
-          </motion.div>
-          <motion.div {...bob.small(0.2)} className={`${glass} absolute bottom-[15%] left-[5%] z-20 rounded-2xl px-4 py-3 shadow-xl`}>
-            <p className='text-sm font-bold'>Last known location</p>
-            <p className='text-glass-muted mt-1 text-xs leading-relaxed'>Somewhere between here &amp; there</p>
-          </motion.div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

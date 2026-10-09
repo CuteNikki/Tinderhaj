@@ -35,9 +35,9 @@ export function AuthShell({
           </Link>
         </motion.div>
 
-        <motion.div initial='hidden' animate='visible' variants={popIn} transition={after(0.15, spring.pop)}>
-          <HeroBadge icon={icon}>{badge}</HeroBadge>
-        </motion.div>
+        <HeroBadge icon={icon} delay={0.15}>
+          {badge}
+        </HeroBadge>
 
         <motion.div initial='hidden' animate='visible' variants={reveal} transition={after(0.2)}>
           <h1 className='mt-4 text-center text-3xl leading-none font-black tracking-tight sm:text-4xl'>{title}</h1>

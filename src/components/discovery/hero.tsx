@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 import { motion } from 'motion/react';
 
-import { after, bob, popIn, reveal, ringIn, sharkHover, spring, swimIn } from '@/lib/motion';
+import { after, bob, reveal, ringIn, sharkHover, spring, swimIn } from '@/lib/motion';
 
 import { HeroBadge } from '@/components/common/hero-badge';
 import { Ocean } from '@/components/common/ocean';
@@ -15,9 +15,7 @@ export function DiscoveryHero() {
       <Ocean into='fill-card' />
       <div className='relative z-10 container mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[minmax(0,1fr)_22rem]'>
         <div className='on-water max-w-3xl'>
-          <motion.div initial='hidden' animate='visible' variants={popIn} transition={spring.pop}>
-            <HeroBadge>Discovery deck</HeroBadge>
-          </motion.div>
+          <HeroBadge>Discovery deck</HeroBadge>
           <motion.div initial='hidden' animate='visible' variants={reveal} transition={after(0.1)}>
             <h1 className='mt-6 max-w-3xl text-5xl leading-none font-black tracking-tight sm:text-7xl'>
               Browse the soft side <span className='text-primary'>of the sea.</span>

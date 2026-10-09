@@ -24,18 +24,16 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
       <Ocean />
       <div className='relative z-10 container mx-auto grid min-h-screen max-w-7xl items-center gap-4 pt-24 pb-16 lg:grid-cols-2 lg:gap-8'>
         <div className='on-water relative z-10 flex max-w-2xl flex-col items-start'>
-          <motion.div initial='hidden' animate='visible' variants={popIn} transition={spring.pop}>
-            <HeroBadge
-              icon={
-                <span className='relative flex h-2 w-2'>
-                  <span className='bg-primary absolute inline-flex h-full w-full animate-ping rounded-full opacity-75' />
-                  <span className='bg-primary relative inline-flex h-2 w-2 rounded-full' />
-                </span>
-              }
-            >
-              The plush dating club
-            </HeroBadge>
-          </motion.div>
+          <HeroBadge
+            icon={
+              <span className='relative flex h-2 w-2'>
+                <span className='bg-primary absolute inline-flex h-full w-full animate-ping rounded-full opacity-75' />
+                <span className='bg-primary relative inline-flex h-2 w-2 rounded-full' />
+              </span>
+            }
+          >
+            The plush dating club
+          </HeroBadge>
           <motion.div initial='hidden' animate='visible' variants={reveal} transition={after(0.1)}>
             <TypographyH1 className='xs:text-5xl mt-6 max-w-3xl text-4xl leading-none font-black tracking-tight md:text-7xl xl:text-8xl'>
               Make a splash.
@@ -104,15 +102,13 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
             transition={after(0.25)}
             className='border-primary/15 absolute top-1/2 left-1/2 size-11/12 -translate-1/2 rounded-full border border-dashed'
           />
-          <motion.div
-            initial='hidden'
-            animate='visible'
-            variants={popIn}
-            transition={after(0.6, spring.pop)}
-            className='absolute top-4 left-1/2 z-10 -translate-x-1/2'
-          >
+          {/* The glass pops in on itself, inside what bobs, so it's frosted from the start (see glass) */}
+          <motion.div {...bob.small(0.6)} className='absolute top-4 left-1/2 z-10 -translate-x-1/2'>
             <motion.div
-              {...bob.small(0.6)}
+              initial='hidden'
+              animate='visible'
+              variants={popIn}
+              transition={after(0.6, spring.pop)}
               className={`${glass} flex items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold whitespace-nowrap shadow-lg`}
             >
               <Sparkles className='h-3.5 w-3.5 text-[#ed3867]' /> A match worth meeting
@@ -134,8 +130,14 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
               </motion.div>
             </motion.div>
           </div>
-          <motion.div initial='hidden' animate='visible' variants={popIn} transition={after(0.75, spring.pop)} className='absolute right-4 bottom-8 z-10'>
-            <motion.div {...bob.small(0.2)} className={`${glass} flex max-w-64 items-center gap-3 rounded-2xl p-3 shadow-xl`}>
+          <motion.div {...bob.small(0.2)} className='absolute right-4 bottom-8 z-10'>
+            <motion.div
+              initial='hidden'
+              animate='visible'
+              variants={popIn}
+              transition={after(0.75, spring.pop)}
+              className={`${glass} flex max-w-64 items-center gap-3 rounded-2xl p-3 shadow-xl`}
+            >
               <Image
                 unoptimized
                 width={64}
@@ -150,37 +152,33 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
               </div>
             </motion.div>
           </motion.div>
-          <motion.div
-            initial='hidden'
-            animate='visible'
-            variants={popIn}
-            transition={after(0.9, spring.pop)}
-            whileHover={{ scale: 1.15, rotate: -8, transition: spring.snappy }}
-            className='absolute top-1/4 right-8'
-          >
-            <motion.div {...bob.small(1, 12)} className={`${glass} flex size-20 rotate-12 items-center justify-center rounded-full shadow-xl`}>
+          <motion.div {...bob.small(1, 12)} className='absolute top-1/4 right-8'>
+            <motion.div
+              initial='hidden'
+              animate='visible'
+              variants={popIn}
+              transition={after(0.9, spring.pop)}
+              whileHover={{ scale: 1.15, rotate: -8, transition: spring.snappy }}
+              className={`${glass} flex size-20 rotate-12 items-center justify-center rounded-full shadow-xl`}
+            >
               <Image unoptimized width={80} height={80} src='/blahajHeart.webp' alt='Heart' className='w-12 sm:w-15' />
             </motion.div>
           </motion.div>
         </div>
       </div>
       {/* Riding the waves, like the shark's own little cards float by it */}
-      <motion.div
-        initial='hidden'
-        animate='visible'
-        variants={popIn}
-        transition={after(1, spring.pop)}
-        className='absolute bottom-4 left-1/2 z-20 -translate-x-1/2 sm:bottom-6'
-      >
-        <motion.div {...bob.small(1.2)}>
-          <ScrollToElement
-            targetId='guide'
-            className={`${glass} group/hint flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold whitespace-nowrap shadow-lg transition-[filter] hover:brightness-110`}
-          >
-            See how it works
-            <ArrowDown className='text-glass-muted ease-bounce h-3.5 w-3.5 transition-transform duration-300 group-hover/hint:translate-y-0.5' />
-          </ScrollToElement>
-        </motion.div>
+      <motion.div {...bob.small(1.2)} className='absolute bottom-4 left-1/2 z-20 -translate-x-1/2 sm:bottom-6'>
+        <ScrollToElement
+          targetId='guide'
+          initial='hidden'
+          animate='visible'
+          variants={popIn}
+          transition={after(1, spring.pop)}
+          className={`${glass} group/hint flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold whitespace-nowrap shadow-lg transition-[filter] hover:brightness-110`}
+        >
+          See how it works
+          <ArrowDown className='text-glass-muted ease-bounce h-3.5 w-3.5 transition-transform duration-300 group-hover/hint:translate-y-0.5' />
+        </ScrollToElement>
       </motion.div>
     </section>
   );

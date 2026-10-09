@@ -1,4 +1,8 @@
-/** Frosted glass for what floats in the water, as on the shared images' cards, but with the water behind actually blurred. */
+/**
+ * Frosted glass for what floats in the water, as on the shared images' cards, but with the water behind actually blurred.
+ * Fade it in on itself, never through a parent: while a parent is see-through, the blur can't see the water behind it,
+ * so the glass comes in clear and only frosts once the fade is done.
+ */
 export const glass = 'border-glass-border bg-glass text-glass-foreground shadow-glass-shadow border backdrop-blur-md backdrop-saturate-120';
 
 /** For the main button in the water: sunlit from above, with a glint along the top like a bubble's. */
