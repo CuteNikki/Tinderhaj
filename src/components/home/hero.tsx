@@ -11,21 +11,24 @@ import { after, popIn, reveal, spring } from '@/lib/motion';
 
 import { DiscoveryLink } from '@/components/discovery/link';
 import { AnimatedCount } from '@/components/home/animated-count';
+import { Ocean } from '@/components/home/ocean';
 import { ScrollToElement } from '@/components/home/scroll-to-element';
 import { TypographyH1, TypographyMuted } from '@/components/typography';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
+/** Frosted glass, as on the shared images' cards, but with the water behind actually blurred. */
+const glass = 'border-glass-border bg-glass text-glass-foreground shadow-glass-shadow border backdrop-blur-md backdrop-saturate-120';
+
 /** `profileCount` is rendered on the server, where the count comes from. */
 export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
   return (
-    <section id='hero' className='bg-background relative isolate overflow-hidden'>
-      <div className='pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[4rem_4rem] opacity-25' />
-      <div className='bg-primary/10 pointer-events-none absolute top-1/2 left-1/2 z-0 size-112 -translate-1/2 rounded-full blur-3xl' />
-      <div className='relative z-10 container mx-auto grid min-h-screen max-w-7xl items-center gap-4 px-6 pt-24 pb-12 md:px-8 lg:grid-cols-2 lg:gap-8'>
+    <section id='hero' className='relative isolate overflow-hidden'>
+      <Ocean />
+      <div className='relative z-10 container mx-auto grid min-h-screen max-w-7xl items-center gap-4 px-6 pt-24 pb-16 md:px-8 lg:grid-cols-2 lg:gap-8'>
         <div className='relative z-10 flex max-w-2xl flex-col items-start'>
           <motion.div initial='hidden' animate='visible' variants={popIn} transition={spring.pop}>
-            <Badge variant='secondary' className='rounded-full p-4 font-semibold tracking-wide uppercase'>
+            <Badge className={`${glass} rounded-full p-4 font-semibold tracking-wide uppercase shadow-lg`}>
               <span className='relative mr-2 flex h-2 w-2'>
                 <span className='bg-primary absolute inline-flex h-full w-full animate-ping rounded-full opacity-75' />
                 <span className='bg-primary relative inline-flex h-2 w-2 rounded-full' />
@@ -52,13 +55,18 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
             transition={after(0.3)}
             className='mt-4 flex w-full flex-wrap items-start gap-2 sm:mt-8'
           >
-            <Button size='lg' className='h-12 rounded-full px-6' asChild>
+            {/* Sunlit from above, with a glint along the top like a bubble's */}
+            <Button
+              size='lg'
+              className='h-12 rounded-full bg-[linear-gradient(to_bottom,color-mix(in_oklch,var(--primary),white_15%),var(--primary))] px-6 inset-shadow-[0_1px_0_oklch(1_0_0/0.3)] hover:opacity-90'
+              asChild
+            >
               <Link href='/sign-up'>
                 Join
                 <ArrowRight />
               </Link>
             </Button>
-            <Button size='lg' className='h-12 rounded-full px-6' asChild variant='outline'>
+            <Button size='lg' className='dark:bg-background dark:hover:bg-muted h-12 rounded-full px-6' asChild variant='outline'>
               <DiscoveryLink>
                 Explore
                 <Search />
@@ -91,7 +99,7 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
             initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={after(0.15)}
-            className='border-primary/20 absolute top-1/2 left-1/2 size-3/4 -translate-1/2 rounded-full border'
+            className='border-primary/20 absolute top-1/2 left-1/2 size-3/4 -translate-1/2 rounded-full border bg-[radial-gradient(circle_closest-side,var(--ocean-light),transparent)]'
           />
           <motion.div
             initial={{ opacity: 0, scale: 0.92 }}
@@ -109,9 +117,9 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
             <motion.div
               animate={{ y: [0, -5, 0] }}
               transition={{ duration: 3.5, ease: 'easeInOut', repeat: Infinity, delay: 0.6 }}
-              className='border-foreground/10 bg-background/80 flex items-center gap-2 rounded-full border px-3 py-2 text-xs font-semibold whitespace-nowrap shadow-lg backdrop-blur-sm'
+              className={`${glass} flex items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold whitespace-nowrap shadow-lg`}
             >
-              <Sparkles className='text-primary h-3.5 w-3.5' /> A match worth meeting
+              <Sparkles className='h-3.5 w-3.5 text-[#ed3867]' /> A match worth meeting
             </motion.div>
           </motion.div>
           <div className='relative z-1 w-3/4 max-w-md'>
@@ -139,12 +147,19 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
             <motion.div
               animate={{ y: [0, 6, 0] }}
               transition={{ duration: 4, ease: 'easeInOut', repeat: Infinity, delay: 0.2 }}
-              className='border-foreground/10 bg-background/90 flex max-w-64 -rotate-3 items-center gap-3 rounded-xl border p-3 shadow-xl backdrop-blur-md'
+              className={`${glass} flex max-w-64 -rotate-3 items-center gap-3 rounded-xl p-3 shadow-xl`}
             >
-              <Image unoptimized width={64} height={64} src='/blahajHug.webp' alt='' className='bg-primary/10 h-14 w-14 shrink-0 rounded-lg object-contain' />
+              <Image
+                unoptimized
+                width={64}
+                height={64}
+                src='/blahajHug.webp'
+                alt=''
+                className='bg-primary/10 h-14 w-14 shrink-0 rounded-lg object-contain dark:bg-white/20'
+              />
               <div>
                 <p className='text-sm font-bold'>Good chemistry</p>
-                <p className='text-muted-foreground mt-1 text-xs leading-relaxed'>The right people are out there. You&apos;ll find &apos;em.</p>
+                <p className='text-glass-muted mt-1 text-xs leading-relaxed'>The right people are out there. You&apos;ll find &apos;em.</p>
               </div>
             </motion.div>
           </motion.div>
@@ -158,19 +173,31 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
             <motion.div
               animate={{ y: [0, -6, 0], rotate: [12, 8, 12] }}
               transition={{ duration: 4, ease: 'easeInOut', repeat: Infinity, delay: 1 }}
-              className='bg-primary/15 flex size-20 rotate-12 items-center justify-center rounded-full shadow-xl'
+              className={`${glass} flex size-20 rotate-12 items-center justify-center rounded-full shadow-xl`}
             >
               <Image unoptimized width={80} height={80} src='/blahajHeart.webp' alt='Heart' className='w-12 sm:w-15' />
             </motion.div>
           </motion.div>
         </div>
       </div>
-      <ScrollToElement
-        targetId='guide'
-        className='absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 animate-bounce items-center gap-2 text-xs font-semibold tracking-widest uppercase opacity-70 hover:opacity-100'
+      {/* Riding the waves, like the shark's own little cards float by it */}
+      <motion.div
+        initial='hidden'
+        animate='visible'
+        variants={popIn}
+        transition={after(1, spring.pop)}
+        className='absolute bottom-4 left-1/2 z-20 -translate-x-1/2 sm:bottom-6'
       >
-        See how it works <ArrowDown className='h-4 w-4' />
-      </ScrollToElement>
+        <motion.div animate={{ y: [0, 5, 0] }} transition={{ duration: 3.8, ease: 'easeInOut', repeat: Infinity, delay: 1.2 }}>
+          <ScrollToElement
+            targetId='guide'
+            className={`${glass} group/hint flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold whitespace-nowrap shadow-lg transition-[filter] hover:brightness-110`}
+          >
+            See how it works
+            <ArrowDown className='text-primary ease-bounce h-3.5 w-3.5 transition-transform duration-300 group-hover/hint:translate-y-0.5' />
+          </ScrollToElement>
+        </motion.div>
+      </motion.div>
     </section>
   );
 }
