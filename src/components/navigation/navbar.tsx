@@ -5,10 +5,10 @@ import {
   HomeIcon,
   type LucideIcon,
   MenuIcon,
-  MessageCircleIcon,
   SearchIcon,
   SettingsIcon,
   SignpostIcon,
+  SparklesIcon,
   UserCheckIcon,
   UserRoundIcon,
   UsersRoundIcon,
@@ -44,8 +44,8 @@ type NavUser = { role: AccountRole };
 /** The site's pages, on the bar on wide screens and in the menu on narrow ones. */
 const siteLinks: NavLink[] = [
   { name: 'Home', href: '/#top', icon: HomeIcon },
-  { name: 'Guide', href: '/#guide', icon: SignpostIcon },
-  { name: 'Features', href: '/#features', icon: MessageCircleIcon },
+  { name: 'Guide', href: '/guide#top', icon: SignpostIcon },
+  { name: 'Features', href: '/features#top', icon: SparklesIcon },
   { name: 'Discovery', href: '/discovery#top', icon: SearchIcon },
 ];
 

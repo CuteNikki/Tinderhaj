@@ -9,7 +9,7 @@ import { Section } from '@/components/sections/section';
 
 const PLACES: { title: string; copy: string; href: string; icon: LucideIcon }[] = [
   { title: 'Browse the sharks', copy: 'Every verified profile, the newest first.', href: '/discovery', icon: SearchIcon },
-  { title: 'See how it works', copy: 'Three steps from soft to sweethearts.', href: '/#guide', icon: SignpostIcon },
+  { title: 'See how it works', copy: 'From signing up to a first match.', href: '/guide', icon: SignpostIcon },
   { title: 'Make your profile', copy: 'Tell the world what makes your fins flutter.', href: '/sign-up', icon: UserRoundPlusIcon },
   { title: 'Ask us anything', copy: 'Lost, stuck, or just saying hi.', href: '/contact', icon: MailIcon },
 ];

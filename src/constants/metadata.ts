@@ -155,6 +155,16 @@ export const termsMetadata: Metadata = {
   description: 'Read the terms for using Tinderhaj.',
 };
 
+export const guideMetadata: Metadata = {
+  title: 'Guide',
+  description: 'How Tinderhaj works, from signing up to your first match.',
+};
+
+export const featuresMetadata: Metadata = {
+  title: 'Features',
+  description: 'Everything Tinderhaj does for you and your sharks: discovery, hearts and matches, hand-checked profiles, and more.',
+};
+
 export const contactMetadata: Metadata = {
   title: 'Contact',
   description: 'Get in touch with Tinderhaj by email, or find it around the internet.',

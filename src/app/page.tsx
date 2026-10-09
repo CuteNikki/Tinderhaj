@@ -1,10 +1,13 @@
+import { ArrowRight } from 'lucide-react';
 import { Metadata } from 'next';
+import Link from 'next/link';
 
 import { homeMetadata } from '@/constants/metadata';
 
 import { GuideStep } from '@/components/home/guide-step';
 import { Hero } from '@/components/home/hero';
 import { ProfileCount } from '@/components/home/profile-count';
+import { FreshSharks } from '@/components/sections/fresh-sharks';
 import { ReadyWhenYouAre } from '@/components/sections/ready-when-you-are';
 import { Section } from '@/components/sections/section';
 
@@ -32,8 +35,13 @@ export default function Home() {
             <GuideStep key={number} number={number} title={title} copy={copy} icon={icon} />
           ))}
         </div>
+        <Link href='/guide' className='text-primary mt-6 inline-flex items-center gap-1 text-sm font-semibold hover:underline'>
+          Read the whole guide
+          <ArrowRight className='size-3.5' aria-hidden='true' />
+        </Link>
       </Section>
-      <ReadyWhenYouAre id='features' />
+      <FreshSharks tone='background' />
+      <ReadyWhenYouAre />
     </>
   );
 }

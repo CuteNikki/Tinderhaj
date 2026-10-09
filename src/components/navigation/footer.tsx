@@ -2,20 +2,20 @@ import Link from 'next/link';
 
 import { Code2, Mail } from 'lucide-react';
 
-import { GITHUB_URL } from '@/constants/contact';
+import { DISCORD_URL, GITHUB_URL } from '@/constants/contact';
 
 import { Logo } from '@/components/common/logo';
 import { Stagger } from '@/components/common/stagger';
 import { DiscoveryLink } from '@/components/discovery/link';
 
 const productLinks = [
-  { label: 'Features', href: '/#features' },
-  { label: 'How it works', href: '/#guide' },
+  { label: 'Features', href: '/features' },
+  { label: 'How it works', href: '/guide' },
   { label: 'Discovery', href: '/discovery#top' },
 ];
 
 const resourceLinks = [
-  { label: 'Community', href: '/#guide' },
+  { label: 'Community', href: DISCORD_URL },
   { label: 'Create a profile', href: '/sign-up' },
   { label: 'Sign in', href: '/sign-in' },
 ];
