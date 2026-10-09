@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'motion/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -26,6 +26,7 @@ export function SignUpForm() {
     resolver: zodResolver(signUpSchema),
     defaultValues: { username: '', email: '', password: '' },
   });
+  const filled = useWatch({ control: form.control, name: ['username', 'email', 'password'] }).every((value) => value.trim());
 
   async function onSubmit(data: z.infer<typeof signUpSchema>) {
     setIsSubmitting(true);
@@ -94,7 +95,7 @@ export function SignUpForm() {
           />
         </motion.div>
         <motion.div variants={staggerItem}>
-          <Button type='submit' className='w-full' disabled={isSubmitting}>
+          <Button type='submit' className='w-full' disabled={isSubmitting || !filled}>
             {isSubmitting ? (
               <>
                 <Loader2Icon className='shrink-0 animate-spin' aria-hidden='true' />

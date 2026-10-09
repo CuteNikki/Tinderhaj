@@ -5,6 +5,7 @@ import { useState } from 'react';
 
 import { authClient } from '@/lib/auth-client';
 
+import { useFormReady } from '@/components/common/use-form-ready';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,11 +16,15 @@ export function DeleteAccount({ hasPassword }: { hasPassword: boolean }) {
   const [error, setError] = useState<string>();
   const [pending, setPending] = useState(false);
   const [sent, setSent] = useState(false);
+  const { ready, onInput } = useFormReady();
 
-  async function handleSubmit(formData: FormData) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    // Not a form action: React would empty the password after a mistake, too.
+    event.preventDefault();
+    const password = hasPassword ? String(new FormData(event.currentTarget).get('password')) : undefined;
     setPending(true);
     setError(undefined);
-    const { error } = await authClient.deleteUser({ password: hasPassword ? String(formData.get('password')) : undefined });
+    const { error } = await authClient.deleteUser({ password });
     setPending(false);
 
     if (error) {
@@ -55,7 +60,7 @@ export function DeleteAccount({ hasPassword }: { hasPassword: boolean }) {
   }
 
   return (
-    <form action={handleSubmit} className='flex flex-col gap-3'>
+    <form onSubmit={handleSubmit} onInput={onInput} className='flex flex-col gap-3'>
       {hasPassword ? (
         <div className='flex flex-col gap-2'>
           <Label htmlFor='delete-password'>Enter your password to confirm</Label>
@@ -66,7 +71,7 @@ export function DeleteAccount({ hasPassword }: { hasPassword: boolean }) {
       )}
       {error && <p className='text-destructive text-sm'>{error}</p>}
       <div className='flex gap-2'>
-        <Button type='submit' variant='destructive' disabled={pending}>
+        <Button type='submit' variant='destructive' disabled={pending || (hasPassword && !ready)}>
           {pending ? <Loader2Icon className='animate-spin' aria-hidden='true' /> : <Trash2Icon aria-hidden='true' />}
           Email me a link
         </Button>

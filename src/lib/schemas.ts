@@ -63,11 +63,14 @@ export const usernameSchema = z
   .min(MIN_USERNAME_LENGTH, `Username must be at least ${MIN_USERNAME_LENGTH} characters.`)
   .max(MAX_USERNAME_LENGTH, `Username must be at most ${MAX_USERNAME_LENGTH} characters.`);
 
+/** The same rule Better Auth applies, so an address it would turn away is caught here first. */
+export const emailSchema = z
+  .email(`Email is invalid!`)
+  .min(MIN_EMAIL_LENGTH, `Email must be at least ${MIN_EMAIL_LENGTH} characters.`)
+  .max(MAX_EMAIL_LENGTH, `Email must be at most ${MAX_EMAIL_LENGTH} characters.`);
+
 export const signInSchema = z.object({
-  email: z
-    .email(`Email is invalid!`)
-    .min(MIN_EMAIL_LENGTH, `Email must be at least ${MIN_EMAIL_LENGTH} characters.`)
-    .max(MAX_EMAIL_LENGTH, `Email must be at most ${MAX_EMAIL_LENGTH} characters.`),
+  email: emailSchema,
   password: z
     .string()
     .min(MIN_PASSWORD_LENGTH, `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`)
@@ -76,10 +79,7 @@ export const signInSchema = z.object({
 
 export const signUpSchema = z.object({
   username: usernameSchema,
-  email: z
-    .email(`Email is invalid!`)
-    .min(MIN_EMAIL_LENGTH, `Email must be at least ${MIN_EMAIL_LENGTH} characters.`)
-    .max(MAX_EMAIL_LENGTH, `Email must be at most ${MAX_EMAIL_LENGTH} characters.`),
+  email: emailSchema,
   password: z
     .string()
     .nonempty(`Password is required!`)
@@ -101,10 +101,7 @@ export const updateMatchContactSchema = z.object({
 });
 
 export const forgotPasswordSchema = z.object({
-  email: z
-    .email(`Email is invalid!`)
-    .min(MIN_EMAIL_LENGTH, `Email must be at least ${MIN_EMAIL_LENGTH} characters.`)
-    .max(MAX_EMAIL_LENGTH, `Email must be at most ${MAX_EMAIL_LENGTH} characters.`),
+  email: emailSchema,
 });
 
 export const resetPasswordSchema = z

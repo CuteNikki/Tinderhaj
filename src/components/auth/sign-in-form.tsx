@@ -4,8 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'motion/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useEffect, useRef, useState } from 'react';
+import { useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -31,6 +31,9 @@ export function SignInForm({ providers, error }: { providers: SocialProviderId[]
     resolver: zodResolver(signInSchema),
     defaultValues: { email: '', password: '' },
   });
+  const filled = useWatch({ control: form.control, name: ['email', 'password'] }).every((value) => value.trim());
+  const formRef = useRef<HTMLFormElement>(null);
+  const autofilled = useAutofilled(formRef);
 
   /**
    * Signs in with a passkey. With `autoFill`, the browser offers saved
@@ -94,7 +97,7 @@ export function SignInForm({ providers, error }: { providers: SocialProviderId[]
 
   return (
     <Form {...form}>
-      <motion.form onSubmit={form.handleSubmit(onSubmit)} className='space-y-2' initial='hidden' animate='visible' variants={staggerContainer}>
+      <motion.form ref={formRef} onSubmit={form.handleSubmit(onSubmit)} className='space-y-2' initial='hidden' animate='visible' variants={staggerContainer}>
         {error && (
           <motion.p variants={staggerItem} role='alert' className='bg-destructive/10 text-destructive rounded-lg px-3 py-2 text-sm text-pretty'>
             {error}
@@ -128,7 +131,7 @@ export function SignInForm({ providers, error }: { providers: SocialProviderId[]
           />
         </motion.div>
         <motion.div variants={staggerItem}>
-          <Button type='submit' className='w-full' disabled={isSubmitting}>
+          <Button type='submit' className='w-full' disabled={isSubmitting || (!filled && !autofilled)}>
             {isSubmitting ? (
               <>
                 <Loader2Icon className='shrink-0 animate-spin' aria-hidden='true' />
@@ -157,4 +160,31 @@ export function SignInForm({ providers, error }: { providers: SocialProviderId[]
       </motion.form>
     </Form>
   );
+}
+
+/**
+ * Whether the browser filled in a saved email and password as the page
+ * loaded. It keeps them from the page until someone clicks, so the fields
+ * look empty to the form, but it marks them, and that shows.
+ */
+function useAutofilled(formRef: React.RefObject<HTMLFormElement | null>) {
+  const [autofilled, setAutofilled] = useState(false);
+
+  useEffect(() => {
+    const check = () => {
+      const form = formRef.current;
+      if (!form) return;
+      // Older Safari only knows the prefixed name, and an unknown one throws.
+      for (const selector of [':autofill', ':-webkit-autofill']) {
+        try {
+          return setAutofilled(!!form.querySelector(selector));
+        } catch {}
+      }
+    };
+    // Browsers fill in soon after the page appears, not at a set moment.
+    const timers = [100, 500, 1000, 2000].map((delay) => setTimeout(check, delay));
+    return () => timers.forEach(clearTimeout);
+  }, [formRef]);
+
+  return autofilled;
 }

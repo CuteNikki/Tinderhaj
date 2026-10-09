@@ -9,7 +9,8 @@ import { KeyRoundIcon, Loader2Icon, MailIcon, SmartphoneIcon } from 'lucide-reac
 
 import { authClient } from '@/lib/auth-client';
 
-import { CodeInput } from '@/components/common/code-input';
+import { CODE_LENGTH, CodeInput } from '@/components/common/code-input';
+import { useFormReady } from '@/components/common/use-form-ready';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -46,6 +47,8 @@ export function TwoFactorForm({ hasApp }: { hasApp: boolean }) {
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [trust, setTrust] = useState(false);
+  // A whole 6-digit code; backup codes come in more than one shape, so any.
+  const { ready, onInput, clear } = useFormReady((form) => mode === 'backup' || String(new FormData(form).get('code')).length === CODE_LENGTH);
   const autoSent = useRef(false);
 
   async function sendCode() {
@@ -80,6 +83,8 @@ export function TwoFactorForm({ hasApp }: { hasApp: boolean }) {
   }, [hasApp]);
 
   async function verify(formData: FormData) {
+    // React empties the form once this is done, however it ends.
+    clear();
     const code = String(formData.get('code')).trim();
     setPending(true);
     setError(undefined);
@@ -114,11 +119,41 @@ export function TwoFactorForm({ hasApp }: { hasApp: boolean }) {
     backup: 'Enter one of the backup codes you saved.',
   };
 
+  // The other kinds of code this account can use.
+  const alternatives = [
+    mode !== 'app' && hasApp && (
+      <Button key='app' variant='outline' size='lg' onClick={() => switchTo('app')}>
+        <SmartphoneIcon />
+        Use your authenticator app
+      </Button>
+    ),
+    mode !== 'email' && (
+      <Button
+        key='email'
+        variant='outline'
+        size='lg'
+        onClick={() => {
+          switchTo('email');
+          if (!sent) void sendCode();
+        }}
+      >
+        <MailIcon />
+        Email me a code instead
+      </Button>
+    ),
+    mode !== 'backup' && hasApp && (
+      <Button key='backup' variant='outline' size='lg' onClick={() => switchTo('backup')}>
+        <KeyRoundIcon />
+        Use a backup code
+      </Button>
+    ),
+  ].filter(Boolean);
+
   // Laid out like the sign-in card: the code and Continue, then the other
   // ways under an "or", as outline buttons like the passkey one there.
   return (
     <div className='flex flex-col gap-4'>
-      <form action={verify} className='flex flex-col items-center gap-4'>
+      <form action={verify} onInput={onInput} className='flex flex-col items-center gap-4'>
         <Label htmlFor={`${id}-code`} className='text-center text-sm font-normal text-pretty'>
           {prompts[mode]}
         </Label>
@@ -143,50 +178,30 @@ export function TwoFactorForm({ hasApp }: { hasApp: boolean }) {
           Don&rsquo;t ask again on this device for 30 days
         </label>
         {error && <p className='text-destructive text-center text-sm'>{error}</p>}
-        <Button type='submit' disabled={pending} className='w-full'>
+        <Button type='submit' disabled={pending || !ready} className='w-full'>
           {pending && <Loader2Icon className='animate-spin' />}
           Continue
         </Button>
       </form>
 
-      <div className='text-muted-foreground flex items-center gap-3 text-xs'>
-        <span className='bg-border h-px flex-1' />
-        or
-        <span className='bg-border h-px flex-1' />
-      </div>
-
-      <div className='flex flex-col gap-2'>
-        {mode !== 'app' && hasApp && (
-          <Button variant='outline' size='lg' onClick={() => switchTo('app')}>
-            <SmartphoneIcon />
-            Use your authenticator app
-          </Button>
-        )}
-        {mode !== 'email' && (
-          <Button
-            variant='outline'
-            size='lg'
-            onClick={() => {
-              switchTo('email');
-              if (!sent) void sendCode();
-            }}
-          >
-            <MailIcon />
-            Email me a code instead
-          </Button>
-        )}
-        {mode !== 'backup' && hasApp && (
-          <Button variant='outline' size='lg' onClick={() => switchTo('backup')}>
-            <KeyRoundIcon />
-            Use a backup code
-          </Button>
-        )}
-      </div>
+      {/* Without an app there's nothing else to offer: email codes are already in use, and backup codes come with an app */}
+      {alternatives.length > 0 && (
+        <>
+          <div className='text-muted-foreground flex items-center gap-3 text-xs'>
+            <span className='bg-border h-px flex-1' />
+            or
+            <span className='bg-border h-px flex-1' />
+          </div>
+          <div className='flex flex-col gap-2'>{alternatives}</div>
+        </>
+      )}
     </div>
   );
 
   function switchTo(to: Mode) {
     setMode(to);
     setError(undefined);
+    // Each kind of code starts with an empty field.
+    clear();
   }
 }

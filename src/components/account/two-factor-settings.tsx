@@ -12,7 +12,8 @@ import { forgetTrustedDevices } from '@/lib/actions';
 import { authClient } from '@/lib/auth-client';
 
 import { useConfirm } from '@/components/common/confirm-dialog';
-import { CodeInput } from '@/components/common/code-input';
+import { CODE_LENGTH, CodeInput } from '@/components/common/code-input';
+import { useFormReady } from '@/components/common/use-form-ready';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -267,9 +268,11 @@ function PasswordStep({
   const id = useId();
   const [error, setError] = useState<string>();
   const [pending, setPending] = useState(false);
+  const { ready, onInput } = useFormReady();
 
   return (
     <form
+      onInput={onInput}
       onSubmit={async (event) => {
         event.preventDefault();
         setPending(true);
@@ -289,7 +292,7 @@ function PasswordStep({
       </div>
       {error && <p className='text-destructive text-sm'>{error}</p>}
       <div className='flex flex-wrap gap-2'>
-        <Button type='submit' variant={destructive ? 'destructive' : 'default'} disabled={pending}>
+        <Button type='submit' variant={destructive ? 'destructive' : 'default'} disabled={pending || !ready}>
           {pending && <Loader2Icon className='animate-spin' />}
           {submit}
         </Button>
@@ -309,6 +312,8 @@ function AppSetup({ totpURI, backupCodes, onCancel, onDone }: { totpURI: string;
   const [confirmed, setConfirmed] = useState(false);
   const [error, setError] = useState<string>();
   const [pending, setPending] = useState(false);
+  // All of the code, not just some of its digits.
+  const { ready, onInput } = useFormReady((form) => String(new FormData(form).get('code')).length === CODE_LENGTH);
   // For typing in by hand, when scanning isn't possible.
   const secret = new URL(totpURI).searchParams.get('secret') ?? '';
 
@@ -342,6 +347,7 @@ function AppSetup({ totpURI, backupCodes, onCancel, onDone }: { totpURI: string;
         <code className='bg-muted rounded-md px-2 py-1 text-xs break-all select-all'>{secret}</code>
       </div>
       <form
+        onInput={onInput}
         onSubmit={async (event) => {
           event.preventDefault();
           setPending(true);
@@ -362,7 +368,7 @@ function AppSetup({ totpURI, backupCodes, onCancel, onDone }: { totpURI: string;
         </div>
         {error && <p className='text-destructive text-sm'>{error}</p>}
         <div className='flex flex-wrap gap-2'>
-          <Button type='submit' disabled={pending}>
+          <Button type='submit' disabled={pending || !ready}>
             {pending && <Loader2Icon className='animate-spin' />}
             Confirm
           </Button>

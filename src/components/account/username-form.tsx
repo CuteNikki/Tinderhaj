@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -21,6 +21,7 @@ export function UsernameForm({ username }: { username: string }) {
     resolver: zodResolver(updateUsernameSchema),
     defaultValues: { username },
   });
+  const typed = useWatch({ control: form.control, name: 'username' }).trim();
 
   async function onSubmit(data: z.infer<typeof updateUsernameSchema>) {
     setIsSaving(true);
@@ -53,7 +54,7 @@ export function UsernameForm({ username }: { username: string }) {
             </FormItem>
           )}
         />
-        <Button type='submit' disabled={isSaving}>
+        <Button type='submit' disabled={isSaving || !typed || typed === username}>
           {isSaving ? (
             <>
               <Loader2Icon className='shrink-0 animate-spin' aria-hidden='true' />

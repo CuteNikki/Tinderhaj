@@ -127,7 +127,9 @@ export function VerifyProfileCard({ profile }: { profile: ProfileWithOwner }) {
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Reject &quot;{profile.displayName}&quot;?</DialogTitle>
-                <DialogDescription>Pick which fields need fixing and optionally leave a note. Nothing is changed except the status.</DialogDescription>
+                <DialogDescription>
+                  Pick which fields need fixing, leave a note, or both, so they know what to change. Nothing is changed except the status.
+                </DialogDescription>
               </DialogHeader>
 
               <div className='space-y-4'>
@@ -147,7 +149,7 @@ export function VerifyProfileCard({ profile }: { profile: ProfileWithOwner }) {
                   </div>
                 </div>
                 <div className='space-y-2'>
-                  <p className='text-sm leading-none font-medium'>Note (optional)</p>
+                  <p className='text-sm leading-none font-medium'>Note</p>
                   <Textarea
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
@@ -161,7 +163,8 @@ export function VerifyProfileCard({ profile }: { profile: ProfileWithOwner }) {
                 <DialogClose asChild>
                   <Button variant='secondary'>Cancel</Button>
                 </DialogClose>
-                <Button variant='destructive' onClick={handleReject} disabled={isRejecting}>
+                {/* Something to go on: a field to fix, a note, or both */}
+                <Button variant='destructive' onClick={handleReject} disabled={isRejecting || (!rejectedFields.length && !note.trim())}>
                   {isRejecting ? 'Rejecting…' : 'Reject'}
                 </Button>
               </DialogFooter>
