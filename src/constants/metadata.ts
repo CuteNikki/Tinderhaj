@@ -155,6 +155,11 @@ export const userPageMetadata: Metadata = {
   description: 'All the sharks of someone on Tinderhaj.',
 };
 
+export const sharkPageMetadata: Metadata = {
+  title: 'Shark',
+  description: 'A shark on Tinderhaj.',
+};
+
 export const privacyMetadata: Metadata = {
   title: 'Privacy',
   description: 'Learn how Tinderhaj collects, uses, and protects your information.',

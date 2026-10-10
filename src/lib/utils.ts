@@ -16,3 +16,8 @@ export function calculateAge(birthday: Date | null): number | null {
   }
   return age;
 }
+
+/** A shark's own page, the link to share it by. */
+export function sharkPath(shark: { id: string; user: { username: string } }) {
+  return `/u/${shark.user.username}/${shark.id}`;
+}

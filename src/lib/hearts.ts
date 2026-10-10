@@ -151,3 +151,24 @@ export async function getUserPage(username: string, viewer: { id: string; role?:
 
   return { user: { id: user.id, username: user.username, createdAt: user.createdAt }, sharks, banned, own: viewer?.id === user.id, moderator };
 }
+
+/**
+ * One verified shark, for its own page, by its id: the username in its link
+ * only says whose it is, so a link still finds it after its owner renames
+ * themselves. Null if it isn't verified, or its owner is banned, but for
+ * moderators.
+ */
+export async function getSharkPage(id: string, viewer: { id: string; role?: string | null } | null) {
+  const shark = await prisma.profile.findUnique({
+    where: { id, status: ProfileStatus.VERIFIED },
+    select: { ...PUBLIC_PROFILE, userId: true, user: { select: { username: true, banned: true, banExpires: true } } },
+  });
+  if (!shark) return null;
+
+  const moderator = isModerator(viewer?.role);
+  const { userId, user, ...rest } = shark;
+  const banned = user.banned && (!user.banExpires || user.banExpires > new Date());
+  if (banned && !moderator) return null;
+
+  return { shark: { ...rest, user: { username: user.username } } satisfies PublicProfile, userId, banned, own: viewer?.id === userId, moderator };
+}

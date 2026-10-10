@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react';
 
-import { CakeIcon, MapPinIcon, PencilIcon, RulerIcon, SendIcon, Trash2Icon } from 'lucide-react';
+import { CakeIcon, CheckIcon, Link2Icon, MapPinIcon, PencilIcon, RulerIcon, SendIcon, Trash2Icon } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
 
@@ -13,6 +13,7 @@ import { PROFILE_STATUS_META } from '@/lib/profile-status';
 import { LIFT } from '@/lib/motion';
 import { calculateAge, cn } from '@/lib/utils';
 
+import { useCopySharkLink } from '@/components/discovery/share-button';
 import { ProfileAvatar, ProfileBanner } from '@/components/profiles/profile-image';
 import {
   AlertDialog,
@@ -34,6 +35,7 @@ export function ProfileCard({ profile }: { profile: ProfileWithOwner }) {
   const [isDeleting, startDeleteTransition] = useTransition();
   const [isSubmitting, startSubmitTransition] = useTransition();
   const [isDeleted, setIsDeleted] = useState(false);
+  const { copied, copy: copyLink } = useCopySharkLink(profile);
 
   const StatusIcon = PROFILE_STATUS_META[profile.status].icon;
 
@@ -157,6 +159,13 @@ export function ProfileCard({ profile }: { profile: ProfileWithOwner }) {
               Edit
             </Link>
           </Button>
+          {/* Only a verified shark has a page of its own to share */}
+          {profile.status === 'VERIFIED' && (
+            <Button variant='outline' size='sm' className='flex-1' onClick={copyLink}>
+              {copied ? <CheckIcon /> : <Link2Icon />}
+              {copied ? 'Copied' : 'Share'}
+            </Button>
+          )}
           {profile.status === 'CREATED' && (
             <Button variant='outline' size='sm' className='flex-1' onClick={handleSubmitForReview} disabled={isSubmitting || isDeleting}>
               <SendIcon />

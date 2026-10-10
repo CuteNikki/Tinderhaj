@@ -15,6 +15,7 @@ import { DiscoveryFilter } from '@/components/discovery/filter';
 import { DiscoveryNoResults } from '@/components/discovery/no-results';
 import { DiscoveryPagination } from '@/components/discovery/pagination';
 import { DiscoveryProfile } from '@/components/discovery/profile';
+import { ShareButton } from '@/components/discovery/share-button';
 import { CardHearts } from '@/components/hearts/card-hearts';
 import { ReportButton } from '@/components/reports/report-dialog';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
@@ -103,6 +104,7 @@ export default async function DiscoveryPage({ searchParams }: { searchParams: Pr
                     profile={profile}
                     action={
                       <div className='flex items-center gap-1'>
+                        <ShareButton shark={{ id: profile.id, displayName: profile.displayName, user: profile.user }} />
                         <ReportButton
                           shark={{ id: profile.id, displayName: profile.displayName }}
                           signedIn={!!session}

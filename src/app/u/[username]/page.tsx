@@ -12,6 +12,7 @@ import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
 import { EmptyState } from '@/components/common/empty-state';
 import { Stagger } from '@/components/common/stagger';
 import { DiscoveryProfile } from '@/components/discovery/profile';
+import { ShareButton } from '@/components/discovery/share-button';
 import { CardHearts } from '@/components/hearts/card-hearts';
 import { ReportButton } from '@/components/reports/report-dialog';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
@@ -93,6 +94,7 @@ export default async function UserSharksPage({ params }: PageProps<'/u/[username
                   profile={shark}
                   action={
                     <div className='flex items-center gap-1'>
+                      <ShareButton shark={{ id: shark.id, displayName: shark.displayName, user: shark.user }} />
                       <ReportButton shark={{ id: shark.id, displayName: shark.displayName }} signedIn={!!session} own={own} />
                       <CardHearts
                         target={{ id: shark.id, displayName: shark.displayName }}
