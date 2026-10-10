@@ -141,6 +141,8 @@ DISCORD_ROLE_VERIFIED=""
 DISCORD_ROLE_MATCHED=""
 DISCORD_ROLE_MODERATOR=""
 DISCORD_ROLE_ADMIN=""
+# Optional: a channel on the same server where newly verified sharks are posted. Needs DISCORD_BOT_TOKEN.
+DISCORD_CHANNEL_NEW_SHARKS=""
 ```
 
 Notes:
@@ -157,6 +159,7 @@ Notes:
   - In the same Discord application as sign-in, add a bot under **Bot** and copy its token into `DISCORD_BOT_TOKEN`. Invite it to the server with the **Manage Roles** permission (OAuth2 → URL Generator, scope `bot`).
   - In the server's role list, drag the bot's role above every role it gives, or Discord refuses to let it give them.
   - With Developer Mode on (Discord settings → Advanced), right-click the server and each role to copy their ids into `DISCORD_GUILD_ID` and the `DISCORD_ROLE_*` variables. A role left empty isn't given.
+- The new sharks feed is optional too. When a moderator verifies a shark for the first time, the bot posts its link in the channel whose id is in `DISCORD_CHANNEL_NEW_SHARKS`, and Discord shows it as the shark's card. A shark verified again after its owner edits it isn't posted twice. The bot needs **View Channel**, **Send Messages** and **Embed Links** in that channel.
 
 ## Installation
 

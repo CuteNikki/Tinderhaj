@@ -3,6 +3,7 @@ import 'server-only';
 import { after } from 'next/server';
 
 import { isBanned, notBannedWhere } from '@/lib/bans';
+import { discord } from '@/lib/discord';
 import prisma from '@/lib/prisma';
 import { AccountRole } from '@/lib/roles';
 
@@ -67,24 +68,11 @@ class DiscordError extends Error {
   }
 }
 
-/** One call to Discord as the bot, waiting out a rate limit once if it hits one. */
-async function discord(method: 'GET' | 'PUT' | 'DELETE', path: string, retried = false): Promise<Response> {
-  const response = await fetch(`https://discord.com/api/v10${path}`, {
-    method,
-    headers: { Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}`, 'X-Audit-Log-Reason': 'Tinderhaj role sync' },
-    signal: AbortSignal.timeout(8000),
-  });
-  if (response.status === 429 && !retried) {
-    const { retry_after: wait = 1 } = (await response.json().catch(() => ({}))) as { retry_after?: number };
-    await new Promise((resolve) => setTimeout(resolve, Math.min(wait, 5) * 1000));
-    return discord(method, path, true);
-  }
-  return response;
-}
+const SYNC = { reason: 'Tinderhaj role sync' };
 
 /** The roles someone has on the server, or null if they aren't on it. */
 async function memberRoles(discordId: string) {
-  const response = await discord('GET', `/guilds/${process.env.DISCORD_GUILD_ID}/members/${discordId}`);
+  const response = await discord('GET', `/guilds/${process.env.DISCORD_GUILD_ID}/members/${discordId}`, SYNC);
   if (response.status === 404) return null;
   if (!response.ok) throw new DiscordError(response.status, `Reading member ${discordId}: ${await response.text()}`);
   return new Set(((await response.json()) as { roles: string[] }).roles);
@@ -96,7 +84,7 @@ async function setRoles(discordId: string, have: Set<string>, want: Set<string>)
   for (const { id } of configuredRoles()) {
     const method = want.has(id) && !have.has(id) ? 'PUT' : !want.has(id) && have.has(id) ? 'DELETE' : null;
     if (!method) continue;
-    const response = await discord(method, `/guilds/${guild}/members/${discordId}/roles/${id}`);
+    const response = await discord(method, `/guilds/${guild}/members/${discordId}/roles/${id}`, SYNC);
     // 403: the bot lacks Manage Roles, or its role sits below this one.
     if (!response.ok) throw new DiscordError(response.status, `${method} role ${id} for ${discordId}: ${await response.text()}`);
   }

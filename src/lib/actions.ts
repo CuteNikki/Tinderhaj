@@ -11,6 +11,7 @@ import prisma from '@/lib/prisma';
 import { MAX_PROFILES } from '@/constants/auth';
 import { PROFILE_COUNT_TAG, QUERIES } from '@/lib/queries';
 import { BAN_REASON_MAX, banExpiry, isBanDuration, isBanned } from '@/lib/bans';
+import { announceNewSharkLater } from '@/lib/discord-feed';
 import { clearDiscordRolesLater, syncDiscordRoles, syncDiscordRolesLater, type DiscordSync } from '@/lib/discord-roles';
 import { HEARTS_PER_DAY, liveProfileWhere } from '@/lib/hearts';
 import { REPORTS_PER_DAY, reportSchema } from '@/lib/reports';
@@ -325,12 +326,16 @@ export async function verifyProfile({ profileId }: { profileId: string }) {
 
   if (!isModerator(session.user.role)) return false;
 
+  // Editing a verified shark sends it back for review but keeps when it was first verified, so a shark
+  // without one is new to Tinderhaj (or was unverified, as a mistake), and gets posted on Discord.
+  const before = await prisma.profile.findUnique({ where: { id: profileId }, select: { verifiedAt: true } });
   const { userId } = await prisma.profile.update({
     where: { id: profileId },
     data: { status: 'VERIFIED', rejectedFields: [], rejectionNote: null, verifiedAt: new Date() },
     select: { userId: true },
   });
   syncDiscordRolesLater(userId);
+  if (!before?.verifiedAt) announceNewSharkLater(profileId);
 
   revalidatePath('/moderation/verification');
   revalidatePath('/dashboard/profiles');
