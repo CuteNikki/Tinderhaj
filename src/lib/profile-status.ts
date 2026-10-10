@@ -16,25 +16,25 @@ export function isFreshProfile(verifiedAt: Date | null, createdAt: Date) {
 export const PROFILE_STATUS_META: Record<ProfileStatus, { label: string; badgeClassName: string; icon: typeof ClockIcon; description: string }> = {
   CREATED: {
     label: 'Draft',
-    badgeClassName: 'bg-slate-600 text-white',
+    badgeClassName: 'bg-slate-600 dark:bg-slate-600 text-white',
     icon: FileIcon,
     description: 'Saved as a draft. Submit it for review when you\u2019re ready to go live.',
   },
   PENDING: {
     label: 'Pending Review',
-    badgeClassName: 'bg-amber-700 text-white',
+    badgeClassName: 'bg-amber-700 dark:bg-amber-700 text-white',
     icon: ClockIcon,
     description: 'Waiting on a moderator to verify it before it shows up in discovery.',
   },
   VERIFIED: {
     label: 'Verified',
-    badgeClassName: 'bg-emerald-700 text-white',
+    badgeClassName: 'bg-emerald-700 dark:bg-emerald-700 text-white',
     icon: BadgeCheckIcon,
     description: 'Live in discovery. Editing it will send it back for re-verification.',
   },
   REJECTED: {
     label: 'Rejected',
-    badgeClassName: 'bg-red-700 text-white',
+    badgeClassName: 'bg-red-700 dark:bg-red-700 text-white',
     icon: XCircleIcon,
     description: 'A moderator rejected this profile. Edit it and resubmit for review.',
   },
