@@ -23,7 +23,7 @@ export default function DiscoveryError() {
   }
 
   return (
-    <div className='bg-background flex flex-1 items-center justify-center px-6 py-40'>
+    <div className='flex flex-1 items-center justify-center px-6 py-40'>
       <div className='flex max-w-md flex-col items-center gap-4 text-center'>
         <h1 className='text-2xl font-bold'>Discovery is temporarily unavailable</h1>
         <p className='text-muted-foreground text-sm'>The profiles could not be loaded right now. Try again in a moment.</p>

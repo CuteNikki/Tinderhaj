@@ -7,17 +7,12 @@ import { motion } from 'motion/react';
 import { after, bob, ringIn, sharkHover, sink, spring, swimIn } from '@/lib/motion';
 
 import { HeroBadge } from '@/components/common/hero-badge';
-import { Ocean } from '@/components/common/ocean';
+import { HeroWater } from '@/components/common/hero-water';
 
 export function DiscoveryHero() {
   return (
-    <section data-water='band' data-floor='card' className='relative isolate overflow-hidden px-4 pt-28 pb-24 sm:px-5 md:pt-32 md:pb-28 lg:px-8'>
-      {/* The layout's band of water, carried on from the page before; this one only where browsers can't fit that to the hero */}
-      <div className='own-water'>
-        <Ocean into='fill-card' />
-      </div>
-      {/* Where the band of water across the top ends (see PageBand): the waves' height above the bottom, so they roll in where this hero ends */}
-      <div id='page-header' aria-hidden='true' className='absolute inset-x-0 bottom-22 sm:bottom-26' />
+    <section data-water='band' data-tone='card' className='relative isolate overflow-hidden px-4 pt-28 pb-24 sm:px-5 md:pt-32 md:pb-28 lg:px-8'>
+      <HeroWater floor='card' />
       <div className='relative z-10 container mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[minmax(0,1fr)_22rem]'>
         <div className='on-water max-w-3xl'>
           <HeroBadge>Discovery deck</HeroBadge>

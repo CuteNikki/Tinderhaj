@@ -9,7 +9,8 @@ import Link from 'next/link';
 import { ArrowLeft, Compass, Radio, Search } from 'lucide-react';
 
 import { HeroBadge } from '@/components/common/hero-badge';
-import { Ocean, glass, sunlit } from '@/components/common/ocean';
+import { HeroWater } from '@/components/common/hero-water';
+import { glass, sunlit } from '@/components/common/ocean';
 import { DiscoveryLink } from '@/components/discovery/link';
 import { Button } from '@/components/ui/button';
 
@@ -19,12 +20,7 @@ export function NotFoundPage() {
   return (
     // Flowing into the sections below (see app/not-found.tsx)
     <section data-water='band' data-floor='muted' className='relative isolate overflow-hidden px-4 sm:px-5 lg:px-8'>
-      {/* The layout's band of water, carried on from the page before; this one only where browsers can't fit that to the hero */}
-      <div className='own-water'>
-        <Ocean into='fill-muted' />
-      </div>
-      {/* Where the band of water across the top ends (see PageBand): the waves' height above the bottom, so they roll in where this hero ends */}
-      <div id='page-header' aria-hidden='true' className='absolute inset-x-0 bottom-22 sm:bottom-26' />
+      <HeroWater floor='muted' />
 
       <div className='container mx-auto grid max-w-7xl items-center gap-10 pt-20 pb-32 md:grid-cols-[0.9fr_1.1fr] lg:gap-16 lg:pt-24 lg:pb-36'>
         <div className='on-water order-2 max-w-xl md:order-1'>

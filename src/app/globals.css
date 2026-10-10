@@ -332,29 +332,49 @@
   text-shadow: none;
 }
 
-/* Shown as the page asks (see PageWater): the page showing, that is, not one Next keeps hidden to go back to. */
+/*
+ * Shown as the page asks (see PageWater). The band's script copies what the
+ * page showing asks for onto main (data-page-water, -floor and -tone, see
+ * PageBand), passing over pages Next keeps hidden to go back to. Until it has,
+ * the page is the only one there, so it's read from the page itself. Never by
+ * testing for those hidden pages' inline display: a selector that reads style
+ * attributes has the whole page restyled every time an animation writes one.
+ */
 .page-band {
   display: none;
 }
 
-main:has([data-water]:not([style*='display: none'] *)) > .page-band {
+main:not([data-page-water]):has([data-water]) > .page-band,
+main[data-page-water] > .page-band {
   display: block;
 }
 
 /*
- * A band page set on muted (`data-tone`), and the band's waves flowing into
- * it. On main rather than the page, as main draws its background beneath the
- * band, where the page's own would cover it.
+ * A band page set on muted or card (`data-tone`), and the band's waves
+ * flowing into it. On main rather than the page, as main draws its background
+ * beneath the band, where the page's own would cover it. So it shows under the
+ * waves even before the page below has come in, or while the band is still
+ * moving to fit a taller header, rather than the background showing there.
  */
 .page-band {
   --band-floor: var(--background);
 }
 
-main:has([data-water='band'][data-tone='muted']:not([style*='display: none'] *)) {
+main:not([data-page-water]):has([data-water='band'][data-tone='muted']),
+main[data-page-water='band'][data-page-tone='muted'] {
   background-color: var(--muted);
 
   > .page-band {
     --band-floor: var(--muted);
+  }
+}
+
+main:not([data-page-water]):has([data-water='band'][data-tone='card']),
+main[data-page-water='band'][data-page-tone='card'] {
+  background-color: var(--card);
+
+  > .page-band {
+    --band-floor: var(--card);
   }
 }
 
@@ -385,14 +405,11 @@ main:has([data-water='band'][data-tone='muted']:not([style*='display: none'] *))
 
 /*
  * The color the band's waves flow into, for a hero followed by a section of
- * another color (Home, Discovery). Unlike data-tone, the page stays as it is.
+ * another color (Home, the 404 page). Unlike data-tone, the page stays as it is.
  */
-main:has([data-water='band'][data-floor='muted']:not([style*='display: none'] *)) > .page-band {
+main:not([data-page-water]):has([data-water='band'][data-floor='muted']) > .page-band,
+main[data-page-water='band'][data-page-floor='muted'] > .page-band {
   --band-floor: var(--muted);
-}
-
-main:has([data-water='band'][data-floor='card']:not([style*='display: none'] *)) > .page-band {
-  --band-floor: var(--card);
 }
 
 /*
@@ -400,7 +417,8 @@ main:has([data-water='band'][data-floor='card']:not([style*='display: none'] *))
  * stretched down to the footer and flowing into it. The same band, so going
  * to or from one of these it moves to fit as it does between any two pages.
  */
-main:has([data-water='full']:not([style*='display: none'] *)) > .page-band {
+main:not([data-page-water]):has([data-water='full']) > .page-band,
+main[data-page-water='full'] > .page-band {
   --band-floor: var(--floor);
   bottom: 0;
   height: auto;

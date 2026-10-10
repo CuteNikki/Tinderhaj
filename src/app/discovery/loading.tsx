@@ -19,7 +19,7 @@ function DiscoveryFilterSkeleton() {
 /** Discovery's profiles while they load; the hero above them is already there (see layout). */
 export default function DiscoveryLoading() {
   return (
-    <section className='bg-card text-card-foreground w-full flex-1 px-4 pb-8 sm:px-5 lg:px-8' aria-busy='true' aria-label='Loading'>
+    <section className='text-card-foreground w-full flex-1 px-4 pb-8 sm:px-5 lg:px-8' aria-busy='true' aria-label='Loading'>
       <div className='container mx-auto max-w-7xl'>
         <div className='-mt-8 mb-4'>
           <DiscoveryFilterSkeleton />
