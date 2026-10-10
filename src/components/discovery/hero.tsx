@@ -11,8 +11,8 @@ import { HeroWater } from '@/components/common/hero-water';
 
 export function DiscoveryHero() {
   return (
-    <section data-water='band' data-tone='card' className='relative isolate overflow-hidden px-4 pt-28 pb-24 sm:px-5 md:pt-32 md:pb-28 lg:px-8'>
-      <HeroWater floor='card' />
+    <section data-water='band' data-tone='muted' className='relative isolate overflow-hidden px-4 pt-28 pb-24 sm:px-5 md:pt-32 md:pb-28 lg:px-8'>
+      <HeroWater floor='muted' />
       <div className='relative z-10 container mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[minmax(0,1fr)_22rem]'>
         <div className='on-water max-w-3xl'>
           <HeroBadge>Discovery deck</HeroBadge>

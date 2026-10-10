@@ -137,26 +137,27 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
+  /* A hint of the water's blue, less than the water itself so the waves still stand out, cards a touch lighter than the page so they lift off it */
+  --background: oklch(0.986 0.007 240);
   --foreground: oklch(0.19 0.04 255);
-  --card: oklch(0.985 0.002 245);
+  --card: oklch(0.996 0.004 240);
   --card-foreground: oklch(0.19 0.04 255);
-  --popover: oklch(1 0 0);
+  --popover: oklch(0.996 0.004 240);
   --popover-foreground: oklch(0.19 0.04 255);
   --primary: oklch(0.52 0.18 245);
   --primary-foreground: oklch(0.98 0.01 245);
   /* For small text on primary's own tint (badges): primary isn't dark enough to read on it in light mode */
   --primary-strong: oklch(0.46 0.17 245);
-  --secondary: oklch(0.95 0.008 240);
+  --secondary: oklch(0.95 0.014 240);
   --secondary-foreground: oklch(0.24 0.025 245);
-  --muted: oklch(0.965 0.006 245);
+  --muted: oklch(0.962 0.012 240);
   --muted-foreground: oklch(0.42 0.03 245);
-  --accent: oklch(0.965 0.006 245);
+  --accent: oklch(0.953 0.014 240);
   --accent-foreground: oklch(0.24 0.025 245);
   /* Tailwind's red-700, dark enough to read on its own tint (Delete buttons, what needs fixing) */
   --destructive: oklch(0.505 0.213 27.518);
-  --border: oklch(0.91 0.014 245);
-  --input: oklch(0.91 0.014 245);
+  --border: oklch(0.9 0.018 242);
+  --input: oklch(0.9 0.018 242);
   --ring: oklch(0.7 0.06 245);
   --chart-1: oklch(0.809 0.105 251.813);
   --chart-2: oklch(0.623 0.214 259.815);
@@ -164,13 +165,13 @@
   --chart-4: oklch(0.488 0.243 264.376);
   --chart-5: oklch(0.424 0.199 265.638);
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0.004 245);
+  --sidebar: oklch(0.992 0.005 240);
   --sidebar-foreground: oklch(0.19 0.04 255);
   --sidebar-primary: oklch(0.546 0.245 262.881);
   --sidebar-primary-foreground: oklch(0.97 0.014 254.604);
-  --sidebar-accent: oklch(0.965 0.006 245);
+  --sidebar-accent: oklch(0.953 0.014 240);
   --sidebar-accent-foreground: oklch(0.24 0.025 245);
-  --sidebar-border: oklch(0.91 0.014 245);
+  --sidebar-border: oklch(0.9 0.018 242);
   --sidebar-ring: oklch(0.7 0.06 245);
 
   /* The water the home page is set in, like the shared images (see lib/og.tsx):
@@ -355,7 +356,7 @@ main[data-page-water] > .page-band {
 }
 
 /*
- * A band page set on muted or card (`data-tone`), and the band's waves
+ * A band page set on muted (`data-tone`), and the band's waves
  * flowing into it. On main rather than the page, as main draws its background
  * beneath the band, where the page's own would cover it. So it shows under the
  * waves even before the page below has come in, or while the band is still
@@ -371,15 +372,6 @@ main[data-page-water='band'][data-page-tone='muted'] {
 
   > .page-band {
     --band-floor: var(--muted);
-  }
-}
-
-main:not([data-page-water]):has([data-water='band'][data-tone='card']),
-main[data-page-water='band'][data-page-tone='card'] {
-  background-color: var(--card);
-
-  > .page-band {
-    --band-floor: var(--card);
   }
 }
 
