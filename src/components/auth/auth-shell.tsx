@@ -26,8 +26,8 @@ export function AuthShell({
   footer?: React.ReactNode;
 }) {
   return (
-    // Set in the water from the layout (see PageWater), so it carries on from one of these pages to the next
-    <div data-water='full' className={`${AUTH_HEIGHT} relative flex flex-1 items-center justify-center px-4 py-28`}>
+    // Set in the water from the layout (see PageWater): the band every page's header is in, stretched to fit it all, so going to or from it the water carries on and moves to fit
+    <div id='page-header' data-water='full' className={`${AUTH_HEIGHT} relative flex flex-1 items-center justify-center px-4 py-28`}>
       <div className='on-water relative z-10 flex w-full max-w-md flex-col items-center'>
         <motion.div initial='hidden' animate='visible' variants={popIn} transition={after(0.05, spring.pop)}>
           <Link href='/' className='hover:animate-wiggle mb-6 flex items-center gap-2'>

@@ -333,13 +333,11 @@
 }
 
 /* Shown as the page asks (see PageWater): the page showing, that is, not one Next keeps hidden to go back to. */
-.water-full,
 .page-band {
   display: none;
 }
 
-main:has([data-water='full']:not([style*='display: none'] *)) > .water-full,
-main:has([data-water='band']:not([style*='display: none'] *)) > .page-band {
+main:has([data-water]:not([style*='display: none'] *)) > .page-band {
   display: block;
 }
 
@@ -395,6 +393,18 @@ main:has([data-water='band'][data-floor='muted']:not([style*='display: none'] *)
 
 main:has([data-water='band'][data-floor='card']:not([style*='display: none'] *)) > .page-band {
   --band-floor: var(--card);
+}
+
+/*
+ * A page set in the water as a whole (signing in and the like): the band,
+ * stretched down to the footer and flowing into it. The same band, so going
+ * to or from one of these it moves to fit as it does between any two pages.
+ */
+main:has([data-water='full']:not([style*='display: none'] *)) > .page-band {
+  --band-floor: var(--floor);
+  bottom: 0;
+  height: auto;
+  margin-bottom: 0;
 }
 
 /* Center sonner's toast close button vertically, inset on the right edge, instead of hanging off the top-left corner */
