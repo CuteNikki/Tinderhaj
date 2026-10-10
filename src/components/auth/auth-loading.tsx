@@ -16,7 +16,7 @@ export function AuthLoading() {
       {/* A GIF rather than a video: it's see-through, so it swims in the water */}
       <Image unoptimized src='/blahajSpinSmall.gif' width={382} height={201} alt='' className='h-auto w-48 motion-reduce:hidden' />
       {/* Still, for those who ask for less motion */}
-      <Image unoptimized src='/blahajSmall.png' width={192} height={192} alt='' className='hidden h-auto w-32 motion-reduce:block' />
+      <Image unoptimized src='/blahajSmall.webp' width={192} height={192} alt='' className='hidden h-auto w-32 motion-reduce:block' />
       <span className={`${glass} rounded-full px-3 py-2 text-xs font-semibold shadow-lg`}>Swimming over…</span>
     </div>
   );

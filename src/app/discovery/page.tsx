@@ -12,6 +12,7 @@ import { STAGGER } from '@/lib/motion';
 
 import { Eyebrow } from '@/components/common/heading';
 import { DiscoveryFilter } from '@/components/discovery/filter';
+import { KeepSeed } from '@/components/discovery/keep-seed';
 import { DiscoveryNoResults } from '@/components/discovery/no-results';
 import { DiscoveryPagination } from '@/components/discovery/pagination';
 import { DiscoveryProfile } from '@/components/discovery/profile';
@@ -53,15 +54,10 @@ export default async function DiscoveryPage({ searchParams }: { searchParams: Pr
   await connection();
 
   const { q: query, p: page, t: take, s: seedParam } = searchParamsSchema.parse(await searchParams);
-  // Arriving without a shuffle, e.g. from a bookmark: a fresh one, kept in the URL from here on. This renders once per
-  // request on the server, so a random seed is what's meant; 1 and up, as `s` must be positive.
-  if (!seedParam) {
-    // eslint-disable-next-line react-hooks/purity
-    const seed = 1 + Math.floor(Math.random() * (Number.MAX_SAFE_INTEGER - 1));
-    const params = new URLSearchParams({ q: query, p: String(page), t: String(take), s: String(seed) });
-    redirect(`/discovery?${params}`);
-  }
-  const seed = seedParam;
+  // Arriving without a shuffle, e.g. from a bookmark: a fresh one, which KeepSeed puts in the URL from here on. This
+  // renders once per request on the server, so a random seed is what's meant; 1 and up, as `s` must be positive.
+  // eslint-disable-next-line react-hooks/purity
+  const seed = seedParam ?? 1 + Math.floor(Math.random() * (Number.MAX_SAFE_INTEGER - 1));
 
   const { profiles, totalProfiles } = await withTimeout(
     query?.length ? QUERIES.getProfilesWithQuery(query, page, take, seed) : QUERIES.getProfiles(page, take, seed),
@@ -86,6 +82,7 @@ export default async function DiscoveryPage({ searchParams }: { searchParams: Pr
 
   return (
     <section className='text-card-foreground w-full flex-1 px-4 pb-8 sm:px-5 lg:px-8'>
+      {!seedParam && <KeepSeed seed={seed} />}
       <div className='container mx-auto max-w-7xl'>
         <div className='-mt-8 mb-4'>
           <DiscoveryFilter page={page} query={query} seed={seed} take={take} />

@@ -51,7 +51,7 @@ export function DiscoveryHero() {
             className='relative z-10'
           >
             <motion.div {...bob.shark}>
-              <Image unoptimized priority width={320} height={320} src='/blahajSmall.png' alt='Two Blåhaj sharing a hug' className='h-auto w-72' />
+              <Image unoptimized priority width={320} height={320} src='/blahajSmall.webp' alt='Two Blåhaj sharing a hug' className='h-auto w-72' />
             </motion.div>
           </motion.div>
         </div>
