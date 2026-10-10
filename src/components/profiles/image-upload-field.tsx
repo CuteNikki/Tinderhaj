@@ -66,17 +66,24 @@ export function ImageUploadField({
             appearance={{
               container: cn(
                 'absolute inset-0 flex items-center justify-center',
-                value && 'opacity-0 bg-black/50 transition-opacity group-hover:opacity-100',
+                // Shown on hover, and when it has keyboard focus, which can't hover
+                value && 'opacity-0 bg-black/50 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100',
                 progress !== null && 'pointer-events-none opacity-0',
               ),
               button: 'h-full w-full rounded-none bg-transparent shadow-none ring-0 text-muted-foreground gap-1 text-xs font-medium after:hidden',
               allowedContent: 'hidden',
             }}
             content={{
+              // Coloured here rather than on the button, where UploadThing's own white wins: muted on the empty grey, white over a picture
               button: (
                 <>
-                  <ImageUpIcon className={cn('shrink-0', value ? 'text-white' : '', shape === 'circle' ? 'h-4 w-4' : 'h-5 w-5')} />
-                  {shape === 'banner' && <span className={value ? 'text-white' : ''}>{value ? 'Change banner' : 'Upload banner'}</span>}
+                  <ImageUpIcon className={cn('shrink-0', value ? 'text-white' : 'text-muted-foreground', shape === 'circle' ? 'h-4 w-4' : 'h-5 w-5')} />
+                  {shape === 'banner' ? (
+                    <span className={value ? 'text-white' : 'text-muted-foreground'}>{value ? 'Change banner' : 'Upload banner'}</span>
+                  ) : (
+                    // Only an icon shows, so this names it for screen readers
+                    <span className='sr-only'>{`${value ? 'Change' : 'Upload'} ${label.toLowerCase()}`}</span>
+                  )}
                 </>
               ),
             }}

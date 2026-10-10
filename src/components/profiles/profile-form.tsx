@@ -212,7 +212,7 @@ export function ProfileForm({ username, profile }: { username: string; profile?:
           {profile?.status === 'VERIFIED' && (
             // On small screens, where the save bar has no room to say it
             <ScrollReveal delay={CONTENT_DELAY} className='sm:hidden'>
-              <p className='flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-sm text-amber-600 dark:text-amber-400'>
+              <p className='flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-sm text-amber-700 dark:text-amber-400'>
                 <TriangleAlertIcon className='mt-0.5 size-4 shrink-0' aria-hidden='true' />
                 This profile is live in discovery. Saving changes takes it out until you send it for review again and it&apos;s verified.
               </p>
@@ -528,7 +528,7 @@ export function ProfileForm({ username, profile }: { username: string; profile?:
           >
             {profile?.status === 'VERIFIED' && !unchanged && (
               // Live: saving takes it out (and asks first). On small screens it's said at the top instead.
-              <p className='hidden items-center gap-1.5 text-sm leading-tight text-amber-600 sm:flex dark:text-amber-400'>
+              <p className='hidden items-center gap-1.5 text-sm leading-tight text-amber-700 sm:flex dark:text-amber-400'>
                 <TriangleAlertIcon className='size-4 shrink-0' aria-hidden='true' />
                 Saving takes it out of discovery
               </p>

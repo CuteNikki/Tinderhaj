@@ -6,8 +6,13 @@ import { CheckIcon, ChevronRightIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
-function DropdownMenu({ ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Root>) {
-  return <DropdownMenuPrimitive.Root data-slot='dropdown-menu' {...props} />;
+/**
+ * Not modal unless asked: a small menu doesn't hide the rest of the page from
+ * screen readers, stop clicks on it, or lock scrolling (which shifts the page
+ * over where the scrollbar was).
+ */
+function DropdownMenu({ modal = false, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Root>) {
+  return <DropdownMenuPrimitive.Root data-slot='dropdown-menu' modal={modal} {...props} />;
 }
 
 function DropdownMenuPortal({ ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Portal>) {

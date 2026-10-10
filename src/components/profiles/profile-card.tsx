@@ -88,7 +88,7 @@ export function ProfileCard({ profile }: { profile: ProfileWithOwner }) {
           </div>
           <div className='min-w-0 flex-1 pt-4'>
             <div className='flex flex-wrap items-center gap-x-2'>
-              <h3 className='text-foreground max-w-full truncate text-xl font-black tracking-tight'>{profile.displayName}</h3>
+              <h2 className='text-foreground max-w-full truncate text-xl font-black tracking-tight'>{profile.displayName}</h2>
               {profile.pronouns && <span className='text-muted-foreground text-sm'>({profile.pronouns})</span>}
             </div>
             <p className='text-muted-foreground truncate text-sm'>@{profile.user.username}</p>
@@ -122,8 +122,9 @@ export function ProfileCard({ profile }: { profile: ProfileWithOwner }) {
             {profile.rejectedFields.length > 0 && (
               <div className='flex flex-wrap items-center gap-1.5'>
                 <span className='font-semibold'>Needs fixing:</span>
+                {/* Solid, as a tinted one on the box's own tint is too faint to read */}
                 {profile.rejectedFields.map((field) => (
-                  <Badge key={field} variant='destructive' className='rounded-full text-xs font-semibold'>
+                  <Badge key={field} className='bg-destructive dark:bg-destructive rounded-full text-xs font-semibold text-white'>
                     {profileFieldLabel(field)}
                   </Badge>
                 ))}

@@ -92,6 +92,7 @@ export default async function UserSharksPage({ params }: PageProps<'/u/[username
               <ScrollReveal key={shark.id} className='h-full' delay={CONTENT_DELAY + index * STAGGER} scrollDelay={(index % 3) * STAGGER} variant='card'>
                 <DiscoveryProfile
                   profile={shark}
+                  heading='h2'
                   action={
                     <div className='flex items-center gap-1'>
                       <ShareButton shark={{ id: shark.id, displayName: shark.displayName, user: shark.user }} />

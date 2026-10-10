@@ -113,6 +113,7 @@ export default async function VerifyPage({ searchParams }: PageProps<'/moderatio
                 >
                   <DiscoveryProfile
                     profile={profile}
+                    heading='h2'
                     action={<UnverifyButton profile={{ id: profile.id, displayName: profile.displayName }} verifiedAt={profile.verifiedAt?.toISOString()} />}
                   />
                 </ScrollReveal>

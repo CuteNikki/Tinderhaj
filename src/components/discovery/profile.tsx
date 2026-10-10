@@ -16,18 +16,22 @@ import { Card, CardContent } from '@/components/ui/card';
  * A shark's card. `showStatus` shows where it is in review instead of whether
  * it's new, for moderators; `action` floats in the bottom-right corner, e.g. a
  * heart. `lift: false` keeps it still under the pointer, for a card that's a
- * popup of its own rather than one among many.
+ * popup of its own rather than one among many. `heading` is the level of its
+ * name: h2 on pages where cards come straight under the page's title, rather
+ * than under a section's.
  */
 export function DiscoveryProfile({
   profile,
   showStatus = false,
   action,
   lift = true,
+  heading: Heading = 'h3',
 }: {
   profile: PublicProfile;
   showStatus?: boolean;
   action?: React.ReactNode;
   lift?: boolean;
+  heading?: 'h2' | 'h3';
 }) {
   const status = PROFILE_STATUS_META[profile.status];
 
@@ -59,7 +63,7 @@ export function DiscoveryProfile({
           </div>
           <div className='min-w-0 flex-1 pt-4'>
             <div className='flex flex-wrap items-center gap-x-2'>
-              <h3 className='text-foreground max-w-full truncate text-xl font-black tracking-tight'>{profile.displayName}</h3>
+              <Heading className='text-foreground max-w-full truncate text-xl font-black tracking-tight'>{profile.displayName}</Heading>
               {profile.pronouns && <span className='text-muted-foreground text-sm'>({profile.pronouns})</span>}
             </div>
             <p className='text-muted-foreground truncate text-sm'>
