@@ -3,10 +3,12 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 
 import { homeMetadata } from '@/constants/metadata';
+import { STAGGER } from '@/lib/motion';
 
 import { GuideStep } from '@/components/home/guide-step';
 import { Hero } from '@/components/home/hero';
 import { ProfileCount } from '@/components/home/profile-count';
+import { ScrollReveal } from '@/components/home/scroll-reveal';
 import { FreshSharks } from '@/components/sections/fresh-sharks';
 import { ReadyWhenYouAre } from '@/components/sections/ready-when-you-are';
 import { Section } from '@/components/sections/section';
@@ -35,10 +37,13 @@ export default function Home() {
             <GuideStep key={number} number={number} title={title} copy={copy} icon={icon} />
           ))}
         </div>
-        <Link href='/guide' className='text-primary mt-6 inline-flex items-center gap-1 text-sm font-semibold hover:underline'>
-          Read the whole guide
-          <ArrowRight className='size-3.5' aria-hidden='true' />
-        </Link>
+        {/* After the steps, as a fourth would come */}
+        <ScrollReveal className='mt-6' scrollDelay={GUIDE.length * STAGGER}>
+          <Link href='/guide' className='text-primary inline-flex items-center gap-1 text-sm font-semibold hover:underline'>
+            Read the whole guide
+            <ArrowRight className='size-3.5' aria-hidden='true' />
+          </Link>
+        </ScrollReveal>
       </Section>
       <FreshSharks tone='background' />
       <ReadyWhenYouAre />
