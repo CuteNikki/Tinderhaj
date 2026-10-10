@@ -11,6 +11,7 @@ import prisma from '@/lib/prisma';
 import { MAX_PROFILES } from '@/constants/auth';
 import { PROFILE_COUNT_TAG, QUERIES } from '@/lib/queries';
 import { BAN_REASON_MAX, banExpiry, isBanDuration, isBanned } from '@/lib/bans';
+import { clearDiscordRolesLater, syncDiscordRoles, syncDiscordRolesLater, type DiscordSync } from '@/lib/discord-roles';
 import { HEARTS_PER_DAY, liveProfileWhere } from '@/lib/hearts';
 import { REPORTS_PER_DAY, reportSchema } from '@/lib/reports';
 import { canBan, canManageAccount, isAdmin, isRole } from '@/lib/roles';
@@ -145,6 +146,7 @@ export async function setUserRole(userId: string, role: string) {
   await prisma.user.update({ where: { id: userId }, data: { role } });
 
   revalidateUser(userId);
+  syncDiscordRolesLater(userId);
 }
 
 /** Signs them out everywhere and stops them signing in until the ban ends or is lifted. */
@@ -169,6 +171,7 @@ export async function banUser(userId: string, input: { reason: string; duration:
   revalidateUser(userId);
   revalidatePath('/discovery');
   updateTag(PROFILE_COUNT_TAG);
+  syncDiscordRolesLater(userId);
 }
 
 export async function unbanUser(userId: string) {
@@ -185,6 +188,7 @@ export async function unbanUser(userId: string) {
   revalidateUser(userId);
   revalidatePath('/discovery');
   updateTag(PROFILE_COUNT_TAG);
+  syncDiscordRolesLater(userId);
 }
 
 export async function signOutUserEverywhere(userId: string) {
@@ -215,7 +219,10 @@ export async function deleteUserAccount(userId: string) {
 
   if (!canManageAccount(found.session.user.role, found.target.role)) return { message: 'Only admins can delete accounts.' };
 
+  // Their Discord connection goes with the account, so the roles it earned go too.
+  const discord = await prisma.account.findFirst({ where: { userId, providerId: 'discord' }, select: { accountId: true } });
   await prisma.user.delete({ where: { id: userId } });
+  if (discord) clearDiscordRolesLater(discord.accountId);
 
   revalidatePath('/moderation/users');
   revalidatePath('/discovery');
@@ -310,6 +317,7 @@ export async function deleteProfile({ profileId }: { profileId: string }) {
 
   revalidatePath('/dashboard/profiles');
   updateTag(PROFILE_COUNT_TAG);
+  syncDiscordRolesLater(session.user.id);
 }
 
 export async function verifyProfile({ profileId }: { profileId: string }) {
@@ -317,10 +325,12 @@ export async function verifyProfile({ profileId }: { profileId: string }) {
 
   if (!isModerator(session.user.role)) return false;
 
-  await prisma.profile.update({
+  const { userId } = await prisma.profile.update({
     where: { id: profileId },
     data: { status: 'VERIFIED', rejectedFields: [], rejectionNote: null, verifiedAt: new Date() },
+    select: { userId: true },
   });
+  syncDiscordRolesLater(userId);
 
   revalidatePath('/moderation/verification');
   revalidatePath('/dashboard/profiles');
@@ -343,6 +353,8 @@ export async function unverifyProfile({ profileId }: { profileId: string }) {
     data: { status: 'PENDING', verifiedAt: null, submittedAt: new Date() },
   });
   if (!count) return { message: 'That profile isn’t verified anymore.' };
+  const { userId } = await prisma.profile.findUniqueOrThrow({ where: { id: profileId }, select: { userId: true } });
+  syncDiscordRolesLater(userId);
 
   revalidatePath('/moderation/verification');
   revalidatePath('/moderation/users', 'layout');
@@ -360,10 +372,12 @@ export async function rejectProfile(unsafeData: z.infer<typeof rejectProfileSche
 
   if (!isModerator(session.user.role)) return { message: 'Unable to reject this profile.' };
 
-  await prisma.profile.update({
+  const { userId } = await prisma.profile.update({
     where: { id: data.profileId },
     data: { status: 'REJECTED', rejectedFields: data.rejectedFields, rejectionNote: data.note ?? null },
+    select: { userId: true },
   });
+  syncDiscordRolesLater(userId);
 
   revalidatePath('/moderation/verification');
   revalidatePath('/dashboard/profiles');
@@ -391,6 +405,7 @@ export async function sendHeart({ fromProfileId, toProfileId }: { fromProfileId:
   // Sending twice does nothing.
   await prisma.heart.createMany({ data: { fromProfileId, toProfileId }, skipDuplicates: true });
   const back = await prisma.heart.count({ where: { fromProfileId: toProfileId, toProfileId: fromProfileId } });
+  if (back) syncDiscordRolesLater(session.user.id, to.userId);
 
   revalidatePath('/discovery');
   revalidatePath('/dashboard/hearts');
@@ -403,6 +418,9 @@ export async function takeBackHeart({ fromProfileId, toProfileId }: { fromProfil
 
   const { count } = await prisma.heart.deleteMany({ where: { fromProfileId, toProfileId, from: { userId: session.user.id } } });
   if (!count) return { message: 'That heart was already taken back.' };
+  // It may have ended a match, for either owner.
+  const to = await prisma.profile.findUnique({ where: { id: toProfileId }, select: { userId: true } });
+  syncDiscordRolesLater(session.user.id, ...(to ? [to.userId] : []));
 
   revalidatePath('/discovery');
   revalidatePath('/dashboard/hearts');
@@ -474,4 +492,10 @@ export async function handleReport({ reportId, outcome }: { reportId: string; ou
   if (!count) return { message: 'Someone already handled this report.' };
 
   revalidatePath('/moderation/reports');
+}
+
+/** The Refresh button on the account page: their Discord roles, brought up to date now. */
+export async function refreshDiscordRoles(): Promise<DiscordSync> {
+  const session = await requireUser();
+  return syncDiscordRoles(session.user.id);
 }

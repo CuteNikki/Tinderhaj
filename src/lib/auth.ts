@@ -19,6 +19,7 @@ import {
 } from '@/constants/auth';
 import { BAN_NOTICE_COOKIE, BAN_NOTICE_MAX_AGE, signBanNotice } from '@/lib/ban-notice';
 import { isBanned } from '@/lib/bans';
+import { clearDiscordRolesLater, syncDiscordRolesLater } from '@/lib/discord-roles';
 import { sendDeleteAccountEmail, sendEmailChangeConfirmation, sendPasswordResetEmail, sendTwoFactorCode, sendVerificationEmail } from '@/lib/email';
 import { hashPassword, verifyPassword } from '@/lib/password-hasher';
 import { isAdmin } from '@/lib/roles';
@@ -207,6 +208,28 @@ export const auth = betterAuth({
         // Sign-up with a password already checked the username; this is for
         // providers. Their profile picture isn't used, so isn't kept.
         before: async (user) => ({ data: { ...user, name: await availableUsername(user.name, user.email), image: null } }),
+      },
+      delete: {
+        // Their Discord connection goes with the account, so the roles it earned go too.
+        before: async (user) => {
+          const discord = await prisma.account.findFirst({ where: { userId: user.id, providerId: 'discord' }, select: { accountId: true } });
+          if (discord) clearDiscordRolesLater(discord.accountId);
+        },
+      },
+    },
+    // Roles on the Discord server (see discord-roles): given as soon as Discord is
+    // connected, by signing up with it or from the account page, and taken back
+    // when it's disconnected.
+    account: {
+      create: {
+        after: async (account) => {
+          if (account.providerId === 'discord') syncDiscordRolesLater(account.userId);
+        },
+      },
+      delete: {
+        after: async (account) => {
+          if (account.providerId === 'discord') clearDiscordRolesLater(account.accountId);
+        },
       },
     },
   },

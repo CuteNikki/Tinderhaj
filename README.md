@@ -132,6 +132,15 @@ TWITCH_CLIENT_ID=""
 TWITCH_CLIENT_SECRET=""
 FACEBOOK_CLIENT_ID=""
 FACEBOOK_CLIENT_SECRET=""
+
+# Optional: roles on the Discord server for what people do on the site. Needs Discord sign-in above.
+DISCORD_BOT_TOKEN=""
+DISCORD_GUILD_ID=""
+DISCORD_ROLE_LINKED=""
+DISCORD_ROLE_VERIFIED=""
+DISCORD_ROLE_MATCHED=""
+DISCORD_ROLE_MODERATOR=""
+DISCORD_ROLE_ADMIN=""
 ```
 
 Notes:
@@ -144,6 +153,10 @@ Notes:
   - Apple's client secret is a signed JWT you generate from your Apple key, and it expires after at most six months. `APPLE_APP_BUNDLE_IDENTIFIER` is only needed for signing in from an iOS app.
   - X only shares the email address if the app asks for it ("Request email from users" in the X developer portal); without it, signing in with X fails.
   - Microsoft accepts both personal and work or school accounts.
+- Discord roles are optional, and need Discord sign-in. People who connect Discord get roles on the server for what they've done on the site: `Linked` for connecting at all, `Verified Shark Owner` for a verified shark, `Matched` for a match, `Site Moderator` for moderators and admins, and `Site Admin` for admins. They're given and taken back as those change, all of them while an account is banned, and each person can refresh theirs from Account Settings.
+  - In the same Discord application as sign-in, add a bot under **Bot** and copy its token into `DISCORD_BOT_TOKEN`. Invite it to the server with the **Manage Roles** permission (OAuth2 → URL Generator, scope `bot`).
+  - In the server's role list, drag the bot's role above every role it gives, or Discord refuses to let it give them.
+  - With Developer Mode on (Discord settings → Advanced), right-click the server and each role to copy their ids into `DISCORD_GUILD_ID` and the `DISCORD_ROLE_*` variables. A role left empty isn't given.
 
 ## Installation
 

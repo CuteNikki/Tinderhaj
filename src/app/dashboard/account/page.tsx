@@ -3,12 +3,14 @@ import type { Metadata } from 'next';
 import { accountMetadata } from '@/constants/metadata';
 import { getAccountSettings } from '@/lib/account';
 import { enabledProviders } from '@/lib/auth';
+import { discordRoleList, discordRolesEnabled } from '@/lib/discord-roles';
 import { requireUser } from '@/lib/session';
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 
 import { SettingsSection } from '@/components/common/settings-section';
 import { Eyebrow, PageTitle } from '@/components/common/heading';
 import { DeleteAccount } from '@/components/account/delete-account';
+import { DiscordRoles } from '@/components/account/discord-roles';
 import { EmailSettings } from '@/components/account/email-settings';
 import { LinkedAccounts } from '@/components/account/linked-accounts';
 import { MatchContactForm } from '@/components/account/match-contact-form';
@@ -28,6 +30,9 @@ export default async function AccountPage({ searchParams }: PageProps<'/dashboar
     userId: user.id,
     sessionId: session.id,
   });
+  const discordLinked = accounts.some((account) => account.providerId === 'discord');
+  // Only where Discord can be connected, or already is.
+  const discordRoles = discordRolesEnabled() && (discordLinked || enabledProviders.includes('discord')) ? await discordRoleList(user.id) : null;
 
   return (
     <div data-water='band' className='flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'>
@@ -63,6 +68,15 @@ export default async function AccountPage({ searchParams }: PageProps<'/dashboar
             <SettingsSection title='Sign-in methods' description='Connect other accounts to sign in with them too.' delay={CONTENT_DELAY + STAGGER}>
               <LinkedAccounts providers={enabledProviders} accounts={accounts} error={typeof error === 'string' ? error : undefined} />
             </SettingsSection>
+            {discordRoles && (
+              <SettingsSection
+                title='Discord roles'
+                description='Roles on the Tinderhaj Discord server for what you do here. They update by themselves; refresh if they look out of date.'
+                delay={CONTENT_DELAY + 2 * STAGGER}
+              >
+                <DiscordRoles roles={discordRoles} linked={discordLinked} />
+              </SettingsSection>
+            )}
             <SettingsSection title='Two-step sign-in' delay={CONTENT_DELAY + 2 * STAGGER}>
               <TwoFactorSettings method={twoFactor} hasPassword={hasPassword} trustedDevices={trustedDevices} />
             </SettingsSection>
