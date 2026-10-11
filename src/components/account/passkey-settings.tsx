@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 
 import { FingerprintIcon, Loader2Icon, Trash2Icon } from 'lucide-react';
 
-import { authClient } from '@/lib/auth-client';
+import { authClient, recentSignInMessage } from '@/lib/auth-client';
 
 import { useConfirm } from '@/components/common/confirm-dialog';
 import { LocalTime } from '@/components/common/local-time';
@@ -44,7 +44,10 @@ export function PasskeySettings({ passkeys }: { passkeys: Passkey[] }) {
       if ('code' in result.error && result.error.code === 'ERROR_CEREMONY_ABORTED') {
         return;
       }
-      return void toast.error(result.error.message ?? 'Unable to add a passkey!', { duration: 5000, position: 'top-center' });
+      return void toast.error(recentSignInMessage(result.error) ?? result.error.message ?? 'Unable to add a passkey!', {
+        duration: 5000,
+        position: 'top-center',
+      });
     }
     toast.success('Passkey added.', { duration: 5000, position: 'top-center' });
     router.refresh();

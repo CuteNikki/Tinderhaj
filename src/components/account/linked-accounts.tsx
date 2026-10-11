@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-import { authClient } from '@/lib/auth-client';
+import { authClient, recentSignInMessage } from '@/lib/auth-client';
 import { providerLabel, SOCIAL_PROVIDERS, type SocialProviderId } from '@/lib/providers';
 
 import { useConfirm } from '@/components/common/confirm-dialog';
@@ -77,7 +77,7 @@ export function LinkedAccounts({
     setPending(null);
 
     if (error) {
-      toast.error(error.code === 'SESSION_EXPIRED' ? 'For safety, sign out and back in, then try again.' : (error.message ?? 'Unable to disconnect!'), {
+      toast.error(recentSignInMessage(error) ?? error.message ?? 'Unable to disconnect!', {
         duration: 5000,
         position: 'top-center',
       });
