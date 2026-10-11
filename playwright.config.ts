@@ -31,6 +31,8 @@ export default defineConfig({
       // Emails go to a stand-in from global-setup.ts, not to Resend.
       RESEND_API_KEY: 're_e2e',
       RESEND_BASE_URL: MAIL_URL,
+      // Nothing posted or given on the real Discord server, whatever .env has: empty, it stays set, and the bot is off.
+      DISCORD_BOT_TOKEN: '',
     },
   },
 });
