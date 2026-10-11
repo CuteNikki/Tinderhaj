@@ -3,6 +3,7 @@ import { ArrowRight, Heart, Search, ShieldCheck } from 'lucide-react';
 import { sunlit } from '@/components/common/ocean';
 import { Stagger } from '@/components/common/stagger';
 import { DiscoveryLink } from '@/components/discovery/link';
+import { PeekingShark } from '@/components/sections/peeking-shark';
 import { Section } from '@/components/sections/section';
 import { Button } from '@/components/ui/button';
 
@@ -21,6 +22,7 @@ export function ReadyWhenYouAre({ id }: { id?: string }) {
       title='Your next great connection'
       highlight='is one heart away.'
       tone='card'
+      edge={<PeekingShark />}
       aside={
         <Button size='xl' className={sunlit} asChild>
           <DiscoveryLink>

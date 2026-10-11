@@ -9,7 +9,8 @@ const TONES = { muted: 'bg-muted', card: 'bg-card text-card-foreground', backgro
  * its second line in blue, and a note under it, all on the left, like every
  * other heading. `tone` is its background, so sections one after another can
  * take turns. `aside`, a button to end on or a picture, sits beside it all on
- * wide screens and under it on narrow ones.
+ * wide screens and under it on narrow ones. `edge`, something set across its
+ * top edge, on the right.
  */
 export function Section({
   id,
@@ -19,6 +20,7 @@ export function Section({
   note,
   tone = 'muted',
   aside,
+  edge,
   children,
 }: {
   id?: string;
@@ -28,6 +30,7 @@ export function Section({
   note?: string;
   tone?: keyof typeof TONES;
   aside?: React.ReactNode;
+  edge?: React.ReactNode;
   children: React.ReactNode;
 }) {
   const content = (
@@ -51,7 +54,13 @@ export function Section({
 
   return (
     // Inset like the pages they follow, so their edges line up
-    <section id={id} className={cn('text-foreground scroll-m-16 px-4 py-18 sm:px-5 lg:px-8', TONES[tone])}>
+    <section id={id} className={cn('text-foreground relative scroll-m-16 px-4 py-18 sm:px-5 lg:px-8', TONES[tone])}>
+      {edge && (
+        // Standing on the line, over what's above it
+        <div className='pointer-events-none absolute inset-x-0 bottom-full px-4 sm:px-5 lg:px-8'>
+          <div className='container mx-auto flex max-w-7xl justify-end pr-6'>{edge}</div>
+        </div>
+      )}
       <ScrollReveal>
         <div className='container mx-auto max-w-7xl'>
           {aside ? (
