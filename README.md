@@ -74,6 +74,7 @@ The product flow is centered on creating a profile for a shark, submitting it fo
 
 ```text
 .
+├── bot/                # The Discord bot, its own package (see Discord Bot)
 ├── generated/          # Prisma client, made by `prisma generate`
 ├── prisma/
 │   ├── schema.prisma
@@ -145,6 +146,9 @@ DISCORD_ROLE_ADMIN=""
 DISCORD_CHANNEL_NEW_SHARKS=""
 # Optional: a channel only moderators see, where sharks waiting for review are posted. Needs DISCORD_BOT_TOKEN.
 DISCORD_CHANNEL_REVIEW_QUEUE=""
+# Optional: the Discord bot in bot/ (see Discord Bot below).
+DISCORD_CHANNEL_JOIN_TO_CREATE=""
+DISCORD_CHANNEL_BUBBLE_CONTROLS=""
 ```
 
 Notes:
@@ -284,6 +288,29 @@ This app is designed for deployment on modern Node.js hosting platforms such as 
 - UploadThing credentials
 
 Better Auth rate limits sign-in, sign-up, and code requests per IP address in production. It reads the address from `x-forwarded-for`, which Vercel sets. Behind a proxy that doesn't, every visitor shares one limit.
+
+## Discord Bot
+
+`bot/` holds the Tinderhaj bot: the same bot as the role sync, new sharks feed and review queue, but running all the time, so it can see who joins voice channels and answer buttons and commands. It's built like [CuteNikki/DiscordBot](https://github.com/CuteNikki/DiscordBot/tree/v2) (a file per command, button, modal and event, loaded from their folders) on discord.js 14, and runs with Bun. It uses the site's database (`DATABASE_URL`) with the client generated from `prisma/schema.prisma`, where its own tables (`Bubble`, `BubbleSettings`) are too. It reads site data directly, but only changes its own tables: the site's data is left to the site's code, which keeps its cache, Discord roles and posts in step.
+
+- **Bubbles (join-to-create).** Joining the voice channel in `DISCORD_CHANNEL_JOIN_TO_CREATE` makes a voice channel of your own in the same category and takes you there; joining again while you have one takes you back to it.
+  - Its chat opens with a panel that shows the bubble as it is (owner, how many are in it, locked or open, hidden or visible) and is kept up to date. From it the owner can lock or hide it, change its name (what comes after the 🫧︱ every bubble starts with; left empty, it goes back to their display name) and user limit, pick who's let in even while it's locked or hidden and who's kept out, pop it, or pick someone in it to kick, keep out or hand it over to. `/bubble`, or the button the bot keeps in `DISCORD_CHANNEL_BUBBLE_CONTROLS` if that's set, shows the same panel from anywhere.
+  - A bubble remembers its owner's choices: their next one starts with the same name, limit, lock, visibility and lists.
+  - If the owner is gone for 30 seconds, the bubble goes to someone still there. Once everyone's left, it's deleted. Bubbles are only ever deleted if they're in the bot's database.
+  - Owners get no permissions on the channel themselves; the bot makes every change. A bubble's permissions are worked out from the category's and its settings, so changes made to a bubble's permissions by hand are undone at its next change. Staff (roles with Administrator, Manage Channels or Timeout Members) can always see and join bubbles, can't be kept out, and can change anyone's.
+- **`/shark member`** posts someone's verified sharks (or yours), and **`/shark random`** a random one, as links Discord shows as cards. It says the same for someone who hasn't connected Discord as for someone with no sharks.
+
+Setting it up:
+
+1. Set `SITE_URL` for the bot if the site isn't at `https://tinderhaj.com`, e.g. `http://localhost:3000` locally, so `/shark` links to it.
+2. Give the bot's role **Manage Channels**, **Manage Roles**, **Move Members**, **View Channel**, **Connect**, **Speak**, **Video**, **Send Messages**, **Embed Links** and **Read Message History** in the join-to-create category (it can only give owners what it has itself), and **View Channel**, **Send Messages** and **Read Message History** in the bubble controls channel. It needs no privileged intents.
+3. Copy the join-to-create voice channel's id into `DISCORD_CHANNEL_JOIN_TO_CREATE`, and optionally a text channel's into `DISCORD_CHANNEL_BUBBLE_CONTROLS`.
+4. Apply the site's migrations, which include the bot's tables (see Database Setup).
+5. Run it. Locally, `cd bot && bun install && bun run dev` reads the site's `.env` and uses the client the site generated. On a server, `cd bot && docker compose up -d --build` builds it from the repo root, generating the client from the site's schema, and reads `../.env` as well. The compose file joins the external `postgres_default` network, so `DATABASE_URL` can use the Postgres container's name as its host; take that out if your Postgres isn't a container on that network. Logs go to `bot/logs`.
+
+6. Register its commands on the server in `DISCORD_GUILD_ID`: `bun run register` in `bot/`, or `docker compose exec tinderhaj-bot bun run register` on the server. Discord keeps them, so this isn't done on start; run it again only when commands are added, removed or changed. It replaces what was there, so removed commands go too.
+
+`bun run typecheck` checks the bot, and the site's checks leave `bot/` out.
 
 ## Contributing
 
