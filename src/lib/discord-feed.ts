@@ -23,6 +23,23 @@ function escapeMarkdown(text: string) {
 }
 
 /**
+ * Asks for a page's shared image the way Discord will, so it's drawn and in
+ * the CDN by the time Discord asks: Discord gives up on a slow one, drawing it
+ * the first time is slow, and a link it gave up on stays without a card for a
+ * while. Best effort: posting goes ahead whatever happens here.
+ */
+async function warmSharedImage(page: string) {
+  try {
+    const html = await (await fetch(page, { signal: AbortSignal.timeout(10_000) })).text();
+    // Exactly the address in the page, with its query, since that's what the CDN keeps it under.
+    const image = html.match(/<meta property="og:image" content="([^"]+)"/)?.[1]?.replaceAll('&amp;', '&');
+    if (image) await fetch(image, { signal: AbortSignal.timeout(10_000) }).then((response) => response.arrayBuffer());
+  } catch (error) {
+    console.warn('Warming shared image failed', error);
+  }
+}
+
+/**
  * Posts a shark that's just been verified for the first time, after the
  * response has gone out. Checked again then, so a shark unverified or an owner
  * banned in the meantime isn't posted.
@@ -38,6 +55,7 @@ export function announceNewSharkLater(profileId: string) {
       if (!shark || shark.status !== 'VERIFIED' || isBanned(shark.user)) return;
 
       const link = new URL(`/u/${shark.user.username}/${shark.id}`, SITE_URL).href;
+      await warmSharedImage(link);
       const response = await discord('POST', `/channels/${process.env.DISCORD_CHANNEL_NEW_SHARKS}/messages`, {
         reason: 'Tinderhaj new shark',
         // A name can't ping anyone, whatever it says.
