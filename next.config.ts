@@ -1,5 +1,10 @@
 import type { NextConfig } from 'next';
 
+import { SOCIALS, type SocialId } from './src/constants/contact';
+
+/** Short links for a social other than its id. */
+const SOCIAL_ALIASES: Partial<Record<SocialId, string[]>> = { x: ['x', 'twitter'] };
+
 const nextConfig: NextConfig = {
   /* config options here */
   cacheComponents: true,
@@ -13,6 +18,11 @@ const nextConfig: NextConfig = {
       // The sections themselves open on their first page, for now.
       { source: '/dashboard', destination: '/dashboard/profiles', permanent: false },
       { source: '/moderation', destination: '/moderation/verification', permanent: false },
+      // Short links to Tinderhaj elsewhere, like tinderhaj.com/discord. Not permanent, so a new invite or handle
+      // takes over right away instead of browsers keeping the old one.
+      ...SOCIALS.flatMap(({ id, href }) =>
+        href ? (SOCIAL_ALIASES[id] ?? [id]).map((slug) => ({ source: `/${slug}`, destination: href, permanent: false })) : [],
+      ),
     ];
   },
 
