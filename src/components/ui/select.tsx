@@ -44,7 +44,8 @@ function SelectTrigger({
   );
 }
 
-function SelectContent({ className, children, position = 'item-aligned', align = 'center', ...props }: React.ComponentProps<typeof SelectPrimitive.Content>) {
+/** Opens below its field rather than over it, so what's chosen stays in view. */
+function SelectContent({ className, children, position = 'popper', align = 'center', ...props }: React.ComponentProps<typeof SelectPrimitive.Content>) {
   return (
     <SelectPrimitive.Portal>
       <SelectPrimitive.Content
@@ -63,10 +64,8 @@ function SelectContent({ className, children, position = 'item-aligned', align =
         <SelectScrollUpButton />
         <SelectPrimitive.Viewport
           data-position={position}
-          className={cn(
-            'data-[position=popper]:h-(--radix-select-trigger-height) data-[position=popper]:w-full data-[position=popper]:min-w-(--radix-select-trigger-width)',
-            position === 'popper' && '',
-          )}
+          // Inset like the dropdown menu's, so items and their highlight don't run into the border
+          className='p-1 data-[position=popper]:h-(--radix-select-trigger-height) data-[position=popper]:w-full data-[position=popper]:min-w-(--radix-select-trigger-width)'
         >
           {children}
         </SelectPrimitive.Viewport>

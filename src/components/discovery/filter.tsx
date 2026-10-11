@@ -67,7 +67,7 @@ export function DiscoveryFilter({ take, page, query, seed, disabled }: { take?: 
               <span className='xs:hidden'>per page</span>
             </span>
           </SelectTrigger>
-          <SelectContent position='popper'>
+          <SelectContent>
             <SelectItem value='3'>3</SelectItem>
             <SelectItem value='4'>4</SelectItem>
             <SelectItem value='6'>6</SelectItem>
