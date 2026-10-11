@@ -174,11 +174,14 @@ function HeartListRow({ row, tab }: { row: HeartRow; tab: Tab }) {
   );
 }
 
-/** How to reach a match's owner, under its row and lined up with its text, with a way to report it. */
+/**
+ * How to reach a match's owner, with a way to report it: a footnote to the line above, as small and
+ * right under it, lined up with its text. Only the way to reach them is brighter, to find at a glance.
+ */
 function MatchContact({ shark, username, contact }: { shark: { id: string; displayName: string }; username: string; contact: string | null }) {
   return (
-    <p className='text-muted-foreground mt-3 flex items-start gap-2 pl-15 text-sm'>
-      <MessageCircleIcon className='mt-0.5 size-4 shrink-0' aria-hidden='true' />
+    <p className='text-muted-foreground mt-1.5 flex items-start gap-1.5 pl-15 text-xs'>
+      <MessageCircleIcon className='mt-px size-3.5 shrink-0' aria-hidden='true' />
       {contact ? (
         <>
           <span className='min-w-0 flex-1 wrap-break-word'>
@@ -189,13 +192,13 @@ function MatchContact({ shark, username, contact }: { shark: { id: string; displ
           </span>
           {/* Moderators never see these otherwise, so their matches are the ones to say */}
           <ReportDialog shark={shark} contact>
-            <button type='button' className='hover:text-foreground shrink-0 text-xs underline-offset-4 hover:underline'>
+            <button type='button' className='hover:text-foreground shrink-0 underline-offset-4 hover:underline'>
               Report
             </button>
           </ReportDialog>
         </>
       ) : (
-        <span>@{username} hasn&apos;t shared a way to reach them yet.</span>
+        <span>Hasn&apos;t shared a way to reach them yet.</span>
       )}
     </p>
   );

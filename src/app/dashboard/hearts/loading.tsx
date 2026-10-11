@@ -24,9 +24,9 @@ export default function Loading() {
               Match
             </Skeleton>
           </div>
-          <div className='mt-3 flex h-5 items-center gap-2 pl-15'>
-            <Skeleton className='size-4 shrink-0 rounded-full' />
-            <Skeleton className='h-4 w-40 max-w-full' />
+          <div className='mt-1.5 flex h-4 items-center gap-1.5 pl-15'>
+            <Skeleton className='size-3.5 shrink-0 rounded-full' />
+            <Skeleton className='h-3 w-48 max-w-full' />
           </div>
         </div>
       </ListSkeleton>
