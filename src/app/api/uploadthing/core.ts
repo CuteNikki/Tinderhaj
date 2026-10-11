@@ -6,6 +6,9 @@ import { getSession } from '@/lib/session';
 
 const f = createUploadthing();
 
+/** A size limit as UploadThing takes it, like '4MB'. */
+type FileSize = NonNullable<NonNullable<Exclude<Parameters<typeof f>[0], unknown[]>['image']>['maxFileSize']>;
+
 async function requireSession() {
   const session = await getSession();
 
@@ -14,12 +17,22 @@ async function requireSession() {
   return session;
 }
 
+/**
+ * Still pictures only, the kinds the browser shrinks to size before sending
+ * (see shrinkImage): no GIFs, which would move and couldn't be shrunk, and no
+ * SVGs.
+ */
+function pictures(maxFileSize: FileSize) {
+  const each = { maxFileSize, maxFileCount: 1 };
+  return { 'image/jpeg': each, 'image/png': each, 'image/webp': each, 'image/avif': each };
+}
+
 export const ourFileRouter = {
-  profileAvatar: f({ image: { maxFileSize: `${MAX_AVATAR_SIZE_MB}MB`, maxFileCount: 1 } })
+  profileAvatar: f(pictures(`${MAX_AVATAR_SIZE_MB}MB`))
     .middleware(async () => ({ userId: (await requireSession()).user.id }))
     .onUploadComplete(async ({ file }) => ({ url: file.ufsUrl })),
 
-  profileBanner: f({ image: { maxFileSize: `${MAX_BANNER_SIZE_MB}MB`, maxFileCount: 1 } })
+  profileBanner: f(pictures(`${MAX_BANNER_SIZE_MB}MB`))
     .middleware(async () => ({ userId: (await requireSession()).user.id }))
     .onUploadComplete(async ({ file }) => ({ url: file.ufsUrl })),
 } satisfies FileRouter;

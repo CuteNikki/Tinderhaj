@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 
 import type { OurFileRouter } from '@/app/api/uploadthing/core';
 import { MAX_AVATAR_SIZE_MB, MAX_BANNER_SIZE_MB } from '@/constants/uploads';
+import { IMAGE_BOXES, shrinkImage } from '@/lib/shrink-image';
 import { UploadButton } from '@/lib/uploadthing';
 import { cn } from '@/lib/utils';
 
@@ -87,6 +88,8 @@ export function ImageUploadField({
                 </>
               ),
             }}
+            // Made no bigger than it's ever shown before it goes, so the size limit is checked on what's uploaded
+            onBeforeUploadBegin={(files) => Promise.all(files.map((file) => shrinkImage(file, IMAGE_BOXES[shape === 'circle' ? 'avatar' : 'banner'])))}
             onUploadBegin={() => setProgress(0)}
             onUploadProgress={(p) => setProgress(p)}
             onClientUploadComplete={(res) => {
