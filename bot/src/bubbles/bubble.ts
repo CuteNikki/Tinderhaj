@@ -279,6 +279,7 @@ export async function forgetBubble(channelId: string) {
 
 /** Gives a bubble to someone else. */
 export async function handOver(bubble: Bubble, newOwnerId: string) {
+  const oldOwnerId = bubble.record.ownerId;
   bubble.record = await prisma.bubble.update({
     where: { channelId: bubble.channel.id },
     // The new owner is let in as owner, not on the list, and can't keep themselves out.
@@ -289,7 +290,29 @@ export async function handOver(bubble: Bubble, newOwnerId: string) {
     },
   });
   await applyAccess(bubble);
+  // Nice to have: the hand-over stands even if this fails.
+  await renameForNewOwner(bubble, oldOwnerId, newOwnerId).catch((err) => logger.error({ err }, 'Failed to rename handed-over bubble'));
   refreshPanel(bubble);
+}
+
+/**
+ * A bubble still named after its old owner takes the name the new owner's own
+ * bubble would have: their saved one, or their display name. One its owner
+ * named themselves, e.g. for what everyone's doing in it, keeps its name.
+ */
+async function renameForNewOwner(bubble: Bubble, oldOwnerId: string, newOwnerId: string) {
+  const [oldOwner, newOwner] = await Promise.all([
+    bubble.channel.guild.members.fetch(oldOwnerId).catch(() => null),
+    bubble.channel.guild.members.fetch(newOwnerId).catch(() => null),
+  ]);
+  // Someone who's left the server has no display name to compare with, so the name stays.
+  if (!oldOwner || !newOwner || bubbleLabel(bubble.channel.name) !== oldOwner.displayName) return;
+
+  const settings = await prisma.bubbleSettings.findUnique({ where: { userId: newOwnerId }, select: { name: true } });
+  const name = bubbleName(settings?.name ?? newOwner.displayName);
+  if (name === bubble.channel.name) return;
+  // Discord only allows so many renames; if it won't now, the old name stays, and the new owner can rename it.
+  await bubble.channel.setName(name, 'Bubble handed to someone else').catch((err) => logger.debug({ err }, 'Could not rename handed-over bubble'));
 }
 
 /**
