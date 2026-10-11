@@ -12,6 +12,26 @@ const nextConfig: NextConfig = {
   // major turns this on for everyone and removes the option.
   partialPrefetching: true,
   reactCompiler: true,
+  // Nobody needs to know what it's built with
+  poweredByHeader: false,
+
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          // Never inside another site's frame, where it could be dressed up to trick a click (deleting an account,
+          // banning someone). Both: the CSP for browsers now, the other for old ones.
+          { key: 'Content-Security-Policy', value: "frame-ancestors 'none'" },
+          { key: 'X-Frame-Options', value: 'DENY' },
+          // Files are what they say they are, not whatever the browser guesses from their contents
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          // Other sites learn where a visitor came from, not the page: links like reset-password carry tokens
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+        ],
+      },
+    ];
+  },
 
   async redirects() {
     return [
