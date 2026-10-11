@@ -134,6 +134,16 @@ model Verification {
   @@index([identifier])
 }
 
+/// How many requests an address has made to an auth endpoint lately, for
+/// Better Auth's rate limits. Kept here rather than in memory, which each
+/// serverless instance has its own of.
+model RateLimit {
+  id          String @id
+  key         String @unique
+  count       Int
+  lastRequest BigInt
+}
+
 /// An authenticator app set up for two-step sign-in, with backup codes.
 /// Accounts using email codes only have none.
 model TwoFactor {

@@ -308,8 +308,12 @@ export const auth = betterAuth({
     },
   },
   rateLimit: {
-    // On in production only, per IP address. Sign-in codes are emails, so
-    // they get a tighter limit than the default 100 requests per 10 seconds.
+    // On in production only, per IP address. Counted in the database: in
+    // memory, each serverless instance would keep its own count, and start
+    // over whenever it's started anew.
+    storage: 'database',
+    // Sign-in codes are emails, so they get a tighter limit than the default
+    // 100 requests per 10 seconds.
     customRules: {
       '/two-factor/send-otp': { window: 60, max: 3 },
     },
