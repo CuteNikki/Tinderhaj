@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "lib": ["ESNext"],
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleDetection": "force",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "noFallthroughCasesInSwitch": true,
+    "types": ["bun"],
+    "paths": {
+      "classes/*": ["./src/classes/*"],
+      "loaders/*": ["./src/loaders/*"],
+      "utility/*": ["./src/utility/*"],
+      "bubbles/*": ["./src/bubbles/*"],
+      "generated/*": ["../generated/*"],
+      "database/*": ["./src/database/*"]
+    }
+  },
+  "include": ["src"]
+}

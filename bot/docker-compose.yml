@@ -1,0 +1,21 @@
+services:
+  tinderhaj-bot:
+    build:
+      context: ..
+      dockerfile: bot/Dockerfile
+    container_name: tinderhaj-bot
+    restart: unless-stopped
+    # The site's .env, which has everything the bot needs. See the README's Discord Bot section.
+    env_file:
+      - ../.env
+    volumes:
+      - ./logs:/app/bot/logs
+    networks:
+      - default
+      - postgres_network
+
+# The Postgres container's network, like CuteNikki/DiscordBot's, so the bot can reach the site's database.
+networks:
+  postgres_network:
+    external: true
+    name: postgres_default

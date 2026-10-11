@@ -1,0 +1,7 @@
+# The build context is the repo root: send only what the bot needs.
+**
+!bot/package.json
+!bot/bun.lock
+!bot/tsconfig.json
+!bot/src
+!prisma/schema.prisma
