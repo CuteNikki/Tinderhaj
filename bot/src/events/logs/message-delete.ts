@@ -2,7 +2,7 @@ import { Events } from 'discord.js';
 
 import { Event } from 'classes/base/event';
 
-import { LOG_COLORS, log, quote, who } from 'moderation/log';
+import { LOG_COLORS, log, purging, quote, who } from 'moderation/log';
 import { KEYS } from 'utility/keys';
 import { escapeMarkdown, listOf } from 'utility/markdown';
 
@@ -15,6 +15,8 @@ export default new Event({
   async execute(_client, message) {
     if (message.guildId !== KEYS.DISCORD_GUILD_ID || message.channelId === KEYS.DISCORD_CHANNEL_LOG || !message.guild) return;
     if (message.author?.bot || message.webhookId) return;
+    // A /purge of one message deletes it alone rather than in bulk; the purge's own entry already says so.
+    if (purging.has(message.id)) return;
 
     // Sent before the bot started, so it never saw it: only where it was is known.
     if (message.partial) {

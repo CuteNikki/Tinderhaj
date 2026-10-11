@@ -19,7 +19,7 @@ export default new Button({
     if (member && isStaff(member)) return interaction.update({ components: [notice("Staff can join any bubble, so they can't be kept out.", COLORS.error)] });
 
     await interaction.deferUpdate();
-    await changeBubble(bubble, interaction.member, { blocked: [...new Set([...bubble.record.blocked, id])] });
+    await changeBubble(bubble, interaction.member, (record) => ({ blocked: [...new Set([...record.blocked, id])] }));
     await interaction.editReply({ components: [notice(`<@${id}> is kept out of this bubble now.`, COLORS.bubble)], allowedMentions: { parse: [] } });
   },
 });

@@ -15,6 +15,8 @@ export default new Command({
     .addStringOption((option) => option.setName('reason').setDescription('What for. They see this.').setMaxLength(500)),
   async execute(interaction) {
     if (!interaction.inCachedGuild()) return;
+    // Checked before anything's said to them, so nobody's told they were kicked when they weren't.
+    if (!interaction.guild.members.me?.permissions.has(PermissionFlagsBits.KickMembers)) return fail(interaction, 'I need Kick Members to do that.');
     const target = interaction.options.getMember('member');
     if (!target) return fail(interaction, "They're not on the server.");
     const problem = cannotModerate(interaction.member, target);

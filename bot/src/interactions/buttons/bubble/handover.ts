@@ -22,8 +22,8 @@ export default new Button({
     }
 
     await interaction.deferUpdate();
-    const from = bubble.record.ownerId;
-    await handOver(bubble, member.id);
+    const from = await handOver(bubble, interaction.member, member.id);
+    if (!from) return interaction.editReply({ components: [notice('This bubble changed hands or popped in the meantime.', COLORS.error)] });
     await interaction.editReply({ components: [notice(`It's ${member}'s bubble now.`, COLORS.bubble)], allowedMentions: { parse: [] } });
     // Says who did it: staff can hand over anyone's bubble, including to themselves.
     const by = interaction.user.id;

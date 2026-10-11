@@ -100,16 +100,20 @@ export function refreshPanel(bubble: Bubble) {
     bubble.channel.id,
     setTimeout(async () => {
       pending.delete(bubble.channel.id);
-      // Read again, in case the bubble changed or popped since.
-      const record = await prisma.bubble.findUnique({ where: { channelId: bubble.channel.id } });
-      if (!record || !bubble.channel.guild.channels.cache.has(bubble.channel.id)) return;
-      const current = { channel: bubble.channel, record };
-      // Not posted yet: blowBubble is posting it right now, and posting here too would make two.
-      if (!record.panelMessageId) return;
-      await bubble.channel.messages.edit(record.panelMessageId, panel(current)).catch(async (err) => {
-        logger.debug({ err }, 'Bubble panel gone, posting it again');
-        await postPanel(current);
-      });
+      try {
+        // Read again, in case the bubble changed or popped since.
+        const record = await prisma.bubble.findUnique({ where: { channelId: bubble.channel.id } });
+        if (!record || !bubble.channel.guild.channels.cache.has(bubble.channel.id)) return;
+        const current = { channel: bubble.channel, record };
+        // Not posted yet: blowBubble is posting it right now, and posting here too would make two.
+        if (!record.panelMessageId) return;
+        await bubble.channel.messages.edit(record.panelMessageId, panel(current)).catch(async (err) => {
+          logger.debug({ err }, 'Bubble panel gone, posting it again');
+          await postPanel(current);
+        });
+      } catch (err) {
+        logger.error({ err }, 'Failed to refresh bubble panel');
+      }
     }, 1_000),
   );
 }

@@ -7,8 +7,10 @@ import { LOG_COLORS, log, quote, when, who } from 'moderation/log';
 import { ACTION_LABELS } from 'moderation/moderation';
 import { answer, COLORS, fail } from 'utility/replies';
 
-/** How many cases one look shows, newest first, to stay within what a message holds. */
+/** The most cases one look shows, newest first. Fewer if their reasons are long. */
 const SHOWN = 20;
+/** Room for the cases, leaving what the heading and the "older" line need out of a message's 4000 characters. */
+const TEXT_ROOM = 3_600;
 
 export default new Command({
   builder: new SlashCommandBuilder()
@@ -54,19 +56,25 @@ export default new Command({
     ]);
     if (!total) return answer(interaction, `${user} has no history: nothing's been done about them.`, { accent: COLORS.info });
 
-    const lines = records.map((record) =>
-      [
+    // Newest first, for as long as they fit: a message holds 4000 characters in all, and 20 long reasons don't.
+    const lines: string[] = [];
+    let room = TEXT_ROOM;
+    for (const record of records) {
+      const line = [
         `\`#${record.id}\` **${ACTION_LABELS[record.action]}** ${when(record.createdAt)} by <@${record.moderatorId}>${record.until ? `, until ${when(record.until, 'f')}` : ''}`,
         record.reason ? quote(record.reason.length > 200 ? `${record.reason.slice(0, 199)}…` : record.reason) : '-# No reason given',
-      ].join('\n'),
-    );
+      ].join('\n');
+      if (line.length + 2 > room) break;
+      lines.push(line);
+      room -= line.length + 2;
+    }
     const container = new ContainerBuilder()
       .setAccentColor(LOG_COLORS.moderation)
       .addTextDisplayComponents(
         new TextDisplayBuilder().setContent(`-# HISTORY\n## ${user.username}\n${who(user)} · ${total} case${total === 1 ? '' : 's'}`),
         new TextDisplayBuilder().setContent(lines.join('\n\n')),
       );
-    if (total > SHOWN) container.addTextDisplayComponents(new TextDisplayBuilder().setContent(`-# And ${total - SHOWN} older, not shown.`));
+    if (total > lines.length) container.addTextDisplayComponents(new TextDisplayBuilder().setContent(`-# And ${total - lines.length} older, not shown.`));
     return interaction.reply({ components: [container], flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral, allowedMentions: { parse: [] } });
   },
 });

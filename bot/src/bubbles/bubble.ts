@@ -246,7 +246,7 @@ export function settleBubble(channel: VoiceChannel, ownerGrace = OWNER_GRACE): P
       ownerAway.delete(channel.id);
     } else if (!ownerGrace) {
       const [oldOwnerId, newOwner] = [bubble.record.ownerId, here.first()!];
-      await handOver(bubble, newOwner.id);
+      await giveTo(bubble, newOwner.id);
       await announce(bubble, `<@${oldOwnerId}> left a while ago, so this bubble is ${newOwner}'s now.`, [newOwner.id]);
       return;
     } else if (!ownerAway.has(channel.id)) {
@@ -277,8 +277,33 @@ export async function forgetBubble(channelId: string) {
   await prisma.bubble.deleteMany({ where: { channelId } });
 }
 
-/** Gives a bubble to someone else. */
-export async function handOver(bubble: Bubble, newOwnerId: string) {
+/**
+ * Reads a bubble's record again, for a change that waited its turn: the one
+ * read when it was asked for may be out of date by now. False if it's popped.
+ */
+async function reread(bubble: Bubble) {
+  const record = await prisma.bubble.findUnique({ where: { channelId: bubble.channel.id } });
+  if (!record || !bubble.channel.guild.channels.cache.has(bubble.channel.id)) return false;
+  bubble.record = record;
+  return true;
+}
+
+/**
+ * Gives a bubble to someone else from its panel, in turn with other changes
+ * to it, if whoever asked still may. Returns who owned it before, or null if
+ * it wasn't handed over: it popped, or changed hands in the meantime.
+ */
+export function handOver(bubble: Bubble, by: GuildMember, newOwnerId: string) {
+  return queued(`bubble:${bubble.channel.id}`, async () => {
+    if (!(await reread(bubble)) || !canChange(by, bubble) || bubble.record.ownerId === newOwnerId) return null;
+    const oldOwnerId = bubble.record.ownerId;
+    await giveTo(bubble, newOwnerId);
+    return oldOwnerId;
+  });
+}
+
+/** Gives a bubble to someone else, for work already in the bubble's turn. */
+async function giveTo(bubble: Bubble, newOwnerId: string) {
   const oldOwnerId = bubble.record.ownerId;
   bubble.record = await prisma.bubble.update({
     where: { channelId: bubble.channel.id },
@@ -315,14 +340,21 @@ async function renameForNewOwner(bubble: Bubble, oldOwnerId: string, newOwnerId:
   await bubble.channel.setName(name, 'Bubble handed to someone else').catch((err) => logger.debug({ err }, 'Could not rename handed-over bubble'));
 }
 
+type Change = Partial<Access> & { name?: string; userLimit?: number };
+
 /**
- * A change someone made to a bubble from its panel. Saved as the owner's
- * settings for next time when it's the owner who made it. Returns when it can
- * be tried again if Discord won't rename it yet.
+ * A change someone made to a bubble from its panel, worked out from the bubble
+ * as it is once it's this change's turn when given as a function (e.g. adding
+ * one person to a list). Nothing changes if it popped, or whoever made it no
+ * longer may change it. Saved as the owner's settings for next time when it's
+ * the owner who made it. Returns when it can be tried again if Discord won't
+ * rename it yet.
  */
-export function changeBubble(bubble: Bubble, by: GuildMember, change: Partial<Access> & { name?: string; userLimit?: number }) {
+export function changeBubble(bubble: Bubble, by: GuildMember, change: Change | ((record: BubbleRecord) => Change)) {
   return queued(`bubble:${bubble.channel.id}`, async (): Promise<{ retryAt: Date } | void> => {
-    const { name, userLimit, ...access } = change;
+    // A change made just before this one, or a hand-over, may have changed it since it was read.
+    if (!(await reread(bubble)) || !canChange(by, bubble)) return;
+    const { name, userLimit, ...access } = typeof change === 'function' ? change(bubble.record) : change;
     const before = { name: bubble.channel.name, userLimit: bubble.channel.userLimit, ...bubble.record };
 
     if ((name !== undefined && name !== bubble.channel.name) || (userLimit !== undefined && userLimit !== bubble.channel.userLimit)) {

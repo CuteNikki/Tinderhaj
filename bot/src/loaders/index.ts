@@ -92,9 +92,16 @@ export async function loadEvents(client: ExtendedClient) {
     (event) => `${event.options.rest ? 'rest:' : ''}${event.options.name}`,
   );
   for (const event of events) {
-    const handler = (...args: ClientEvents[keyof ClientEvents]) => event.options.execute(client, ...args);
-    // Both kinds of event are told apart by `rest`, so this cast only loses what the Event class already checked.
+    // Caught here, since an emitter doesn't wait for what it calls: one that failed would otherwise take the whole bot down.
+    // Both kinds of event are told apart by `rest`, so these casts only lose what the Event class already checked.
+    const handler = async (...args: unknown[]) => {
+      try {
+        await event.options.execute(client, ...(args as ClientEvents[keyof ClientEvents]));
+      } catch (err) {
+        logger.error({ err, event: event.options.name }, 'Error while handling event');
+      }
+    };
     const emitter = (event.options.rest ? client.rest : client) as unknown as NodeJS.EventEmitter;
-    emitter[event.options.once ? 'once' : 'on'](event.options.name, handler as (...args: unknown[]) => void);
+    emitter[event.options.once ? 'once' : 'on'](event.options.name, handler);
   }
 }

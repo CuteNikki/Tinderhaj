@@ -26,6 +26,8 @@ export default new Command({
     ),
   async execute(interaction) {
     if (!interaction.inCachedGuild()) return;
+    // Checked before anything's said to them, so nobody's told they were banned when they weren't.
+    if (!interaction.guild.members.me?.permissions.has(PermissionFlagsBits.BanMembers)) return fail(interaction, 'I need Ban Members to do that.');
     const user = interaction.options.getUser('user', true);
     // Someone who's left can still be banned; only someone here has roles to compare.
     const target = interaction.options.getMember('user');
