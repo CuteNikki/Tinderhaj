@@ -1,5 +1,3 @@
-import { HEARTS_PER_DAY } from '@/lib/hearts';
-
 import { PonderingShark } from '@/components/sections/pondering-shark';
 import { QuestionList } from '@/components/sections/question-list';
 import { Section } from '@/components/sections/section';
@@ -14,10 +12,10 @@ const QUESTIONS = [
     answer:
       'Send its profile in for review and a moderator checks it by hand. Until it’s verified, only you can see it. If something needs changing, your profiles page says what.',
   },
-  { question: 'How many sharks can I have?', answer: 'Up to five on one account, for now.' },
+  { question: 'Can I have more than one shark?', answer: 'Yes. Each one gets its own profile, pictures and hearts, all on one account.' },
   {
     question: 'How do hearts and matches work?',
-    answer: `Send a heart to a shark you like. When it hearts one of yours back, that’s a match. Each shark can send ${HEARTS_PER_DAY} hearts a day.`,
+    answer: 'Send a heart to a shark you like. When it hearts one of yours back, that’s a match.',
   },
   { question: 'Can I delete my account?', answer: 'Yes, from your settings. Your sharks and their hearts go with it.' },
 ];

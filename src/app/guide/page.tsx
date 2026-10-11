@@ -2,9 +2,7 @@ import { ArrowRight, BadgeCheckIcon, HeartIcon, type LucideIcon, SearchIcon, Use
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { MAX_PROFILES } from '@/constants/auth';
 import { guideMetadata } from '@/constants/metadata';
-import { HEARTS_PER_DAY } from '@/lib/hearts';
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 
 import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
@@ -27,7 +25,7 @@ const STEPS: { title: string; copy: string; icon: LucideIcon; link?: { label: st
   },
   {
     title: 'Make a profile for your shark',
-    copy: `A name, a picture or two, a few words and what it loves. Its card shows beside you as you fill it in. Up to ${MAX_PROFILES} sharks on one account.`,
+    copy: 'A name, a picture or two, a few words and what it loves. Its card shows beside you as you fill it in. Got a whole pod? Each shark gets its own.',
     icon: WandSparklesIcon,
   },
   {
@@ -44,7 +42,7 @@ const STEPS: { title: string; copy: string; icon: LucideIcon; link?: { label: st
   },
   {
     title: 'Send hearts, find matches',
-    copy: `Heart a shark you like, up to ${HEARTS_PER_DAY} a day for each of yours. When it hearts one of yours back, that’s a match, and both of you see how to reach the other, if you’ve added a way in Settings.`,
+    copy: 'Heart a shark you like. When it hearts one of yours back, that’s a match, and both of you see how to reach the other, if you’ve added a way in Settings.',
     icon: HeartIcon,
   },
 ];

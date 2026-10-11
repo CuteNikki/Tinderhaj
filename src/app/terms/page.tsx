@@ -1,10 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { MAX_PROFILES } from '@/constants/auth';
 import { CONTACT_EMAIL } from '@/constants/contact';
 import { termsMetadata } from '@/constants/metadata';
-import { HEARTS_PER_DAY } from '@/lib/hearts';
 
 import { LegalPage } from '@/components/legal/legal-page';
 import { LegalSection } from '@/components/legal/legal-section';
@@ -14,7 +12,7 @@ export const metadata: Metadata = termsMetadata;
 
 export default function TermsPage() {
   return (
-    <LegalPage title='Terms of Service' lead='The rules for using Tinderhaj and taking part in the community.' updated='October 9, 2026'>
+    <LegalPage title='Terms of Service' lead='The rules for using Tinderhaj and taking part in the community.' updated='October 11, 2026'>
       <LegalSection index={0} title='1. Using Tinderhaj'>
         <TypographyP>
           By creating an account or using Tinderhaj, you agree to these Terms of Service, our{' '}
@@ -32,7 +30,7 @@ export default function TermsPage() {
       <LegalSection index={1} title='2. What Tinderhaj is'>
         <TypographyP>
           Tinderhaj is a free, just-for-fun dating site for plush sharks. Profiles are for plush sharks such as IKEA&apos;s Blåhaj, not for people. Each account
-          can have up to {MAX_PROFILES} profiles, and each profile can send up to {HEARTS_PER_DAY} hearts a day. Two profiles hearting each other is a match.
+          can have a limited number of profiles, and each profile can send a limited number of hearts a day. Two profiles hearting each other is a match.
           There is nothing to buy.
         </TypographyP>
       </LegalSection>

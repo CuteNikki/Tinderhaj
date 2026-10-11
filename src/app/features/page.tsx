@@ -1,11 +1,8 @@
 import { BadgeCheckIcon, FingerprintIcon, GiftIcon, HeartIcon, type LucideIcon, MoonStarIcon, SearchIcon, Share2Icon, UsersRoundIcon } from 'lucide-react';
 import type { Metadata } from 'next';
 
-import { MAX_PROFILES } from '@/constants/auth';
 import { featuresMetadata } from '@/constants/metadata';
-import { HEARTS_PER_DAY } from '@/lib/hearts';
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
-import { FRESH_PROFILE_WINDOW_IN_DAYS } from '@/lib/profile-status';
 
 import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
 import { IconCard } from '@/components/common/icon-card';
@@ -18,12 +15,12 @@ export const metadata: Metadata = featuresMetadata;
 const FEATURES: { title: string; copy: string; icon: LucideIcon }[] = [
   {
     title: 'Discovery',
-    copy: `Search every verified shark by name, location, pronouns or interests. New ones get a boost for their first ${FRESH_PROFILE_WINDOW_IN_DAYS} days, among a fresh shuffle each visit.`,
+    copy: 'Search every verified shark by name, location, pronouns or interests. New ones get a boost for their first few days, among a fresh shuffle each visit.',
     icon: SearchIcon,
   },
   {
     title: 'Hearts and matches',
-    copy: `Heart the sharks you like, up to ${HEARTS_PER_DAY} a day for each of yours. A heart sent back is a match, and you see how to reach each other.`,
+    copy: 'Heart the sharks you like. A heart sent back is a match, and you see how to reach each other.',
     icon: HeartIcon,
   },
   {
@@ -33,7 +30,7 @@ const FEATURES: { title: string; copy: string; icon: LucideIcon }[] = [
   },
   {
     title: 'A whole pod',
-    copy: `Up to ${MAX_PROFILES} sharks on one account, each with its own profile, pictures and hearts.`,
+    copy: 'More than one shark on one account, each with its own profile, pictures and hearts.',
     icon: UsersRoundIcon,
   },
   {

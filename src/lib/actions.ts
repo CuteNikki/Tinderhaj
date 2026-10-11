@@ -241,7 +241,7 @@ export async function createProfile(unsafeData: z.infer<typeof createProfileSche
   const profileCount = await prisma.profile.count({ where: { userId: session.user.id } });
 
   if (profileCount >= MAX_PROFILES) {
-    return { message: `You have reached the maximum number of profiles (${MAX_PROFILES})!` };
+    return { message: 'You’ve reached the most profiles one account can have.' };
   }
 
   await prisma.profile.create({
@@ -405,7 +405,7 @@ export async function sendHeart({ fromProfileId, toProfileId }: { fromProfileId:
   if (to.userId === session.user.id) return { message: 'Your sharks can’t heart each other.' };
 
   const today = await prisma.heart.count({ where: { fromProfileId, createdAt: { gt: new Date(Date.now() - 24 * 60 * 60 * 1000) } } });
-  if (today >= HEARTS_PER_DAY) return { message: `${from.displayName} has sent ${HEARTS_PER_DAY} hearts today. Try again tomorrow.` };
+  if (today >= HEARTS_PER_DAY) return { message: `${from.displayName} is out of hearts for today. Try again tomorrow.` };
 
   // Sending twice does nothing.
   await prisma.heart.createMany({ data: { fromProfileId, toProfileId }, skipDuplicates: true });
