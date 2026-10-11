@@ -15,7 +15,7 @@ import { BackLink, Eyebrow, PageTitle } from '@/components/common/heading';
 import { EmptyState } from '@/components/common/empty-state';
 import { Stagger } from '@/components/common/stagger';
 import { LocalTime } from '@/components/common/local-time';
-import { DiscoveryProfile } from '@/components/discovery/profile';
+import { DiscoveryProfile, FIRST_ROW } from '@/components/discovery/profile';
 import { Badge } from '@/components/ui/badge';
 import { AccountActions } from '@/components/users/account-actions';
 import { BanForm, UnbanButton } from '@/components/users/ban-controls';
@@ -101,10 +101,11 @@ export default async function UserPage({ params }: PageProps<'/moderation/users/
           >
             {user.profiles.length ? (
               <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-3'>
-                {user.profiles.map((profile) => (
+                {user.profiles.map((profile, index) => (
                   <DiscoveryProfile
                     key={profile.id}
                     profile={profile}
+                    eager={index < FIRST_ROW}
                     showStatus
                     action={
                       profile.status === 'VERIFIED' ? (

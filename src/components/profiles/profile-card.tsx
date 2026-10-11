@@ -31,7 +31,8 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
-export function ProfileCard({ profile }: { profile: ProfileWithOwner }) {
+/** One of your sharks, to edit, send for review or delete. `eager` for one in view as the page opens (see ProfileBanner). */
+export function ProfileCard({ profile, eager = false }: { profile: ProfileWithOwner; eager?: boolean }) {
   const [isDeleting, startDeleteTransition] = useTransition();
   const [isSubmitting, startSubmitTransition] = useTransition();
   const [isDeleted, setIsDeleted] = useState(false);
@@ -69,7 +70,7 @@ export function ProfileCard({ profile }: { profile: ProfileWithOwner }) {
   return (
     <Card className={cn('group bg-background h-full w-full overflow-hidden pt-0 shadow-sm', LIFT)}>
       <div className='relative aspect-5/2 overflow-hidden'>
-        <ProfileBanner src={profile.bannerUrl} alt={`${profile.displayName}'s banner`} />
+        <ProfileBanner src={profile.bannerUrl} alt={`${profile.displayName}'s banner`} eager={eager} />
         <Tooltip>
           <TooltipTrigger asChild>
             <Badge className={cn('absolute top-3 right-3 gap-1 rounded-full font-semibold shadow-sm', PROFILE_STATUS_META[profile.status].badgeClassName)}>
@@ -84,7 +85,7 @@ export function ProfileCard({ profile }: { profile: ProfileWithOwner }) {
       <CardContent className='-mt-8 px-4 pb-5 sm:px-6'>
         <div className='relative flex items-start gap-4'>
           <div className='border-background bg-muted h-18 w-18 shrink-0 overflow-hidden rounded-full border-4 shadow-md'>
-            <ProfileAvatar src={profile.avatarUrl} alt={`${profile.displayName}'s avatar`} />
+            <ProfileAvatar src={profile.avatarUrl} alt={`${profile.displayName}'s avatar`} eager={eager} />
           </div>
           <div className='min-w-0 flex-1 pt-4'>
             <div className='flex flex-wrap items-center gap-x-2'>

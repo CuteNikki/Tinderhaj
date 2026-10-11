@@ -17,8 +17,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 
-/** A shark waiting for review, to verify or reject. `fullBio` shows all of the bio, for the shark's own review page. */
-export function VerifyProfileCard({ profile, fullBio = false }: { profile: ProfileWithOwner; fullBio?: boolean }) {
+/**
+ * A shark waiting for review, to verify or reject. `fullBio` shows all of the bio, for the shark's own review page; `eager` for one in view as the
+ * page opens (see ProfileBanner).
+ */
+export function VerifyProfileCard({ profile, fullBio = false, eager = false }: { profile: ProfileWithOwner; fullBio?: boolean; eager?: boolean }) {
   const [isVerifying, startVerifyTransition] = useTransition();
   const [isRejecting, startRejectTransition] = useTransition();
   const [isHandled, setIsHandled] = useState(false);
@@ -62,13 +65,13 @@ export function VerifyProfileCard({ profile, fullBio = false }: { profile: Profi
   return (
     <Card className='border-foreground/10 bg-background h-full w-full overflow-hidden pt-0 shadow-sm'>
       <div className='relative aspect-5/2 overflow-hidden'>
-        <ProfileBanner src={profile.bannerUrl} alt={`${profile.displayName}'s banner`} />
+        <ProfileBanner src={profile.bannerUrl} alt={`${profile.displayName}'s banner`} eager={eager} />
       </div>
 
       <CardContent className='-mt-8 px-4 pb-5 sm:px-6'>
         <div className='relative flex items-start gap-4'>
           <div className='border-background bg-muted h-18 w-18 shrink-0 overflow-hidden rounded-full border-4 shadow-md'>
-            <ProfileAvatar src={profile.avatarUrl} alt={`${profile.displayName}'s avatar`} />
+            <ProfileAvatar src={profile.avatarUrl} alt={`${profile.displayName}'s avatar`} eager={eager} />
           </div>
           <div className='min-w-0 flex-1 pt-4'>
             <div className='flex flex-wrap items-center gap-x-2'>

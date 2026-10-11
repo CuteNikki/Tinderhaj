@@ -15,7 +15,7 @@ import { DiscoveryFilter } from '@/components/discovery/filter';
 import { KeepSeed } from '@/components/discovery/keep-seed';
 import { DiscoveryNoResults } from '@/components/discovery/no-results';
 import { DiscoveryPagination } from '@/components/discovery/pagination';
-import { DiscoveryProfile } from '@/components/discovery/profile';
+import { DiscoveryProfile, FIRST_ROW } from '@/components/discovery/profile';
 import { ShareButton } from '@/components/discovery/share-button';
 import { CardHearts } from '@/components/hearts/card-hearts';
 import { ReportButton } from '@/components/reports/report-dialog';
@@ -99,6 +99,7 @@ export default async function DiscoveryPage({ searchParams }: { searchParams: Pr
                 <ScrollReveal key={profile.id} className='h-full' delay={0.5 + index * STAGGER} scrollDelay={(index % 3) * STAGGER} variant='card'>
                   <DiscoveryProfile
                     profile={profile}
+                    eager={index < FIRST_ROW}
                     action={
                       <div className='flex items-center gap-1'>
                         <ShareButton shark={{ id: profile.id, displayName: profile.displayName, user: profile.user }} />

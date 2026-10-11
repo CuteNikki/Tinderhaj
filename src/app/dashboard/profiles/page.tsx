@@ -12,6 +12,7 @@ import { Eyebrow, PageTitle } from '@/components/common/heading';
 import { EmptyState } from '@/components/common/empty-state';
 import { Stagger } from '@/components/common/stagger';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
+import { FIRST_ROW } from '@/components/discovery/profile';
 import { ProfileCard } from '@/components/profiles/profile-card';
 import { Button } from '@/components/ui/button';
 
@@ -48,7 +49,7 @@ export default async function ProfilesPage() {
           <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-3'>
             {profiles.map((profile, index) => (
               <ScrollReveal key={profile.id} className='h-full' delay={CONTENT_DELAY + index * STAGGER} scrollDelay={(index % 3) * STAGGER} variant='card'>
-                <ProfileCard profile={profile} />
+                <ProfileCard profile={profile} eager={index < FIRST_ROW} />
               </ScrollReveal>
             ))}
           </div>

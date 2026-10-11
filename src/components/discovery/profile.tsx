@@ -12,13 +12,17 @@ import { ProfileAvatar, ProfileBanner } from '@/components/profiles/profile-imag
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 
+/** How many cards a grid has in its first row at its widest: in view as a page opens, so their pictures load straight away (`eager`). */
+export const FIRST_ROW = 3;
+
 /**
  * A shark's card. `showStatus` shows where it is in review instead of whether
  * it's new, for moderators; `action` floats in the bottom-right corner, e.g. a
  * heart. `lift: false` keeps it still under the pointer, for a card that's a
  * popup of its own rather than one among many. `heading` is the level of its
  * name: h2 on pages where cards come straight under the page's title, rather
- * than under a section's.
+ * than under a section's. `eager` for one in view as the page opens, so its
+ * pictures load straight away (see ProfileBanner).
  */
 export function DiscoveryProfile({
   profile,
@@ -26,19 +30,21 @@ export function DiscoveryProfile({
   action,
   lift = true,
   heading: Heading = 'h3',
+  eager = false,
 }: {
   profile: PublicProfile;
   showStatus?: boolean;
   action?: React.ReactNode;
   lift?: boolean;
   heading?: 'h2' | 'h3';
+  eager?: boolean;
 }) {
   const status = PROFILE_STATUS_META[profile.status];
 
   return (
     <Card className={cn('group bg-background h-full w-full overflow-hidden pt-0 pb-0 shadow-sm', lift && LIFT)}>
       <div className='relative aspect-5/2 overflow-hidden'>
-        <ProfileBanner src={profile.bannerUrl} alt={`${profile.user.username}'s banner`} />
+        <ProfileBanner src={profile.bannerUrl} alt={`${profile.user.username}'s banner`} eager={eager} />
         {showStatus ? (
           <Badge className={cn(status.badgeClassName, 'absolute top-3 right-3 rounded-full text-xs font-semibold shadow-md')}>
             <status.icon aria-hidden='true' />
@@ -58,7 +64,7 @@ export function DiscoveryProfile({
         <div className='relative flex items-start gap-4'>
           <div className='relative shrink-0'>
             <div className='border-background bg-muted h-18 w-18 overflow-hidden rounded-full border-4 shadow-md'>
-              <ProfileAvatar src={profile.avatarUrl} alt={`${profile.user.username}'s avatar`} />
+              <ProfileAvatar src={profile.avatarUrl} alt={`${profile.user.username}'s avatar`} eager={eager} />
             </div>
           </div>
           <div className='min-w-0 flex-1 pt-4'>

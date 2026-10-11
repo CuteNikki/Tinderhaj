@@ -11,7 +11,7 @@ import { getSession } from '@/lib/session';
 import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
 import { EmptyState } from '@/components/common/empty-state';
 import { Stagger } from '@/components/common/stagger';
-import { DiscoveryProfile } from '@/components/discovery/profile';
+import { DiscoveryProfile, FIRST_ROW } from '@/components/discovery/profile';
 import { ShareButton } from '@/components/discovery/share-button';
 import { CardHearts } from '@/components/hearts/card-hearts';
 import { ReportButton } from '@/components/reports/report-dialog';
@@ -92,6 +92,7 @@ export default async function UserSharksPage({ params }: PageProps<'/u/[username
               <ScrollReveal key={shark.id} className='h-full' delay={CONTENT_DELAY + index * STAGGER} scrollDelay={(index % 3) * STAGGER} variant='card'>
                 <DiscoveryProfile
                   profile={shark}
+                  eager={index < FIRST_ROW}
                   heading='h2'
                   action={
                     <div className='flex items-center gap-1'>

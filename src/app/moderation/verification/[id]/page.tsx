@@ -62,7 +62,7 @@ export default async function ReviewPage({ params }: PageProps<'/moderation/veri
 
         <ScrollReveal delay={CONTENT_DELAY} className='max-w-md'>
           {profile.status === 'PENDING' ? (
-            <VerifyProfileCard profile={profile} fullBio />
+            <VerifyProfileCard profile={profile} fullBio eager />
           ) : (
             <div className='flex flex-col gap-4'>
               <p className='text-muted-foreground text-sm text-pretty'>
@@ -97,6 +97,7 @@ export default async function ReviewPage({ params }: PageProps<'/moderation/veri
               )}
               <DiscoveryProfile
                 profile={profile}
+                eager
                 heading='h2'
                 showStatus
                 action={

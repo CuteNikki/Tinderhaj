@@ -500,6 +500,7 @@ export function ProfileForm({ username, profile }: { username: string; profile?:
         >
           <Eyebrow as='h2'>Preview</Eyebrow>
           <DiscoveryProfile
+            eager
             profile={{
               id: profile?.id ?? 'new',
               displayName: preview.displayName || 'Your shark',

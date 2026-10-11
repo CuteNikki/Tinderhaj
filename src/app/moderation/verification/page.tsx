@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 
 import { Eyebrow, PageTitle } from '@/components/common/heading';
 import { EmptyState } from '@/components/common/empty-state';
-import { DiscoveryProfile } from '@/components/discovery/profile';
+import { DiscoveryProfile, FIRST_ROW } from '@/components/discovery/profile';
 import { Stagger } from '@/components/common/stagger';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
 import { UnverifyButton } from '@/components/verify/unverify-button';
@@ -86,7 +86,7 @@ export default async function VerifyPage({ searchParams }: PageProps<'/moderatio
                   scrollDelay={(index % 3) * STAGGER}
                   variant='card'
                 >
-                  <VerifyProfileCard profile={profile} />
+                  <VerifyProfileCard profile={profile} eager={index < FIRST_ROW} />
                 </ScrollReveal>
               ))}
             </div>
@@ -113,6 +113,7 @@ export default async function VerifyPage({ searchParams }: PageProps<'/moderatio
                 >
                   <DiscoveryProfile
                     profile={profile}
+                    eager={index < FIRST_ROW}
                     heading='h2'
                     action={<UnverifyButton profile={{ id: profile.id, displayName: profile.displayName }} verifiedAt={profile.verifiedAt?.toISOString()} />}
                   />

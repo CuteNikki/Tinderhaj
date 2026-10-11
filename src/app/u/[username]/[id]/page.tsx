@@ -110,6 +110,7 @@ export default async function SharkPage({ params }: PageProps<'/u/[username]/[id
           <DiscoveryProfile
             profile={shark}
             heading='h2'
+            eager
             action={
               <div className='flex items-center gap-1'>
                 <ShareButton shark={{ id: shark.id, displayName: shark.displayName, user: shark.user }} />
