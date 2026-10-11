@@ -22,7 +22,7 @@ export function LocalTime({ iso, absolute, className }: { iso: string; absolute?
   );
 
   return (
-    <time dateTime={iso} title={inBrowser && !absolute ? formatDate(iso) : undefined} className={className}>
+    <time dateTime={iso} title={absolute || !inBrowser ? undefined : formatDate(iso)} className={className}>
       {inBrowser && (absolute ? formatDate(iso) : relative(iso))}
     </time>
   );
