@@ -35,6 +35,10 @@ export class ExtendedClient extends Client {
         GatewayIntentBits.GuildMessages,
         // Audit log entries, for who did what to the server.
         GatewayIntentBits.GuildModeration,
+        // Emojis, stickers, invites and events made, changed and deleted, for the log.
+        GatewayIntentBits.GuildExpressions,
+        GatewayIntentBits.GuildInvites,
+        GatewayIntentBits.GuildScheduledEvents,
       ],
       // Deletes and edits of messages from before the bot started, and leaves of members it never saw, still arrive.
       partials: [Partials.Message, Partials.Channel, Partials.GuildMember, Partials.User],

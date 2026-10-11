@@ -3,22 +3,27 @@ import { AuditLogEvent, Events, PermissionsBitField, type GuildAuditLogsEntry, t
 import { Event } from 'classes/base/event';
 
 import { LOG_COLORS, log, quote, when, who } from 'moderation/log';
+import { CHANNELS_MOVED, rememberAuditEntry } from 'moderation/audit';
 import { recordModeration } from 'moderation/moderation';
 import { KEYS } from 'utility/keys';
 import { logger } from 'utility/logger';
 import { code, escapeMarkdown, listOf } from 'utility/markdown';
 
 /**
- * Everything the audit log says someone did to the server, in the log: bans,
- * kicks and timeouts done by hand in Discord (kept as cases too, so they're in
- * people's history), and every other change, with who made it and what
- * changed. The bot's own entries are left out: its commands log themselves
+ * Discord's audit log, which says who did what. Every entry is kept for a
+ * moment, so the events that log changes (channels, roles, members and so on,
+ * in events/logs) can say who made them. Bans, kicks and timeouts done by hand
+ * in Discord are kept as cases, so they're in people's history. Anything no
+ * event covers, like a message deleted by someone else or a webhook, is logged
+ * from here. The bot's own entries are left out: its commands log themselves
  * with the moderator who used them, and bubbles change channels constantly.
  */
 export default new Event({
   name: Events.GuildAuditLogEntryCreate,
   async execute(client, entry, guild) {
-    if (guild.id !== KEYS.DISCORD_GUILD_ID || !entry.executorId || entry.executorId === client.user?.id) return;
+    if (guild.id !== KEYS.DISCORD_GUILD_ID) return;
+    rememberAuditEntry(entry);
+    if (!entry.executorId || entry.executorId === client.user?.id) return;
 
     try {
       const executor = await client.users.fetch(entry.executorId);
@@ -27,12 +32,17 @@ export default new Event({
         await recordModeration(guild, { ...moderation, moderator: executor, reason: entry.reason }, 'discord');
         return;
       }
+      const handled = FROM_EVENTS.get(entry.action);
+      if (handled === 'all') return;
+      // Something deleted lists every setting it had, which says nothing: its name is in What.
+      const changes = entry.actionType === 'Delete' ? [] : entry.changes.filter((change) => !handled?.has(change.key)).flatMap(describeChange);
+      // Everything in it was logged by an event already.
+      if (handled && !changes.length) return;
 
       const target = describeTarget(entry);
       await log(guild, actionLabel(entry.action), LOG_COLORS.server, [
         [`**By:** ${who(executor)}`, target && `**What:** ${target}`, ...describeExtra(entry.extra)].filter(Boolean).join('\n'),
-        // Something deleted lists every setting it had, which says nothing: its name is in What.
-        entry.actionType === 'Delete' ? '' : entry.changes.flatMap(describeChange).join('\n'),
+        changes.join('\n'),
         entry.reason ? quote(entry.reason) : '',
       ]);
     } catch (err) {
@@ -40,6 +50,77 @@ export default new Event({
     }
   },
 });
+
+/**
+ * What the events in events/logs log themselves, with who did it from here:
+ * all of it, or the changes with these keys. Any other change in an entry,
+ * like a server mute or a forum's tags, is logged from here, so nothing goes
+ * unlogged that an event doesn't cover.
+ */
+const FROM_EVENTS = new Map<AuditLogEvent, 'all' | Set<string>>([
+  [
+    AuditLogEvent.GuildUpdate,
+    new Set([
+      'name',
+      'description',
+      'icon_hash',
+      'banner_hash',
+      'splash_hash',
+      'vanity_url_code',
+      'verification_level',
+      'explicit_content_filter',
+      'afk_channel_id',
+      'afk_timeout',
+      'system_channel_id',
+      'rules_channel_id',
+      'public_updates_channel_id',
+      'owner_id',
+    ]),
+  ],
+  [AuditLogEvent.ChannelCreate, 'all'],
+  [
+    AuditLogEvent.ChannelUpdate,
+    new Set([
+      'name',
+      'parent_id',
+      'position',
+      'topic',
+      'nsfw',
+      'rate_limit_per_user',
+      'bitrate',
+      'user_limit',
+      'rtc_region',
+      'default_auto_archive_duration',
+      'permission_overwrites',
+    ]),
+  ],
+  [AuditLogEvent.ChannelDelete, 'all'],
+  [AuditLogEvent.ChannelOverwriteCreate, 'all'],
+  [AuditLogEvent.ChannelOverwriteUpdate, 'all'],
+  [AuditLogEvent.ChannelOverwriteDelete, 'all'],
+  [CHANNELS_MOVED, 'all'],
+  // Timeouts are kept as cases above; mutes and deafens aren't in member-update.ts, so they're logged from here.
+  [AuditLogEvent.MemberUpdate, new Set(['nick', 'communication_disabled_until'])],
+  [AuditLogEvent.MemberRoleUpdate, 'all'],
+  [AuditLogEvent.RoleCreate, 'all'],
+  [AuditLogEvent.RoleUpdate, new Set(['name', 'color', 'colors', 'hoist', 'mentionable', 'icon_hash', 'unicode_emoji', 'permissions'])],
+  [AuditLogEvent.RoleDelete, 'all'],
+  [AuditLogEvent.InviteCreate, 'all'],
+  [AuditLogEvent.InviteUpdate, 'all'],
+  [AuditLogEvent.InviteDelete, 'all'],
+  [AuditLogEvent.EmojiCreate, 'all'],
+  [AuditLogEvent.EmojiUpdate, new Set(['name'])],
+  [AuditLogEvent.EmojiDelete, 'all'],
+  [AuditLogEvent.StickerCreate, 'all'],
+  [AuditLogEvent.StickerUpdate, new Set(['name', 'description', 'tags'])],
+  [AuditLogEvent.StickerDelete, 'all'],
+  [AuditLogEvent.ThreadCreate, 'all'],
+  [AuditLogEvent.ThreadUpdate, new Set(['name', 'archived', 'locked', 'rate_limit_per_user', 'applied_tags'])],
+  [AuditLogEvent.ThreadDelete, 'all'],
+  [AuditLogEvent.GuildScheduledEventCreate, 'all'],
+  [AuditLogEvent.GuildScheduledEventUpdate, new Set(['name', 'description', 'scheduled_start_time', 'channel_id', 'status'])],
+  [AuditLogEvent.GuildScheduledEventDelete, 'all'],
+]);
 
 /** A ban, unban, kick, or timeout given or taken away, as a moderation. */
 async function asModeration(entry: GuildAuditLogsEntry, fetchUser: (id: string) => Promise<User>) {
@@ -75,7 +156,9 @@ export function actionLabel(action: AuditLogEvent) {
     Pin: 'pinned',
     Unpin: 'unpinned',
   };
-  const words = (AuditLogEvent[action] ?? `Action ${action}`).split(/(?=[A-Z])/);
+  // Anything else Discord adds before discord.js knows it: at least say it's a change to the server.
+  if (!AuditLogEvent[action]) return `Server changed (type ${action})`;
+  const words = AuditLogEvent[action].split(/(?=[A-Z])/);
   const last = words.at(-1)!;
   if (PAST[last]) words[words.length - 1] = PAST[last];
   const text = words.join(' ').toLowerCase();
