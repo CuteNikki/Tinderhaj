@@ -9,8 +9,8 @@ export type SocialId = 'discord' | 'x' | 'instagram' | 'github';
  */
 export const SOCIALS: { id: SocialId; name: string; handle: string | null; href: string | null; blurb: string }[] = [
   { id: 'discord', name: 'Discord', handle: 'tinderhaj.com/discord', href: 'https://discord.gg/m6yVUqNqt', blurb: 'Hang out with the rest of the pod.' },
-  { id: 'x', name: 'Twitter', handle: '@tinderhaj', href: 'https://x.com/tinderhaj', blurb: 'News, updates, and the odd shark pun.' },
   { id: 'instagram', name: 'Instagram', handle: '@tinderhaj', href: 'https://www.instagram.com/tinderhaj', blurb: 'Sharks living their best lives.' },
+  { id: 'x', name: 'Twitter', handle: '@tinderhaj', href: 'https://x.com/tinderhaj', blurb: 'News, updates, and the odd shark pun.' },
   {
     id: 'github',
     name: 'GitHub',
