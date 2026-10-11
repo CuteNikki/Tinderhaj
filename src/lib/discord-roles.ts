@@ -41,7 +41,7 @@ export const DISCORD_ROLES = [
 export type DiscordRoleKey = (typeof DISCORD_ROLES)[number]['key'];
 
 /** The roles set up on this site, with their ids on the server. */
-function configuredRoles() {
+export function configuredRoles() {
   return DISCORD_ROLES.flatMap((role) => {
     const id = process.env[role.env];
     return id ? [{ ...role, id }] : [];

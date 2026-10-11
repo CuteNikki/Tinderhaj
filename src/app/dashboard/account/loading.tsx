@@ -1,6 +1,7 @@
 import 'server-only';
 
 import { enabledProviders } from '@/lib/auth';
+import { configuredRoles, discordRolesEnabled } from '@/lib/discord-roles';
 
 import { PageLoading } from '@/components/common/page-loading';
 import { SettingsSection } from '@/components/common/settings-section';
@@ -13,6 +14,9 @@ import { Skeleton } from '@/components/ui/skeleton';
  * one session and nothing else set up yet, the usual case.
  */
 export default function Loading() {
+  // Shown when the real page shows it to someone without Discord connected
+  const discordRoles = discordRolesEnabled() && enabledProviders.includes('discord') ? configuredRoles() : null;
+
   return (
     <PageLoading eyebrow='Your account' title='Settings'>
       <div className='grid grid-cols-1 items-start gap-6 lg:grid-cols-2'>
@@ -79,6 +83,28 @@ export default function Loading() {
               ))}
             </div>
           </SettingsSection>
+          {discordRoles && (
+            <SettingsSection
+              still
+              title='Discord roles'
+              description='Roles on the Tinderhaj Discord server for what you do here. They update by themselves; refresh if they look out of date.'
+            >
+              <div className='flex flex-col gap-4'>
+                <ul className='flex flex-col gap-2'>
+                  {discordRoles.map((role) => (
+                    <li key={role.key} className='flex items-start gap-3 text-sm'>
+                      <Skeleton className='mt-0.5 size-5 shrink-0 rounded-full' />
+                      {/* The real words, unseen, so each wraps as the real one does */}
+                      <GhostText as='span' className='text-wrap'>
+                        <span className='font-semibold'>{role.label}</span> · {role.about}
+                      </GhostText>
+                    </li>
+                  ))}
+                </ul>
+                <GhostText>Connect Discord under Sign-in methods to get them.</GhostText>
+              </div>
+            </SettingsSection>
+          )}
           <SettingsSection still title='Two-step sign-in'>
             <div className='flex flex-col gap-3'>
               <GhostText>Asks for a code after your password, so your password alone isn&apos;t enough to sign in. Choose where the code comes from:</GhostText>

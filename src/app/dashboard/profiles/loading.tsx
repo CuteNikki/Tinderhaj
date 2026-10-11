@@ -3,15 +3,7 @@ import { ButtonSkeleton, ProfileGridSkeleton } from '@/components/common/skeleto
 
 export default function Loading() {
   return (
-    <PageLoading
-      eyebrow='Your sharks'
-      title='Profiles'
-      below={
-        <ButtonSkeleton icon={false} className='mt-4'>
-          Create Profile
-        </ButtonSkeleton>
-      }
-    >
+    <PageLoading eyebrow='Your sharks' title='Profiles' below={<ButtonSkeleton className='mt-4'>New profile</ButtonSkeleton>}>
       <ProfileGridSkeleton ending='actions' />
     </PageLoading>
   );

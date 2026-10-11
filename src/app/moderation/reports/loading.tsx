@@ -1,5 +1,5 @@
 import { PageLoading } from '@/components/common/page-loading';
-import { ButtonSkeleton, TabsSkeleton } from '@/components/common/skeletons';
+import { ButtonSkeleton, GhostText, TabsSkeleton } from '@/components/common/skeletons';
 import { Skeleton } from '@/components/ui/skeleton';
 
 /** The reports page while it loads: its tabs, and rows shaped like open reports. */
@@ -12,13 +12,14 @@ export default function Loading() {
           <div key={index} className='flex flex-col gap-4 p-4 sm:flex-row sm:items-start'>
             <div className='flex min-w-0 flex-1 items-start gap-3'>
               <Skeleton className='size-12 shrink-0 rounded-full' />
-              <div className='min-w-0 flex-1 space-y-2'>
-                <div className='flex items-center gap-2'>
+              <div className='min-w-0 flex-1'>
+                <div className='flex h-6 items-center gap-2'>
                   <Skeleton className='h-5 w-28' />
                   <Skeleton className='h-5 w-32 rounded-full' />
                 </div>
-                <Skeleton className='h-3 w-64 max-w-full' />
-                <Skeleton className='mt-3 h-4 w-full max-w-md' />
+                {/* In words, so it wraps where the real one does on narrow screens */}
+                <GhostText className='text-xs'>Owned by @someone · reported by @someone 2 hours ago</GhostText>
+                <GhostText className='mt-3'>What they said is wrong with it, in a line.</GhostText>
               </div>
             </div>
             <div className='flex shrink-0 gap-2'>

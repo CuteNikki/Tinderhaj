@@ -45,8 +45,8 @@ export function ProfileCardSkeleton({ ending = 'heart', blank = false }: { endin
               <Skeleton className='h-4 w-24' />
               <Skeleton className='h-4 w-16' />
             </div>
-            {/* Two lines, as most bios are, even on narrow cards */}
-            <div className='mt-4 flex h-11.5 flex-col justify-center gap-2'>
+            {/* Two lines, as most bios are, even on narrow cards: in the bio's own type, so exactly as tall */}
+            <div className='mt-4 flex h-[2lh] flex-col justify-center gap-2 text-sm leading-relaxed'>
               <Skeleton className='h-4 w-full' />
               <Skeleton className='h-4 w-5/6' />
             </div>
@@ -114,18 +114,12 @@ export function TabsSkeleton({ count, compact = false, className }: { count: num
   );
 }
 
-/** A list of rows in one card, each with a round picture or not (see Hearts and Users). */
-export function ListSkeleton({ rows = 4, avatar = false }: { rows?: number; avatar?: boolean }) {
+/** A list in one card, `rows` of the row given, shaped like the page's own (see Hearts and Users). */
+export function ListSkeleton({ rows = 4, children }: { rows?: number; children: React.ReactNode }) {
   return (
     <div className='border-foreground/10 bg-card divide-foreground/10 divide-y rounded-2xl border shadow-sm'>
       {Array.from({ length: rows }, (_, index) => (
-        <div key={index} className='flex items-center gap-3 p-4'>
-          {avatar && <Skeleton className='size-12 shrink-0 rounded-full' />}
-          <div className='min-w-0 flex-1 space-y-2'>
-            <Skeleton className='h-4 w-40 max-w-full' />
-            <Skeleton className='h-3 w-56 max-w-full' />
-          </div>
-        </div>
+        <div key={index}>{children}</div>
       ))}
     </div>
   );
@@ -186,7 +180,8 @@ export function ButtonSkeleton({
     <Skeleton
       aria-hidden
       className={cn(
-        'inline-flex w-fit shrink-0 items-center justify-center rounded-full text-sm font-medium text-transparent text-shadow-none',
+        // The border's there, unseen, as on every real one
+        'inline-flex w-fit shrink-0 items-center justify-center rounded-full border border-transparent text-sm font-medium text-transparent text-shadow-none',
         size === 'sm' ? 'h-8 gap-1 px-3' : 'h-9 gap-1.5 px-3.5',
         className,
       )}

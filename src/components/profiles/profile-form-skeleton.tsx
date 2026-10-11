@@ -14,6 +14,16 @@ export function ProfileFormSkeleton({ editing = false }: { editing?: boolean }) 
   return (
     <div className='grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_26rem] lg:gap-x-8'>
       <div className='grid gap-6'>
+        {editing && (
+          // On small screens, the note a live one has (see ProfileForm): most sharks being edited are verified
+          <p aria-hidden className='border-foreground/10 flex items-start gap-2 rounded-lg border p-3 text-sm sm:hidden'>
+            <Skeleton className='mt-0.5 size-4 shrink-0 rounded-full' />
+            {/* Wrapped as plainly as the real one, so onto as many lines */}
+            <GhostText as='span' className='text-wrap'>
+              This profile is live in discovery. Saving changes takes it out until you send it for review again and it&apos;s verified.
+            </GhostText>
+          </p>
+        )}
         <SettingsSection still title='Name' description='What everyone sees first, and what they call it.'>
           <div className='grid gap-4 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]'>
             <FieldSkeleton />
@@ -92,9 +102,10 @@ export function ProfileFormSkeleton({ editing = false }: { editing?: boolean }) 
         <Eyebrow as='h2'>Preview</Eyebrow>
         <ProfileCardSkeleton ending='none' blank={!editing} />
       </div>
-      <div className='px-3 sm:px-6 lg:col-start-1'>
-        <div className='border-foreground/10 bg-background/85 xs:pl-5 flex w-full items-center gap-2 rounded-full border p-2 shadow-lg'>
-          <GhostText className='xs:block hidden text-xs leading-tight sm:text-sm'>Saved as a draft</GhostText>
+      {/* Floating along the bottom of the screen, as the real one does */}
+      <div className='sticky bottom-4 z-30 px-2 lg:col-start-1'>
+        <div className='border-foreground/10 bg-background/85 xs:pl-5 flex w-full items-center gap-2 rounded-full border p-2 shadow-lg backdrop-blur-md'>
+          <GhostText className='xs:block hidden text-xs leading-tight sm:text-sm'>{editing ? 'No changes yet' : 'Give it a name to start'}</GhostText>
           <div className='max-xs:w-full ml-auto flex shrink-0 gap-2'>
             <ButtonSkeleton icon={false} className='max-xs:flex-1'>
               Cancel
