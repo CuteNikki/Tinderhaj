@@ -268,7 +268,7 @@ function SiteLink({ link, className, children }: { link: NavLink; className?: st
 function MenuDot({ pending, reports, hearts }: { pending: number; reports: number; hearts: number }) {
   const news = [
     hearts > 0 && `${hearts} new ${hearts === 1 ? 'heart' : 'hearts'}`,
-    pending > 0 && `${pending} profiles waiting for review`,
+    pending > 0 && `${pending} ${pending === 1 ? 'profile' : 'profiles'} waiting for review`,
     reports > 0 && `${reports} ${reports === 1 ? 'report' : 'reports'} waiting`,
   ].filter(Boolean);
   return (

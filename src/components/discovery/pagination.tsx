@@ -61,7 +61,7 @@ export function DiscoveryPagination({
   return (
     <div className='flex flex-col items-center gap-4 px-5 pt-8 text-center text-balance'>
       <p className='text-muted-foreground text-sm'>
-        Showing {displayedUsers} of {totalUsers} profiles (page {page} of {totalPages})
+        Showing {displayedUsers} of {totalUsers} {totalUsers === 1 ? 'profile' : 'profiles'} (page {page} of {totalPages})
       </p>
       <Pagination>
         <PaginationContent>
