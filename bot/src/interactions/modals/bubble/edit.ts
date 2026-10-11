@@ -12,8 +12,9 @@ export default new Modal({
     const bubble = await controlledBubble(interaction);
     if (!bubble) return;
 
-    const limit = interaction.fields.getTextInputValue('limit').trim();
-    if (!/^\d{1,2}$/.test(limit)) return fail(interaction, 'The limit needs to be a number up to 99, or 0 for no limit.');
+    // Left empty, there's no limit, as with 0.
+    const limit = interaction.fields.getTextInputValue('limit').trim() || '0';
+    if (!/^\d{1,2}$/.test(limit)) return fail(interaction, 'The limit needs to be a number up to 99, or empty for no limit.');
 
     await interaction.deferUpdate();
     // Left empty, it goes back to the owner's display name (not whoever's changing it, if that's staff).

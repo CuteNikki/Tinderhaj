@@ -28,17 +28,14 @@ export default new Button({
                 .setStyle(TextInputStyle.Short)
                 .setRequired(false),
             ),
-          new LabelBuilder()
-            .setLabel('User limit (0 for none)')
-            .setTextInputComponent(
-              new TextInputBuilder()
-                .setCustomId('limit')
-                .setValue(String(bubble.channel.userLimit))
-                .setMaxLength(2)
-                .setStyle(TextInputStyle.Short)
-                .setRequired(true),
-            ),
+          new LabelBuilder().setLabel('User limit (empty for none)').setTextInputComponent(limitInput(bubble.channel.userLimit)),
         ),
     );
   },
 });
+
+/** The limit field: empty while there's no limit, rather than a 0 to clear first. Left out, not set to "", when empty. */
+function limitInput(userLimit: number) {
+  const input = new TextInputBuilder().setCustomId('limit').setMaxLength(2).setStyle(TextInputStyle.Short).setRequired(false);
+  return userLimit ? input.setValue(String(userLimit)) : input;
+}
