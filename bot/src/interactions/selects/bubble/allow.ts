@@ -7,6 +7,8 @@ import { controlledBubble, showChanged } from 'bubbles/controls';
 export default new SelectMenu({
   customId: 'bubble-allow',
   includeCustomId: true,
+  // Picking people is quick, several in a row; changes to a bubble wait their turn anyway (see queued).
+  cooldown: 0,
   async execute(interaction) {
     if (!interaction.inCachedGuild() || !interaction.isUserSelectMenu()) return;
     const bubble = await controlledBubble(interaction);

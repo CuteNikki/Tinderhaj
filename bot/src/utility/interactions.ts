@@ -30,20 +30,23 @@ export async function run<T extends ChatInputCommandInteraction | ButtonInteract
   cooldown: number | undefined,
   execute: (interaction: T) => unknown,
 ) {
-  if (!client.cooldowns.has(key)) client.cooldowns.set(key, new Collection());
-  const timestamps = client.cooldowns.get(key)!;
-  const now = Date.now();
   const amount = cooldown ?? 3_000;
-  const until = (timestamps.get(interaction.user.id) ?? 0) + amount;
+  // A cooldown of 0 is none at all, not one that still catches two uses in the same millisecond.
+  if (amount > 0) {
+    if (!client.cooldowns.has(key)) client.cooldowns.set(key, new Collection());
+    const timestamps = client.cooldowns.get(key)!;
+    const now = Date.now();
+    const until = (timestamps.get(interaction.user.id) ?? 0) + amount;
 
-  if (now <= until) {
-    await fail(interaction, `Slow down a little! You can do that again ${time(Math.round(until / 1_000), TimestampStyles.RelativeTime)}.`).catch((err) =>
-      logger.debug({ err }, 'Error while replying to interaction'),
-    );
-    return;
+    if (now <= until) {
+      await fail(interaction, `Slow down a little! You can do that again ${time(Math.round(until / 1_000), TimestampStyles.RelativeTime)}.`).catch((err) =>
+        logger.debug({ err }, 'Error while replying to interaction'),
+      );
+      return;
+    }
+    timestamps.set(interaction.user.id, now);
+    setTimeout(() => timestamps.delete(interaction.user.id), amount);
   }
-  timestamps.set(interaction.user.id, now);
-  setTimeout(() => timestamps.delete(interaction.user.id), amount);
 
   try {
     await execute(interaction);

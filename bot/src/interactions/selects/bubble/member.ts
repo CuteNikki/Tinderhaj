@@ -9,6 +9,8 @@ import { COLORS, notice } from 'utility/replies';
 export default new SelectMenu({
   customId: 'bubble-member',
   includeCustomId: true,
+  // Picking people is quick, several in a row; changes to a bubble wait their turn anyway (see queued).
+  cooldown: 0,
   async execute(interaction) {
     if (!interaction.inCachedGuild() || !interaction.isStringSelectMenu()) return;
     const bubble = await controlledBubble(interaction);
