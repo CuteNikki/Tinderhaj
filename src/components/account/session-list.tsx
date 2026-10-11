@@ -1,9 +1,9 @@
 'use client';
 
-import { useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
-import { ActivityIcon, HourglassIcon, LogInIcon, MonitorIcon, NetworkIcon, SmartphoneIcon, type LucideIcon } from 'lucide-react';
+import { ActivityIcon, ChevronDownIcon, HourglassIcon, LogInIcon, MonitorIcon, NetworkIcon, SmartphoneIcon, type LucideIcon } from 'lucide-react';
 
 import { revokeOtherSessions, revokeSession } from '@/lib/actions';
 import { cn } from '@/lib/utils';
@@ -23,10 +23,18 @@ type SessionInfo = {
   current: boolean;
 };
 
+/** How many show until the rest are asked for: most people are signed in on a few devices at most. */
+const SHOWN_SESSIONS = 5;
+
 export function SessionList({ sessions }: { sessions: SessionInfo[] }) {
   const [pending, startTransition] = useTransition();
   const [ask, confirmDialog] = useConfirm();
+  const [showAll, setShowAll] = useState(false);
   const others = sessions.filter((session) => !session.current);
+  // This device first, then the rest as they were last active
+  const ordered = [...sessions.filter((session) => session.current), ...others];
+  const shown = showAll ? ordered : ordered.slice(0, SHOWN_SESSIONS);
+  const hidden = ordered.length - shown.length;
 
   async function run(question: ConfirmOptions, action: () => Promise<{ message: string } | void>, success: string) {
     if (!(await ask(question))) return;
@@ -40,7 +48,7 @@ export function SessionList({ sessions }: { sessions: SessionInfo[] }) {
   return (
     <div className='flex flex-col gap-2'>
       <ul className='divide-foreground/10 border-foreground/10 flex flex-col divide-y rounded-xl border'>
-        {sessions.map((session) => {
+        {shown.map((session) => {
           const Icon = /iPhone|iPad|Android/.test(session.device) ? SmartphoneIcon : MonitorIcon;
           return (
             <li key={session.id} className='flex items-start gap-3 p-3 px-4 sm:gap-4'>
@@ -91,6 +99,20 @@ export function SessionList({ sessions }: { sessions: SessionInfo[] }) {
             </li>
           );
         })}
+        {/* The list's own last row, quieter than the sessions in it */}
+        {ordered.length > SHOWN_SESSIONS && (
+          <li>
+            <button
+              type='button'
+              aria-expanded={showAll}
+              onClick={() => setShowAll(!showAll)}
+              className='text-muted-foreground hover:bg-muted/50 hover:text-foreground focus-visible:ring-ring/50 flex w-full items-center justify-center gap-1.5 rounded-b-xl px-4 py-2.5 text-sm font-medium transition-colors outline-none focus-visible:ring-3'
+            >
+              {showAll ? 'Show fewer' : `Show ${hidden} more`}
+              <ChevronDownIcon className={cn('size-4 transition-transform duration-150', showAll && 'rotate-180')} aria-hidden='true' />
+            </button>
+          </li>
+        )}
       </ul>
       {others.length > 0 && (
         <Button
