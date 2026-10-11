@@ -30,8 +30,8 @@ export default function TermsPage() {
       <LegalSection index={1} title='2. What Tinderhaj is'>
         <TypographyP>
           Tinderhaj is a free, just-for-fun dating site for plush sharks. Profiles are for plush sharks such as IKEA&apos;s Blåhaj, not for people. Each account
-          can have a limited number of profiles, and each profile can send a limited number of hearts a day. Two profiles hearting each other is a match.
-          There is nothing to buy.
+          can have a limited number of profiles, and each profile can send a limited number of hearts a day. Two profiles hearting each other is a match. There
+          is nothing to buy.
         </TypographyP>
       </LegalSection>
 
