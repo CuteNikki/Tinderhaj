@@ -5,7 +5,7 @@ import 'server-only';
  * a rate limit once if it hits one. `reason` shows in the server's audit log.
  */
 export async function discord(
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE',
+  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
   path: string,
   options: { reason: string; body?: unknown },
   retried = false,

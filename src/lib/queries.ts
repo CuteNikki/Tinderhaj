@@ -255,6 +255,11 @@ export const QUERIES = {
     });
   },
 
+  /** One shark in any state of review, for its review page. */
+  getProfileForReview: async (id: string) => {
+    return prisma.profile.findUnique({ where: { id }, include: { user: { select: { id: true, username: true } } } });
+  },
+
   getPendingProfiles: async () => {
     return prisma.profile.findMany({ where: { status: ProfileStatus.PENDING }, include: PROFILE_OWNER, orderBy: { submittedAt: 'asc' } });
   },

@@ -194,8 +194,11 @@ model Profile {
   rejectedFields String[] @default([])
   rejectionNote  String?
 
-  submittedAt DateTime?
-  verifiedAt  DateTime?
+  submittedAt     DateTime?
+  verifiedAt      DateTime?
+  /// The bot's message about this shark in the moderators' review channel on
+  /// Discord, edited once a moderator verifies or rejects it.
+  reviewMessageId String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

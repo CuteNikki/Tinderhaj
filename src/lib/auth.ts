@@ -20,6 +20,7 @@ import {
 import { BAN_NOTICE_COOKIE, BAN_NOTICE_MAX_AGE, signBanNotice } from '@/lib/ban-notice';
 import { isBanned } from '@/lib/bans';
 import { clearDiscordRolesLater, syncDiscordRolesLater } from '@/lib/discord-roles';
+import { dropReviewsLater } from '@/lib/discord-review';
 import { sendDeleteAccountEmail, sendEmailChangeConfirmation, sendPasswordResetEmail, sendTwoFactorCode, sendVerificationEmail } from '@/lib/email';
 import { hashPassword, verifyPassword } from '@/lib/password-hasher';
 import { isAdmin } from '@/lib/roles';
@@ -214,6 +215,8 @@ export const auth = betterAuth({
         before: async (user) => {
           const discord = await prisma.account.findFirst({ where: { userId: user.id, providerId: 'discord' }, select: { accountId: true } });
           if (discord) clearDiscordRolesLater(discord.accountId);
+          const waiting = await prisma.profile.findMany({ where: { userId: user.id, reviewMessageId: { not: null } }, select: { reviewMessageId: true } });
+          dropReviewsLater(waiting.map((profile) => profile.reviewMessageId));
         },
       },
     },

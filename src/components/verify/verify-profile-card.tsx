@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 import type { ProfileWithOwner } from '@/lib/queries';
 import { rejectProfile, verifyProfile } from '@/lib/actions';
 import { PROFILE_FIELDS } from '@/lib/profile-fields';
-import { calculateAge } from '@/lib/utils';
+import { calculateAge, cn } from '@/lib/utils';
 
 import { ProfileAvatar, ProfileBanner } from '@/components/profiles/profile-image';
 import { Badge } from '@/components/ui/badge';
@@ -17,7 +17,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 
-export function VerifyProfileCard({ profile }: { profile: ProfileWithOwner }) {
+/** A shark waiting for review, to verify or reject. `fullBio` shows all of the bio, for the shark's own review page. */
+export function VerifyProfileCard({ profile, fullBio = false }: { profile: ProfileWithOwner; fullBio?: boolean }) {
   const [isVerifying, startVerifyTransition] = useTransition();
   const [isRejecting, startRejectTransition] = useTransition();
   const [isHandled, setIsHandled] = useState(false);
@@ -100,7 +101,11 @@ export function VerifyProfileCard({ profile }: { profile: ProfileWithOwner }) {
           )}
         </div>
 
-        {profile.bio && <p className='text-foreground/80 mt-4 line-clamp-3 text-sm leading-relaxed'>{profile.bio}</p>}
+        {profile.bio && (
+          <p className={cn('text-foreground/80 mt-4 text-sm leading-relaxed', fullBio ? 'wrap-break-word whitespace-pre-line' : 'line-clamp-3')}>
+            {profile.bio}
+          </p>
+        )}
 
         {profile.interests.length > 0 && (
           <div className='mt-4 flex flex-wrap gap-1.5'>

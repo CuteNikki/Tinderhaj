@@ -143,6 +143,8 @@ DISCORD_ROLE_MODERATOR=""
 DISCORD_ROLE_ADMIN=""
 # Optional: a channel on the same server where newly verified sharks are posted. Needs DISCORD_BOT_TOKEN.
 DISCORD_CHANNEL_NEW_SHARKS=""
+# Optional: a channel only moderators see, where sharks waiting for review are posted. Needs DISCORD_BOT_TOKEN.
+DISCORD_CHANNEL_REVIEW_QUEUE=""
 ```
 
 Notes:
@@ -160,6 +162,7 @@ Notes:
   - In the server's role list, drag the bot's role above every role it gives, or Discord refuses to let it give them.
   - With Developer Mode on (Discord settings → Advanced), right-click the server and each role to copy their ids into `DISCORD_GUILD_ID` and the `DISCORD_ROLE_*` variables. A role left empty isn't given.
 - The new sharks feed is optional too. When a moderator verifies a shark for the first time, the bot posts its link in the channel whose id is in `DISCORD_CHANNEL_NEW_SHARKS`, and Discord shows it as the shark's card. A shark verified again after its owner edits it isn't posted twice. The bot needs **View Channel**, **Send Messages** and **Embed Links** in that channel.
+- The review queue works the same way. When a shark is sent for review, the bot posts it in the channel whose id is in `DISCORD_CHANNEL_REVIEW_QUEUE`, with a button to the verification page. Once a moderator verifies or rejects it, the message is edited to say so and by whom; if the owner takes the shark back to edit it, or deletes it, the message is removed. Keep the channel visible to moderators only. The bot needs the same three permissions there.
 
 ## Installation
 

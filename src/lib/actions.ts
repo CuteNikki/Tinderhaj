@@ -12,6 +12,7 @@ import { MAX_PROFILES } from '@/constants/auth';
 import { PROFILE_COUNT_TAG, QUERIES } from '@/lib/queries';
 import { BAN_REASON_MAX, banExpiry, isBanDuration, isBanned } from '@/lib/bans';
 import { announceNewSharkLater } from '@/lib/discord-feed';
+import { dropReviewsLater, postReviewLater, settleReviewLater } from '@/lib/discord-review';
 import { clearDiscordRolesLater, syncDiscordRoles, syncDiscordRolesLater, type DiscordSync } from '@/lib/discord-roles';
 import { HEARTS_PER_DAY, liveProfileWhere } from '@/lib/hearts';
 import { REPORTS_PER_DAY, reportSchema } from '@/lib/reports';
@@ -48,7 +49,7 @@ export async function updateUsername(unsafeData: z.infer<typeof updateUsernameSc
   revalidatePath('/dashboard/account');
   revalidatePath('/dashboard/profiles');
   revalidatePath('/discovery');
-  revalidatePath('/moderation/verification');
+  revalidatePath('/moderation/verification', 'layout');
   // Their sharks' cards show it
   updateTag(PROFILE_COUNT_TAG);
 }
@@ -222,13 +223,15 @@ export async function deleteUserAccount(userId: string) {
 
   // Their Discord connection goes with the account, so the roles it earned go too.
   const discord = await prisma.account.findFirst({ where: { userId, providerId: 'discord' }, select: { accountId: true } });
+  const waiting = await prisma.profile.findMany({ where: { userId, reviewMessageId: { not: null } }, select: { reviewMessageId: true } });
   await prisma.user.delete({ where: { id: userId } });
   if (discord) clearDiscordRolesLater(discord.accountId);
+  dropReviewsLater(waiting.map((profile) => profile.reviewMessageId));
 
   revalidatePath('/moderation/users');
   revalidatePath('/discovery');
   updateTag(PROFILE_COUNT_TAG);
-  revalidatePath('/moderation/verification');
+  revalidatePath('/moderation/verification', 'layout');
 }
 
 export async function createProfile(unsafeData: z.infer<typeof createProfileSchema>) {
@@ -269,10 +272,13 @@ export async function updateProfile(unsafeData: z.infer<typeof updateProfileSche
 
   const { id, isVerified: _isVerified, ...profileData } = data;
 
+  // Editing a shark that's waiting for review takes it out of the queue until it's sent again.
+  const before = await prisma.profile.findUnique({ where: { id }, select: { reviewMessageId: true } });
   await prisma.profile.update({
     where: { id },
-    data: { ...profileData, status: 'CREATED', rejectedFields: [], rejectionNote: null },
+    data: { ...profileData, status: 'CREATED', rejectedFields: [], rejectionNote: null, reviewMessageId: null },
   });
+  dropReviewsLater([before?.reviewMessageId]);
 
   revalidatePath('/dashboard/profiles');
   updateTag(PROFILE_COUNT_TAG);
@@ -297,6 +303,7 @@ export async function submitProfileForReview({ profileId }: { profileId: string 
     where: { id: profileId },
     data: { status: 'PENDING', submittedAt: new Date() },
   });
+  postReviewLater(profileId);
 
   revalidatePath('/dashboard/profiles');
 }
@@ -315,6 +322,7 @@ export async function deleteProfile({ profileId }: { profileId: string }) {
   await prisma.profile.delete({
     where: { id: profileId },
   });
+  dropReviewsLater([profile.reviewMessageId]);
 
   revalidatePath('/dashboard/profiles');
   updateTag(PROFILE_COUNT_TAG);
@@ -335,9 +343,10 @@ export async function verifyProfile({ profileId }: { profileId: string }) {
     select: { userId: true },
   });
   syncDiscordRolesLater(userId);
+  settleReviewLater(profileId, session.user);
   if (!before?.verifiedAt) announceNewSharkLater(profileId);
 
-  revalidatePath('/moderation/verification');
+  revalidatePath('/moderation/verification', 'layout');
   revalidatePath('/dashboard/profiles');
   updateTag(PROFILE_COUNT_TAG);
   return true;
@@ -361,7 +370,7 @@ export async function unverifyProfile({ profileId }: { profileId: string }) {
   const { userId } = await prisma.profile.findUniqueOrThrow({ where: { id: profileId }, select: { userId: true } });
   syncDiscordRolesLater(userId);
 
-  revalidatePath('/moderation/verification');
+  revalidatePath('/moderation/verification', 'layout');
   revalidatePath('/moderation/users', 'layout');
   revalidatePath('/discovery');
   revalidatePath('/dashboard/profiles');
@@ -383,8 +392,9 @@ export async function rejectProfile(unsafeData: z.infer<typeof rejectProfileSche
     select: { userId: true },
   });
   syncDiscordRolesLater(userId);
+  settleReviewLater(data.profileId, session.user);
 
-  revalidatePath('/moderation/verification');
+  revalidatePath('/moderation/verification', 'layout');
   revalidatePath('/dashboard/profiles');
   updateTag(PROFILE_COUNT_TAG);
 }
