@@ -149,6 +149,7 @@ DISCORD_CHANNEL_REVIEW_QUEUE=""
 # Optional: the Discord bot in bot/ (see Discord Bot below).
 DISCORD_CHANNEL_JOIN_TO_CREATE=""
 DISCORD_CHANNEL_BUBBLE_CONTROLS=""
+DISCORD_CHANNEL_LOG=""
 ```
 
 Notes:
@@ -299,16 +300,20 @@ Better Auth rate limits sign-in, sign-up, and code requests per IP address in pr
   - If the owner is gone for 30 seconds, the bubble goes to someone still there. Once everyone's left, it's deleted. Bubbles are only ever deleted if they're in the bot's database.
   - Owners get no permissions on the channel themselves; the bot makes every change. A bubble's permissions are worked out from the category's and its settings, so changes made to a bubble's permissions by hand are undone at its next change. Staff (roles with Administrator, Manage Channels or Timeout Members) can always see and join bubbles, can't be kept out, and can change anyone's.
 - **`/shark member`** posts someone's verified sharks (or yours), and **`/shark random`** a random one, as links Discord shows as cards. It says the same for someone who hasn't connected Discord as for someone with no sharks.
+- **Moderation.** `/warn`, `/timeout`, `/untimeout`, `/kick`, `/ban` and `/unban`, each for whoever has the matching Discord permission (Timeout Members, Kick Members or Ban Members). Nobody can act on someone whose top role is as high as theirs. Before a warn, timeout, kick or ban, the bot DMs them what happened and why, without saying who did it. `/purge` deletes up to 100 messages in a channel at once, optionally only one member's, for whoever has Manage Messages there; Discord doesn't let bots bulk delete messages older than 2 weeks, so those are left.
+  - Every moderation is a numbered case in the `Moderation` table, including ones done by hand in Discord (found in the audit log), so `/history view` shows everything that's happened to someone. `/history remove` takes out one made by mistake, and says so in the log. Nothing happens automatically: moderators decide.
+- **Log.** Everything goes to the channel in `DISCORD_CHANNEL_LOG`: joins (flagging new accounts) and leaves, name changes, edited and deleted messages, voice joins, leaves and moves, moderation, and every other change the audit log records (channels, roles, nicknames, invites and so on), with who made it. The bot's own changes are left out, since bubbles change channels all the time and its commands log themselves.
 
 Setting it up:
 
 1. Set `SITE_URL` for the bot if the site isn't at `https://tinderhaj.com`, e.g. `http://localhost:3000` locally, so `/shark` links to it.
-2. Give the bot's role **Manage Channels**, **Manage Roles**, **Move Members**, **View Channel**, **Connect**, **Speak**, **Video**, **Send Messages**, **Embed Links** and **Read Message History** in the join-to-create category (it can only give owners what it has itself), and **View Channel**, **Send Messages** and **Read Message History** in the bubble controls channel. It needs no privileged intents.
-3. Copy the join-to-create voice channel's id into `DISCORD_CHANNEL_JOIN_TO_CREATE`, and optionally a text channel's into `DISCORD_CHANNEL_BUBBLE_CONTROLS`.
-4. Apply the site's migrations, which include the bot's tables (see Database Setup).
-5. Run it. Locally, `cd bot && bun install && bun run dev` reads the site's `.env` and uses the client the site generated. On a server, `cd bot && docker compose up -d --build` builds it from the repo root, generating the client from the site's schema, and reads `../.env` as well. The compose file joins the external `postgres_default` network, so `DATABASE_URL` can use the Postgres container's name as its host; take that out if your Postgres isn't a container on that network. Logs go to `bot/logs`.
+2. Give the bot's role **Manage Channels**, **Manage Roles**, **Move Members**, **View Channel**, **Connect**, **Speak**, **Video**, **Send Messages**, **Embed Links** and **Read Message History** in the join-to-create category (it can only give owners what it has itself), and **View Channel**, **Send Messages** and **Read Message History** in the bubble controls channel. For moderation and the log it also needs **View Audit Log**, **Ban Members**, **Kick Members** and **Timeout Members**, **View Channel** and **Read Message History** everywhere it should log messages from, and its role above everyone it should be able to moderate.
+3. In the Discord Developer Portal, under **Bot**, turn on **Server Members Intent** and **Message Content Intent**: the log needs them for joins and leaves and for what edited and deleted messages said.
+4. Copy the join-to-create voice channel's id into `DISCORD_CHANNEL_JOIN_TO_CREATE`, optionally a text channel's into `DISCORD_CHANNEL_BUBBLE_CONTROLS`, and the log channel's into `DISCORD_CHANNEL_LOG`. Keep the log channel visible to moderators only.
+5. Apply the site's migrations, which include the bot's tables (see Database Setup).
+6. Run it. Locally, `cd bot && bun install && bun run dev` reads the site's `.env` and uses the client the site generated. On a server, `cd bot && docker compose up -d --build` builds it from the repo root, generating the client from the site's schema, and reads `../.env` as well. The compose file joins the external `postgres_default` network, so `DATABASE_URL` can use the Postgres container's name as its host; take that out if your Postgres isn't a container on that network. Logs go to `bot/logs`.
 
-6. Register its commands on the server in `DISCORD_GUILD_ID`: `bun run register` in `bot/`, or `docker compose exec tinderhaj-bot bun run register` on the server. Discord keeps them, so this isn't done on start; run it again only when commands are added, removed or changed. It replaces what was there, so removed commands go too.
+7. Register its commands on the server in `DISCORD_GUILD_ID`: `bun run register` in `bot/`, or `docker compose exec tinderhaj-bot bun run register` on the server. Discord keeps them, so this isn't done on start; run it again only when commands are added, removed or changed. It replaces what was there, so removed commands go too.
 
 `bun run typecheck` checks the bot, and the site's checks leave `bot/` out.
 
