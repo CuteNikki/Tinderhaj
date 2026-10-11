@@ -23,6 +23,14 @@ import {
   MIN_SIZE_INCH,
   MIN_USERNAME_LENGTH,
 } from '@/constants/auth';
+import { UPLOAD_HOSTNAME } from '@/constants/uploads';
+
+/** A picture uploaded with UploadThing, the only place they come from (see ImageUploadField). */
+function uploadUrlSchema(name: string) {
+  return z
+    .url({ protocol: /^https$/, hostname: UPLOAD_HOSTNAME, error: `${name} must be a picture uploaded here.` })
+    .max(2000, `${name} URL must be at most 2000 characters.`);
+}
 
 const SIZE_BOUNDS = {
   CM: { min: MIN_SIZE_CM, max: MAX_SIZE_CM },
@@ -134,8 +142,8 @@ export const createProfileSchema = z
       .min(MIN_DISPLAY_NAME_LENGTH, `Display Name must be at least ${MIN_DISPLAY_NAME_LENGTH} characters.`)
       .max(MAX_DISPLAY_NAME_LENGTH, `Display Name must be at most ${MAX_DISPLAY_NAME_LENGTH} characters.`)
       .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
-    avatarUrl: z.url().max(2000, 'Avatar URL must be at most 2000 characters.').nullable().default(null),
-    bannerUrl: z.url().max(2000, 'Banner URL must be at most 2000 characters.').nullable().default(null),
+    avatarUrl: uploadUrlSchema('Avatar').nullable().default(null),
+    bannerUrl: uploadUrlSchema('Banner').nullable().default(null),
     birthday: birthdaySchema,
     size: z.number().nullable(),
     unit: z.enum(['CM', 'INCH']).default('CM'),
@@ -180,8 +188,8 @@ export const updateProfileSchema = z
       .min(MIN_DISPLAY_NAME_LENGTH, `Display Name must be at least ${MIN_DISPLAY_NAME_LENGTH} characters.`)
       .max(MAX_DISPLAY_NAME_LENGTH, `Display Name must be at most ${MAX_DISPLAY_NAME_LENGTH} characters.`)
       .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
-    avatarUrl: z.url().max(2000, 'Avatar URL must be at most 2000 characters.').nullable(),
-    bannerUrl: z.url().max(2000, 'Banner URL must be at most 2000 characters.').nullable(),
+    avatarUrl: uploadUrlSchema('Avatar').nullable(),
+    bannerUrl: uploadUrlSchema('Banner').nullable(),
     birthday: birthdaySchema,
     size: z.number().nullable(),
     unit: z.enum(['CM', 'INCH']).default('CM'),

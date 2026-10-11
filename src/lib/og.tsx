@@ -4,6 +4,8 @@ import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import sharp from 'sharp';
 
+import { isUploadUrl } from '@/constants/uploads';
+
 /** Shared images (Open Graph and Twitter): what a link looks like when it's shared. */
 export const OG_SIZE = { width: 1200, height: 630 };
 
@@ -34,6 +36,8 @@ export async function publicImage(file: string) {
  * format an upload might be in. Null if it can't be had in time.
  */
 export async function toOgImage(url: string, size: number) {
+  // Only from UploadThing, never wherever a saved URL points
+  if (!isUploadUrl(url)) return null;
   try {
     const response = await fetch(url, { signal: AbortSignal.timeout(3000) });
     if (!response.ok) return null;
