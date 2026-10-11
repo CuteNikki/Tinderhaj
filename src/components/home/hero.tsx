@@ -6,6 +6,7 @@ import { Suspense } from 'react';
 
 import { ArrowDown, ArrowRight, Search, Sparkles, Users2Icon, ZapIcon } from 'lucide-react';
 
+import { SHARKS } from '@/lib/images';
 import { BOB_SHARK, bob, SHARK_HOVER } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 
@@ -107,11 +108,12 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
               <div className={BOB_SHARK}>
                 <Image
                   unoptimized
-                  priority
+                  loading='eager'
+                  fetchPriority='high'
                   draggable={false}
                   width={448}
                   height={448}
-                  src='/blahaj-float.webp'
+                  src={SHARKS.float}
                   alt='A Blåhaj ready to find a match'
                   className='h-auto w-full select-none'
                 />
@@ -124,7 +126,7 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
                 unoptimized
                 width={64}
                 height={64}
-                src='/blahajHug.webp'
+                src={SHARKS.hug}
                 alt=''
                 className='bg-primary/10 h-14 w-14 shrink-0 rounded-lg object-contain dark:bg-white/20'
               />
@@ -143,7 +145,7 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
                 'spring-hover flex size-20 rotate-12 items-center justify-center rounded-full shadow-xl hover:scale-115 hover:rotate-4',
               )}
             >
-              <Image unoptimized width={80} height={80} src='/blahajHeart.webp' alt='Heart' className='w-12 sm:w-15' />
+              <Image unoptimized width={80} height={80} src={SHARKS.heart} alt='Heart' className='w-12 sm:w-15' />
             </div>
           </div>
         </div>

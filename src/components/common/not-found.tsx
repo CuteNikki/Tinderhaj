@@ -1,9 +1,11 @@
 'use client';
 
-import { BOB_SHARK, bob, SHARK_HOVER, STAGGER } from '@/lib/motion';
-import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
+
+import { SHARKS } from '@/lib/images';
+import { BOB_SHARK, bob, SHARK_HOVER, STAGGER } from '@/lib/motion';
+import { cn } from '@/lib/utils';
 
 import { ArrowLeft, Compass, Radio, Search } from 'lucide-react';
 
@@ -61,7 +63,7 @@ export function NotFoundPage() {
             <div className={cn(BOB_SHARK, SHARK_HOVER, 'absolute top-1/2 left-1/2 z-10 -translate-1/2')}>
               <Image
                 unoptimized
-                src='/blahajThink.webp'
+                src={SHARKS.think}
                 width={320}
                 height={320}
                 alt='A Blåhaj looking for the missing page'

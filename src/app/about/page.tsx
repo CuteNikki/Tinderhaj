@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 import { socialLink } from '@/lib/social-link';
 import { aboutMetadata } from '@/constants/metadata';
+import { SHARKS } from '@/lib/images';
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 
 import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
@@ -90,7 +91,7 @@ export default function AboutPage() {
                     unoptimized
                     width={64}
                     height={64}
-                    src='/blahajHug.webp'
+                    src={SHARKS.hug}
                     alt=''
                     className='bg-primary/10 size-14 rounded-lg object-contain dark:bg-white/20'
                   />

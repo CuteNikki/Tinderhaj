@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 
+import { SHARKS } from '@/lib/images';
 import { BOB_SHARK, SHARK_HOVER } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 
@@ -34,7 +35,16 @@ export function DiscoveryHero() {
           <Enter variant='ring' delay={0.25} className='border-primary/15 absolute inset-0 rounded-full border border-dashed' />
           <div style={shark.style} className={cn(shark.className, SHARK_HOVER, 'relative z-10')}>
             <div className={BOB_SHARK}>
-              <Image unoptimized priority width={320} height={320} src='/blahajSmall.webp' alt='Two Blåhaj sharing a hug' className='h-auto w-72' />
+              <Image
+                unoptimized
+                loading='eager'
+                fetchPriority='high'
+                width={320}
+                height={320}
+                src={SHARKS.small}
+                alt='Two Blåhaj sharing a hug'
+                className='h-auto w-72'
+              />
             </div>
           </div>
         </div>

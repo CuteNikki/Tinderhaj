@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 
+import { SHARKS } from '@/lib/images';
 import { BOB_SHARK, bob, SHARK_HOVER } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 
@@ -31,7 +32,7 @@ export function PonderingShark() {
       <div className={cn('border-primary/15 absolute inset-0 rounded-full border border-dashed', outer.className)} style={outer.style} />
       <div className={cn('relative z-10', SHARK_HOVER, shark.className)} style={shark.style}>
         <div className={BOB_SHARK}>
-          <Image unoptimized src='/blahajThink.webp' width={320} height={320} alt='' className='h-auto w-32 drop-shadow-2xl xl:w-40' />
+          <Image unoptimized src={SHARKS.think} width={320} height={320} alt='' className='h-auto w-32 drop-shadow-2xl xl:w-40' />
         </div>
       </div>
       {/* The glass pops in on itself, inside what bobs, so it's frosted from the start (see glass) */}
