@@ -2,6 +2,7 @@ import 'server-only';
 
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { cacheLife } from 'next/cache';
 import sharp from 'sharp';
 
 import { isUploadUrl } from '@/constants/uploads';
@@ -39,17 +40,39 @@ export async function toOgImage(url: string, size: number) {
   // Only from UploadThing, never wherever a saved URL points
   if (!isUploadUrl(url)) return null;
   try {
-    const response = await fetch(url, { signal: AbortSignal.timeout(3000) });
-    if (!response.ok) return null;
-    const png = await sharp(Buffer.from(await response.arrayBuffer()))
-      .resize(size, size, { fit: 'cover' })
-      .png()
-      .toBuffer();
-    return `data:image/png;base64,${png.toString('base64')}`;
+    return await shrunkUpload(url, size);
   } catch {
     return null;
   }
 }
+
+/**
+ * The fetching and shrinking for toOgImage, which is most of the time a shared
+ * image takes (UploadThing is slow to answer), kept in memory for as long as
+ * the server is, since an upload never changes: a new one gets a new URL. On
+ * serverless hosting that's often not long, so OG_HEADERS does most of the
+ * work there. Fails by throwing, so a slow moment isn't cached.
+ */
+async function shrunkUpload(url: string, size: number) {
+  'use cache';
+  cacheLife('max');
+
+  const response = await fetch(url, { signal: AbortSignal.timeout(3000) });
+  if (!response.ok) throw new Error(`Fetching ${url}: ${response.status}`);
+  const png = await sharp(Buffer.from(await response.arrayBuffer()))
+    .resize(size, size, { fit: 'cover' })
+    .png()
+    .toBuffer();
+  return `data:image/png;base64,${png.toString('base64')}`;
+}
+
+/**
+ * For a shared image's response: Discord and the like give up on a slow one
+ * and remember the link as having none, so the CDN keeps each a few minutes and
+ * answers from what it has while drawing it again, rather than drawing it while
+ * they wait. An edited shark shows its new one within those minutes.
+ */
+export const OG_HEADERS = { 'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=86400' };
 
 const BUBBLES = [
   { left: 640, top: 70, size: 22 },

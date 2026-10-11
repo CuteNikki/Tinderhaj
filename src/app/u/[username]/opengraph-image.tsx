@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og';
 
 import { SITE_NAME } from '@/constants/metadata';
 import { getUserPage } from '@/lib/hearts';
-import { OG_FONTS, OG_SIZE, Ocean, OgPill, OgText, SHARK_SRC, toOgImage } from '@/lib/og';
+import { OG_FONTS, OG_HEADERS, OG_SIZE, Ocean, OgPill, OgText, SHARK_SRC, toOgImage } from '@/lib/og';
 
 import SiteImage from '@/app/opengraph-image';
 
@@ -146,7 +146,7 @@ export default async function Image({ params }: { params: Promise<{ username: st
         ))
       )}
     </Ocean>,
-    { ...OG_SIZE, fonts: OG_FONTS },
+    { ...OG_SIZE, fonts: OG_FONTS, headers: OG_HEADERS },
   );
 }
 
