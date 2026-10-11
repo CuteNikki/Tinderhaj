@@ -330,27 +330,31 @@ export async function deleteProfile({ profileId }: { profileId: string }) {
   syncDiscordRolesLater(session.user.id);
 }
 
+/** When a review finds the profile isn't waiting anymore. */
+const REVIEWED_ALREADY = 'That profile has changed since you opened it, or someone already reviewed it. Reload to see it as it is now.';
+
 export async function verifyProfile({ profileId }: { profileId: string }) {
   const session = await requireUser();
 
-  if (!isModerator(session.user.role)) return false;
+  if (!isModerator(session.user.role)) return { message: 'Only moderators can verify profiles.' };
 
   // Editing a verified shark sends it back for review but keeps when it was first verified, so a shark
   // without one is new to Tinderhaj (or was unverified, as a mistake), and gets posted on Discord.
-  const before = await prisma.profile.findUnique({ where: { id: profileId }, select: { verifiedAt: true } });
-  const { userId } = await prisma.profile.update({
-    where: { id: profileId },
+  const before = await prisma.profile.findUnique({ where: { id: profileId }, select: { verifiedAt: true, userId: true } });
+  // Only while it's waiting: edited since the moderator opened it, it's a draft again, and verifying it
+  // would put what nobody has seen into discovery.
+  const { count } = await prisma.profile.updateMany({
+    where: { id: profileId, status: 'PENDING' },
     data: { status: 'VERIFIED', rejectedFields: [], rejectionNote: null, verifiedAt: new Date() },
-    select: { userId: true },
   });
-  syncDiscordRolesLater(userId);
+  if (!before || !count) return { message: REVIEWED_ALREADY };
+  syncDiscordRolesLater(before.userId);
   settleReviewLater(profileId, session.user);
-  if (!before?.verifiedAt) announceNewSharkLater(profileId);
+  if (!before.verifiedAt) announceNewSharkLater(profileId);
 
   revalidatePath('/moderation/verification', 'layout');
   revalidatePath('/dashboard/profiles');
   updateTag(PROFILE_COUNT_TAG);
-  return true;
 }
 
 /**
@@ -387,11 +391,13 @@ export async function rejectProfile(unsafeData: z.infer<typeof rejectProfileSche
 
   if (!isModerator(session.user.role)) return { message: 'Unable to reject this profile.' };
 
-  const { userId } = await prisma.profile.update({
-    where: { id: data.profileId },
+  // Only while it's waiting, like verifying
+  const { count } = await prisma.profile.updateMany({
+    where: { id: data.profileId, status: 'PENDING' },
     data: { status: 'REJECTED', rejectedFields: data.rejectedFields, rejectionNote: data.note ?? null },
-    select: { userId: true },
   });
+  if (!count) return { message: REVIEWED_ALREADY };
+  const { userId } = await prisma.profile.findUniqueOrThrow({ where: { id: data.profileId }, select: { userId: true } });
   syncDiscordRolesLater(userId);
   settleReviewLater(data.profileId, session.user);
 

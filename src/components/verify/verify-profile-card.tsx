@@ -35,10 +35,10 @@ export function VerifyProfileCard({ profile, fullBio = false, eager = false }: {
 
   function handleVerify() {
     startVerifyTransition(async () => {
-      const success = await verifyProfile({ profileId: profile.id });
+      const error = await verifyProfile({ profileId: profile.id }).catch(() => ({ message: 'Unable to verify this profile.' }));
 
-      if (!success) {
-        toast.error('Unable to verify this profile.', { duration: 5000, position: 'top-center' });
+      if (error) {
+        toast.error(error.message, { duration: 5000, position: 'top-center' });
       } else {
         setIsHandled(true);
         toast.success(`"${profile.displayName}" verified!`, { duration: 4000, position: 'top-center' });
