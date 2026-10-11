@@ -6,10 +6,10 @@ import { toast } from 'sonner';
 import { ActivityIcon, HourglassIcon, LogInIcon, MonitorIcon, NetworkIcon, SmartphoneIcon, type LucideIcon } from 'lucide-react';
 
 import { revokeOtherSessions, revokeSession } from '@/lib/actions';
-import { formatDate, relative } from '@/lib/time';
 import { cn } from '@/lib/utils';
 
 import { type ConfirmOptions, useConfirm } from '@/components/common/confirm-dialog';
+import { LocalTime } from '@/components/common/local-time';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
@@ -59,12 +59,17 @@ export function SessionList({ sessions }: { sessions: SessionInfo[] }) {
                     </Detail>
                   </Details>
                 )}
-                {/* Times are shown in the viewer's own time zone and relative
-                    to now, so the server's render can differ slightly. */}
-                <Details className='text-xs' suppressHydrationWarning>
-                  <Detail icon={LogInIcon}>Signed in {formatDate(session.createdAt)}</Detail>
-                  <Detail icon={ActivityIcon}>Active {relative(session.lastActive)}</Detail>
-                  <Detail icon={HourglassIcon}>Expires {relative(session.expiresAt)}</Detail>
+                {/* In the viewer's own time zone, and relative to now */}
+                <Details className='text-xs'>
+                  <Detail icon={LogInIcon}>
+                    Signed in <LocalTime iso={session.createdAt} absolute />
+                  </Detail>
+                  <Detail icon={ActivityIcon}>
+                    Active <LocalTime iso={session.lastActive} />
+                  </Detail>
+                  <Detail icon={HourglassIcon}>
+                    Expires <LocalTime iso={session.expiresAt} />
+                  </Detail>
                 </Details>
               </div>
               {!session.current && (
@@ -113,12 +118,8 @@ export function SessionList({ sessions }: { sessions: SessionInfo[] }) {
   );
 }
 
-function Details({ className, children, suppressHydrationWarning }: { className?: string; children: React.ReactNode; suppressHydrationWarning?: boolean }) {
-  return (
-    <ul className={cn('text-muted-foreground flex flex-wrap gap-x-3 gap-y-0.5', className)} suppressHydrationWarning={suppressHydrationWarning}>
-      {children}
-    </ul>
-  );
+function Details({ className, children }: { className?: string; children: React.ReactNode }) {
+  return <ul className={cn('text-muted-foreground flex flex-wrap gap-x-3 gap-y-0.5', className)}>{children}</ul>;
 }
 
 function Detail({
@@ -132,7 +133,7 @@ function Detail({
   children: React.ReactNode;
 }) {
   return (
-    <li className='flex min-w-0 items-center gap-1' suppressHydrationWarning>
+    <li className='flex min-w-0 items-center gap-1'>
       <Icon className='text-muted-foreground size-3.5 shrink-0' aria-hidden />
       {label && <span className='sr-only'>{label}: </span>}
       <span className='min-w-0 wrap-break-word'>{children}</span>
