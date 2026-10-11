@@ -306,3 +306,30 @@ model BubbleSettings {
   blocked   String[] @default([])
   updatedAt DateTime @updatedAt
 }
+
+enum ModerationAction {
+  WARN
+  TIMEOUT
+  UNTIMEOUT
+  KICK
+  BAN
+  UNBAN
+}
+
+/// One moderation on the Discord server, by the bot's commands or by hand in
+/// Discord, so each member's history (/history) has all of them. The id is
+/// its case number. Ids of people are Discord's, not this site's.
+model Moderation {
+  id          Int              @id @default(autoincrement())
+  /// Who it was done to.
+  userId      String
+  /// Who did it.
+  moderatorId String
+  action      ModerationAction
+  reason      String?
+  /// When a timeout ends.
+  until       DateTime?
+  createdAt   DateTime         @default(now())
+
+  @@index([userId, createdAt])
+}
