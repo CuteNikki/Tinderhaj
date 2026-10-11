@@ -51,10 +51,11 @@ export default function ContactPage() {
                   Reach us
                 </Eyebrow>
               </ScrollReveal>
-              <ScrollReveal delay={CONTENT_DELAY} variant='card'>
+              {/* Side by side only when the card itself has room for the address and buttons on one line, whatever the screen */}
+              <ScrollReveal delay={CONTENT_DELAY} variant='card' className='@container'>
                 <section
                   aria-labelledby='email'
-                  className='border-foreground/10 bg-card dark:bg-accent flex flex-col gap-5 rounded-2xl border p-5 shadow-sm sm:flex-row sm:items-center sm:p-6'
+                  className='border-foreground/10 bg-card dark:bg-accent flex flex-col gap-5 rounded-2xl border p-5 shadow-sm sm:p-6 @min-[34.5rem]:flex-row @min-[34.5rem]:items-center'
                 >
                   <span className='bg-primary/10 text-primary flex size-12 shrink-0 items-center justify-center rounded-full'>
                     <MailIcon className='size-6' aria-hidden='true' />
