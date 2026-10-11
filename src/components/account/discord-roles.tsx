@@ -28,7 +28,7 @@ export function DiscordRoles({ roles, linked }: { roles: Role[]; linked: boolean
       const toastOptions = { duration: 5000, position: 'top-center' as const };
       if (result.status === 'synced')
         toast.success(result.roles.length ? `Your roles: ${result.roles.join(', ')}.` : 'Up to date. No roles yet.', toastOptions);
-      else if (result.status === 'not-member') toast.error('You’re not on the server yet. Join it, then refresh.', toastOptions);
+      else if (result.status === 'not-member') toast.error("You're not on the server yet. Join it, then refresh.", toastOptions);
       else if (result.status === 'unlinked') toast.error('Connect Discord first, under Sign-in methods.', toastOptions);
       else toast.error('Unable to reach Discord. Please try again in a moment.', toastOptions);
       // What's earned may have changed since the page loaded.

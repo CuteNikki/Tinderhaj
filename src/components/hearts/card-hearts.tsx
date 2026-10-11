@@ -66,9 +66,9 @@ export function CardHearts({
     const [{ shark, ...state }] = states;
     const label =
       state.sent && state.received
-        ? `It’s a match! Take back ${shark.displayName}’s heart`
+        ? `It's a match! Take back ${shark.displayName}'s heart`
         : state.sent
-          ? `Take back ${shark.displayName}’s heart`
+          ? `Take back ${shark.displayName}'s heart`
           : state.received
             ? `${target.displayName} hearted ${shark.displayName}. Heart back`
             : `Send ${target.displayName} a heart from ${shark.displayName}`;

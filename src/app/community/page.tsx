@@ -30,7 +30,7 @@ const WAYS_IN: { title: string; copy: string; icon: LucideIcon; link: { label: s
   },
   {
     title: 'Under the hood',
-    copy: 'All of Tinderhaj’s code is on GitHub, if you’d like a look at how it’s made.',
+    copy: "All of Tinderhaj's code is on GitHub, if you'd like a look at how it's made.",
     icon: Code2Icon,
     link: { label: 'See the code', href: GITHUB_URL },
   },
@@ -66,7 +66,7 @@ export default function CommunityPage() {
         eyebrow='Join in'
         title='More than'
         highlight='sending hearts.'
-        note='A few ways to be part of it, beyond your sharks’ profiles.'
+        note="A few ways to be part of it, beyond your sharks' profiles."
         tone='background'
       >
         <Stagger as='ul' itemAs='li' variant='card' gap={STAGGER} delay={0.1} className='grid gap-4 sm:grid-cols-2 xl:grid-cols-4' itemClassName='h-full'>

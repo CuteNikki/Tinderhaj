@@ -21,7 +21,7 @@ export function AddYourShark({ tone }: { tone?: 'muted' | 'card' | 'background' 
   return (
     <Section
       eyebrow='Your turn'
-      title='Don’t see your shark?'
+      title="Don't see your shark?"
       highlight='Add them to the pod.'
       note='Every shark here started with a profile. Yours could be the next one someone hearts.'
       tone={tone}

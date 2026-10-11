@@ -37,7 +37,7 @@ const RULES: { title: string; copy: string; icon: LucideIcon }[] = [
   },
   {
     title: 'Your own pictures',
-    copy: 'Photos you took of a shark that’s yours. No store photos, and nothing taken from someone else’s post.',
+    copy: "Photos you took of a shark that's yours. No store photos, and nothing taken from someone else's post.",
     icon: CameraIcon,
   },
   {
@@ -52,19 +52,19 @@ const RULES: { title: string; copy: string; icon: LucideIcon }[] = [
   },
   {
     title: 'One profile per shark',
-    copy: 'No copies of the same shark, and no passing off someone else’s shark as yours.',
+    copy: "No copies of the same shark, and no passing off someone else's shark as yours.",
     icon: CopyXIcon,
   },
   {
     title: 'No ads or spam',
-    copy: 'No selling, shop links or referral codes. A shark’s profile is about the shark.',
+    copy: "No selling, shop links or referral codes. A shark's profile is about the shark.",
     icon: BotOffIcon,
   },
 ];
 
 /** A profile's way through review, as named on the profiles page. */
 const REVIEW: { title: string; copy: string; icon: LucideIcon }[] = [
-  { title: 'Draft', copy: 'Saved, and only you can see it. Send it in when it’s ready.', icon: FilePenLineIcon },
+  { title: 'Draft', copy: "Saved, and only you can see it. Send it in when it's ready.", icon: FilePenLineIcon },
   { title: 'Pending Review', copy: 'Waiting for a moderator, who looks at every profile by hand.', icon: ClockIcon },
   { title: 'Verified', copy: 'In discovery for everyone to find. Editing it sends it back to draft, to be checked again.', icon: CircleCheckIcon },
 ];
@@ -73,12 +73,12 @@ const REVIEW: { title: string; copy: string; icon: LucideIcon }[] = [
 const CONSEQUENCES: { title: string; copy: string; icon: LucideIcon }[] = [
   {
     title: 'Sent back',
-    copy: 'A profile that isn’t quite right is rejected, with the parts that need fixing marked and often a note. Fix them and send it in again.',
+    copy: "A profile that isn't quite right is rejected, with the parts that need fixing marked and often a note. Fix them and send it in again.",
     icon: UndoIcon,
   },
   {
     title: 'Banned',
-    copy: 'Breaking the rules on purpose, or again and again, can get an account banned, for a day up to until it’s lifted, with the reason given.',
+    copy: "Breaking the rules on purpose, or again and again, can get an account banned, for a day up to until it's lifted, with the reason given.",
     icon: BanIcon,
   },
   {
@@ -138,7 +138,7 @@ export default function GuidelinesPage() {
       </Section>
 
       <Section
-        eyebrow='When something’s not right'
+        eyebrow="When something's not right"
         title='Fixed, mostly.'
         highlight='Banned, rarely.'
         note='Most profiles that come back need a small change, nothing more.'

@@ -81,7 +81,7 @@ export default function Loading() {
           </SettingsSection>
           <SettingsSection still title='Two-step sign-in'>
             <div className='flex flex-col gap-3'>
-              <GhostText>Asks for a code after your password, so your password alone isn’t enough to sign in. Choose where the code comes from:</GhostText>
+              <GhostText>Asks for a code after your password, so your password alone isn&apos;t enough to sign in. Choose where the code comes from:</GhostText>
               <div className='grid gap-3 sm:grid-cols-2'>
                 {[
                   'A code from an app like Google Authenticator, 1Password or Bitwarden. The safest choice.',
@@ -134,7 +134,7 @@ export default function Loading() {
         <SettingsSection
           still
           title='Delete account'
-          description='This permanently deletes your account, profiles, and sessions. We’ll email you a link to confirm first.'
+          description="This permanently deletes your account, profiles, and sessions. We'll email you a link to confirm first."
           destructive
           className='lg:col-span-2'
         >

@@ -34,7 +34,7 @@ const FACTS: { label: string; value: React.ReactNode }[] = [
 const VALUES: { title: string; copy: string; icon: LucideIcon; link?: { label: string; href: string } }[] = [
   {
     title: 'Sharks, not people',
-    copy: 'Every profile is a plush. That keeps it light, and keeps people’s own lives out of it.',
+    copy: "Every profile is a plush. That keeps it light, and keeps people's own lives out of it.",
     icon: SmileIcon,
   },
   {
@@ -45,7 +45,7 @@ const VALUES: { title: string; copy: string; icon: LucideIcon; link?: { label: s
   },
   {
     title: 'Out in the open',
-    copy: 'The code is public, and so are bug reports and ideas. Anyone can see what’s being worked on.',
+    copy: "The code is public, and so are bug reports and ideas. Anyone can see what's being worked on.",
     icon: Code2Icon,
     link: { label: 'See it on GitHub', href: GITHUB_URL },
   },

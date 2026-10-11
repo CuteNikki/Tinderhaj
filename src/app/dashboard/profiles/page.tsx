@@ -37,7 +37,7 @@ export default async function ProfilesPage() {
               </Link>
             </Button>
           ) : (
-            <Button disabled title='You’ve reached the most profiles one account can have.'>
+            <Button disabled title="You've reached the most profiles one account can have.">
               <PlusIcon />
               New profile
             </Button>

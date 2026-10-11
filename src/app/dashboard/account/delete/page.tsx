@@ -21,7 +21,7 @@ export default async function DeleteAccountPage({ searchParams }: PageProps<'/da
       <AuthShell
         badge='Broken link'
         icon={<LinkIcon className='size-4 shrink-0' aria-hidden='true' />}
-        title='That link didn’t work'
+        title="That link didn't work"
         description='It is incomplete. Open the link from the email again.'
       >
         <Button asChild className='w-full'>
@@ -37,7 +37,7 @@ export default async function DeleteAccountPage({ searchParams }: PageProps<'/da
         badge='Sign in first'
         icon={<LogInIcon className='size-4 shrink-0' aria-hidden='true' />}
         title='Sign in to continue'
-        description='For safety, the link only works in a browser where you’re signed in. Sign in, then open the link from the email again.'
+        description="For safety, the link only works in a browser where you're signed in. Sign in, then open the link from the email again."
       >
         <Button asChild className='w-full'>
           <Link href='/sign-in'>Sign in</Link>
@@ -51,7 +51,7 @@ export default async function DeleteAccountPage({ searchParams }: PageProps<'/da
       badge='Danger zone'
       icon={<Trash2Icon className='size-4 shrink-0' aria-hidden='true' />}
       title='Delete your account?'
-      description={`This deletes @${session.user.name}, all of its profiles, and signs you out everywhere. It can’t be undone.`}
+      description={`This deletes @${session.user.name}, all of its profiles, and signs you out everywhere. It can't be undone.`}
     >
       <ConfirmDeleteAccount token={token} />
     </AuthShell>

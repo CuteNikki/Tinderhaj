@@ -53,7 +53,7 @@ export function PasskeySettings({ passkeys }: { passkeys: Passkey[] }) {
   async function remove(passkey: Passkey) {
     const confirmed = await ask({
       title: `Remove ${passkey.name ?? 'this passkey'}?`,
-      description: 'You can’t sign in with it anymore. It may still show on your device until you delete it there too.',
+      description: "You can't sign in with it anymore. It may still show on your device until you delete it there too.",
       action: 'Remove',
       destructive: true,
     });

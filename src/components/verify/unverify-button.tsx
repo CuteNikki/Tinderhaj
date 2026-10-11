@@ -20,7 +20,7 @@ export function UnverifyButton({ profile, verifiedAt }: { profile: { id: string;
   async function unverify() {
     const confirmed = await ask({
       title: `Unverify ${profile.displayName}?`,
-      description: 'It leaves discovery right away and goes back to waiting for review. Its hearts come back if it’s verified again.',
+      description: "It leaves discovery right away and goes back to waiting for review. Its hearts come back if it's verified again.",
       action: 'Unverify',
       destructive: true,
     });

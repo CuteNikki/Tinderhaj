@@ -26,10 +26,10 @@ export function socialErrorMessage(error: string) {
     case 'account_not_linked':
       return 'An account with this email already exists. Sign in with your password or a passkey, then connect it in your account settings.';
     case 'email_not_found':
-      return 'That account didn’t share an email address, which Tinderhaj needs.';
+      return "That account didn't share an email address, which Tinderhaj needs.";
     case 'access_denied':
       return 'Signing in was cancelled.';
     default:
-      return 'That didn’t work. Please try again.';
+      return "That didn't work. Please try again.";
   }
 }

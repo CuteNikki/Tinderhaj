@@ -25,7 +25,7 @@ const FEATURES: { title: string; copy: string; icon: LucideIcon }[] = [
   },
   {
     title: 'Checked by hand',
-    copy: 'Every profile is looked over by a moderator before it’s shown, and if something needs fixing, you’re told exactly what.',
+    copy: "Every profile is looked over by a moderator before it's shown, and if something needs fixing, you're told exactly what.",
     icon: BadgeCheckIcon,
   },
   {
@@ -35,7 +35,7 @@ const FEATURES: { title: string; copy: string; icon: LucideIcon }[] = [
   },
   {
     title: 'A page to share',
-    copy: 'Your sharks together on a page of their own, at your username, with a picture of them when the link’s shared.',
+    copy: "Your sharks together on a page of their own, at your username, with a picture of them when the link's shared.",
     icon: Share2Icon,
   },
   {

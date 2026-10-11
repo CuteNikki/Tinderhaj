@@ -28,4 +28,4 @@ export const reportSchema = z
     contact: z.boolean(),
   })
   // "Something else" says nothing on its own.
-  .refine((report) => report.reason !== 'OTHER' || report.details, { path: ['details'], message: 'Say what’s wrong, so a moderator knows what to look for.' });
+  .refine((report) => report.reason !== 'OTHER' || report.details, { path: ['details'], message: "Say what's wrong, so a moderator knows what to look for." });

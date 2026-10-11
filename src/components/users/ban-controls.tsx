@@ -29,7 +29,7 @@ export function BanForm({ user }: { user: BanTarget }) {
     const how = duration === 'permanent' ? 'until the ban is lifted' : `for ${BAN_DURATIONS[duration]}`;
     const confirmed = await ask({
       title: `Ban @${user.username} ${how}?`,
-      description: 'They’re signed out everywhere right away, and their profiles leave discovery while the ban lasts.',
+      description: "They're signed out everywhere right away, and their profiles leave discovery while the ban lasts.",
       action: 'Ban',
       destructive: true,
     });
@@ -98,7 +98,7 @@ export function UnbanButton({ user }: { user: BanTarget }) {
         className='w-fit'
         disabled={pending}
         onClick={async () => {
-          const confirmed = await ask({ title: `Lift @${user.username}’s ban?`, description: 'They can sign in again right away.', action: 'Lift ban' });
+          const confirmed = await ask({ title: `Lift @${user.username}'s ban?`, description: 'They can sign in again right away.', action: 'Lift ban' });
           if (!confirmed) return;
 
           startTransition(async () => {

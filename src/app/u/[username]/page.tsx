@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: PageProps<'/u/[username]'>): 
     title: `@${user.username}`,
     description: names.length
       ? `Meet ${new Intl.ListFormat('en', { type: 'conjunction' }).format(names)}: the sharks of @${user.username} on Tinderhaj.`
-      : `@${user.username} is on Tinderhaj. Their sharks show up here once they’re verified.`,
+      : `@${user.username} is on Tinderhaj. Their sharks show up here once they're verified.`,
   };
 }
 
@@ -114,7 +114,7 @@ export default async function UserSharksPage({ params }: PageProps<'/u/[username
             <EmptyState
               icon={UserRoundIcon}
               title='No sharks yet.'
-              description={own ? 'Your sharks show up here once they’re verified.' : 'Their sharks show up here once they’re verified.'}
+              description={own ? "Your sharks show up here once they're verified." : "Their sharks show up here once they're verified."}
             />
           </ScrollReveal>
         )}

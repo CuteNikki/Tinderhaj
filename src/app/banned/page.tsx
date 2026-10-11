@@ -29,7 +29,7 @@ export default async function BannedPage() {
         badge='Banned'
         icon={<BanIcon className='size-4 shrink-0' aria-hidden='true' />}
         title='Your account is banned'
-        description={user.banExpires ? 'You can sign in again once the ban ends.' : 'You can’t sign in until a moderator lifts the ban.'}
+        description={user.banExpires ? 'You can sign in again once the ban ends.' : "You can't sign in until a moderator lifts the ban."}
       >
         <div className='flex flex-col gap-4 text-sm'>
           {user.banExpires && (

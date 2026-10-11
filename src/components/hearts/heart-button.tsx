@@ -25,7 +25,7 @@ export function useHeartActions() {
       if ('message' in result) return void toast.error(result.message, { duration: 5000, position: 'top-center' });
 
       if (result.matched)
-        toast.success(`It’s a match! ${from.displayName} and ${to.displayName} hearted each other.`, { duration: 6000, position: 'top-center' });
+        toast.success(`It's a match! ${from.displayName} and ${to.displayName} hearted each other.`, { duration: 6000, position: 'top-center' });
       else toast.success(`${from.displayName} sent ${to.displayName} a heart.`, { duration: 5000, position: 'top-center' });
       router.refresh();
     });

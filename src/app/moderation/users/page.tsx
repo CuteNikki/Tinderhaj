@@ -59,7 +59,7 @@ export default async function UsersPage({ searchParams }: PageProps<'/moderation
   const filters: { show: Show; label: string; count: number; description: string }[] = [
     { show: null, label: 'Everyone', count: everyone, description: 'All accounts on Tinderhaj.' },
     ...ROLES.map((role) => ({ show: role, label: `${ROLE_LABELS[role]}s`, count: counts[role] ?? 0, description: ROLE_DESCRIPTIONS[role] })),
-    { show: 'BANNED', label: 'Banned', count: counts.BANNED, description: 'Can’t sign in until their ban ends or is lifted.' },
+    { show: 'BANNED', label: 'Banned', count: counts.BANNED, description: "Can't sign in until their ban ends or is lifted." },
   ];
   const shownLabel = show === 'BANNED' ? 'banned accounts' : show ? `${ROLE_LABELS[show].toLowerCase()}s` : 'accounts';
 

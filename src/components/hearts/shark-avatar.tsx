@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 export function SharkAvatar({ shark, className }: { shark: { displayName: string; avatarUrl: string | null }; className?: string }) {
   return (
     <span className={cn('bg-muted block size-10 shrink-0 overflow-hidden rounded-full', className)}>
-      <ProfileAvatar src={shark.avatarUrl} alt={`${shark.displayName}’s avatar`} size={80} />
+      <ProfileAvatar src={shark.avatarUrl} alt={`${shark.displayName}'s avatar`} size={80} />
     </span>
   );
 }

@@ -143,7 +143,7 @@ async function assertNotLastAdmin(user: { role?: string | null }) {
   if ((await prisma.user.count({ where: { role: 'ADMIN' } })) <= 1) {
     throw new APIError('BAD_REQUEST', {
       code: 'LAST_ADMIN',
-      message: 'You’re the only admin. Make someone else an admin before deleting your account.',
+      message: "You're the only admin. Make someone else an admin before deleting your account.",
     });
   }
 }

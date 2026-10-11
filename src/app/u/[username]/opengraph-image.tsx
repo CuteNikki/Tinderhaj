@@ -6,7 +6,7 @@ import { OG_FONTS, OG_SIZE, Ocean, OgPill, OgText, SHARK_SRC, toOgImage } from '
 
 import SiteImage from '@/app/opengraph-image';
 
-export const alt = `Someone’s sharks on ${SITE_NAME}, shown as photos fanned out like cards.`;
+export const alt = `Someone's sharks on ${SITE_NAME}, shown as photos fanned out like cards.`;
 export const size = OG_SIZE;
 export const contentType = 'image/png';
 

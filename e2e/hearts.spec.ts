@@ -21,13 +21,13 @@ test('a heart sent back is a match, and shows how to reach each other', async ({
   // He hearts back.
   await page.goto(`/u/${alice.username}`);
   await page.getByRole('button', { name: 'Bubbles hearted Finn. Heart back' }).click();
-  await expect(page.getByText('It’s a match! Finn and Bubbles hearted each other.')).toBeVisible();
+  await expect(page.getByText("It's a match! Finn and Bubbles hearted each other.")).toBeVisible();
 
   // The match shows Alice's way to reach her, its link clickable, and asks Bob for his.
   await page.goto('/dashboard/hearts?tab=matches');
   await expect(page.getByText('Matched with your Finn')).toBeVisible();
   await expect(page.getByRole('link', { name: 'https://bsky.app/profile/bubbles.test' })).toHaveAttribute('href', 'https://bsky.app/profile/bubbles.test');
-  await expect(page.getByText('Your matches can’t see a way to reach you yet.')).toBeVisible();
+  await expect(page.getByText("Your matches can't see a way to reach you yet.")).toBeVisible();
 
   // Bob adds his.
   await page.getByRole('link', { name: 'Add one in Settings' }).click();

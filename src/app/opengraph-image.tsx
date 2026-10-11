@@ -112,7 +112,7 @@ export default function Image() {
         >
           <img src={hug} width={62} height={62} alt='' />
         </div>
-        <div style={{ display: 'flex', fontSize: 30, fontWeight: 900, letterSpacing: -0.5 }}>It’s a match!</div>
+        <div style={{ display: 'flex', fontSize: 30, fontWeight: 900, letterSpacing: -0.5 }}>It&apos;s a match!</div>
       </div>
     </Ocean>,
     { ...OG_SIZE, fonts: OG_FONTS },

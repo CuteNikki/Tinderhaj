@@ -87,7 +87,7 @@ export const verifiedMetadata: Metadata = {
 export const bannedMetadata: Metadata = {
   ...unlisted,
   title: 'Banned',
-  description: 'Why your Tinderhaj account can’t sign in.',
+  description: "Why your Tinderhaj account can't sign in.",
 };
 
 export const newProfileMetadata: Metadata = {
@@ -197,7 +197,7 @@ export const communityMetadata: Metadata = {
 
 export const guidelinesMetadata: Metadata = {
   title: 'Guidelines',
-  description: 'What moderators look for in a Blåhaj profile, how review works, and what happens when something isn’t right.',
+  description: "What moderators look for in a Blåhaj profile, how review works, and what happens when something isn't right.",
 };
 
 export const imprintMetadata: Metadata = {

@@ -27,7 +27,7 @@ const TABS = {
   matches: {
     label: 'Matches',
     icon: HeartHandshakeIcon,
-    empty: { title: 'No matches yet.', description: 'When a shark you hearted hearts you back, or the other way round, you’ll find them here.' },
+    empty: { title: 'No matches yet.', description: "When a shark you hearted hearts you back, or the other way round, you'll find them here." },
   },
   received: {
     label: 'Received',
@@ -98,7 +98,7 @@ export default async function HeartsPage({ searchParams }: PageProps<'/dashboard
         {tab === 'matches' && rows.length > 0 && !hearts.sharesContact && (
           <ScrollReveal delay={CONTENT_DELAY}>
             <p className='text-muted-foreground mb-4 text-sm'>
-              Your matches can’t see a way to reach you yet.{' '}
+              Your matches can&apos;t see a way to reach you yet.{' '}
               <Link href='/dashboard/account#top' className='text-foreground font-medium underline'>
                 Add one in Settings
               </Link>
@@ -195,7 +195,7 @@ function MatchContact({ shark, username, contact }: { shark: { id: string; displ
           </ReportDialog>
         </>
       ) : (
-        <span>@{username} hasn’t shared a way to reach them yet.</span>
+        <span>@{username} hasn&apos;t shared a way to reach them yet.</span>
       )}
     </p>
   );

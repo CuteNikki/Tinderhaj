@@ -32,7 +32,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
   ].filter(Boolean);
   const interests = shark.interests.slice(0, 4);
   const rest = shark.interests.length - interests.length;
-  // As big as fits on one line of the text side (each letter about 3/5 as wide as it’s tall); longer ones wrap.
+  // As big as fits on one line of the text side (each letter about 3/5 as wide as it's tall); longer ones wrap.
   const nameSize = Math.max(48, Math.min(120, Math.floor(TEXT_WIDTH / (shark.displayName.length * 0.6))));
 
   return new ImageResponse(

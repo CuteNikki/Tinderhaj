@@ -16,8 +16,8 @@ const SOCIAL_IDS = new Set<string>(SOCIAL_PROVIDERS.map((provider) => provider.i
 
 const linkErrors: Record<string, string> = {
   account_already_linked_to_different_user: 'That account is already connected to another Tinderhaj account.',
-  unable_to_link_account: 'That account’s email isn’t verified there, so it can’t be connected.',
-  email_not_found: 'That account didn’t share an email address, which Tinderhaj needs.',
+  unable_to_link_account: "That account's email isn't verified there, so it can't be connected.",
+  email_not_found: "That account didn't share an email address, which Tinderhaj needs.",
 };
 
 /**
@@ -66,7 +66,7 @@ export function LinkedAccounts({
     const label = providerLabel(account.providerId);
     const confirmed = await ask({
       title: `Disconnect ${label}?`,
-      description: `You can’t sign in with ${label} anymore, until you connect it again.`,
+      description: `You can't sign in with ${label} anymore, until you connect it again.`,
       action: 'Disconnect',
       destructive: true,
     });

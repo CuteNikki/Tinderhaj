@@ -49,13 +49,13 @@ export function ReportDialog({ shark, contact = false, children }: { shark: Shar
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{contact ? `Report how to reach ${shark.displayName}’s owner` : `Report ${shark.displayName}`}</DialogTitle>
+          <DialogTitle>{contact ? `Report how to reach ${shark.displayName}'s owner` : `Report ${shark.displayName}`}</DialogTitle>
           <DialogDescription>Only moderators see reports, and nobody is told who made one.</DialogDescription>
         </DialogHeader>
 
         <div className='space-y-4'>
           <div className='flex flex-col gap-2'>
-            <Label htmlFor={`${id}-reason`}>What’s wrong?</Label>
+            <Label htmlFor={`${id}-reason`}>What&apos;s wrong?</Label>
             <Select value={reason} onValueChange={(value) => setReason(value as ReportReason)}>
               <SelectTrigger id={`${id}-reason`} className='w-full'>
                 <SelectValue placeholder='Pick a reason' />
@@ -70,7 +70,7 @@ export function ReportDialog({ shark, contact = false, children }: { shark: Shar
             </Select>
           </div>
           <div className='flex flex-col gap-2'>
-            <Label htmlFor={`${id}-details`}>{reason === 'OTHER' ? 'What’s wrong' : 'Anything else (optional)'}</Label>
+            <Label htmlFor={`${id}-details`}>{reason === 'OTHER' ? "What's wrong" : 'Anything else (optional)'}</Label>
             <Textarea
               id={`${id}-details`}
               value={details}

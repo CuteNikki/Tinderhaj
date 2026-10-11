@@ -100,7 +100,7 @@ export default async function ReportsPage({ searchParams }: PageProps<'/moderati
         ) : (
           <ScrollReveal delay={CONTENT_DELAY + 0.1}>
             {tab === 'open' ? (
-              <EmptyState icon={ShieldCheckIcon} title='All caught up.' description='Nobody has reported anything that’s waiting for a look.' />
+              <EmptyState icon={ShieldCheckIcon} title='All caught up.' description="Nobody has reported anything that's waiting for a look." />
             ) : (
               <EmptyState icon={FlagIcon} title='Nothing handled yet.' description='Reports you deal with or dismiss show up here, newest first.' />
             )}
@@ -118,7 +118,7 @@ function ReportItem({ report }: { report: ReportRow }) {
     <div className='flex flex-col gap-4 p-4 sm:flex-row sm:items-start'>
       <div className='flex min-w-0 flex-1 items-start gap-3'>
         <SharkDialog shark={profile}>
-          <button type='button' className='shrink-0' aria-label={`Show ${profile.displayName}’s card`}>
+          <button type='button' className='shrink-0' aria-label={`Show ${profile.displayName}'s card`}>
             <SharkAvatar shark={profile} className='size-12' />
           </button>
         </SharkDialog>

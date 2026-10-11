@@ -84,7 +84,7 @@ export default async function SharkPage({ params }: PageProps<'/u/[username]/[id
             <Button variant='outline' asChild>
               <Link href={`/u/${shark.user.username}`}>
                 <UsersRoundIcon aria-hidden='true' />
-                {own ? 'All your sharks' : `All of @${shark.user.username}’s sharks`}
+                {own ? 'All your sharks' : `All of @${shark.user.username}'s sharks`}
               </Link>
             </Button>
             {own && (

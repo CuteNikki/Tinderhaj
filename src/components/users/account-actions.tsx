@@ -42,7 +42,7 @@ export function AccountActions({ user, sessions }: { user: { id: string; usernam
       <Button
         variant='destructive'
         disabled={running !== null || sessions === 0}
-        title={sessions === 0 ? 'They aren’t signed in anywhere.' : undefined}
+        title={sessions === 0 ? "They aren't signed in anywhere." : undefined}
         onClick={() =>
           run(
             'sign-out',
@@ -87,7 +87,7 @@ export function AccountActions({ user, sessions }: { user: { id: string; usernam
             'delete',
             {
               title: `Delete @${user.username}?`,
-              description: 'This deletes their account and all of their profiles right away. It can’t be undone.',
+              description: "This deletes their account and all of their profiles right away. It can't be undone.",
               action: 'Delete',
               destructive: true,
             },

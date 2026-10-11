@@ -25,8 +25,8 @@ type Mode = 'app' | 'email' | 'backup';
 export const SEND_CODE_KEY = 'two-factor-send-code';
 
 const messages: Record<string, string> = {
-  INVALID_CODE: 'That code didn’t work. Try again.',
-  INVALID_BACKUP_CODE: 'That backup code didn’t work, or was used already.',
+  INVALID_CODE: "That code didn't work. Try again.",
+  INVALID_BACKUP_CODE: "That backup code didn't work, or was used already.",
   OTP_HAS_EXPIRED: 'That code has expired. Send a new one.',
   TOO_MANY_ATTEMPTS_REQUEST_NEW_CODE: 'Too many tries with that code. Send a new one.',
   ACCOUNT_TEMPORARILY_LOCKED: 'Too many wrong codes. Wait 15 minutes, then sign in again.',

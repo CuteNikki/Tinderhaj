@@ -6,7 +6,7 @@ test('a reported shark reaches the moderators, who deal with it', async ({ page 
   const reporter = await createUser({ sharks: ['Finn'] });
   // Each run's own, as every moderator sees every report.
   const contact = `Discord: ${owner.username}`;
-  const details = `It’s a dolphin, says ${reporter.username}.`;
+  const details = `It's a dolphin, says ${reporter.username}.`;
   await prisma.user.update({ where: { id: owner.id }, data: { matchContact: contact } });
   const moderator = await createUser();
   await prisma.user.update({ where: { id: moderator.id }, data: { role: 'MODERATOR' } });
@@ -30,14 +30,14 @@ test('a reported shark reaches the moderators, who deal with it', async ({ page 
     await page.getByRole('option', { name: 'Not a shark plush' }).click();
     await dialog.getByRole('textbox').fill(details);
     await dialog.getByRole('button', { name: 'Report', exact: true }).click();
-    await expect(page.getByText(time === 'first' ? 'Thanks for telling us.' : 'You’ve reported this already.')).toBeVisible();
+    await expect(page.getByText(time === 'first' ? 'Thanks for telling us.' : "You've reported this already.")).toBeVisible();
   }
 
   // Reporting the way to reach Bubbles' owner, from the match.
   await page.goto('/dashboard/hearts?tab=matches');
   await page.getByRole('button', { name: 'Report', exact: true }).click();
   const dialog = page.getByRole('dialog');
-  await expect(dialog.getByText('Report how to reach Bubbles’s owner')).toBeVisible();
+  await expect(dialog.getByText("Report how to reach Bubbles's owner")).toBeVisible();
   await dialog.getByRole('combobox').click();
   await page.getByRole('option', { name: 'Spam or a scam' }).click();
   await dialog.getByRole('button', { name: 'Report', exact: true }).click();

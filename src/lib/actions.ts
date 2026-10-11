@@ -118,10 +118,10 @@ export async function forgetTrustedDevices() {
  */
 async function moderationTarget(userId: string) {
   const session = await requireUser();
-  if (session.user.id === userId) return { error: { message: 'You can’t do that to your own account.' } } as const;
+  if (session.user.id === userId) return { error: { message: "You can't do that to your own account." } } as const;
 
   const target = await prisma.user.findUnique({ where: { id: userId }, select: { id: true, username: true, email: true, role: true } });
-  if (!target) return { error: { message: 'That account doesn’t exist anymore.' } } as const;
+  if (!target) return { error: { message: "That account doesn't exist anymore." } } as const;
 
   return { session, target } as const;
 }
@@ -156,7 +156,7 @@ export async function banUser(userId: string, input: { reason: string; duration:
   if (found.error) return found.error;
 
   const { session, target } = found;
-  if (!canBan(session.user.role, target.role)) return { message: 'You can’t ban this account.' };
+  if (!canBan(session.user.role, target.role)) return { message: "You can't ban this account." };
   if (!isBanDuration(input.duration)) return { message: 'Unknown ban length.' };
 
   const reason = input.reason.trim().slice(0, BAN_REASON_MAX) || null;
@@ -179,7 +179,7 @@ export async function unbanUser(userId: string) {
   const found = await moderationTarget(userId);
   if (found.error) return found.error;
 
-  if (!canBan(found.session.user.role, found.target.role)) return { message: 'You can’t lift this ban.' };
+  if (!canBan(found.session.user.role, found.target.role)) return { message: "You can't lift this ban." };
 
   await prisma.user.update({
     where: { id: userId },
@@ -241,7 +241,7 @@ export async function createProfile(unsafeData: z.infer<typeof createProfileSche
   const profileCount = await prisma.profile.count({ where: { userId: session.user.id } });
 
   if (profileCount >= MAX_PROFILES) {
-    return { message: 'You’ve reached the most profiles one account can have.' };
+    return { message: "You've reached the most profiles one account can have." };
   }
 
   await prisma.profile.create({
@@ -357,7 +357,7 @@ export async function unverifyProfile({ profileId }: { profileId: string }) {
     where: { id: profileId, status: 'VERIFIED' },
     data: { status: 'PENDING', verifiedAt: null, submittedAt: new Date() },
   });
-  if (!count) return { message: 'That profile isn’t verified anymore.' };
+  if (!count) return { message: "That profile isn't verified anymore." };
   const { userId } = await prisma.profile.findUniqueOrThrow({ where: { id: profileId }, select: { userId: true } });
   syncDiscordRolesLater(userId);
 
@@ -397,12 +397,12 @@ export async function sendHeart({ fromProfileId, toProfileId }: { fromProfileId:
   const session = await requireUser();
 
   const from = await prisma.profile.findFirst({ where: { id: fromProfileId, userId: session.user.id }, select: { status: true, displayName: true } });
-  if (!from) return { message: 'That shark isn’t yours.' };
+  if (!from) return { message: "That shark isn't yours." };
   if (from.status !== 'VERIFIED') return { message: 'Only verified sharks can send hearts.' };
 
   const to = await prisma.profile.findFirst({ where: { id: toProfileId, ...liveProfileWhere() }, select: { userId: true } });
-  if (!to) return { message: 'That shark isn’t around anymore.' };
-  if (to.userId === session.user.id) return { message: 'Your sharks can’t heart each other.' };
+  if (!to) return { message: "That shark isn't around anymore." };
+  if (to.userId === session.user.id) return { message: "Your sharks can't heart each other." };
 
   const today = await prisma.heart.count({ where: { fromProfileId, createdAt: { gt: new Date(Date.now() - 24 * 60 * 60 * 1000) } } });
   if (today >= HEARTS_PER_DAY) return { message: `${from.displayName} is out of hearts for today. Try again tomorrow.` };
@@ -452,8 +452,8 @@ export async function reportProfile(unsafeData: z.input<typeof reportSchema>) {
     where: { id: data.profileId, ...liveProfileWhere() },
     select: { userId: true, user: { select: { matchContact: true } } },
   });
-  if (!profile) return { message: 'That shark isn’t around anymore.' };
-  if (profile.userId === session.user.id) return { message: 'You can’t report your own shark.' };
+  if (!profile) return { message: "That shark isn't around anymore." };
+  if (profile.userId === session.user.id) return { message: "You can't report your own shark." };
 
   // Only a match sees how to reach the owner, so only a match can report it,
   // and the copy for moderators comes from here rather than the browser.
@@ -463,7 +463,7 @@ export async function reportProfile(unsafeData: z.input<typeof reportSchema>) {
       where: { fromProfileId: data.profileId, to: { userId: session.user.id, heartsSent: { some: { toProfileId: data.profileId } } } },
       select: { id: true },
     });
-    if (!match || !profile.user.matchContact) return { message: 'Only a match can report how to reach this shark’s owner.' };
+    if (!match || !profile.user.matchContact) return { message: "Only a match can report how to reach this shark's owner." };
     contactNote = profile.user.matchContact;
   }
 
@@ -473,8 +473,8 @@ export async function reportProfile(unsafeData: z.input<typeof reportSchema>) {
     }),
     prisma.report.count({ where: { reporterId: session.user.id, createdAt: { gt: new Date(Date.now() - 24 * 60 * 60 * 1000) } } }),
   ]);
-  if (open) return { message: 'You’ve reported this already. A moderator will look at it soon.' };
-  if (today >= REPORTS_PER_DAY) return { message: `That’s ${REPORTS_PER_DAY} reports today. Try again tomorrow, or write to us.` };
+  if (open) return { message: "You've reported this already. A moderator will look at it soon." };
+  if (today >= REPORTS_PER_DAY) return { message: `That's ${REPORTS_PER_DAY} reports today. Try again tomorrow, or write to us.` };
 
   await prisma.report.create({
     data: { profileId: data.profileId, reporterId: session.user.id, reason: data.reason, details: data.details || null, contactNote },

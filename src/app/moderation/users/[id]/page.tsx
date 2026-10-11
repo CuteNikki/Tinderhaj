@@ -115,7 +115,7 @@ export default async function UserPage({ params }: PageProps<'/moderation/users/
                 ))}
               </div>
             ) : (
-              <EmptyState icon={UserRoundIcon} title='No profiles.' description='They haven’t made a profile yet.' />
+              <EmptyState icon={UserRoundIcon} title='No profiles.' description="They haven't made a profile yet." />
             )}
           </SettingsSection>
 
@@ -124,7 +124,7 @@ export default async function UserPage({ params }: PageProps<'/moderation/users/
               <RoleSelect userId={user.id} username={user.username} role={user.role} />
             ) : (
               <p className='text-muted-foreground text-sm'>
-                {self ? 'You can’t change your own role.' : 'Only admins can change roles.'} {ROLE_LABELS[user.role]} is the current role.
+                {self ? "You can't change your own role." : 'Only admins can change roles.'} {ROLE_LABELS[user.role]} is the current role.
               </p>
             )}
           </SettingsSection>
@@ -166,7 +166,7 @@ export default async function UserPage({ params }: PageProps<'/moderation/users/
                   <p className='bg-background rounded-lg px-3 py-2 text-sm wrap-break-word whitespace-pre-line'>
                     {user.banReason ?? <span className='text-muted-foreground'>No reason given.</span>}
                   </p>
-                  {mayBan ? <UnbanButton user={user} /> : <p className='text-muted-foreground text-sm'>Only admins can lift a moderator’s ban.</p>}
+                  {mayBan ? <UnbanButton user={user} /> : <p className='text-muted-foreground text-sm'>Only admins can lift a moderator&apos;s ban.</p>}
                 </div>
               ) : (
                 <BanForm user={user} />

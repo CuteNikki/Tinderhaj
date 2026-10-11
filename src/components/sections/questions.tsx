@@ -5,17 +5,17 @@ import { Section } from '@/components/sections/section';
 const QUESTIONS = [
   {
     question: 'Who is Tinderhaj for?',
-    answer: 'Blåhaj, IKEA’s plush sharks, and the people who look after them. Every profile here is a shark, not a person.',
+    answer: "Blåhaj, IKEA's plush sharks, and the people who look after them. Every profile here is a shark, not a person.",
   },
   {
     question: 'How does a shark get verified?',
     answer:
-      'Send its profile in for review and a moderator checks it by hand. Until it’s verified, only you can see it. If something needs changing, your profiles page says what.',
+      "Send its profile in for review and a moderator checks it by hand. Until it's verified, only you can see it. If something needs changing, your profiles page says what.",
   },
   { question: 'Can I have more than one shark?', answer: 'Yes. Each one gets its own profile, pictures and hearts, all on one account.' },
   {
     question: 'How do hearts and matches work?',
-    answer: 'Send a heart to a shark you like. When it hearts one of yours back, that’s a match.',
+    answer: "Send a heart to a shark you like. When it hearts one of yours back, that's a match.",
   },
   { question: 'Can I delete my account?', answer: 'Yes, from your settings. Your sharks and their hearts go with it.' },
 ];

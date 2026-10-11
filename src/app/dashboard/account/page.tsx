@@ -93,7 +93,7 @@ export default async function AccountPage({ searchParams }: PageProps<'/dashboar
           </SettingsSection>
           <SettingsSection
             title='Delete account'
-            description='This permanently deletes your account, profiles, and sessions. We’ll email you a link to confirm first.'
+            description="This permanently deletes your account, profiles, and sessions. We'll email you a link to confirm first."
             destructive
             className='lg:col-span-2'
             delay={CONTENT_DELAY + 5 * STAGGER}

@@ -356,7 +356,7 @@ function AppSetup({ totpURI, backupCodes, onCancel, onDone }: { totpURI: string;
           const { error } = await authClient.twoFactor.verifyTotp({ code });
           setPending(false);
           if (error) {
-            return setError('That code didn’t work. Check the time on your phone, then try the newest code.');
+            return setError("That code didn't work. Check the time on your phone, then try the newest code.");
           }
           setConfirmed(true);
         }}

@@ -39,7 +39,7 @@ export default async function VerifiedPage({ searchParams }: PageProps<'/verifie
       <AuthShell
         badge='Link expired'
         icon={<MailXIcon className='size-4 shrink-0' aria-hidden='true' />}
-        title='That link didn’t work'
+        title="That link didn't work"
         description={`${error === 'TOKEN_EXPIRED' ? 'It has expired. Links work for 24 hours.' : 'It is invalid or was already used.'} Sign in and try again from your account settings.`}
       >
         <Button asChild className='w-full'>

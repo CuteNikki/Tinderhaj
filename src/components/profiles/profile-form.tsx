@@ -182,7 +182,7 @@ export function ProfileForm({ username, profile }: { username: string; profile?:
     if (profile?.status === 'VERIFIED') {
       const confirmed = await ask({
         title: `Take ${profile.displayName} out of discovery?`,
-        description: 'Saving changes takes it out of discovery until you send it for review again and it’s verified.',
+        description: "Saving changes takes it out of discovery until you send it for review again and it's verified.",
         action: 'Save changes',
         destructive: true,
       });
@@ -193,7 +193,7 @@ export function ProfileForm({ username, profile }: { username: string; profile?:
     if (error) return void toast.error(error.message, { duration: 5000, position: 'top-center' });
 
     if (!profile) writeDraft(username, null);
-    toast.success('Profile saved as a draft. Submit it for review when you’re ready.', { duration: 5000, position: 'top-center' });
+    toast.success("Profile saved as a draft. Submit it for review when you're ready.", { duration: 5000, position: 'top-center' });
     router.push('/dashboard/profiles');
   }
 
