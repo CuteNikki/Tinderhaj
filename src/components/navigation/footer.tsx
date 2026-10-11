@@ -1,7 +1,9 @@
 import Link from 'next/link';
+import { Suspense } from 'react';
 
 import { Code2, Mail } from 'lucide-react';
 
+import { getSession } from '@/lib/session';
 import { socialLink } from '@/lib/social-link';
 
 import { Logo } from '@/components/common/logo';
@@ -21,9 +23,15 @@ const communityLinks = [
   { label: 'Contact', href: '/contact' },
 ];
 
-const accountLinks = [
+const signedOutLinks = [
   { label: 'Create a profile', href: '/sign-up' },
   { label: 'Sign in', href: '/sign-in' },
+];
+
+/** Named as in the menu, and two, like signed out, so the column keeps its height when it changes. */
+const signedInLinks = [
+  { label: 'Profiles', href: '/dashboard/profiles#top' },
+  { label: 'Settings', href: '/dashboard/account#top' },
 ];
 
 export function Footer() {
@@ -56,7 +64,10 @@ export function Footer() {
           </div>
           <FooterColumn title='Product' links={productLinks} />
           <FooterColumn title='Community' links={communityLinks} />
-          <FooterColumn title='Account' links={accountLinks} />
+          {/* Who's signed in streams in after the rest, like the navbar; until then, as for someone signed out */}
+          <Suspense fallback={<FooterColumn title='Account' links={signedOutLinks} />}>
+            <AccountColumn />
+          </Suspense>
         </Stagger>
         <div className='border-border mt-10 border-t pt-6'>
           <div className='flex flex-col gap-6 text-xs md:flex-row md:items-center md:justify-between'>
@@ -82,6 +93,11 @@ export function Footer() {
       </div>
     </footer>
   );
+}
+
+async function AccountColumn() {
+  const session = await getSession();
+  return <FooterColumn title='Account' links={session ? signedInLinks : signedOutLinks} />;
 }
 
 function FooterColumn({ title, links }: { title: string; links: { label: string; href: string }[] }) {
