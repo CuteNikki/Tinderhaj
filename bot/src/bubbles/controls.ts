@@ -38,7 +38,7 @@ export async function showOwnPanel(interaction: ButtonInteraction<'cached'> | Ch
   const bubble = await findBubble(interaction.guild, interaction.member.voice.channelId);
   if (!bubble) {
     const hub = hubChannel(interaction.guild);
-    return fail(interaction, `You're not in a bubble.${hub ? ` Join ${hub} to blow one.` : ''}`);
+    return fail(interaction, `You're not in a bubble right now.${hub ? ` Join ${hub} to get a voice channel of your own.` : ''}`);
   }
   if (!canChange(interaction.member, bubble)) return fail(interaction, `This is <@${bubble.record.ownerId}>'s bubble, so only they can change it.`);
   const { components, allowedMentions } = panel(bubble);

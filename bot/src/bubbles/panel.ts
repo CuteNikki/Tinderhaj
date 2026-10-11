@@ -134,19 +134,49 @@ export async function ensureControlsMessage(guild: Guild, hubId: string) {
     return;
   }
 
+  // For someone who's never seen one: what a bubble is, how to get one, and what they can do with it.
+  const section = (text: string) => new TextDisplayBuilder().setContent(text);
   const components = [
-    notice(
-      [
-        '-# BUBBLE CONTROLS',
-        '## Your bubble, your way',
-        `Join <#${hubId}> to blow a bubble of your own. Its controls are at the top of its chat, or right here while you're in it.`,
-      ].join('\n'),
-      COLORS.bubble,
-    ).addActionRowComponents(
-      new ActionRowBuilder<ButtonBuilder>().addComponents(
-        new ButtonBuilder().setCustomId('bubble-controls').setLabel('My bubble').setEmoji('🫧').setStyle(ButtonStyle.Primary),
+    new ContainerBuilder()
+      .setAccentColor(COLORS.bubble)
+      .addTextDisplayComponents(
+        section(
+          [
+            '-# BUBBLES',
+            '## A voice channel of your own',
+            `Join <#${hubId}> and you get a voice channel just for you, called a bubble, and you're moved straight into it. It's yours to set up however you like, for as long as you're there.`,
+          ].join('\n'),
+        ),
+      )
+      .addSeparatorComponents(new SeparatorBuilder())
+      .addTextDisplayComponents(
+        section(
+          [
+            '**What you can do with it**',
+            '- Give it a name, and limit how many people can be in it',
+            '- Lock it, so only people you let in can join',
+            '- Hide it, so only people you let in can see it',
+            '- Let friends in, keep someone out, kick someone, or hand it to someone else',
+          ].join('\n'),
+        ),
+        section(
+          [
+            '**Where to change it**',
+            "There's a panel at the top of your bubble's chat. While you're in your bubble, the button below or `/bubble` shows it too.",
+          ].join('\n'),
+        ),
+        section(
+          [
+            '**When you leave**',
+            "If you're gone for a little while, it goes to someone who's still there. Once everyone has left, it pops and disappears. Your next one starts with the same name and settings.",
+          ].join('\n'),
+        ),
+      )
+      .addActionRowComponents(
+        new ActionRowBuilder<ButtonBuilder>().addComponents(
+          new ButtonBuilder().setCustomId('bubble-controls').setLabel('Open my bubble controls').setEmoji('🫧').setStyle(ButtonStyle.Primary),
+        ),
       ),
-    ),
   ];
   const recent = await channel.messages.fetch({ limit: 50 }).catch(() => null);
   const existing = recent?.find((message) => message.author.id === guild.client.user.id && message.flags.has(MessageFlags.IsComponentsV2));
