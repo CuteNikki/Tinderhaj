@@ -268,3 +268,41 @@ model Report {
   @@index([status, createdAt])
   @@index([reporterId, createdAt])
 }
+
+/// A bubble: a voice channel the Discord bot (bot/) made for someone who
+/// joined the join-to-create channel. Only these are ever deleted by it.
+/// Whether it's locked or hidden and who's let in or kept out live here, and
+/// the channel's permissions are worked out from them, never read back. Ids
+/// are Discord's, not this site's.
+model Bubble {
+  channelId      String   @id
+  ownerId        String
+  /// The control panel in the bubble's chat, edited as the bubble changes.
+  panelMessageId String?
+  locked         Boolean  @default(false)
+  hidden         Boolean  @default(false)
+  /// Members let in even while it's locked or hidden.
+  allowed        String[] @default([])
+  /// Members who can't see or join it.
+  blocked        String[] @default([])
+  createdAt      DateTime @default(now())
+
+  @@index([ownerId])
+}
+
+/// How someone on Discord left their last bubble, so their next one starts
+/// the same.
+model BubbleSettings {
+  /// Their Discord id.
+  userId    String   @id
+  /// What they call it, after the 🫧︱ every bubble's name starts with. Null
+  /// for their display name.
+  name      String?
+  /// 0 for no limit.
+  userLimit Int      @default(0)
+  locked    Boolean  @default(false)
+  hidden    Boolean  @default(false)
+  allowed   String[] @default([])
+  blocked   String[] @default([])
+  updatedAt DateTime @updatedAt
+}

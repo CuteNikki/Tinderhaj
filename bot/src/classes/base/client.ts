@@ -6,6 +6,7 @@ import type { Command } from 'classes/base/command';
 import type { Modal } from 'classes/base/modal';
 import type { SelectMenu } from 'classes/base/select';
 
+import { isRenameLimit } from 'bubbles/bubble';
 import { loadButtons, loadCommands, loadEvents, loadModals, loadSelectMenus } from 'loaders/index';
 import { KEYS } from 'utility/keys';
 import { logger } from 'utility/logger';
@@ -27,6 +28,8 @@ export class ExtendedClient extends Client {
     super({
       // Only what bubbles and interactions need, none of them privileged.
       intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates],
+      // Rather than wait minutes in a queue, tell the owner a bubble can't be renamed again yet.
+      rest: { rejectOnRateLimit: isRenameLimit },
     });
     this.initialize();
   }
