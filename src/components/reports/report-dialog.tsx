@@ -5,9 +5,9 @@ import Link from 'next/link';
 import { useId, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
+import { REPORT_DETAILS_MAX, REPORT_REASONS } from '@/constants/reports';
 import type { ReportReason } from '@/generated/enums';
 import { reportProfile } from '@/lib/actions';
-import { REPORT_DETAILS_MAX, REPORT_REASONS } from '@/lib/reports';
 
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';

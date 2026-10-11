@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { reportsMetadata } from '@/constants/metadata';
 import { CONTENT_DELAY } from '@/lib/motion';
 import { QUERIES, type ReportRow } from '@/lib/queries';
-import { REPORT_REASONS } from '@/lib/reports';
+import { REPORT_REASONS } from '@/constants/reports';
 import { isModerator, requireUser } from '@/lib/session';
 import { cn } from '@/lib/utils';
 

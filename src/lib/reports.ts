@@ -1,23 +1,8 @@
-// Shared by the report dialog and the server, so keep this free of server-only imports.
+// The checks a report gets on the server. What the dialog shows is in constants/reports, which needs no zod.
 import { z } from 'zod';
 
+import { REPORT_DETAILS_MAX } from '@/constants/reports';
 import { ReportReason } from '@/generated/enums';
-
-/** Why someone can report a shark, in the order the dialog offers them. */
-export const REPORT_REASONS: Record<ReportReason, string> = {
-  NOT_A_SHARK: 'Not a shark plush',
-  INAPPROPRIATE: 'Inappropriate or explicit',
-  PERSONAL_INFO: 'Shares personal information',
-  HARASSMENT: 'Harassment or hate',
-  SPAM: 'Spam or a scam',
-  OTHER: 'Something else',
-};
-
-/** The longest explanation a report can carry. */
-export const REPORT_DETAILS_MAX = 500;
-
-/** How many reports one account can make in a day, so nobody can flood the queue. */
-export const REPORTS_PER_DAY = 20;
 
 export const reportSchema = z
   .object({
