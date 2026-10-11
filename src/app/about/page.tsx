@@ -1,14 +1,13 @@
-import { BadgeCheckIcon, Code2Icon, type LucideIcon, SmileIcon } from 'lucide-react';
+import { ArrowRightIcon, BadgeCheckIcon, Code2Icon, type LucideIcon, SmileIcon } from 'lucide-react';
 import type { Metadata } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
 
 import { socialLink } from '@/lib/social-link';
 import { aboutMetadata } from '@/constants/metadata';
-import { SHARKS } from '@/lib/images';
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 
 import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
+import { Logo } from '@/components/common/logo';
 import { IconCard } from '@/components/common/icon-card';
 import { Stagger } from '@/components/common/stagger';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
@@ -17,19 +16,33 @@ import { Section } from '@/components/sections/section';
 
 export const metadata: Metadata = aboutMetadata;
 
-/** Tinderhaj at a glance, beside its story. */
+/**
+ * Tinderhaj at a glance, beside its story: a word or two each, so the rows
+ * look alike, in an order that keeps their lengths from stepping down the card.
+ */
 const FACTS: { label: string; value: React.ReactNode }[] = [
   { label: 'Started', value: 'December 2024' },
-  { label: 'Made in', value: 'Germany, by one person' },
+  { label: 'Made in', value: 'Germany' },
+  {
+    label: 'Made by',
+    value: (
+      <a href='https://niso.moe' target='_blank' rel='noreferrer' className='hover:text-primary underline'>
+        One person
+      </a>
+    ),
+  },
   {
     label: 'Code',
     value: (
       <a href={socialLink('github')} target='_blank' rel='noreferrer' className='hover:text-primary underline'>
-        Open source on GitHub
+        Open source
       </a>
     ),
   },
-  { label: 'Price', value: 'Free, for every shark' },
+  { label: 'Price', value: 'Free' },
+  // As the privacy policy says
+  { label: 'Ads', value: 'None' },
+  { label: 'Moderated', value: 'Every profile' },
 ];
 
 const VALUES: { title: string; copy: string; icon: LucideIcon; link?: { label: string; href: string } }[] = [
@@ -76,30 +89,33 @@ export default function AboutPage() {
               </p>
               <p>
                 It started in December 2024 as a small side project, and it&apos;s still made by one person, in the open on GitHub. There&apos;s nothing to buy
-                and nothing to unlock. Questions, ideas or just saying hi:{' '}
-                <Link href='/contact' className='text-primary font-semibold hover:underline'>
-                  get in touch
+                and nothing to unlock.
+              </p>
+              <p>
+                Questions, ideas, or just want to say hi?
+                <Link href='/contact' className='text-primary flex w-fit items-center gap-1 font-semibold hover:underline'>
+                  Contact us
+                  <ArrowRightIcon className='size-4' aria-hidden='true' />
                 </Link>
-                .
+              </p>
+              {/* The small print, right under the story, before the card on small screens too */}
+              <p className='text-muted-foreground border-border mt-2 border-t pt-4 text-xs leading-relaxed'>
+                Blåhaj is a trademark of IKEA. Tinderhaj is an independent project, not affiliated with IKEA or Tinder.
               </p>
             </Stagger>
-
-            <ScrollReveal delay={CONTENT_DELAY + STAGGER} variant='card' className='lg:sticky lg:top-24'>
-              <aside aria-labelledby='in-short' className='border-foreground/10 bg-card rounded-2xl border p-6 shadow-sm'>
-                <div className='flex items-center gap-4'>
-                  <Image
-                    unoptimized
-                    width={64}
-                    height={64}
-                    src={SHARKS.hug}
-                    alt=''
-                    className='bg-primary/10 size-14 rounded-lg object-contain dark:bg-white/20'
-                  />
-                  <h2 id='in-short' className='text-xl font-bold'>
-                    In short
-                  </h2>
+            <ScrollReveal delay={CONTENT_DELAY + STAGGER} variant='card' className='max-w-2xl'>
+              <aside aria-labelledby='at-a-glance' className='border-foreground/10 bg-card rounded-2xl border p-6 shadow-sm'>
+                {/* Headed across the top, over a line: the words centered, and the logo beside them, not counted in */}
+                <div className='border-border -mx-6 -mt-6 mb-6 flex justify-center border-b px-6 py-5'>
+                  <div className='relative text-center'>
+                    <Logo className='absolute top-1/2 right-full mr-3 size-10 -translate-y-1/2' />
+                    <h2 id='at-a-glance' className='text-lg leading-tight font-black tracking-tight'>
+                      Tinderhaj
+                    </h2>
+                    <p className='text-muted-foreground text-sm'>At a glance</p>
+                  </div>
                 </div>
-                <dl className='mt-5 grid gap-3 text-sm'>
+                <dl className='grid gap-3 text-sm'>
                   {FACTS.map(({ label, value }) => (
                     <div key={label} className='flex justify-between gap-4'>
                       <dt className='text-muted-foreground'>{label}</dt>
@@ -107,9 +123,6 @@ export default function AboutPage() {
                     </div>
                   ))}
                 </dl>
-                <p className='text-muted-foreground border-border mt-5 border-t pt-4 text-xs leading-relaxed'>
-                  Blåhaj is a trademark of IKEA. Tinderhaj is an independent project, not affiliated with IKEA or Tinder.
-                </p>
               </aside>
             </ScrollReveal>
           </div>
