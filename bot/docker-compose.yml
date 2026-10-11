@@ -14,6 +14,13 @@ services:
       - default
       - postgres_network
 
+    # On the VPS's dashboard (gethomepage), with the other bots.
+    labels:
+      homepage.group: 'Discord Bots'
+      homepage.name: 'Tinderhaj'
+      homepage.icon: 'si-discord'
+      homepage.href: 'https://github.com/CuteNikki/Tinderhaj'
+
 # The Postgres container's network, like CuteNikki/DiscordBot's, so the bot can reach the site's database.
 networks:
   postgres_network:
