@@ -4,7 +4,8 @@ import Link from 'next/link';
 import { Fragment } from 'react';
 
 import { contactMetadata } from '@/constants/metadata';
-import { CONTACT_EMAIL, GITHUB_URL } from '@/constants/contact';
+import { CONTACT_EMAIL } from '@/constants/contact';
+import { isExternalLink, socialLink } from '@/lib/social-link';
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 
 import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
@@ -27,7 +28,7 @@ const ANSWERS: { title: string; copy: string; link: string; href: string; icon: 
     href: '/dashboard/profiles',
     icon: UserRoundCheckIcon,
   },
-  { title: 'Found a bug?', copy: 'The code lives on GitHub, and so do bug reports.', link: 'Report it', href: `${GITHUB_URL}/issues`, icon: BugIcon },
+  { title: 'Found a bug?', copy: 'The code lives on GitHub, and so do bug reports.', link: 'Report it', href: socialLink('github', '/issues'), icon: BugIcon },
   { title: 'About your data?', copy: 'What we keep, why, and how to have it deleted.', link: 'Privacy Policy', href: '/privacy', icon: ShieldIcon },
 ];
 
@@ -103,7 +104,7 @@ export default function ContactPage() {
                         <h3 className='font-bold'>{title}</h3>
                         <p className='text-muted-foreground mt-1 text-sm leading-relaxed'>{copy}</p>
                       </div>
-                      {href.startsWith('http') ? (
+                      {isExternalLink(href) ? (
                         <a
                           href={href}
                           target='_blank'

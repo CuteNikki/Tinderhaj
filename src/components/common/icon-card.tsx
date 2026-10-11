@@ -1,6 +1,8 @@
 import { ArrowRight, ArrowUpRightIcon, type LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 
+import { isExternalLink } from '@/lib/social-link';
+
 /**
  * A card of a page's grid: its icon beside its title, so the icon doesn't cost
  * a row of its own, and a few words under them. `step` numbers it, `link` ends
@@ -36,7 +38,7 @@ export function IconCard({
       </div>
       <p className='text-muted-foreground mt-2 text-sm leading-relaxed text-pretty'>{copy}</p>
       {link &&
-        (link.href.startsWith('http') ? (
+        (isExternalLink(link.href) ? (
           <a href={link.href} target='_blank' rel='noreferrer' className={linkClassName}>
             {link.label}
             <ArrowUpRightIcon className='size-3.5' aria-hidden='true' />

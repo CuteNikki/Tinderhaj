@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import { Code2, Mail } from 'lucide-react';
 
-import { GITHUB_URL } from '@/constants/contact';
+import { socialLink } from '@/lib/social-link';
 
 import { Logo } from '@/components/common/logo';
 import { Stagger } from '@/components/common/stagger';
@@ -41,7 +41,7 @@ export function Footer() {
             </p>
             <div className='mt-4 flex items-center gap-4'>
               <a
-                href={GITHUB_URL}
+                href={socialLink('github')}
                 target='_blank'
                 rel='noreferrer'
                 aria-label='Tinderhaj on GitHub'

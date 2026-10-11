@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { GITHUB_URL } from '@/constants/contact';
+import { socialLink } from '@/lib/social-link';
 import { aboutMetadata } from '@/constants/metadata';
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 
@@ -23,7 +23,7 @@ const FACTS: { label: string; value: React.ReactNode }[] = [
   {
     label: 'Code',
     value: (
-      <a href={GITHUB_URL} target='_blank' rel='noreferrer' className='hover:text-primary underline'>
+      <a href={socialLink('github')} target='_blank' rel='noreferrer' className='hover:text-primary underline'>
         Open source on GitHub
       </a>
     ),
@@ -47,7 +47,7 @@ const VALUES: { title: string; copy: string; icon: LucideIcon; link?: { label: s
     title: 'Out in the open',
     copy: "The code is public, and so are bug reports and ideas. Anyone can see what's being worked on.",
     icon: Code2Icon,
-    link: { label: 'See it on GitHub', href: GITHUB_URL },
+    link: { label: 'See it on GitHub', href: socialLink('github') },
   },
 ];
 

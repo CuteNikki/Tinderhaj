@@ -1,6 +1,7 @@
 import { ArrowUpRightIcon } from 'lucide-react';
 
 import { SOCIALS } from '@/constants/contact';
+import { socialLink } from '@/lib/social-link';
 import { LIFT, STAGGER } from '@/lib/motion';
 
 import { Stagger } from '@/components/common/stagger';
@@ -25,7 +26,7 @@ export function SocialLinks({ delay, className }: { delay: number; className?: s
       {socials.map((social) => (
         <a
           key={social.id}
-          href={social.href!}
+          href={socialLink(social.id)}
           target='_blank'
           rel='noreferrer'
           title={social.handle ?? undefined}

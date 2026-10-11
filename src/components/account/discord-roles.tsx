@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import { toast } from 'sonner';
 
-import { DISCORD_URL } from '@/constants/contact';
+import { socialLink } from '@/lib/social-link';
 import { refreshDiscordRoles } from '@/lib/actions';
 import { cn } from '@/lib/utils';
 
@@ -65,7 +65,7 @@ export function DiscordRoles({ roles, linked }: { roles: Role[]; linked: boolean
             Refresh roles
           </Button>
           <Button variant='ghost' asChild>
-            <a href={DISCORD_URL} target='_blank' rel='noreferrer'>
+            <a href={socialLink('discord')} target='_blank' rel='noreferrer'>
               Join the server
               <ExternalLinkIcon aria-hidden='true' />
             </a>

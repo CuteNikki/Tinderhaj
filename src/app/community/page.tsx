@@ -1,7 +1,7 @@
 import { BugIcon, Code2Icon, HeartHandshakeIcon, type LucideIcon, Share2Icon } from 'lucide-react';
 import type { Metadata } from 'next';
 
-import { GITHUB_URL } from '@/constants/contact';
+import { socialLink } from '@/lib/social-link';
 import { communityMetadata } from '@/constants/metadata';
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 
@@ -26,13 +26,13 @@ const WAYS_IN: { title: string; copy: string; icon: LucideIcon; link: { label: s
     title: 'Bugs and ideas',
     copy: 'Something broken, or something you wish it did? Open an issue on GitHub, where everyone can follow along.',
     icon: BugIcon,
-    link: { label: 'Open an issue', href: `${GITHUB_URL}/issues` },
+    link: { label: 'Open an issue', href: socialLink('github', '/issues') },
   },
   {
     title: 'Under the hood',
     copy: "All of Tinderhaj's code is on GitHub, if you'd like a look at how it's made.",
     icon: Code2Icon,
-    link: { label: 'See the code', href: GITHUB_URL },
+    link: { label: 'See the code', href: socialLink('github') },
   },
   {
     title: 'Keep it kind',

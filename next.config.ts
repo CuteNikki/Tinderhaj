@@ -20,8 +20,14 @@ const nextConfig: NextConfig = {
       { source: '/moderation', destination: '/moderation/verification', permanent: false },
       // Short links to Tinderhaj elsewhere, like tinderhaj.com/discord. Not permanent, so a new invite or handle
       // takes over right away instead of browsers keeping the old one.
+      // Anything after it goes along, like /github/issues.
       ...SOCIALS.flatMap(({ id, href }) =>
-        href ? (SOCIAL_ALIASES[id] ?? [id]).map((slug) => ({ source: `/${slug}`, destination: href, permanent: false })) : [],
+        href
+          ? (SOCIAL_ALIASES[id] ?? [id]).flatMap((slug) => [
+              { source: `/${slug}`, destination: href, permanent: false },
+              { source: `/${slug}/:path+`, destination: `${href}/:path+`, permanent: false },
+            ])
+          : [],
       ),
     ];
   },
