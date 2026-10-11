@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react';
 
-import { CakeIcon, CheckIcon, Link2Icon, MapPinIcon, PencilIcon, RulerIcon, SendIcon, Trash2Icon } from 'lucide-react';
+import { ArrowRightIcon, CakeIcon, CheckIcon, Link2Icon, MapPinIcon, PencilIcon, RulerIcon, SendIcon, Trash2Icon } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
 
@@ -135,8 +135,10 @@ export function ProfileCard({ profile }: { profile: ProfileWithOwner }) {
                 <span className='font-semibold'>Note:</span> {profile.rejectionNote}
               </p>
             )}
-            <Link href='/guidelines' className='mt-2 inline-block font-semibold underline-offset-4 hover:underline'>
-              What moderators look for
+            {/* Underlined throughout, since in the box's red it doesn't stand out as a link otherwise */}
+            <Link href='/guidelines' className='mt-2 inline-flex items-center gap-1 font-semibold underline underline-offset-4'>
+              View Guidelines
+              <ArrowRightIcon className='size-3.5' aria-hidden='true' />
             </Link>
           </div>
         )}
