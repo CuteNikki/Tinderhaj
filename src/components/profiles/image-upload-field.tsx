@@ -75,6 +75,8 @@ export function ImageUploadField({
               allowedContent: 'hidden',
             }}
             content={{
+              // Hidden anyway, but set so the server renders what the browser does: left out, UploadThing fills it from config only the browser has
+              allowedContent: <></>,
               // Coloured here rather than on the button, where UploadThing's own white wins: muted on the empty grey, white over a picture
               button: (
                 <>
