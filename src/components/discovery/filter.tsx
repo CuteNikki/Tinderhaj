@@ -3,10 +3,11 @@
 import { useRouter } from 'next/navigation';
 
 import { Grid2X2Icon, Search, SearchIcon } from 'lucide-react';
-import { motion } from 'motion/react';
 
-import { after, reveal } from '@/lib/motion';
+import { cn } from '@/lib/utils';
 
+import { enter } from '@/components/common/enter';
+import { useReveal } from '@/components/common/use-reveal';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -17,15 +18,14 @@ function getDiscoverySeed() {
 
 export function DiscoveryFilter({ take, page, query, seed, disabled }: { take?: number; page?: number; query?: string; seed?: number; disabled?: boolean }) {
   const router = useRouter();
+  const { ref, waiting } = useReveal<HTMLFormElement>({ delay: 0.4, scrollDelay: 0.4, amount: 0.45 });
+  const { className, style } = enter('reveal', 0.4, { waiting });
 
   return (
-    <motion.form
-      initial='hidden'
-      whileInView='visible'
-      variants={reveal}
-      viewport={{ once: true, amount: 0.45 }}
-      transition={after(0.4)}
-      className='border-foreground/10 bg-background/85 rounded-3xl border p-3 shadow-lg backdrop-blur-md sm:rounded-full'
+    <form
+      ref={ref}
+      style={style}
+      className={cn('border-foreground/10 bg-background/85 rounded-3xl border p-3 shadow-lg backdrop-blur-md sm:rounded-full', className)}
       onSubmit={(e) => {
         e.preventDefault();
         const formData = new FormData(e.target as HTMLFormElement);
@@ -89,6 +89,6 @@ export function DiscoveryFilter({ take, page, query, seed, disabled }: { take?: 
           <SearchIcon />
         </Button>
       </div>
-    </motion.form>
+    </form>
   );
 }

@@ -8,7 +8,7 @@ export async function ProfileCount() {
 
   return (
     <>
-      <AnimatedCount target={count} duration={1000} localize /> {count === 1 ? 'profile' : 'profiles'}
+      <AnimatedCount target={count} duration={1000} delay={0.4} localize /> {count === 1 ? 'profile' : 'profiles'}
     </>
   );
 }

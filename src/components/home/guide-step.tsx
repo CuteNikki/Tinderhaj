@@ -1,26 +1,27 @@
 'use client';
 
 import { Heart, Search, Sparkles } from 'lucide-react';
-import { motion, useInView } from 'motion/react';
-import { useRef } from 'react';
 
-import { after, cardReveal, spring, STAGGER } from '@/lib/motion';
+import { STAGGER } from '@/lib/motion';
+import { cn } from '@/lib/utils';
+
+import { enter } from '@/components/common/enter';
+import { useReveal } from '@/components/common/use-reveal';
 
 const icons = { sparkles: Sparkles, search: Search, heart: Heart };
 
 export function GuideStep({ number, title, copy, icon }: { number: string; title: string; copy: string; icon: keyof typeof icons }) {
   const Icon = icons[icon];
-  const elementRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(elementRef, { once: true, amount: 0.5 });
+  // One after another, however they're reached
+  const delay = (Number(number) - 1) * STAGGER;
+  const { ref, waiting } = useReveal<HTMLDivElement>({ delay, scrollDelay: delay, amount: 0.5 });
+  const { className, style } = enter('card', delay, { waiting });
 
   return (
-    <motion.div
-      ref={elementRef}
-      className='group/step border-b border-current/20 py-5 last:border-b-0 md:border-r md:border-b-0 md:px-6 md:first:pl-0 last:md:border-r-0'
-      initial='hidden'
-      animate={isInView ? 'visible' : 'hidden'}
-      variants={cardReveal}
-      transition={after((Number(number) - 1) * STAGGER, spring.pop)}
+    <div
+      ref={ref}
+      className={cn('group/step border-b border-current/20 py-5 last:border-b-0 md:border-r md:border-b-0 md:px-6 md:first:pl-0 last:md:border-r-0', className)}
+      style={style}
     >
       <div className='mb-4 flex items-center justify-between'>
         <span className='text-muted-foreground font-mono text-sm'>{number}</span>
@@ -30,6 +31,6 @@ export function GuideStep({ number, title, copy, icon }: { number: string; title
       </div>
       <h3 className='text-2xl font-bold'>{title}</h3>
       <p className='text-muted-foreground mt-2 max-w-xs text-sm leading-relaxed'>{copy}</p>
-    </motion.div>
+    </div>
   );
 }

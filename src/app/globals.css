@@ -297,10 +297,343 @@
   }
 }
 
-/* Less motion for people who ask their system for it: CSS animations and
-   transitions finish at once. Motion's animations check the same setting
-   (see components/theme/motion-provider.tsx). */
+/*
+ * What comes in as a page opens (see Enter), played by the browser as soon as
+ * the page shows, rather than once its JavaScript has loaded, which on a phone
+ * can be seconds later. The same moves and springs as lib/motion: `soft` for
+ * sections and headings, `pop` for cards, badges and sharks, sampled from
+ * Motion's own springs so they overshoot and settle alike. Only `backwards`,
+ * so once in, they leave the element's transform to whatever else moves it.
+ */
+:root {
+  --spring-soft: linear(
+    0,
+    0.013,
+    0.048,
+    0.098,
+    0.157,
+    0.221,
+    0.289,
+    0.356,
+    0.422,
+    0.485,
+    0.544,
+    0.599,
+    0.649,
+    0.695,
+    0.737,
+    0.774,
+    0.807,
+    0.836,
+    0.861,
+    0.884,
+    0.903,
+    0.919,
+    0.934,
+    0.946,
+    0.956,
+    0.965,
+    0.972,
+    0.978,
+    0.983,
+    0.987,
+    0.99,
+    0.993,
+    0.995,
+    0.997,
+    0.998,
+    0.999,
+    1,
+    1.001,
+    1.001,
+    1.001,
+    1
+  );
+  --spring-pop: linear(
+    0,
+    0.022,
+    0.079,
+    0.158,
+    0.25,
+    0.348,
+    0.445,
+    0.538,
+    0.624,
+    0.701,
+    0.769,
+    0.827,
+    0.876,
+    0.916,
+    0.949,
+    0.974,
+    0.993,
+    1.007,
+    1.017,
+    1.023,
+    1.027,
+    1.028,
+    1.028,
+    1.027,
+    1.025,
+    1.022,
+    1.019,
+    1.017,
+    1.014,
+    1.011,
+    1.009,
+    1.007,
+    1.005,
+    1.004,
+    1.003,
+    1.002,
+    1.001,
+    1,
+    1,
+    1,
+    1
+  );
+  /* Quick, for what answers the pointer (see spring-hover). */
+  --spring-snappy: linear(
+    0,
+    0.043,
+    0.146,
+    0.275,
+    0.411,
+    0.539,
+    0.653,
+    0.748,
+    0.826,
+    0.886,
+    0.931,
+    0.964,
+    0.986,
+    1,
+    1.009,
+    1.014,
+    1.015,
+    1.015,
+    1.013,
+    1.012,
+    1.01,
+    1.008,
+    1.006,
+    1.004,
+    1.003,
+    1.002,
+    1.001,
+    1.001,
+    1,
+    1,
+    1
+  );
+}
+
+.enter {
+  animation-delay: var(--enter-delay, 0s);
+  animation-fill-mode: backwards;
+}
+
+.enter-sink,
+.enter-reveal,
+.enter-ring {
+  animation-duration: 590ms;
+  animation-timing-function: var(--spring-soft);
+}
+
+.enter-pop,
+.enter-swim,
+.enter-card {
+  animation-duration: 680ms;
+  animation-timing-function: var(--spring-pop);
+}
+
+.enter-sink {
+  animation-name: enter-sink;
+}
+.enter-reveal {
+  animation-name: enter-reveal;
+}
+.enter-ring {
+  animation-name: enter-ring;
+}
+.enter-pop {
+  animation-name: enter-pop;
+}
+.enter-swim {
+  animation-name: enter-swim;
+}
+.enter-card {
+  animation-name: enter-card;
+}
+
+@keyframes enter-sink {
+  from {
+    opacity: 0;
+    transform: translateY(-16px) scale(0.97);
+  }
+}
+@keyframes enter-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+  }
+}
+@keyframes enter-ring {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+}
+@keyframes enter-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.5) rotate(-12deg);
+  }
+}
+@keyframes enter-swim {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.85) rotate(-10deg);
+  }
+}
+@keyframes enter-card {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.94) rotate(-1.5deg);
+  }
+}
+
+/* Up from behind a line, turning upright as it comes, nothing fading: what's below the line is cut off anyway (see PeekingShark). */
+.enter-peek {
+  animation-name: enter-peek;
+  animation-duration: 680ms;
+  animation-timing-function: var(--spring-pop);
+}
+@keyframes enter-peek {
+  from {
+    transform: translateY(100%) rotate(-8deg);
+  }
+}
+
+/* Any of them with the bouncier spring, like the fields of a form. */
+.enter.spring-pop {
+  animation-duration: 680ms;
+  animation-timing-function: var(--spring-pop);
+}
+
+/* Further down the page, waiting to be scrolled to (see useReveal). */
+.enter-waiting {
+  opacity: 0;
+}
+
+/*
+ * Floating in place, forever: every big shark the same way, and the little
+ * pills and cards around one more gently, each from its own `--bob-delay` so
+ * they don't all bob together; `bob-tilt` for one set at a slant
+ * (`--bob-rotate`). On a wrapper of their own, so they never fight an
+ * entrance or a hover over the transform.
+ */
+.bob-shark {
+  animation: bob-shark 6s ease-in-out infinite;
+}
+.bob-small {
+  animation: bob-small 4s ease-in-out var(--bob-delay, 0s) infinite;
+}
+.bob-tilt {
+  animation: bob-tilt 4s ease-in-out var(--bob-delay, 0s) infinite;
+  transform: rotate(var(--bob-rotate, 0deg));
+}
+@keyframes bob-shark {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(2deg);
+  }
+}
+@keyframes bob-small {
+  50% {
+    transform: translateY(-5px);
+  }
+}
+@keyframes bob-tilt {
+  0%,
+  100% {
+    transform: rotate(var(--bob-rotate, 0deg));
+  }
+  50% {
+    transform: translateY(-5px) rotate(calc(var(--bob-rotate, 0deg) - 4deg));
+  }
+}
+
+/* Answering the pointer with the snappy spring, there and back: give it the hover state as scale, rotate or translate classes. */
+.spring-hover {
+  transition-property: scale, rotate, translate;
+  transition-duration: 460ms;
+  transition-timing-function: var(--spring-snappy);
+}
+
+/*
+ * A number counting up from nothing (see CountUp), also played by the browser
+ * from the start. A counter shows it climbing, over the real number, which
+ * shows once it's there: the counter can't group thousands, the number can.
+ */
+@property --count-now {
+  syntax: '<integer>';
+  inherits: false;
+  initial-value: 0;
+}
+
+.count-up {
+  position: relative;
+  display: inline-block;
+}
+
+.count-up::before {
+  content: counter(count-up);
+  counter-reset: count-up var(--count-now);
+  position: absolute;
+  inset-inline-start: 0;
+  animation:
+    count-up var(--count-duration, 1s) cubic-bezier(0.5, 1, 0.89, 1) var(--count-delay, 0s) both,
+    count-up-done 0s calc(var(--count-delay, 0s) + var(--count-duration, 1s)) forwards;
+}
+
+.count-up > span {
+  animation: count-up-wait 0s calc(var(--count-delay, 0s) + var(--count-duration, 1s)) backwards;
+}
+
+@keyframes count-up {
+  from {
+    --count-now: 0;
+  }
+  to {
+    --count-now: var(--count);
+  }
+}
+@keyframes count-up-done {
+  to {
+    visibility: hidden;
+  }
+}
+@keyframes count-up-wait {
+  from {
+    visibility: hidden;
+  }
+}
+
+/* Less motion for people who ask their system for it: animations and
+   transitions finish at once, and floating stops. All of the site's movement
+   is CSS, so this covers it all. */
 @media (prefers-reduced-motion: reduce) {
+  /* Without waiting their turn, either. */
+  .enter,
+  .count-up::before,
+  .count-up > span {
+    animation-delay: 0s !important;
+  }
+
   *,
   ::before,
   ::after {

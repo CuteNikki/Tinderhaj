@@ -2,19 +2,18 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2Icon, MailCheckIcon, RotateCwIcon } from 'lucide-react';
-import { motion } from 'motion/react';
 import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { MAX_EMAIL_LENGTH } from '@/constants/auth';
-import { after, popIn, spring } from '@/lib/motion';
 import { authClient } from '@/lib/auth-client';
 import { forgotPasswordSchema } from '@/lib/schemas';
 
 import { AuthInput } from '@/components/auth/auth-input';
-import { staggerContainer, staggerItem } from '@/components/auth/motion';
+import { fieldDelay } from '@/components/auth/motion';
+import { Enter } from '@/components/common/enter';
 import { Button } from '@/components/ui/button';
 import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form';
 
@@ -47,30 +46,19 @@ export function ForgotPasswordForm() {
 
   if (isSent) {
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={spring.soft}
-        className='flex flex-col items-center gap-3 py-2 text-center'
-      >
-        <motion.div
-          initial='hidden'
-          animate='visible'
-          variants={popIn}
-          transition={after(0.1, spring.pop)}
-          className='bg-primary/10 text-primary flex size-12 items-center justify-center rounded-full'
-        >
+      <Enter variant='reveal' className='flex flex-col items-center gap-3 py-2 text-center'>
+        <Enter variant='pop' delay={0.1} className='bg-primary/10 text-primary flex size-12 items-center justify-center rounded-full'>
           <MailCheckIcon className='h-6 w-6' />
-        </motion.div>
+        </Enter>
         <p className='text-muted-foreground text-sm'>If an account with that email exists, we&apos;ve sent a password reset link to it.</p>
-      </motion.div>
+      </Enter>
     );
   }
 
   return (
     <Form {...form}>
-      <motion.form onSubmit={form.handleSubmit(onSubmit)} className='space-y-2' initial='hidden' animate='visible' variants={staggerContainer}>
-        <motion.div variants={staggerItem}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-2'>
+        <Enter variant='reveal' spring='pop' delay={fieldDelay(0)}>
           <FormField
             control={form.control}
             name='email'
@@ -81,8 +69,8 @@ export function ForgotPasswordForm() {
               </FormItem>
             )}
           />
-        </motion.div>
-        <motion.div variants={staggerItem}>
+        </Enter>
+        <Enter variant='reveal' spring='pop' delay={fieldDelay(1)}>
           <Button type='submit' className='w-full' disabled={isSubmitting || !filled}>
             {isSubmitting ? (
               <>
@@ -96,8 +84,8 @@ export function ForgotPasswordForm() {
               </>
             )}
           </Button>
-        </motion.div>
-      </motion.form>
+        </Enter>
+      </form>
     </Form>
   );
 }

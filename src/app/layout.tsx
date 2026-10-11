@@ -13,7 +13,6 @@ import { PageWater } from '@/components/common/page-water';
 import { Footer } from '@/components/navigation/footer';
 import { Navbar, NavbarFallback } from '@/components/navigation/navbar';
 import { ThemeProvider } from '@/components/theme/provider';
-import { MotionProvider } from '@/components/theme/motion-provider';
 import { Toaster } from '@/components/theme/toaster';
 
 import './globals.css';
@@ -49,17 +48,15 @@ export default function RootLayout({
         <NextSSRPlugin routerConfig={uploadthingRouterConfig} />
         <div id='top' />
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
-          <MotionProvider>
-            <Suspense fallback={<NavbarFallback />}>
-              <Navbar />
-            </Suspense>
-            <main className='relative isolate flex flex-1 flex-col'>
-              <PageWater />
-              {children}
-            </main>
-            <Footer />
-            <Toaster position='top-center' />
-          </MotionProvider>
+          <Suspense fallback={<NavbarFallback />}>
+            <Navbar />
+          </Suspense>
+          <main className='relative isolate flex flex-1 flex-col'>
+            <PageWater />
+            {children}
+          </main>
+          <Footer />
+          <Toaster position='top-center' />
         </ThemeProvider>
       </body>
     </html>

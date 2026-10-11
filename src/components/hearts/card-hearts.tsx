@@ -1,13 +1,12 @@
 'use client';
 
 import { HeartIcon, Loader2Icon } from 'lucide-react';
-import { motion } from 'motion/react';
 import Link from 'next/link';
 
 import type { HeartState } from '@/lib/hearts';
-import { popIn, spring } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 
+import { Enter } from '@/components/common/enter';
 import { useHeartActions } from '@/components/hearts/heart-button';
 import { SharkAvatar } from '@/components/hearts/shark-avatar';
 import { Button } from '@/components/ui/button';
@@ -140,9 +139,9 @@ function HeartCircle({
         <Loader2Icon className='animate-spin' aria-hidden='true' />
       ) : (
         // A new key when it fills in, so the heart pops each time.
-        <motion.span key={String(sent)} initial='hidden' animate='visible' variants={popIn} transition={spring.pop} className='inline-flex'>
+        <Enter as='span' key={String(sent)} variant='pop' className='inline-flex'>
           <HeartIcon className={cn(sent && 'fill-current')} aria-hidden='true' />
-        </motion.span>
+        </Enter>
       )}
       {received && (
         <span className='absolute -top-0.5 -right-0.5 flex size-2.5' aria-hidden='true'>

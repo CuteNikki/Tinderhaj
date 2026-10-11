@@ -1,7 +1,6 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { motion } from 'motion/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -15,9 +14,10 @@ import type { SocialProviderId } from '@/lib/providers';
 import { signInSchema } from '@/lib/schemas';
 
 import { AuthInput } from '@/components/auth/auth-input';
-import { staggerContainer, staggerItem } from '@/components/auth/motion';
+import { fieldDelay } from '@/components/auth/motion';
 import { SocialButtons } from '@/components/auth/social-buttons';
 import { SEND_CODE_KEY } from '@/components/auth/two-factor-form';
+import { Enter } from '@/components/common/enter';
 import { Button } from '@/components/ui/button';
 import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { ArrowRightIcon, FingerprintIcon, Loader2Icon } from 'lucide-react';
@@ -97,13 +97,13 @@ export function SignInForm({ providers, error }: { providers: SocialProviderId[]
 
   return (
     <Form {...form}>
-      <motion.form ref={formRef} onSubmit={form.handleSubmit(onSubmit)} className='space-y-2' initial='hidden' animate='visible' variants={staggerContainer}>
+      <form ref={formRef} onSubmit={form.handleSubmit(onSubmit)} className='space-y-2'>
         {error && (
-          <motion.p variants={staggerItem} role='alert' className='bg-destructive/10 text-destructive rounded-lg px-3 py-2 text-sm text-pretty'>
+          <Enter as='p' variant='reveal' spring='pop' role='alert' className='bg-destructive/10 text-destructive rounded-lg px-3 py-2 text-sm text-pretty'>
             {error}
-          </motion.p>
+          </Enter>
         )}
-        <motion.div variants={staggerItem}>
+        <Enter variant='reveal' spring='pop' delay={fieldDelay(0)}>
           <FormField
             control={form.control}
             name='email'
@@ -114,8 +114,8 @@ export function SignInForm({ providers, error }: { providers: SocialProviderId[]
               </FormItem>
             )}
           />
-        </motion.div>
-        <motion.div variants={staggerItem}>
+        </Enter>
+        <Enter variant='reveal' spring='pop' delay={fieldDelay(1)}>
           <FormField
             control={form.control}
             name='password'
@@ -129,8 +129,8 @@ export function SignInForm({ providers, error }: { providers: SocialProviderId[]
               </FormItem>
             )}
           />
-        </motion.div>
-        <motion.div variants={staggerItem}>
+        </Enter>
+        <Enter variant='reveal' spring='pop' delay={fieldDelay(2)}>
           <Button type='submit' className='w-full' disabled={isSubmitting || (!filled && !autofilled)}>
             {isSubmitting ? (
               <>
@@ -144,20 +144,20 @@ export function SignInForm({ providers, error }: { providers: SocialProviderId[]
               </>
             )}
           </Button>
-        </motion.div>
-        <motion.div variants={staggerItem} className='text-muted-foreground flex items-center gap-3 text-xs'>
+        </Enter>
+        <Enter variant='reveal' spring='pop' delay={fieldDelay(3)} className='text-muted-foreground flex items-center gap-3 text-xs'>
           <span className='bg-border h-px flex-1' />
           or
           <span className='bg-border h-px flex-1' />
-        </motion.div>
-        <motion.div variants={staggerItem} className='space-y-2'>
+        </Enter>
+        <Enter variant='reveal' spring='pop' delay={fieldDelay(4)} className='space-y-2'>
           <Button type='button' variant='outline' className='w-full' onClick={() => signInWithPasskey()}>
             <FingerprintIcon className='shrink-0' aria-hidden='true' />
             Sign in with a passkey
           </Button>
           <SocialButtons providers={providers} errorCallbackURL='/sign-in' />
-        </motion.div>
-      </motion.form>
+        </Enter>
+      </form>
     </Form>
   );
 }

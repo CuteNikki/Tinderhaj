@@ -1,9 +1,4 @@
-'use client';
-
-import { motion } from 'motion/react';
-
-import { after, popIn, spring } from '@/lib/motion';
-
+import { enter } from '@/components/common/enter';
 import { glass } from '@/components/common/ocean';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -13,13 +8,15 @@ import { cn } from '@/lib/utils';
  * Smaller headers use an Eyebrow.
  */
 export function HeroBadge({ icon, delay = 0, className, children }: { icon?: React.ReactNode; delay?: number; className?: string; children: React.ReactNode }) {
+  const pop = enter('pop', delay);
+
   return (
-    <Badge asChild className={cn(glass, 'dark:bg-glass gap-2 p-4 font-semibold tracking-wide uppercase shadow-lg transition-none', className)}>
+    <Badge asChild className={cn(glass, 'dark:bg-glass gap-2 p-4 font-semibold tracking-wide uppercase shadow-lg transition-none', pop.className, className)}>
       {/* Popping in on itself rather than in a wrapper, so it's frosted from the start (see glass); no CSS transition to drag behind */}
-      <motion.span initial='hidden' animate='visible' variants={popIn} transition={after(delay, spring.pop)}>
+      <span style={pop.style}>
         {icon}
         {children}
-      </motion.span>
+      </span>
     </Badge>
   );
 }

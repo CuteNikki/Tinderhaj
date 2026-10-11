@@ -1,31 +1,34 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
-import { Suspense } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
+
+/** Longer than React's own unmount and remount in development, far shorter than leaving a page and coming back. */
+const AWAY = 100;
 
 /**
- * Builds each page anew whenever the path changes, so its opening animations
- * play every time you arrive, however you got there. Next would otherwise
- * show a page it kept from an earlier visit as it was left, which plays some
- * animations again and skips others. Search and filters change only the
- * query, so they don't replay anything.
+ * Builds a page anew whenever it's shown again, so its opening animations
+ * play every time you arrive, however you got there. Next keeps pages from
+ * earlier visits and would otherwise show one as it was left, which plays
+ * some animations again (those done in CSS) and skips others.
  *
- * A path with a param that isn't known at build time (a user's id) can't be
- * read while prerendering, so until it can, the page is shown without the key.
+ * A kept page is hidden, not removed, and shown again by running its effects
+ * once more, before the browser paints: that's when it's rebuilt, so the
+ * page as it was left never shows. Nothing here reads the path, so pages
+ * never wait for it while prerendering.
  */
 export function Replay({ children }: { children: React.ReactNode }) {
-  return (
-    <Suspense fallback={children}>
-      <Keyed>{children}</Keyed>
-    </Suspense>
-  );
-}
+  const [visit, setVisit] = useState(0);
+  const hiddenAt = useRef<number | null>(null);
 
-function Keyed({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
+  useLayoutEffect(() => {
+    if (hiddenAt.current !== null && performance.now() - hiddenAt.current > AWAY) setVisit((count) => count + 1);
+    return () => {
+      hiddenAt.current = performance.now();
+    };
+  }, []);
 
   return (
-    <div key={pathname} className='contents'>
+    <div key={visit} className='contents'>
       {children}
     </div>
   );

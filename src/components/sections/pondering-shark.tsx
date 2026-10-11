@@ -2,10 +2,12 @@
 
 import Image from 'next/image';
 
-import { motion } from 'motion/react';
+import { BOB_SHARK, bob, SHARK_HOVER } from '@/lib/motion';
+import { cn } from '@/lib/utils';
 
+import { enter } from '@/components/common/enter';
 import { glass } from '@/components/common/ocean';
-import { after, bob, popIn, ringIn, sharkHover, spring, swimIn } from '@/lib/motion';
+import { useReveal } from '@/components/common/use-reveal';
 
 /** Question marks floating around the shark: where, how big, and when each bobs. */
 const MARKS = [
@@ -16,64 +18,38 @@ const MARKS = [
 
 /** A shark thinking it over, beside the questions on wide screens. Just for looks. */
 export function PonderingShark() {
+  // All of it coming in together, in the same order however it's reached, once enough is in view that the rings at its edges are too
+  const { ref, waiting } = useReveal<HTMLDivElement>({ amount: 0.5 });
+  const inner = enter('ring', 0.1, { waiting });
+  const outer = enter('ring', 0.2, { waiting });
+  const shark = enter('swim', 0.3, { waiting });
+  const pill = enter('pop', 0.7, { waiting });
+
   return (
-    <div aria-hidden className='relative hidden aspect-square w-80 items-center justify-center lg:flex xl:w-96'>
-      <motion.div
-        initial='hidden'
-        whileInView='visible'
-        viewport={{ once: true }}
-        variants={ringIn}
-        transition={after(0.1)}
-        className='border-primary/20 absolute inset-10 rounded-full border'
-      />
-      <motion.div
-        initial='hidden'
-        whileInView='visible'
-        viewport={{ once: true }}
-        variants={ringIn}
-        transition={after(0.2)}
-        className='border-primary/15 absolute inset-0 rounded-full border border-dashed'
-      />
-      <motion.div
-        initial='hidden'
-        whileInView='visible'
-        variants={swimIn}
-        viewport={{ once: true }}
-        transition={after(0.3, spring.pop)}
-        whileHover={sharkHover}
-        className='relative z-10'
-      >
-        <motion.div {...bob.shark}>
+    <div ref={ref} aria-hidden className='relative hidden aspect-square w-80 items-center justify-center lg:flex xl:w-96'>
+      <div className={cn('border-primary/20 absolute inset-10 rounded-full border', inner.className)} style={inner.style} />
+      <div className={cn('border-primary/15 absolute inset-0 rounded-full border border-dashed', outer.className)} style={outer.style} />
+      <div className={cn('relative z-10', SHARK_HOVER, shark.className)} style={shark.style}>
+        <div className={BOB_SHARK}>
           <Image unoptimized src='/blahajThink.webp' width={320} height={320} alt='' className='h-auto w-32 drop-shadow-2xl xl:w-40' />
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
       {/* The glass pops in on itself, inside what bobs, so it's frosted from the start (see glass) */}
-      {MARKS.map(({ className, delay, rotate }) => (
-        <motion.span key={className} {...bob.small(delay, rotate)} className={`absolute ${className}`}>
-          <motion.span
-            initial='hidden'
-            whileInView='visible'
-            viewport={{ once: true }}
-            variants={popIn}
-            transition={after(0.4 + delay / 4, spring.pop)}
-            className={`${glass} flex size-full items-center justify-center rounded-full font-black shadow-lg`}
-          >
-            <span className='text-[#ed3867]'>?</span>
-          </motion.span>
-        </motion.span>
-      ))}
-      <motion.div {...bob.small(0.4)} className='absolute bottom-[8%] left-[10%] z-20'>
-        <motion.div
-          initial='hidden'
-          whileInView='visible'
-          viewport={{ once: true }}
-          variants={popIn}
-          transition={after(0.7, spring.pop)}
-          className={`${glass} rounded-full px-3 py-2 text-xs font-semibold whitespace-nowrap shadow-lg`}
-        >
+      {MARKS.map(({ className, delay, rotate }) => {
+        const mark = enter('pop', 0.4 + delay / 4, { waiting });
+        return (
+          <span key={className} {...bob({ delay, rotate, className: `absolute ${className}` })}>
+            <span className={cn(glass, 'flex size-full items-center justify-center rounded-full font-black shadow-lg', mark.className)} style={mark.style}>
+              <span className='text-[#ed3867]'>?</span>
+            </span>
+          </span>
+        );
+      })}
+      <div {...bob({ delay: 0.4, className: 'absolute bottom-[8%] left-[10%] z-20' })}>
+        <div className={cn(glass, 'rounded-full px-3 py-2 text-xs font-semibold whitespace-nowrap shadow-lg', pill.className)} style={pill.style}>
           Good question!
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </div>
   );
 }

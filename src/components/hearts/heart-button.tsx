@@ -1,15 +1,14 @@
 'use client';
 
 import { HeartIcon, HeartOffIcon, Loader2Icon } from 'lucide-react';
-import { motion } from 'motion/react';
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import { toast } from 'sonner';
 
 import { sendHeart, takeBackHeart } from '@/lib/actions';
-import { popIn, spring } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 
+import { Enter } from '@/components/common/enter';
 import { Button } from '@/components/ui/button';
 
 type Named = { id: string; displayName: string };
@@ -47,9 +46,9 @@ export function useHeartActions() {
 /** A heart that pops in, for buttons. */
 export function PoppingHeart({ filled = true }: { filled?: boolean }) {
   return (
-    <motion.span initial='hidden' animate='visible' variants={popIn} transition={spring.pop} className='inline-flex'>
+    <Enter as='span' variant='pop' className='inline-flex'>
       <HeartIcon className={cn(filled && 'fill-current')} aria-hidden='true' />
-    </motion.span>
+    </Enter>
   );
 }
 

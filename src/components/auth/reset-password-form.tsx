@@ -1,7 +1,6 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { motion } from 'motion/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
@@ -13,7 +12,8 @@ import { authClient } from '@/lib/auth-client';
 import { resetPasswordSchema } from '@/lib/schemas';
 
 import { AuthInput } from '@/components/auth/auth-input';
-import { staggerContainer, staggerItem } from '@/components/auth/motion';
+import { fieldDelay } from '@/components/auth/motion';
+import { Enter } from '@/components/common/enter';
 import { Button } from '@/components/ui/button';
 import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Loader2Icon, RotateCwIcon } from 'lucide-react';
@@ -49,8 +49,8 @@ export function ResetPasswordForm({ token }: { token: string }) {
 
   return (
     <Form {...form}>
-      <motion.form onSubmit={form.handleSubmit(onSubmit)} className='space-y-2' initial='hidden' animate='visible' variants={staggerContainer}>
-        <motion.div variants={staggerItem}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-2'>
+        <Enter variant='reveal' spring='pop' delay={fieldDelay(0)}>
           <FormField
             control={form.control}
             name='password'
@@ -61,8 +61,8 @@ export function ResetPasswordForm({ token }: { token: string }) {
               </FormItem>
             )}
           />
-        </motion.div>
-        <motion.div variants={staggerItem}>
+        </Enter>
+        <Enter variant='reveal' spring='pop' delay={fieldDelay(1)}>
           <FormField
             control={form.control}
             name='confirmPassword'
@@ -73,8 +73,8 @@ export function ResetPasswordForm({ token }: { token: string }) {
               </FormItem>
             )}
           />
-        </motion.div>
-        <motion.div variants={staggerItem}>
+        </Enter>
+        <Enter variant='reveal' spring='pop' delay={fieldDelay(2)}>
           <Button type='submit' className='w-full' disabled={isSubmitting || !filled}>
             {isSubmitting ? (
               <>
@@ -88,8 +88,8 @@ export function ResetPasswordForm({ token }: { token: string }) {
               </>
             )}
           </Button>
-        </motion.div>
-      </motion.form>
+        </Enter>
+      </form>
     </Form>
   );
 }
