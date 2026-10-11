@@ -17,6 +17,7 @@
       "loaders/*": ["./src/loaders/*"],
       "utility/*": ["./src/utility/*"],
       "bubbles/*": ["./src/bubbles/*"],
+      "moderation/*": ["./src/moderation/*"],
       "generated/*": ["../generated/*"],
       "database/*": ["./src/database/*"]
     }

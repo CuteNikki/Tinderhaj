@@ -1,4 +1,4 @@
-import { Client, Collection, GatewayIntentBits } from 'discord.js';
+import { Client, Collection, GatewayIntentBits, Partials } from 'discord.js';
 import { performance } from 'node:perf_hooks';
 
 import type { Button } from 'classes/base/button';
@@ -26,8 +26,18 @@ export class ExtendedClient extends Client {
 
   constructor() {
     super({
-      // Only what bubbles and interactions need, none of them privileged.
-      intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates],
+      intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildVoiceStates,
+        // Privileged, turned on in the Developer Portal: joins and leaves, and what messages said, for the log.
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.MessageContent,
+        GatewayIntentBits.GuildMessages,
+        // Audit log entries, for who did what to the server.
+        GatewayIntentBits.GuildModeration,
+      ],
+      // Deletes and edits of messages from before the bot started, and leaves of members it never saw, still arrive.
+      partials: [Partials.Message, Partials.Channel, Partials.GuildMember, Partials.User],
       // Rather than wait minutes in a queue, tell the owner a bubble can't be renamed again yet.
       rest: { rejectOnRateLimit: isRenameLimit },
     });

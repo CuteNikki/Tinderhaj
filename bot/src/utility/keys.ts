@@ -24,4 +24,7 @@ export const KEYS = {
   DISCORD_CHANNEL_JOIN_TO_CREATE: process.env.DISCORD_CHANNEL_JOIN_TO_CREATE,
   /** Optional: a text channel where the bot keeps a control panel for whichever bubble you're in. */
   DISCORD_CHANNEL_BUBBLE_CONTROLS: process.env.DISCORD_CHANNEL_BUBBLE_CONTROLS,
+
+  /** The moderators' log: members, messages, moderation and changes to the server. Without it, nothing is logged. */
+  DISCORD_CHANNEL_LOG: process.env.DISCORD_CHANNEL_LOG,
 } as const;
