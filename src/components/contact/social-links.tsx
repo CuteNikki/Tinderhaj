@@ -37,7 +37,7 @@ export function SocialLinks({ delay, className }: { delay: number; className?: s
           </span>
           <span className='min-w-0 flex-1'>
             <span className='block font-bold'>{social.name}</span>
-            <span className='text-muted-foreground block text-sm'>{social.blurb}</span>
+            <span className='text-muted-foreground block text-sm text-pretty'>{social.blurb}</span>
           </span>
           <ArrowUpRightIcon
             className='text-muted-foreground ease-bounce mt-1 size-4 shrink-0 transition-transform duration-300 group-hover/social:translate-x-0.5 group-hover/social:-translate-y-0.5'
