@@ -59,9 +59,14 @@ function linkButton(label: string, path: string) {
 /** The moderator who verified or rejected a shark: their session's user. */
 type Reviewer = { id: string; name: string };
 
-/** Someone's name, linked to their page for moderators, where all their sharks show in any state. */
+/**
+ * Someone's name, linked to their page for moderators, where all their sharks
+ * show in any state. Not escaped: Discord shows a backslash in a link's text as
+ * it is, and a username is only letters, numbers and underscores, which don't
+ * make italics inside a word.
+ */
 function userLink(id: string, username: string) {
-  return `**[${escapeMarkdown(username)}](${new URL(`/moderation/users/${id}`, SITE_URL).href})**`;
+  return `**[${username}](${new URL(`/moderation/users/${id}`, SITE_URL).href})**`;
 }
 
 /** A Discord timestamp, shown in each reader's own time. */
