@@ -176,6 +176,7 @@ export async function ensureControlsMessage(guild: Guild, hubId: string) {
           ].join('\n'),
         ),
       )
+      .addSeparatorComponents(new SeparatorBuilder())
       .addActionRowComponents(
         new ActionRowBuilder<ButtonBuilder>().addComponents(
           new ButtonBuilder().setCustomId('bubble-controls').setLabel('Open my bubble controls').setEmoji('🫧').setStyle(ButtonStyle.Primary),
