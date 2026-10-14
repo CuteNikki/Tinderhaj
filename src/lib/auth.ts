@@ -8,6 +8,7 @@ import { nextCookies } from 'better-auth/next-js';
 import { twoFactor } from 'better-auth/plugins';
 import type { DiscordProfile, GithubProfile, SocialProviders, TwitchProfile, TwitterProfile } from 'better-auth/social-providers';
 import { randomInt } from 'crypto';
+import { after } from 'next/server';
 
 import {
   MAX_PASSWORD_LENGTH,
@@ -247,9 +248,9 @@ export const auth = betterAuth({
     revokeSessionsOnPasswordReset: true,
     resetPasswordTokenExpiresIn: PASSWORD_RESET_TOKEN_EXPIRATION,
     sendResetPassword: async ({ user, url }) => {
-      // Not awaited, so the response time doesn't reveal whether the email exists.
-      void sendPasswordResetEmail({ email: user.email, username: user.name, url }).catch((error) =>
-        console.error('Failed to send password reset email', error),
+      // After the response, so its timing doesn't reveal whether the email exists.
+      after(() =>
+        sendPasswordResetEmail({ email: user.email, username: user.name, url }).catch((error) => console.error('Failed to send password reset email', error)),
       );
     },
   },
@@ -263,12 +264,14 @@ export const auth = betterAuth({
       // no account uses yet. It gets its own wording and landing message.
       const changing = !(await prisma.user.findUnique({ where: { email: user.email }, select: { id: true } }));
 
-      void sendVerificationEmail({
-        email: user.email,
-        username: user.name,
-        url: changing ? withCallback(url, '/verified?step=changed') : url,
-        changing,
-      }).catch((error) => console.error('Failed to send verification email', error));
+      after(() =>
+        sendVerificationEmail({
+          email: user.email,
+          username: user.name,
+          url: changing ? withCallback(url, '/verified?step=changed') : url,
+          changing,
+        }).catch((error) => console.error('Failed to send verification email', error)),
+      );
     },
   },
   user: {
@@ -285,12 +288,14 @@ export const auth = betterAuth({
       // Verified addresses first confirm from the current address, so a
       // stolen session can't quietly take over the account.
       sendChangeEmailConfirmation: async ({ user, newEmail, url }) => {
-        void sendEmailChangeConfirmation({
-          email: user.email,
-          username: user.name,
-          newEmail,
-          url: withCallback(url, '/verified?step=confirmed'),
-        }).catch((error) => console.error('Failed to send email change confirmation', error));
+        after(() =>
+          sendEmailChangeConfirmation({
+            email: user.email,
+            username: user.name,
+            newEmail,
+            url: withCallback(url, '/verified?step=confirmed'),
+          }).catch((error) => console.error('Failed to send email change confirmation', error)),
+        );
       },
     },
     deleteUser: {
@@ -301,8 +306,10 @@ export const auth = betterAuth({
         const link = new URL('/dashboard/account/delete', new URL(url).origin);
         link.searchParams.set('token', token);
 
-        void sendDeleteAccountEmail({ email: user.email, username: user.name, url: link.toString() }).catch((error) =>
-          console.error('Failed to send delete account email', error),
+        after(() =>
+          sendDeleteAccountEmail({ email: user.email, username: user.name, url: link.toString() }).catch((error) =>
+            console.error('Failed to send delete account email', error),
+          ),
         );
       },
       deleteTokenExpiresIn: 60 * 60,
@@ -358,7 +365,9 @@ export const auth = betterAuth({
         // Only a hash is kept, like a password.
         storeOTP: 'hashed',
         sendOTP: ({ user, otp }) => {
-          void sendTwoFactorCode({ email: user.email, username: user.name, code: otp }).catch((error) => console.error('Failed to send sign-in code', error));
+          after(() =>
+            sendTwoFactorCode({ email: user.email, username: user.name, code: otp }).catch((error) => console.error('Failed to send sign-in code', error)),
+          );
         },
       },
     }),

@@ -1,13 +1,14 @@
 import 'server-only';
 
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 
 async function sendEmail(email: { to: string; subject: string; heading: string; body: string; text: string }) {
-  // Created here, not at import, so builds work without the API key.
-  const resend = new Resend(process.env.RESEND_API_KEY);
+  // Our mail server, e.g. smtps://no-reply%40tinderhaj.com:password@mail.niso.moe
+  const url = process.env.SMTP_URL;
+  if (!url) throw new Error('Set SMTP_URL to send emails.');
 
-  const { error } = await resend.emails.send({
-    from: process.env.RESEND_FROM_EMAIL ?? 'Tinderhaj <onboarding@resend.dev>',
+  await nodemailer.createTransport(url).sendMail({
+    from: process.env.EMAIL_FROM ?? 'Tinderhaj <no-reply@tinderhaj.com>',
     to: email.to,
     subject: email.subject,
     text: email.text,
@@ -21,8 +22,6 @@ async function sendEmail(email: { to: string; subject: string; heading: string; 
     // into one conversation, where it hides the repeated text behind "…".
     headers: { 'X-Entity-Ref-ID': crypto.randomUUID() },
   });
-
-  if (error) throw new Error(`Resend: ${error.message}`);
 }
 
 function button(url: string, label: string) {

@@ -1,7 +1,9 @@
 export const PORT = 3100;
 export const BASE_URL = `http://localhost:${PORT}`;
 
-/** Where the server sends emails during tests: the stand-in for Resend in global-setup.ts. */
+/** Where the server sends emails during tests: the stand-in for our mail server in global-setup.ts. */
+export const SMTP_PORT = 3198;
+/** Where tests read back the emails it got. */
 export const MAIL_PORT = 3199;
 export const MAIL_URL = `http://127.0.0.1:${MAIL_PORT}`;
 

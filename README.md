@@ -12,7 +12,7 @@ This project combines:
 - Better Auth for sign-in, sessions, two-step sign-in, and passkeys
 - Prisma + PostgreSQL for persistence
 - Garage, an S3-compatible store on our own server, for profile pictures
-- Resend for transactional email
+- Stalwart, the mail server on our own server, for transactional email
 - Tailwind CSS and shadcn/ui-inspired components for the UI
 - Zod validation for server-side input safety
 
@@ -67,7 +67,7 @@ The product flow is centered on creating a profile for a shark, submitting it fo
 - Prisma ORM
 - PostgreSQL
 - Garage (S3-compatible storage)
-- Resend
+- Stalwart (mail server) and Nodemailer
 - Zod
 
 ## Project Structure
@@ -100,7 +100,7 @@ Before running the app locally, make sure you have:
 - Node.js 20+
 - npm, pnpm, bun, or yarn
 - PostgreSQL running locally or available remotely
-- A Resend API key for password reset emails
+- A mail server to send emails through (see [Emails](#emails)) if you sign up or reset passwords
 - Access to the picture storage (see [Pictures](#pictures)) if you upload profile pictures
 
 ## Environment Variables
@@ -109,8 +109,7 @@ Create a `.env` file in the project root with values similar to:
 
 ```env
 DATABASE_URL="postgresql://username:password@localhost:5432/tinderhaj"
-RESEND_API_KEY="your_resend_api_key"
-RESEND_FROM_EMAIL="Tinderhaj <no-reply@your-domain.com>"
+SMTP_URL="smtps://no-reply%40tinderhaj.com:its_password@mail.niso.moe"
 BETTER_AUTH_SECRET="a random string, e.g. from openssl rand -base64 32"
 BETTER_AUTH_URL="http://localhost:3000"
 STORAGE_ACCESS_KEY_ID="the key from garage key create"
@@ -242,7 +241,7 @@ npm run build
 E2E_DATABASE_URL=postgresql://postgres:postgres@localhost:55432/postgres npm run test:e2e
 ```
 
-The server runs on port 3100 and sends its emails to a stand-in for Resend on port 3199, so nothing leaves your machine. Accounts the tests make have `@e2e.test` addresses and are removed when the run ends.
+The server runs on port 3100 and sends its emails to a stand-in mail server on port 3198, which the tests read them back from on port 3199, so nothing leaves your machine. Accounts the tests make have `@e2e.test` addresses and are removed when the run ends.
 
 ## Authentication and Session Flow
 
@@ -252,7 +251,7 @@ Better Auth calls the username `name`. It checks usernames on sign-up and on cha
 
 Signing in with a provider joins an existing account with the same email only when both the provider and Tinderhaj have verified that email. Otherwise the person is asked to sign in another way and connect the provider from Account Settings. Passwords are hashed with scrypt as `salt:hash` (`src/lib/password-hasher.ts`), the same way as before Better Auth, so older accounts keep their passwords.
 
-Emails (verification, email changes, password resets, sign-in codes, and account deletion) are sent through Resend from `src/lib/email.ts`.
+Emails (verification, email changes, password resets, sign-in codes, and account deletion) are sent through our mail server (see [Emails](#emails)) from `src/lib/email.ts`.
 
 ## Profile and Moderation Model
 
@@ -284,8 +283,7 @@ Only verified profiles from accounts that aren't banned show up in discovery, on
 This app is designed for deployment on modern Node.js hosting platforms such as Vercel. For production, ensure you configure:
 
 - `DATABASE_URL`
-- `RESEND_API_KEY`
-- `RESEND_FROM_EMAIL`
+- `SMTP_URL`
 - `BETTER_AUTH_SECRET`, and `BETTER_AUTH_URL` unless Vercel's production domain is the right address
 - `STORAGE_ACCESS_KEY_ID` and `STORAGE_SECRET_ACCESS_KEY`
 
@@ -328,6 +326,12 @@ Avatars and banners are kept on our own server, in [Garage](https://garagehq.deu
    	}
    }
    ```
+
+## Emails
+
+Emails go out from our own server, through its mail server ([Stalwart](https://stalw.art), at `mail.niso.moe`), which also handles the mail for the server's other domains and isn't part of this repo. The site logs in as `no-reply@tinderhaj.com`, an account in Stalwart, over TLS on port 465, and sends as that address. `SMTP_URL` holds the login, with the `@` written as `%40`: `smtps://no-reply%40tinderhaj.com:its_password@mail.niso.moe`. `EMAIL_FROM` changes the name shown, e.g. `"Tinderhaj <no-reply@tinderhaj.com>"`, the default.
+
+Stalwart signs each email with DKIM and delivers it, retrying for a while when a server is down. Its DNS records for tinderhaj.com (MX, SPF, DKIM, DMARC) are on Cloudflare, published by Stalwart itself.
 
 ## Discord Bot
 

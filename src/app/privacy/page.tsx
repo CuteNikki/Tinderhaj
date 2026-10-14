@@ -127,10 +127,10 @@ export default function PrivacyPage() {
             request.
           </li>
           <li>
-            Our database and the pictures you upload for your profiles are on a server we rent from Index-Hosting (Kurz &amp; Lankow GbR, Germany), in a data
-            center in Germany. Accounts, profiles, pictures, hearts, and sessions are stored there.
+            Our database, the pictures you upload for your profiles, and the mail server that sends our emails are on a server we rent from Index-Hosting (Kurz
+            &amp; Lankow GbR, Germany), in a data center in Germany. Accounts, profiles, pictures, hearts, and sessions are stored there, and the emails we send
+            you go out from there to your email provider.
           </li>
-          <li>Resend, Inc. (USA) delivers our emails, so it processes your email address and the emails we send you.</li>
         </TypographyList>
         <TypographyP>
           If you choose to sign in with another service, that service learns that you are signing in to Tinderhaj, under its own privacy policy. You can
@@ -191,8 +191,8 @@ export default function PrivacyPage() {
       </LegalSection>
       <LegalSection index={13} title='14. International processing'>
         <TypographyP>
-          Vercel and Resend are based in the United States, so information they process may be transferred there. These transfers rely on the safeguards the
-          GDPR provides for, such as the EU-U.S. Data Privacy Framework or the European Commission&apos;s standard contractual clauses.
+          Vercel is based in the United States, so information it processes may be transferred there. These transfers rely on the safeguards the GDPR provides
+          for, such as the EU-U.S. Data Privacy Framework or the European Commission&apos;s standard contractual clauses.
         </TypographyP>
       </LegalSection>
       <LegalSection index={14} title='15. Changes to this policy'>
