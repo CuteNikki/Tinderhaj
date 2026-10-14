@@ -1,0 +1,30 @@
+# Where the site's pictures are kept: Garage, an S3-compatible store, behind
+# Caddy at images.tinderhaj.com. See the README's Pictures section.
+services:
+  tinderhaj-storage:
+    image: dxflrs/garage:v2.4.1
+    container_name: tinderhaj-storage
+    restart: unless-stopped
+    environment:
+      # Any 32 random bytes as hex (openssl rand -hex 32), in storage/.env. Garage wants one even running alone.
+      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET:?Set GARAGE_RPC_SECRET in storage/.env}
+    volumes:
+      - ./garage.toml:/etc/garage.toml:ro
+      # Kept here, next to this file, so they're easy to back up
+      - ./meta:/var/lib/garage/meta
+      - ./data:/var/lib/garage/data
+    networks:
+      - caddy
+
+    # On the VPS's dashboard (gethomepage), with Caddy and Postgres.
+    labels:
+      homepage.group: 'Infrastructure'
+      homepage.name: 'Tinderhaj pictures'
+      homepage.icon: 'mdi-image-multiple'
+      homepage.href: 'https://github.com/CuteNikki/Tinderhaj'
+
+# Caddy's network, so it can reach Garage by name.
+networks:
+  caddy:
+    external: true
+    name: caddy

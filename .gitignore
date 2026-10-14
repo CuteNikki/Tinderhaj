@@ -46,3 +46,7 @@ next-env.d.ts
 
 # Prisma
 /generated
+
+# Pictures kept by storage/ on the server
+/storage/meta
+/storage/data
