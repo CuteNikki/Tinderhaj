@@ -11,7 +11,7 @@ This project combines:
 - Next.js App Router for the web app and server actions
 - Better Auth for sign-in, sessions, two-step sign-in, and passkeys
 - Prisma + PostgreSQL for persistence
-- UploadThing for image uploads
+- Garage, an S3-compatible store on our own server, for profile pictures
 - Resend for transactional email
 - Tailwind CSS and shadcn/ui-inspired components for the UI
 - Zod validation for server-side input safety
@@ -66,7 +66,7 @@ The product flow is centered on creating a profile for a shark, submitting it fo
 - Better Auth
 - Prisma ORM
 - PostgreSQL
-- UploadThing
+- Garage (S3-compatible storage)
 - Resend
 - Zod
 
@@ -101,7 +101,7 @@ Before running the app locally, make sure you have:
 - npm, pnpm, bun, or yarn
 - PostgreSQL running locally or available remotely
 - A Resend API key for password reset emails
-- An UploadThing account and configured secrets if you use profile uploads
+- Access to the picture storage (see [Pictures](#pictures)) if you upload profile pictures
 
 ## Environment Variables
 
@@ -113,7 +113,8 @@ RESEND_API_KEY="your_resend_api_key"
 RESEND_FROM_EMAIL="Tinderhaj <no-reply@your-domain.com>"
 BETTER_AUTH_SECRET="a random string, e.g. from openssl rand -base64 32"
 BETTER_AUTH_URL="http://localhost:3000"
-UPLOADTHING_TOKEN="your_uploadthing_token"
+STORAGE_ACCESS_KEY_ID="the key from garage key create"
+STORAGE_SECRET_ACCESS_KEY="its secret"
 
 # Optional: social sign-in. Each provider shows up once both of its values are set.
 GOOGLE_CLIENT_ID=""
@@ -157,7 +158,7 @@ Notes:
 - `DATABASE_URL` is required for Prisma and the app database connection.
 - `BETTER_AUTH_SECRET` signs session cookies and encrypts two-step sign-in secrets. Keep it the same across deploys, or everyone is signed out and authenticator apps stop working.
 - `BETTER_AUTH_URL` is where the site runs, e.g. `https://tinderhaj.com`. Links in emails and sign-in provider callbacks point there, and passkeys only work on its domain. On Vercel it can be left out: production then uses the project's production domain (`VERCEL_PROJECT_PRODUCTION_URL`) and preview deployments their own address. Anywhere else it is required in production, where the server won't start without it; in development it defaults to `http://localhost:3000`.
-- UploadThing variables are required for avatar/banner uploads to work.
+- `STORAGE_ACCESS_KEY_ID` and `STORAGE_SECRET_ACCESS_KEY` are the storage key the site signs uploads and deletions with (see [Pictures](#pictures)). Without them, uploading a picture fails. `STORAGE_REGION` is `garage` unless set.
 - Social sign-in providers are optional. Register an app with each provider and set its redirect URL to `<BETTER_AUTH_URL>/api/auth/callback/<provider>`, e.g. `http://localhost:3000/api/auth/callback/github`. The provider ids are `google`, `apple`, `microsoft`, `github`, `discord`, `twitter` (X), `twitch`, and `facebook`.
   - Apple's client secret is a signed JWT you generate from your Apple key, and it expires after at most six months. `APPLE_APP_BUNDLE_IDENTIFIER` is only needed for signing in from an iOS app.
   - X only shares the email address if the app asks for it ("Request email from users" in the X developer portal); without it, signing in with X fails.
@@ -286,9 +287,47 @@ This app is designed for deployment on modern Node.js hosting platforms such as 
 - `RESEND_API_KEY`
 - `RESEND_FROM_EMAIL`
 - `BETTER_AUTH_SECRET`, and `BETTER_AUTH_URL` unless Vercel's production domain is the right address
-- UploadThing credentials
+- `STORAGE_ACCESS_KEY_ID` and `STORAGE_SECRET_ACCESS_KEY`
 
 Better Auth rate limits sign-in, sign-up, and code requests per IP address in production. It reads the address from `x-forwarded-for`, which Vercel sets. Behind a proxy that doesn't, every visitor shares one limit.
+
+## Pictures
+
+Avatars and banners are kept on our own server, in [Garage](https://garagehq.deuxfleurs.fr), an S3-compatible store, at `images.tinderhaj.com` (`UPLOAD_ORIGIN` in `src/constants/uploads.ts`). The browser shrinks a picture, asks the site for a link to upload it to (`requestUpload`), and sends it there itself, so it never passes through the site. Each link lasts 5 minutes and is signed for that picture's type and size, at a new address of its own. A picture is deleted once no shark has it any more: when a shark gets a new one, or a shark or account is deleted. Pictures from before, on UploadThing, are still accepted.
+
+`storage/` runs Garage on the server, behind the server's Caddy:
+
+1. Point `images.tinderhaj.com` at the server (an A record; on Cloudflare, DNS only, so Caddy can get its certificate).
+2. Put a secret in `storage/.env`: `GARAGE_RPC_SECRET=` followed by `openssl rand -hex 32`. Then `cd storage && docker compose up -d`. Garage joins the external `caddy` network, and keeps everything in `storage/meta` and `storage/data`, which are what to back up.
+3. Set it up, with `garage` standing for `docker compose exec tinderhaj-storage /garage`:
+   ```sh
+   garage layout assign -z dc1 -c 50G $(garage node id -q | cut -d@ -f1)
+   garage layout apply --version 1
+   garage bucket create images
+   garage bucket website --allow images
+   garage key create tinderhaj-site      # its Key ID and Secret key are STORAGE_ACCESS_KEY_ID and STORAGE_SECRET_ACCESS_KEY
+   garage bucket allow --read --write --owner images --key tinderhaj-site
+   ```
+4. Let the site's pages upload to it: with that key, put a CORS rule on the bucket allowing `PUT` with a `content-type` header from `https://tinderhaj.com` (and `http://localhost:3000` for development), e.g. `aws s3api put-bucket-cors --endpoint-url https://images.tinderhaj.com --bucket images --cors-configuration '{"CORSRules":[{"AllowedOrigins":["https://tinderhaj.com","http://localhost:3000"],"AllowedMethods":["PUT"],"AllowedHeaders":["content-type"],"MaxAgeSeconds":3600}]}'`.
+5. Add it to the Caddyfile. Uploads and deletions go to Garage's S3 API, and everything else is reading a picture:
+   ```caddyfile
+   images.tinderhaj.com {
+   	request_body {
+   		max_size 10MB
+   	}
+   	@api method PUT POST DELETE OPTIONS
+   	handle @api {
+   		reverse_proxy tinderhaj-storage:3900
+   	}
+   	handle {
+   		# A picture never changes: a new one gets a new address
+   		header Cache-Control "public, max-age=31536000, immutable"
+   		header Content-Security-Policy "default-src 'none'; sandbox"
+   		header X-Content-Type-Options nosniff
+   		reverse_proxy tinderhaj-storage:3902
+   	}
+   }
+   ```
 
 ## Discord Bot
 

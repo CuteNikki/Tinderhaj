@@ -5,13 +5,26 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-import type { OurFileRouter } from '@/app/api/uploadthing/core';
-import { MAX_AVATAR_SIZE_MB, MAX_BANNER_SIZE_MB } from '@/constants/uploads';
+import { MAX_AVATAR_SIZE_MB, MAX_BANNER_SIZE_MB, UPLOAD_TYPES, type UploadKind } from '@/constants/uploads';
+import { requestUpload } from '@/lib/actions';
 import { IMAGE_BOXES, shrinkImage } from '@/lib/shrink-image';
-import { UploadButton } from '@/lib/uploadthing';
 import { cn } from '@/lib/utils';
 
 import { Badge } from '@/components/ui/badge';
+
+/** Sends `file` to the link it was given (see requestUpload), telling `onProgress` how far along it is, in percent. */
+function send(uploadUrl: string, file: File, onProgress: (percent: number) => void) {
+  // XMLHttpRequest rather than fetch, which can't tell how much of an upload has gone
+  return new Promise<void>((resolve, reject) => {
+    const request = new XMLHttpRequest();
+    request.open('PUT', uploadUrl);
+    request.setRequestHeader('Content-Type', file.type);
+    request.upload.onprogress = (event) => event.lengthComputable && onProgress((event.loaded / event.total) * 100);
+    request.onload = () => (request.status >= 200 && request.status < 300 ? resolve() : reject(new Error('The picture could not be uploaded.')));
+    request.onerror = () => reject(new Error('The picture could not be uploaded. Check your connection and try again.'));
+    request.send(file);
+  });
+}
 
 /**
  * A picture to upload, change or remove. `bare` leaves out its label and size
@@ -22,14 +35,14 @@ export function ImageUploadField({
   label,
   bare,
   className,
-  endpoint,
+  kind,
   value,
   onChange,
   shape,
   flagged,
 }: {
   label: string;
-  endpoint: keyof OurFileRouter;
+  kind: UploadKind;
   value: string | null;
   onChange: (url: string | null) => void;
   shape: 'circle' | 'banner';
@@ -38,6 +51,22 @@ export function ImageUploadField({
   className?: string;
 }) {
   const [progress, setProgress] = useState<number | null>(null);
+
+  async function upload(file: File) {
+    setProgress(0);
+    try {
+      // Made no bigger than it's ever shown before it goes, so the size limit is checked on what's uploaded
+      const shrunk = await shrinkImage(file, IMAGE_BOXES[kind]);
+      const link = await requestUpload(kind, shrunk.type, shrunk.size);
+      if ('message' in link) throw new Error(link.message);
+      await send(link.uploadUrl, shrunk, setProgress);
+      onChange(link.url);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'The picture could not be uploaded.', { duration: 5000, position: 'top-center' });
+    } finally {
+      setProgress(null);
+    }
+  }
 
   return (
     <div className={cn(!bare && 'space-y-2')}>
@@ -62,48 +91,35 @@ export function ImageUploadField({
             </div>
           )}
 
-          <UploadButton<typeof endpoint>
-            endpoint={endpoint}
-            appearance={{
-              container: cn(
-                'absolute inset-0 flex items-center justify-center',
-                // Shown on hover, and when it has keyboard focus, which can't hover
-                value && 'opacity-0 bg-black/50 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100',
-                progress !== null && 'pointer-events-none opacity-0',
-              ),
-              button: 'h-full w-full rounded-none bg-transparent shadow-none ring-0 text-muted-foreground gap-1 text-xs font-medium after:hidden',
-              allowedContent: 'hidden',
-            }}
-            content={{
-              // Hidden anyway, but set so the server renders what the browser does: left out, UploadThing fills it from config only the browser has
-              allowedContent: <></>,
-              // Coloured here rather than on the button, where UploadThing's own white wins: muted on the empty grey, white over a picture
-              button: (
-                <>
-                  <ImageUpIcon className={cn('shrink-0', value ? 'text-white' : 'text-muted-foreground', shape === 'circle' ? 'h-4 w-4' : 'h-5 w-5')} />
-                  {shape === 'banner' ? (
-                    <span className={value ? 'text-white' : 'text-muted-foreground'}>{value ? 'Change banner' : 'Upload banner'}</span>
-                  ) : (
-                    // Only an icon shows, so this names it for screen readers
-                    <span className='sr-only'>{`${value ? 'Change' : 'Upload'} ${label.toLowerCase()}`}</span>
-                  )}
-                </>
-              ),
-            }}
-            // Made no bigger than it's ever shown before it goes, so the size limit is checked on what's uploaded
-            onBeforeUploadBegin={(files) => Promise.all(files.map((file) => shrinkImage(file, IMAGE_BOXES[shape === 'circle' ? 'avatar' : 'banner'])))}
-            onUploadBegin={() => setProgress(0)}
-            onUploadProgress={(p) => setProgress(p)}
-            onClientUploadComplete={(res) => {
-              setProgress(null);
-              const url = res[0]?.ufsUrl;
-              if (url) onChange(url);
-            }}
-            onUploadError={(error) => {
-              setProgress(null);
-              toast.error(error.message, { duration: 5000, position: 'top-center' });
-            }}
-          />
+          <label
+            className={cn(
+              'text-muted-foreground absolute inset-0 flex cursor-pointer items-center justify-center gap-1 text-xs font-medium',
+              'has-focus-visible:ring-ring/50 has-focus-visible:ring-3 has-focus-visible:ring-inset',
+              // Shown on hover, and when it has keyboard focus, which can't hover
+              value && 'bg-black/50 opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100',
+              progress !== null && 'pointer-events-none opacity-0',
+            )}
+          >
+            <input
+              type='file'
+              accept={Object.keys(UPLOAD_TYPES).join(',')}
+              className='sr-only'
+              disabled={progress !== null}
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                // Emptied, so picking the same file again still counts as a change
+                event.target.value = '';
+                if (file) void upload(file);
+              }}
+            />
+            <ImageUpIcon className={cn('shrink-0', value ? 'text-white' : 'text-muted-foreground', shape === 'circle' ? 'h-4 w-4' : 'h-5 w-5')} />
+            {shape === 'banner' ? (
+              <span className={value ? 'text-white' : 'text-muted-foreground'}>{value ? 'Change banner' : 'Upload banner'}</span>
+            ) : (
+              // Only an icon shows, so this names it for screen readers
+              <span className='sr-only'>{`${value ? 'Change' : 'Upload'} ${label.toLowerCase()}`}</span>
+            )}
+          </label>
         </div>
 
         {value && progress === null && (

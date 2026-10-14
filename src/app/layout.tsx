@@ -2,12 +2,8 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { Suspense } from 'react';
 
-import { NextSSRPlugin } from '@uploadthing/react/next-ssr-plugin';
-import { extractRouterConfig } from 'uploadthing/server';
-
 import { layoutMetadata } from '@/constants/metadata';
 
-import { ourFileRouter } from '@/app/api/uploadthing/core';
 import { KeepScroll } from '@/components/common/keep-scroll';
 import { PageWater } from '@/components/common/page-water';
 import { Footer } from '@/components/navigation/footer';
@@ -27,8 +23,6 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-const uploadthingRouterConfig = extractRouterConfig(ourFileRouter);
-
 export const metadata: Metadata = layoutMetadata;
 
 export default function RootLayout({
@@ -45,7 +39,6 @@ export default function RootLayout({
     >
       <body className='bg-background text-foreground flex min-h-full flex-col overflow-y-scroll'>
         <KeepScroll />
-        <NextSSRPlugin routerConfig={uploadthingRouterConfig} />
         <div id='top' />
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
           <Suspense fallback={<NavbarFallback />}>

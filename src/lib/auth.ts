@@ -26,6 +26,7 @@ import { hashPassword, verifyPassword } from '@/lib/password-hasher';
 import { isAdmin } from '@/lib/roles';
 import prisma from '@/lib/prisma';
 import { SOCIAL_PROVIDERS, type SocialProviderId } from '@/lib/providers';
+import { deleteUploadsLater } from '@/lib/storage';
 import { usernameSchema } from '@/lib/schemas';
 
 /**
@@ -215,8 +216,10 @@ export const auth = betterAuth({
         before: async (user) => {
           const discord = await prisma.account.findFirst({ where: { userId: user.id, providerId: 'discord' }, select: { accountId: true } });
           if (discord) clearDiscordRolesLater(discord.accountId);
-          const waiting = await prisma.profile.findMany({ where: { userId: user.id, reviewMessageId: { not: null } }, select: { reviewMessageId: true } });
-          dropReviewsLater(waiting.map((profile) => profile.reviewMessageId));
+          const sharks = await prisma.profile.findMany({ where: { userId: user.id }, select: { reviewMessageId: true, avatarUrl: true, bannerUrl: true } });
+          dropReviewsLater(sharks.map((profile) => profile.reviewMessageId));
+          // Once they're gone, after the response, so their sharks no longer have them
+          deleteUploadsLater(sharks.flatMap((profile) => [profile.avatarUrl, profile.bannerUrl]));
         },
       },
     },

@@ -37,7 +37,7 @@ export async function publicImage(file: string) {
  * format an upload might be in. Null if it can't be had in time.
  */
 export async function toOgImage(url: string, size: number) {
-  // Only from UploadThing, never wherever a saved URL points
+  // Only from our uploads, never wherever a saved URL points
   if (!isUploadUrl(url)) return null;
   try {
     return await shrunkUpload(url, size);
@@ -48,8 +48,8 @@ export async function toOgImage(url: string, size: number) {
 
 /**
  * The fetching and shrinking for toOgImage, which is most of the time a shared
- * image takes (UploadThing is slow to answer), kept in memory for as long as
- * the server is, since an upload never changes: a new one gets a new URL. On
+ * image takes, kept in memory for as long as the server is, since an upload
+ * never changes: a new one gets a new URL. On
  * serverless hosting that's often not long, so OG_HEADERS does most of the
  * work there. Fails by throwing, so a slow moment isn't cached.
  */

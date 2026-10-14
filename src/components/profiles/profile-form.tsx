@@ -303,7 +303,7 @@ export function ProfileForm({ username, profile }: { username: string; profile?:
                     name='bannerUrl'
                     render={({ field }) => (
                       <FormItem>
-                        <ImageUploadField bare label='Banner' endpoint='profileBanner' value={field.value ?? null} onChange={field.onChange} shape='banner' />
+                        <ImageUploadField bare label='Banner' kind='banner' value={field.value ?? null} onChange={field.onChange} shape='banner' />
                         <FormMessage />
                       </FormItem>
                     )}
@@ -316,7 +316,7 @@ export function ProfileForm({ username, profile }: { username: string; profile?:
                         <ImageUploadField
                           bare
                           label='Avatar'
-                          endpoint='profileAvatar'
+                          kind='avatar'
                           value={field.value ?? null}
                           onChange={field.onChange}
                           shape='circle'

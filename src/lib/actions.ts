@@ -9,6 +9,7 @@ import { z } from 'zod';
 import { auth, forgetTrustedDevices as forget } from '@/lib/auth';
 import prisma from '@/lib/prisma';
 import { MAX_PROFILES } from '@/constants/auth';
+import { UPLOAD_KINDS, UPLOAD_TYPES, type UploadKind } from '@/constants/uploads';
 import { PROFILE_COUNT_TAG, QUERIES } from '@/lib/queries';
 import { BAN_REASON_MAX, banExpiry, isBanDuration, isBanned } from '@/lib/bans';
 import { announceNewSharkLater } from '@/lib/discord-feed';
@@ -20,6 +21,7 @@ import { reportSchema } from '@/lib/reports';
 import { canBan, canManageAccount, isAdmin, isRole } from '@/lib/roles';
 import { createProfileSchema, rejectProfileSchema, updateMatchContactSchema, updateProfileSchema, updateUsernameSchema } from '@/lib/schemas';
 import { getSession, isModerator, requireUser } from '@/lib/session';
+import { deleteUploadsLater, signUpload } from '@/lib/storage';
 
 export async function logOut() {
   await auth.api.signOut({ headers: await headers() });
@@ -224,15 +226,32 @@ export async function deleteUserAccount(userId: string) {
 
   // Their Discord connection goes with the account, so the roles it earned go too.
   const discord = await prisma.account.findFirst({ where: { userId, providerId: 'discord' }, select: { accountId: true } });
-  const waiting = await prisma.profile.findMany({ where: { userId, reviewMessageId: { not: null } }, select: { reviewMessageId: true } });
+  const sharks = await prisma.profile.findMany({ where: { userId }, select: { reviewMessageId: true, avatarUrl: true, bannerUrl: true } });
   await prisma.user.delete({ where: { id: userId } });
   if (discord) clearDiscordRolesLater(discord.accountId);
-  dropReviewsLater(waiting.map((profile) => profile.reviewMessageId));
+  dropReviewsLater(sharks.map((profile) => profile.reviewMessageId));
+  deleteUploadsLater(sharks.flatMap((profile) => [profile.avatarUrl, profile.bannerUrl]));
 
   revalidatePath('/moderation/users');
   revalidatePath('/discovery');
   updateTag(PROFILE_COUNT_TAG);
   revalidatePath('/moderation/verification', 'layout');
+}
+
+/**
+ * A link to upload a shark's picture to, for the browser to send it straight
+ * to storage (see ImageUploadField), at a new address of its own. Only for
+ * someone signed in, and only a picture of a kind and size we take.
+ */
+export async function requestUpload(kind: UploadKind, type: string, size: number) {
+  if (!(await getSession())) return { message: 'Sign in to upload pictures.' };
+
+  const limit = Object.hasOwn(UPLOAD_KINDS, kind) ? UPLOAD_KINDS[kind] : null;
+  const extension = Object.hasOwn(UPLOAD_TYPES, type) ? UPLOAD_TYPES[type as keyof typeof UPLOAD_TYPES] : null;
+  if (!limit || !extension) return { message: 'Pictures can be JPEG, PNG, WebP or AVIF.' };
+  if (!Number.isInteger(size) || size <= 0 || size > limit * 1024 * 1024) return { message: `Pictures can be at most ${limit}MB.` };
+
+  return signUpload(`${kind}s/${crypto.randomUUID()}.${extension}`, type, size);
 }
 
 export async function createProfile(unsafeData: z.infer<typeof createProfileSchema>) {
@@ -274,12 +293,14 @@ export async function updateProfile(unsafeData: z.infer<typeof updateProfileSche
   const { id, isVerified: _isVerified, ...profileData } = data;
 
   // Editing a shark that's waiting for review takes it out of the queue until it's sent again.
-  const before = await prisma.profile.findUnique({ where: { id }, select: { reviewMessageId: true } });
+  const before = await prisma.profile.findUnique({ where: { id }, select: { reviewMessageId: true, avatarUrl: true, bannerUrl: true } });
   await prisma.profile.update({
     where: { id },
     data: { ...profileData, status: 'CREATED', rejectedFields: [], rejectionNote: null, reviewMessageId: null },
   });
   dropReviewsLater([before?.reviewMessageId]);
+  // Its pictures from before, if it has new ones
+  deleteUploadsLater([before?.avatarUrl, before?.bannerUrl]);
 
   revalidatePath('/dashboard/profiles');
   updateTag(PROFILE_COUNT_TAG);
@@ -324,6 +345,7 @@ export async function deleteProfile({ profileId }: { profileId: string }) {
     where: { id: profileId },
   });
   dropReviewsLater([profile.reviewMessageId]);
+  deleteUploadsLater([profile.avatarUrl, profile.bannerUrl]);
 
   revalidatePath('/dashboard/profiles');
   updateTag(PROFILE_COUNT_TAG);

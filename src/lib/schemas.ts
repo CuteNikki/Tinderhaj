@@ -25,7 +25,7 @@ import {
 } from '@/constants/auth';
 import { UPLOAD_HOSTNAME } from '@/constants/uploads';
 
-/** A picture uploaded with UploadThing, the only place they come from (see ImageUploadField). */
+/** A picture uploaded to our storage, the only place they come from (see ImageUploadField). */
 function uploadUrlSchema(name: string) {
   return z
     .url({ protocol: /^https$/, hostname: UPLOAD_HOSTNAME, error: `${name} must be a picture uploaded here.` })
