@@ -28,7 +28,7 @@ import { Section } from '@/components/sections/section';
 
 export const metadata: Metadata = guidelinesMetadata;
 
-/** What a moderator checks a profile against. */
+/** What a moderator checks a profile against. The bot's /guidelines has a copy (bot/src/interactions/commands/guidelines.ts): keep the two in step. */
 const RULES: { title: string; copy: string; icon: LucideIcon }[] = [
   {
     title: 'A shark, not a person',
