@@ -15,14 +15,15 @@ export function ProfileFormSkeleton({ editing = false }: { editing?: boolean }) 
     <div className='grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_26rem] lg:gap-x-8'>
       <div className='grid gap-6'>
         {editing && (
-          // On small screens, the note a live one has (see ProfileForm): most sharks being edited are verified
-          <p aria-hidden className='border-foreground/10 flex items-start gap-2 rounded-lg border p-3 text-sm sm:hidden'>
+          // On small screens, the note a live one has (see ProfileForm): most sharks being edited are verified. A div
+          // where the real one is a p, which can't hold the Skeleton's div.
+          <div aria-hidden className='border-foreground/10 flex items-start gap-2 rounded-lg border p-3 text-sm sm:hidden'>
             <Skeleton className='mt-0.5 size-4 shrink-0 rounded-full' />
             {/* Wrapped as plainly as the real one, so onto as many lines */}
             <GhostText as='span' className='text-wrap'>
               This profile is live in discovery. Saving changes takes it out until you send it for review again and it&apos;s verified.
             </GhostText>
-          </p>
+          </div>
         )}
         <SettingsSection still title='Name' description='What everyone sees first, and what they call it.'>
           <div className='grid gap-4 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]'>
