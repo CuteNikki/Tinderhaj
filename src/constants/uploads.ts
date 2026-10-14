@@ -16,12 +16,11 @@ export const UPLOAD_TYPES = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/we
 export const UPLOAD_ORIGIN = 'https://images.tinderhaj.com';
 
 /**
- * Where uploads are: ours, and UploadThing's (`<app id>.ufs.sh`, or `utfs.io`)
- * for pictures from before we kept them ourselves. Pictures from anywhere else
- * are turned away, so nobody's browser (nor the server, drawing shared images)
- * loads them from a stranger's server.
+ * Where uploads are. Pictures from anywhere else are turned away, so nobody's
+ * browser (nor the server, drawing shared images) loads them from a
+ * stranger's server.
  */
-export const UPLOAD_HOSTNAME = /^(images\.tinderhaj\.com|[a-z0-9]+\.ufs\.sh|utfs\.io)$/;
+export const UPLOAD_HOSTNAME = /^images\.tinderhaj\.com$/;
 
 /** Whether `url` is an upload of ours, over https. */
 export function isUploadUrl(url: string) {

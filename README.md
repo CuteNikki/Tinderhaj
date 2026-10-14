@@ -293,7 +293,7 @@ Better Auth rate limits sign-in, sign-up, and code requests per IP address in pr
 
 ## Pictures
 
-Avatars and banners are kept on our own server, in [Garage](https://garagehq.deuxfleurs.fr), an S3-compatible store, at `images.tinderhaj.com` (`UPLOAD_ORIGIN` in `src/constants/uploads.ts`). The browser shrinks a picture, asks the site for a link to upload it to (`requestUpload`), and sends it there itself, so it never passes through the site. Each link lasts 5 minutes and is signed for that picture's type and size, at a new address of its own. A picture is deleted once no shark has it any more: when a shark gets a new one, or a shark or account is deleted. Pictures from before, on UploadThing, are still accepted.
+Avatars and banners are kept on our own server, in [Garage](https://garagehq.deuxfleurs.fr), an S3-compatible store, at `images.tinderhaj.com` (`UPLOAD_ORIGIN` in `src/constants/uploads.ts`). The browser shrinks a picture, asks the site for a link to upload it to (`requestUpload`), and sends it there itself, so it never passes through the site. Each link lasts 5 minutes and is signed for that picture's type and size, at a new address of its own. A picture is deleted once no shark has it any more: when a shark gets a new one, or a shark or account is deleted.
 
 `storage/` runs Garage on the server, behind the server's Caddy:
 
