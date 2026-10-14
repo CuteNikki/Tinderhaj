@@ -67,7 +67,7 @@ export function panel({ channel, record }: Bubble) {
         button('pop', 'Pop', '🫧', ButtonStyle.Danger),
       ),
     )
-    .addSeparatorComponents(new SeparatorBuilder())
+    .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Large))
     .addTextDisplayComponents(heading('LET IN'))
     .addActionRowComponents(new ActionRowBuilder<UserSelectMenuBuilder>().addComponents(allowed))
     .addTextDisplayComponents(heading('KEPT OUT'))
