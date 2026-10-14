@@ -5,6 +5,7 @@ import {
   ContainerBuilder,
   MessageFlags,
   SeparatorBuilder,
+  SeparatorSpacingSize,
   StringSelectMenuBuilder,
   TextDisplayBuilder,
   UserSelectMenuBuilder,
@@ -152,7 +153,7 @@ export async function ensureControlsMessage(guild: Guild, hubId: string) {
           ].join('\n'),
         ),
       )
-      .addSeparatorComponents(new SeparatorBuilder())
+      .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Large))
       .addTextDisplayComponents(
         section(
           [
@@ -176,7 +177,7 @@ export async function ensureControlsMessage(guild: Guild, hubId: string) {
           ].join('\n'),
         ),
       )
-      .addSeparatorComponents(new SeparatorBuilder())
+      .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Large))
       .addActionRowComponents(
         new ActionRowBuilder<ButtonBuilder>().addComponents(
           new ButtonBuilder().setCustomId('bubble-controls').setLabel('Open my bubble controls').setEmoji('🫧').setStyle(ButtonStyle.Primary),
