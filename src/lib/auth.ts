@@ -25,33 +25,11 @@ import { dropReviewsLater } from '@/lib/discord-review';
 import { sendDeleteAccountEmail, sendEmailChangeConfirmation, sendPasswordResetEmail, sendTwoFactorCode, sendVerificationEmail } from '@/lib/email';
 import { hashPassword, verifyPassword } from '@/lib/password-hasher';
 import { isAdmin } from '@/lib/roles';
+import { siteURL } from '@/lib/site-url';
 import prisma from '@/lib/prisma';
 import { SOCIAL_PROVIDERS, type SocialProviderId } from '@/lib/providers';
 import { deleteUploadsLater } from '@/lib/storage';
 import { usernameSchema } from '@/lib/schemas';
-
-/**
- * Where the site runs, e.g. https://tinderhaj.com. Links in emails, provider
- * callbacks and passkeys all use it. Read when the server starts, unlike
- * NEXT_PUBLIC_ values, which are fixed when the app is built.
- *
- * BETTER_AUTH_URL wins. On Vercel, production uses the project's production
- * domain and previews their own address. Only local development may leave
- * it out entirely.
- */
-function siteURL() {
-  const { BETTER_AUTH_URL, VERCEL_ENV, VERCEL_PROJECT_PRODUCTION_URL, VERCEL_URL } = process.env;
-
-  if (BETTER_AUTH_URL) return new URL(BETTER_AUTH_URL);
-  if (VERCEL_ENV === 'production' && VERCEL_PROJECT_PRODUCTION_URL) return new URL(`https://${VERCEL_PROJECT_PRODUCTION_URL}`);
-  if (VERCEL_URL) return new URL(`https://${VERCEL_URL}`);
-  if (process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE !== 'phase-production-build') {
-    throw new Error('BETTER_AUTH_URL is not set. Set it to the public address of the site, e.g. https://tinderhaj.com.');
-  }
-  return new URL('http://localhost:3000');
-}
-
-const authURL = siteURL();
 
 /**
  * Where Better Auth keeps the devices that skip two-step sign-in ("Don't ask
@@ -152,7 +130,7 @@ async function assertNotLastAdmin(user: { role?: string | null }) {
 }
 
 export const auth = betterAuth({
-  baseURL: authURL.origin,
+  baseURL: siteURL.origin,
   database: prismaAdapter(prisma, { provider: 'postgresql' }),
   session: {
     expiresIn: SESSION_EXPIRATION,
@@ -196,12 +174,12 @@ export const auth = betterAuth({
           ctx?.setCookie(BAN_NOTICE_COOKIE, signBanNotice(session.userId), {
             httpOnly: true,
             sameSite: 'lax',
-            secure: authURL.protocol === 'https:',
+            secure: siteURL.protocol === 'https:',
             path: '/',
             maxAge: BAN_NOTICE_MAX_AGE,
           });
           // Coming back from a provider, there's no form to show an error.
-          if (ctx?.path.startsWith('/callback')) throw ctx.redirect(new URL('/banned', authURL).toString());
+          if (ctx?.path.startsWith('/callback')) throw ctx.redirect(new URL('/banned', siteURL).toString());
           throw new APIError('FORBIDDEN', { code: 'BANNED_USER', message: 'This account is banned.' });
         },
       },
@@ -372,9 +350,9 @@ export const auth = betterAuth({
       },
     }),
     passkey({
-      rpID: authURL.hostname,
+      rpID: siteURL.hostname,
       rpName: 'Tinderhaj',
-      origin: authURL.origin,
+      origin: siteURL.origin,
     }),
     // Must be last: lets server actions set auth cookies.
     nextCookies(),

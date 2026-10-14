@@ -2,6 +2,74 @@ import 'server-only';
 
 import nodemailer from 'nodemailer';
 
+import { siteURL } from '@/lib/site-url';
+
+/**
+ * The site's light theme (see globals.css), as hex: most email clients don't
+ * know oklch.
+ */
+const colors = {
+  // The header, close to the dark mode's deep water: the logo's light grey
+  // and teal stand out on it, where they'd fight a bright blue
+  navy: '#0b2a4a',
+  primary: '#006cc8',
+  primaryStrong: '#005aaf',
+  tint: '#e6f0f7',
+  destructive: '#c10007',
+  foreground: '#071425',
+  muted: '#404f5d',
+  border: '#d4e0e9',
+};
+
+/**
+ * Tables and inline styles, since that's all every email client agrees on.
+ * Just the navy header on a plain page: the mail app is already a frame of
+ * its own. Without images loaded, the header still shows the name.
+ */
+function layout(heading: string, body: string) {
+  return `<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light only" />
+  </head>
+  <body style="margin:0;padding:0;background:#ffffff;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td align="center" style="padding:24px 16px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;">
+            <tr>
+              <td align="center" style="background:${colors.navy};border-radius:16px;padding:20px 24px;">
+                <table role="presentation" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td style="padding-right:12px;vertical-align:middle;">
+                      <img src="${new URL('/email-logo.png', siteURL)}" width="62" height="48" alt="" style="display:block;border:0;" />
+                    </td>
+                    <td style="vertical-align:middle;font-family:sans-serif;font-size:28px;font-weight:bold;color:#ffffff;">Tinderhaj</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:28px 4px 8px;font-family:sans-serif;font-size:15px;line-height:1.6;color:${colors.foreground};text-wrap:pretty;">
+                <h1 style="margin:0 0 16px;font-size:22px;line-height:1.3;color:${colors.primaryStrong};">${heading}</h1>
+                ${body}
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:16px 4px 0;border-top:1px solid ${colors.border};font-family:sans-serif;font-size:12px;color:${colors.muted};">
+                Sent by <a href="${siteURL.origin}" style="color:${colors.muted};">${siteURL.host}</a>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`;
+}
+
 async function sendEmail(email: { to: string; subject: string; heading: string; body: string; text: string }) {
   // Our mail server, e.g. smtps://no-reply%40tinderhaj.com:password@mail.niso.moe
   const url = process.env.SMTP_URL;
@@ -12,20 +80,24 @@ async function sendEmail(email: { to: string; subject: string; heading: string; 
     to: email.to,
     subject: email.subject,
     text: email.text,
-    html: `
-      <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto;">
-        <h2>${email.heading}</h2>
-        ${email.body}
-      </div>
-    `,
+    html: layout(email.heading, email.body),
     // A unique value stops Gmail from grouping emails with the same subject
     // into one conversation, where it hides the repeated text behind "…".
     headers: { 'X-Entity-Ref-ID': crypto.randomUUID() },
   });
 }
 
-function button(url: string, label: string) {
-  return `<p><a href="${url}" style="display:inline-block;padding:10px 20px;background:#111;color:#fff;border-radius:6px;text-decoration:none;">${label}</a></p>`;
+/** In a table cell, so Outlook still paints the whole button and not only behind the label. */
+function button(url: string, label: string, color = colors.primary) {
+  return `
+    <table role="presentation" cellpadding="0" cellspacing="0" style="margin:20px 0;">
+      <tr>
+        <td style="background:${color};border-radius:10px;">
+          <a href="${url}" style="display:inline-block;padding:12px 24px;font-family:sans-serif;font-size:15px;font-weight:bold;color:#ffffff;text-decoration:none;border-radius:10px;">${label}</a>
+        </td>
+      </tr>
+    </table>
+  `;
 }
 
 export async function sendPasswordResetEmail({ email, username, url }: { email: string; username: string; url: string }) {
@@ -93,7 +165,7 @@ export async function sendDeleteAccountEmail({ email, username, url }: { email: 
     heading: 'Delete your account',
     body: `
       <p>Hi @${escapeHtml(username)}, someone (hopefully you) asked to delete your Tinderhaj account, along with all of its profiles. Open the link below in the browser where you're signed in to confirm. This link expires in 1 hour.</p>
-      ${button(url, 'Delete Account')}
+      ${button(url, 'Delete Account', colors.destructive)}
       <p>If you didn't ask for this, ignore this email and consider changing your password.</p>
     `,
     text: `Hi @${username},\n\nSomeone (hopefully you) asked to delete your Tinderhaj account, along with all of its profiles. Open this link in the browser where you're signed in to confirm:\n\n${url}\n\nThis link expires in 1 hour. If you didn't ask for this, ignore this email and consider changing your password.`,
@@ -107,8 +179,8 @@ export async function sendTwoFactorCode({ email, username, code }: { email: stri
     subject: `${code} is your Tinderhaj sign-in code`,
     heading: 'Your sign-in code',
     body: `
-      <p>Hi @${escapeHtml(username)}, your code to finish signing in is:</p>
-      <p style="font-size:24px;font-weight:bold;letter-spacing:4px">${code}</p>
+      <p>Hi @${escapeHtml(username)}, here's your code:</p>
+      <p style="margin:20px 0;padding:14px 0 14px 8px;background:${colors.tint};border-radius:10px;text-align:center;font-family:sans-serif;font-size:30px;font-weight:bold;letter-spacing:8px;font-variant-numeric:tabular-nums;color:${colors.primaryStrong};">${code}</p>
       <p>It expires in 5 minutes. If you didn't just sign in, someone may know your password: change it in your account settings.</p>
     `,
     text: `Hi @${username},\n\nYour code to finish signing in is:\n\n${code}\n\nIt expires in 5 minutes. If you didn't just sign in, someone may know your password: change it in your account settings.`,
