@@ -6,6 +6,19 @@ import { after } from 'next/server';
 import { UPLOAD_ORIGIN } from '@/constants/uploads';
 import prisma from '@/lib/prisma';
 
+/**
+ * The bucket, shared with the plushies and portfolio sites and named after the
+ * address they read it at. Garage's S3 API takes it in the path, so uploading
+ * and deleting go under /images.niso.moe/, and the rest is reading pictures
+ * (see the README's Pictures section).
+ */
+const BUCKET = 'images.niso.moe';
+
+/** Where storage's S3 API takes the picture at `path`. */
+function apiUrl(path: string) {
+  return new URL(`/${BUCKET}${path}`, UPLOAD_ORIGIN);
+}
+
 /** How long a link to upload to lasts: plenty to send one shrunk picture, too short to keep. */
 const UPLOAD_LINK_SECONDS = 300;
 
@@ -25,7 +38,7 @@ function storage() {
  */
 export async function signUpload(path: string, type: string, size: number) {
   const url = new URL(path, UPLOAD_ORIGIN);
-  const upload = new URL(url);
+  const upload = apiUrl(url.pathname);
   upload.searchParams.set('X-Amz-Expires', String(UPLOAD_LINK_SECONDS));
   const signed = await storage().sign(upload.href, {
     method: 'PUT',
@@ -60,7 +73,7 @@ export function deleteUploadsLater(urls: (string | null | undefined)[]) {
     for (const url of ours) {
       try {
         if (await prisma.profile.count({ where: { OR: [{ avatarUrl: url }, { bannerUrl: url }] } })) continue;
-        const response = await storage().fetch(url, { method: 'DELETE', signal: AbortSignal.timeout(8000) });
+        const response = await storage().fetch(apiUrl(new URL(url).pathname), { method: 'DELETE', signal: AbortSignal.timeout(8000) });
         if (!response.ok) console.error(`Failed to delete ${url}: ${response.status}`);
       } catch (error) {
         console.error(`Failed to delete ${url}`, error);
