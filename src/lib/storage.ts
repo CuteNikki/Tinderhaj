@@ -7,16 +7,16 @@ import { UPLOAD_ORIGIN } from '@/constants/uploads';
 import prisma from '@/lib/prisma';
 
 /**
- * The bucket, shared with the plushies and portfolio sites and named after the
- * address they read it at. Garage's S3 API takes it in the path, so uploading
- * and deleting go under /images.niso.moe/, and the rest is reading pictures
- * (see the README's Pictures section).
+ * The site's own bucket, which images.tinderhaj.com serves, and Garage's S3
+ * API for every site, which takes the bucket in the path (see the README's
+ * Pictures section).
  */
-const BUCKET = 'images.niso.moe';
+const BUCKET = 'tinderhaj';
+const STORAGE_ENDPOINT = 'https://s3.niso.moe';
 
 /** Where storage's S3 API takes the picture at `path`. */
 function apiUrl(path: string) {
-  return new URL(`/${BUCKET}${path}`, UPLOAD_ORIGIN);
+  return new URL(`/${BUCKET}${path}`, STORAGE_ENDPOINT);
 }
 
 /** How long a link to upload to lasts: plenty to send one shrunk picture, too short to keep. */

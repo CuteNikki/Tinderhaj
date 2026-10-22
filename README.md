@@ -293,36 +293,18 @@ Better Auth rate limits sign-in, sign-up, and code requests per IP address in pr
 
 Avatars and banners are kept on our own server, in [Garage](https://garagehq.deuxfleurs.fr), an S3-compatible store, at `images.tinderhaj.com` (`UPLOAD_ORIGIN` in `src/constants/uploads.ts`). The browser shrinks a picture, asks the site for a link to upload it to (`requestUpload`), and sends it there itself, so it never passes through the site. Each link lasts 5 minutes and is signed for that picture's type and size, at a new address of its own. A picture is deleted once no shark has it any more: when a shark gets a new one, or a shark or account is deleted.
 
-Garage is the server's shared image storage, run from `~/services/storage` on the server (container `image-storage`, with `meta` and `data` there being what to back up). The pictures are in its `images.niso.moe` bucket, next to the plushies and portfolio sites' under `avatars/` and `banners/`, and `images.tinderhaj.com` is another address for that same bucket. Garage's S3 API takes the bucket in the path, so everything under `/images.niso.moe/` is uploading and deleting (`BUCKET` in `src/lib/storage.ts`), and the rest is reading a picture. To set it up, with `garage` standing for `docker exec image-storage /garage`:
+Garage is the server's image storage, run from `~/services/storage` on the server (container `garage`, with `meta` and `data` there being what to back up), where every site has a bucket of its own. The pictures are in the `tinderhaj` bucket under `avatars/` and `banners/`, which `images.tinderhaj.com` serves. Uploading and deleting go through Garage's S3 API at `s3.niso.moe`, which takes the bucket in the path (`BUCKET` and `STORAGE_ENDPOINT` in `src/lib/storage.ts`). To set it up, with `garage` standing for `docker exec garage /garage`:
 
 1. Point `images.tinderhaj.com` at the server (an A record; on Cloudflare, DNS only, so Caddy can get its certificate).
-2. Give the site a key of its own and let it use the bucket:
+2. Make the bucket and give the site a key of its own, which can use that bucket and no other:
    ```sh
+   garage bucket create tinderhaj
+   garage bucket website --allow tinderhaj
    garage key create tinderhaj-site      # its Key ID and Secret key are STORAGE_ACCESS_KEY_ID and STORAGE_SECRET_ACCESS_KEY
-   garage bucket allow --read --write images.niso.moe --key tinderhaj-site
+   garage bucket allow --read --write tinderhaj --key tinderhaj-site
    ```
-3. Let the site's pages upload: the bucket's CORS rule has to allow `PUT` with a `content-type` header from `https://tinderhaj.com`. Setting CORS replaces the whole rule, so keep the other sites' origins in it: `https://plushies.niso.moe`, `https://niso.moe`, `https://tinderhaj.com` and `http://localhost:3000`.
-4. Add `images.tinderhaj.com` to the Caddyfile's `images.niso.moe` block, which serves both addresses. Reading a picture tells Garage it's `images.niso.moe` being read, since Garage picks the bucket from the address:
-   ```caddyfile
-   images.niso.moe, images.tinderhaj.com {
-   	request_body {
-   		max_size 10MB
-   	}
-   	@api path /images.niso.moe /images.niso.moe/*
-   	handle @api {
-   		reverse_proxy image-storage:3900
-   	}
-   	handle {
-   		# A picture never changes: a new one gets a new address
-   		header Cache-Control "public, max-age=31536000, immutable"
-   		header Content-Security-Policy "default-src 'none'; sandbox"
-   		header X-Content-Type-Options nosniff
-   		reverse_proxy image-storage:3902 {
-   			header_up Host images.niso.moe
-   		}
-   	}
-   }
-   ```
+3. Let the site's pages upload: the bucket's CORS rule allows `PUT` with a `content-type` header from `https://tinderhaj.com` and `http://localhost:3000`.
+4. Caddy serves the bucket at `images.tinderhaj.com` and Garage's S3 API at `s3.niso.moe` (the server's `~/services/caddy/Caddyfile`). Reading a picture tells Garage it's `tinderhaj` being read, since Garage picks the bucket from the address. Uploads have an address of their own because they're signed for their path, which Caddy can't rewrite.
 
 ## Emails
 
