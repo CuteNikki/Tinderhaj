@@ -12,7 +12,7 @@ const globalForPrisma = global as unknown as {
 // one worker per CPU, each with its own pool, so there each gets even fewer.
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  max: process.env.NEXT_PHASE === 'phase-production-build' ? 2 : 5,
+  max: process.env.NEXT_PHASE === 'phase-production-build' ? 2 : 3,
   connectionTimeoutMillis: 5_000,
   query_timeout: 10_000,
   statement_timeout: 10_000,
