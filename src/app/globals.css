@@ -596,7 +596,8 @@
   content: counter(count-up);
   counter-reset: count-up var(--count-now);
   position: absolute;
-  inset-inline-start: 0;
+  /* Against what follows it, as "  0%" to "100%", rather than leaving a gap before it */
+  inset-inline-end: 0;
   animation:
     count-up var(--count-duration, 1s) cubic-bezier(0.5, 1, 0.89, 1) var(--count-delay, 0s) both,
     count-up-done 0s calc(var(--count-delay, 0s) + var(--count-duration, 1s)) forwards;
