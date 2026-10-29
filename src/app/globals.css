@@ -591,6 +591,9 @@
 }
 
 .count-up::before {
+  /* Where it lands, which the animation climbs to from 0: set here rather
+     than in the keyframes, which Safari may not animate to as a var() */
+  --count-now: var(--count);
   content: counter(count-up);
   counter-reset: count-up var(--count-now);
   position: absolute;
@@ -607,9 +610,6 @@
 @keyframes count-up {
   from {
     --count-now: 0;
-  }
-  to {
-    --count-now: var(--count);
   }
 }
 @keyframes count-up-done {
