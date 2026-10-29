@@ -591,8 +591,7 @@
 }
 
 .count-up::before {
-  /* Where it lands, which the animation climbs to from 0: set here rather
-     than in the keyframes, which Safari may not animate to as a var() */
+  /* Where it lands, which the animation climbs to from 0 */
   --count-now: var(--count);
   content: counter(count-up);
   counter-reset: count-up var(--count-now);
@@ -601,6 +600,11 @@
   animation:
     count-up var(--count-duration, 1s) cubic-bezier(0.5, 1, 0.89, 1) var(--count-delay, 0s) both,
     count-up-done 0s calc(var(--count-delay, 0s) + var(--count-duration, 1s)) forwards;
+}
+
+/* Where Safari's has got to, as it doesn't draw the counter again as it climbs (see WebKitCount) */
+.count-up[data-now]::before {
+  content: attr(data-now);
 }
 
 .count-up > span {
