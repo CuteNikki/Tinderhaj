@@ -82,10 +82,11 @@ export const PROFILE_COUNT_TAG = 'profile-count';
 
 /**
  * How many profiles discovery can show: verified, from accounts that aren't
- * banned. Cached, so the home page stays prerendered.
+ * banned. Cached, so the home page stays prerendered; remote, so every
+ * function instance shares one copy rather than each asking the database.
  */
 export async function getDiscoverableProfileCount() {
-  'use cache';
+  'use cache: remote';
   cacheLife('hours');
   cacheTag(PROFILE_COUNT_TAG);
 
@@ -94,7 +95,7 @@ export async function getDiscoverableProfileCount() {
 
 /** The newest profiles discovery shows, newest first. Cached, like the count. */
 export async function getNewestSharks(take = 3) {
-  'use cache';
+  'use cache: remote';
   cacheLife('hours');
   cacheTag(PROFILE_COUNT_TAG);
 
