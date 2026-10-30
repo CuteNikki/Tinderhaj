@@ -52,7 +52,9 @@ export function show(value: unknown, asName = false): string {
 
 /** "**Old X:** a" and "**New X:** b" on lines of their own, if it changed. */
 export function oldNew(label: string, before: unknown, after: unknown, options: { asName?: boolean; format?: (value: unknown) => string } = {}): Change {
-  if (before === after || (before == null && after == null)) return null;
+  // Discord gives an empty text, like a topic never set, as null in one payload and "" in the next.
+  const empty = (value: unknown) => value == null || value === '';
+  if (before === after || (empty(before) && empty(after))) return null;
   const format = options.format ?? ((value: unknown) => show(value, options.asName));
   return `**Old ${label}:** ${format(before)}\n**New ${label}:** ${format(after)}`;
 }
