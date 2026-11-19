@@ -7,6 +7,7 @@ import {
 
 import { Command } from '@/classes/base/command';
 import { log, LOG_COLORS, purging, transcript, who } from '@/moderation/log';
+
 import { answer, COLORS, fail } from '@/utility/replies';
 
 /** Discord deletes messages in bulk up to this old, and no older. */

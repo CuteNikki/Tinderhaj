@@ -1,6 +1,6 @@
-import { SelectMenu } from '@/classes/base/select';
 import { changeBubble, isStaff } from '@/bubbles/bubble';
 import { controlledBubble, showChanged } from '@/bubbles/controls';
+import { SelectMenu } from '@/classes/base/select';
 
 /** Kept out: like Let in, the whole list. Anyone newly kept out who's in the bubble is taken out of it. */
 export default new SelectMenu({

@@ -5,9 +5,9 @@ import {
   TextInputStyle,
 } from 'discord.js';
 
-import { Button } from '@/classes/base/button';
 import { bubbleLabel, LABEL_MAX } from '@/bubbles/bubble';
 import { controlledBubble } from '@/bubbles/controls';
+import { Button } from '@/classes/base/button';
 
 export default new Button({
   customId: 'bubble-edit',

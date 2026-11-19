@@ -2,6 +2,7 @@ import { AuditLogEvent, ChannelType, Events } from 'discord.js';
 
 import { Event } from '@/classes/base/event';
 import { logChange, mentionWithDetails } from '@/moderation/changes';
+
 import { KEYS } from '@/utility/keys';
 
 /** A thread, or a post in a forum, started. Discord also sends this for old threads the bot is let into, which are left out. */

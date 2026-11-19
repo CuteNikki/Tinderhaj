@@ -2,6 +2,7 @@ import { AuditLogEvent, ChannelType, Events } from 'discord.js';
 
 import { Event } from '@/classes/base/event';
 import { logChange, mentionWithDetails } from '@/moderation/changes';
+
 import { KEYS } from '@/utility/keys';
 import { code } from '@/utility/markdown';
 

@@ -5,8 +5,9 @@ import {
   MessageFlags,
 } from 'discord.js';
 
-import { SelectMenu } from '@/classes/base/select';
 import { controlledBubble } from '@/bubbles/controls';
+import { SelectMenu } from '@/classes/base/select';
+
 import { COLORS, notice } from '@/utility/replies';
 
 /** Someone here: asks what to do about them, just for whoever picked. */

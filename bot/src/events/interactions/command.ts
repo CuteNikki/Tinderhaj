@@ -1,6 +1,7 @@
 import { Events } from 'discord.js';
 
 import { Event } from '@/classes/base/event';
+
 import { run } from '@/utility/interactions';
 
 export default new Event({

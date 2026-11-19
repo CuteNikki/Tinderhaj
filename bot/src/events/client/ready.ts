@@ -1,6 +1,7 @@
 import { Events } from 'discord.js';
 
 import { Event } from '@/classes/base/event';
+
 import { logger, table } from '@/utility/logger';
 
 export default new Event({

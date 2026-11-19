@@ -1,7 +1,8 @@
-import { Button } from '@/classes/base/button';
 import { popBubble } from '@/bubbles/bubble';
 import { controlledBubble } from '@/bubbles/controls';
 import { announce } from '@/bubbles/panel';
+import { Button } from '@/classes/base/button';
+
 import { logger } from '@/utility/logger';
 
 export default new Button({

@@ -7,6 +7,7 @@ import {
 
 import { Event } from '@/classes/base/event';
 import { logChange, oldNew } from '@/moderation/changes';
+
 import { KEYS } from '@/utility/keys';
 
 /** The server's own settings changed: its name, pictures, safety settings and special channels. */

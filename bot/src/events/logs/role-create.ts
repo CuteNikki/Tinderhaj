@@ -6,6 +6,7 @@ import {
   mentionWithDetails,
   permissionNames,
 } from '@/moderation/changes';
+
 import { KEYS } from '@/utility/keys';
 
 export default new Event({

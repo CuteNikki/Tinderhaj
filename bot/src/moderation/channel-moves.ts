@@ -6,6 +6,7 @@ import {
 
 import { CHANNELS_MOVED } from '@/moderation/audit';
 import { logChange, mentionWithDetails, oldNew } from '@/moderation/changes';
+
 import { code } from '@/utility/markdown';
 
 /**

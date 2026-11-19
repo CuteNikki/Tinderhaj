@@ -14,8 +14,10 @@ import {
   type User,
 } from 'discord.js';
 
-import { Command } from '@/classes/base/command';
 import { prisma } from '@/database/index';
+
+import { Command } from '@/classes/base/command';
+
 import { KEYS } from '@/utility/keys';
 import { escapeMarkdown } from '@/utility/markdown';
 import { COLORS, fail } from '@/utility/replies';

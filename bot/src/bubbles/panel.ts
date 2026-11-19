@@ -12,8 +12,10 @@ import {
   type Guild,
 } from 'discord.js';
 
-import type { Bubble } from '@/bubbles/bubble';
 import { prisma } from '@/database/index';
+
+import type { Bubble } from '@/bubbles/bubble';
+
 import { KEYS } from '@/utility/keys';
 import { logger } from '@/utility/logger';
 import { COLORS, notice } from '@/utility/replies';

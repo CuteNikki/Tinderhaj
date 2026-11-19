@@ -1,11 +1,11 @@
 import { performance } from 'node:perf_hooks';
 import { Client, Collection, GatewayIntentBits, Partials } from 'discord.js';
 
+import { isRenameLimit } from '@/bubbles/bubble';
 import type { Button } from '@/classes/base/button';
 import type { Command } from '@/classes/base/command';
 import type { Modal } from '@/classes/base/modal';
 import type { SelectMenu } from '@/classes/base/select';
-import { isRenameLimit } from '@/bubbles/bubble';
 import {
   loadButtons,
   loadCommands,
@@ -13,6 +13,7 @@ import {
   loadModals,
   loadSelectMenus,
 } from '@/loaders/index';
+
 import { KEYS } from '@/utility/keys';
 import { logger } from '@/utility/logger';
 

@@ -7,6 +7,7 @@ import {
 
 import { Command } from '@/classes/base/command';
 import { auditReason, recordModeration } from '@/moderation/moderation';
+
 import { answer, COLORS, fail } from '@/utility/replies';
 
 export default new Command({

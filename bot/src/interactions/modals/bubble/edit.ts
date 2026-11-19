@@ -1,6 +1,7 @@
-import { Modal } from '@/classes/base/modal';
 import { bubbleLabel, bubbleName, changeBubble } from '@/bubbles/bubble';
 import { controlledBubble, showChanged } from '@/bubbles/controls';
+import { Modal } from '@/classes/base/modal';
+
 import { fail } from '@/utility/replies';
 
 export default new Modal({

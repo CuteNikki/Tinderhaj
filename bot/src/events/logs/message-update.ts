@@ -2,6 +2,7 @@ import { Events } from 'discord.js';
 
 import { Event } from '@/classes/base/event';
 import { log, LOG_COLORS, quote, who } from '@/moderation/log';
+
 import { KEYS } from '@/utility/keys';
 
 /** A message edited by whoever sent it. Bots' and webhooks' are left out, as are links getting their previews. */

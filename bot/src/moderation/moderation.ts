@@ -8,8 +8,10 @@ import {
 } from 'discord.js';
 
 import type { ModerationAction } from '@/generated/client';
-import { log, LOG_COLORS, quote, when, who } from '@/moderation/log';
 import { prisma } from '@/database/index';
+
+import { log, LOG_COLORS, quote, when, who } from '@/moderation/log';
+
 import { escapeMarkdown } from '@/utility/markdown';
 
 /**

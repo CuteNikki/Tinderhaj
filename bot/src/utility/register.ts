@@ -2,6 +2,7 @@ import { pathToFileURL } from 'node:url';
 import { REST, Routes } from 'discord.js';
 
 import { Command } from '@/classes/base/command';
+
 import { getCommandFiles } from '@/utility/files';
 import { KEYS } from '@/utility/keys';
 

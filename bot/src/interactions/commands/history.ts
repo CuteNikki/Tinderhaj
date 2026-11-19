@@ -7,10 +7,12 @@ import {
   TextDisplayBuilder,
 } from 'discord.js';
 
+import { prisma } from '@/database/index';
+
 import { Command } from '@/classes/base/command';
 import { log, LOG_COLORS, quote, when, who } from '@/moderation/log';
 import { ACTION_LABELS } from '@/moderation/moderation';
-import { prisma } from '@/database/index';
+
 import { answer, COLORS, fail } from '@/utility/replies';
 
 /** The most cases one look shows, newest first. Fewer if their reasons are long. */

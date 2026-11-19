@@ -2,6 +2,7 @@ import { Events } from 'discord.js';
 
 import { Event } from '@/classes/base/event';
 import { log, LOG_COLORS, when, who } from '@/moderation/log';
+
 import { KEYS } from '@/utility/keys';
 
 /** An account this new is worth a second look. */

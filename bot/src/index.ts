@@ -1,4 +1,5 @@
 import { ExtendedClient } from '@/classes/base/client';
+
 import { logger } from '@/utility/logger';
 
 // Anything that fails with nobody waiting on it (a timer, say) is logged, rather than ending the process as Bun otherwise would.

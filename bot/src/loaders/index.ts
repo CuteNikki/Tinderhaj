@@ -8,6 +8,7 @@ import { Command } from '@/classes/base/command';
 import { Event } from '@/classes/base/event';
 import { Modal } from '@/classes/base/modal';
 import { SelectMenu } from '@/classes/base/select';
+
 import {
   getButtonFiles,
   getCommandFiles,

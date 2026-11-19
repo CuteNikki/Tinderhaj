@@ -61,9 +61,10 @@
             "<THIRD_PARTY_MODULES>",
             "",
             "^@/generated/(.*)$",
-            "^@/classes/(.*)$",
-            "^@/(bubbles|loaders|moderation)/(.*)$",
             "^@/database/(.*)$",
+            "",
+            "^@/(bubbles|classes|loaders|moderation)/(.*)$",
+            "",
             "^@/utility/(.*)$",
             "",
             "^[.]"
