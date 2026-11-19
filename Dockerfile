@@ -2,16 +2,15 @@
 FROM oven/bun:1.4.4-alpine AS build
 WORKDIR /app
 # Dependencies first, so a change to the code alone reuses them. Installing
-# generates the Prisma client, which needs the schema and, for its config,
-# DATABASE_URL from the site's .env
+# generates the Prisma client, which needs the schema
 COPY package.json bun.lock prisma.config.ts ./
 COPY prisma ./prisma
-# The .env comes in as a build secret, there only for the steps that need it
-RUN --mount=type=secret,id=env,target=/app/.env bun install --frozen-lockfile
+RUN bun install --frozen-lockfile
 COPY . .
-# The build needs it too: the pages it prerenders read the database. The copy
-# Next makes of it into the standalone server is deleted in the same step, so
-# the image doesn't keep it: the server gets its settings at runtime
+# The site's .env comes in as a build secret: the pages it prerenders read the
+# database. It's there for this step only, and the copy Next makes of it into
+# the standalone server is deleted in the same step, so the image doesn't keep
+# it: the server gets its settings at runtime
 RUN --mount=type=secret,id=env,target=/app/.env bun run build && rm -f .next/standalone/.env
 
 FROM node:24-alpine
