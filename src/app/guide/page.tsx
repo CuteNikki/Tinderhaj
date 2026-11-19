@@ -1,8 +1,17 @@
-import { ArrowRight, BadgeCheckIcon, HeartIcon, type LucideIcon, SearchIcon, UserRoundPlusIcon, WandSparklesIcon } from 'lucide-react';
+import { guideMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { guideMetadata } from '@/constants/metadata';
+import {
+  ArrowRight,
+  BadgeCheckIcon,
+  HeartIcon,
+  SearchIcon,
+  UserRoundPlusIcon,
+  WandSparklesIcon,
+  type LucideIcon,
+} from 'lucide-react';
+
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 
 import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
@@ -16,7 +25,12 @@ import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = guideMetadata;
 
-const STEPS: { title: string; copy: string; icon: LucideIcon; link?: { label: string; href: string } }[] = [
+const STEPS: {
+  title: string;
+  copy: string;
+  icon: LucideIcon;
+  link?: { label: string; href: string };
+}[] = [
   {
     title: 'Sign up',
     copy: 'With an email and a password, or with an account you already have elsewhere. Passkeys and two-step sign-in are there if you want them.',
@@ -50,33 +64,53 @@ const STEPS: { title: string; copy: string; icon: LucideIcon; link?: { label: st
 export default function GuidePage() {
   return (
     <>
-      <div data-water='band' data-tone='muted' className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'>
+      <div
+        data-water='band'
+        data-tone='muted'
+        className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'
+      >
         <div className='container mx-auto max-w-7xl'>
           <Stagger id='page-header' variant='sink' className='mb-24'>
             <Eyebrow>Guide</Eyebrow>
             <PageTitle>How Tinderhaj works</PageTitle>
-            <PageNote>From signing up to your shark&apos;s first match, in five steps.</PageNote>
+            <PageNote>
+              From signing up to your shark&apos;s first match, in five steps.
+            </PageNote>
           </Stagger>
 
           <div className='grid grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-16'>
-            <Stagger as='ul' itemAs='li' variant='card' gap={STAGGER} delay={CONTENT_DELAY} className='grid gap-4'>
+            <Stagger
+              as='ul'
+              itemAs='li'
+              variant='card'
+              gap={STAGGER}
+              delay={CONTENT_DELAY}
+              className='grid gap-4'
+            >
               {STEPS.map(({ title, copy, icon: Icon, link }, index) => (
                 // On phones the icon sits beside the title only, so the text below has the card's full width; wider, it has a column of its own
                 <div
                   key={title}
-                  className='border-foreground/10 bg-card grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-4 rounded-2xl border p-5 shadow-sm sm:items-start sm:gap-x-5 sm:p-6'
+                  className='grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-4 rounded-2xl border border-foreground/10 bg-card p-5 shadow-sm sm:items-start sm:gap-x-5 sm:p-6'
                 >
-                  <span className='bg-primary/10 text-primary flex size-11 shrink-0 items-center justify-center rounded-full sm:row-span-2'>
+                  <span className='flex size-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary sm:row-span-2'>
                     <Icon className='size-5' aria-hidden='true' />
                   </span>
                   <div>
-                    <p className='text-muted-foreground font-mono text-xs'>Step {index + 1}</p>
+                    <p className='font-mono text-xs text-muted-foreground'>
+                      Step {index + 1}
+                    </p>
                     <h2 className='mt-1 text-lg font-bold'>{title}</h2>
                   </div>
                   <div className='col-span-2 mt-3 sm:col-span-1 sm:col-start-2 sm:mt-1'>
-                    <p className='text-muted-foreground text-sm leading-relaxed text-pretty'>{copy}</p>
+                    <p className='text-sm leading-relaxed text-pretty text-muted-foreground'>
+                      {copy}
+                    </p>
                     {link && (
-                      <Link href={link.href} className='text-primary mt-2 inline-flex items-center gap-1 text-sm font-semibold hover:underline'>
+                      <Link
+                        href={link.href}
+                        className='mt-2 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline'
+                      >
                         {link.label}
                         <ArrowRight className='size-3.5' aria-hidden='true' />
                       </Link>
@@ -87,10 +121,16 @@ export default function GuidePage() {
             </Stagger>
 
             {/* Beside the steps on wide screens, staying in view: somewhere to start */}
-            <ScrollReveal delay={CONTENT_DELAY + STAGGER} variant='card' className='lg:sticky lg:top-24'>
-              <div className='border-foreground/10 bg-card rounded-2xl border p-6 shadow-sm'>
+            <ScrollReveal
+              delay={CONTENT_DELAY + STAGGER}
+              variant='card'
+              className='lg:sticky lg:top-24'
+            >
+              <div className='rounded-2xl border border-foreground/10 bg-card p-6 shadow-sm'>
                 <h2 className='text-xl font-bold'>Ready to dive in?</h2>
-                <p className='text-muted-foreground mt-2 text-sm leading-relaxed text-pretty'>It&apos;s free. Make an account, or have a look around first.</p>
+                <p className='mt-2 text-sm leading-relaxed text-pretty text-muted-foreground'>
+                  It&apos;s free. Make an account, or have a look around first.
+                </p>
                 <div className='mt-5 flex flex-col gap-2'>
                   <Button size='lg' className={sunlit} asChild>
                     <Link href='/sign-up'>

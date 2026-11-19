@@ -1,6 +1,7 @@
+import { cn } from '@/lib/utils';
+
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { cn } from '@/lib/utils';
 
 /**
  * What a page looks like while it loads, piece by piece: each shaped like
@@ -14,17 +15,33 @@ import { cn } from '@/lib/utils';
  * VerifyProfileCard), or to edit or delete your own (see ProfileCard).
  * `blank` for one with nothing but a name yet, as a new one's preview.
  */
-export function ProfileCardSkeleton({ ending = 'heart', blank = false }: { ending?: 'heart' | 'unverify' | 'actions' | 'none'; blank?: boolean }) {
+export function ProfileCardSkeleton({
+  ending = 'heart',
+  blank = false,
+}: {
+  ending?: 'heart' | 'unverify' | 'actions' | 'none';
+  blank?: boolean;
+}) {
   const actions = ending === 'actions';
 
   return (
-    <Card className={cn('bg-background h-full w-full overflow-hidden pt-0 shadow-sm', !actions && 'pb-0')}>
+    <Card
+      className={cn(
+        'h-full w-full overflow-hidden bg-background pt-0 shadow-sm',
+        !actions && 'pb-0'
+      )}
+    >
       <Skeleton className='aspect-5/2 w-full rounded-none' />
       {/* Row for row as tall as a real card's, so the cards don't grow when they arrive */}
-      <CardContent className={cn('-mt-8 flex flex-1 flex-col px-4 sm:px-6', actions ? 'pb-5' : 'pb-4 sm:pb-6')}>
+      <CardContent
+        className={cn(
+          '-mt-8 flex flex-1 flex-col px-4 sm:px-6',
+          actions ? 'pb-5' : 'pb-4 sm:pb-6'
+        )}
+      >
         <div className='relative flex items-start gap-4'>
           {/* On a solid disc, so where it overlaps the banner it isn't lighter there */}
-          <span className='border-background bg-background size-18 shrink-0 overflow-hidden rounded-full border-4 shadow-md'>
+          <span className='size-18 shrink-0 overflow-hidden rounded-full border-4 border-background bg-background shadow-md'>
             <Skeleton className='size-full rounded-full' />
           </span>
           <div className='min-w-0 flex-1 pt-4'>
@@ -84,7 +101,13 @@ export function ProfileCardSkeleton({ ending = 'heart', blank = false }: { endin
 }
 
 /** Sharks' cards in the usual grid. */
-export function ProfileGridSkeleton({ count = 3, ending }: { count?: number; ending?: 'heart' | 'unverify' | 'actions' | 'none' }) {
+export function ProfileGridSkeleton({
+  count = 3,
+  ending,
+}: {
+  count?: number;
+  ending?: 'heart' | 'unverify' | 'actions' | 'none';
+}) {
   return (
     <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-3'>
       {Array.from({ length: count }, (_, index) => (
@@ -98,16 +121,32 @@ export function ProfileGridSkeleton({ count = 3, ending }: { count?: number; end
  * The tabs above a list (see Hearts and Verification). `compact` for tabs
  * that, on phones, show only the open one's label (see Hearts).
  */
-export function TabsSkeleton({ count, compact = false, className }: { count: number; compact?: boolean; className?: string }) {
+export function TabsSkeleton({
+  count,
+  compact = false,
+  className,
+}: {
+  count: number;
+  compact?: boolean;
+  className?: string;
+}) {
   return (
     <div
-      className={cn('bg-muted grid max-w-md gap-1 rounded-full p-1', compact && 'max-sm:flex', className)}
+      className={cn(
+        'grid max-w-md gap-1 rounded-full bg-muted p-1',
+        compact && 'max-sm:flex',
+        className
+      )}
       style={{ gridTemplateColumns: `repeat(${count}, minmax(0, 1fr))` }}
     >
       {Array.from({ length: count }, (_, index) => (
         <Skeleton
           key={index}
-          className={cn('h-9 rounded-full', index === 0 ? 'bg-background' : 'bg-transparent', compact && (index === 0 ? 'max-sm:flex-1' : 'max-sm:w-14'))}
+          className={cn(
+            'h-9 rounded-full',
+            index === 0 ? 'bg-background' : 'bg-transparent',
+            compact && (index === 0 ? 'max-sm:flex-1' : 'max-sm:w-14')
+          )}
         />
       ))}
     </div>
@@ -115,9 +154,15 @@ export function TabsSkeleton({ count, compact = false, className }: { count: num
 }
 
 /** A list in one card, `rows` of the row given, shaped like the page's own (see Hearts and Users). */
-export function ListSkeleton({ rows = 4, children }: { rows?: number; children: React.ReactNode }) {
+export function ListSkeleton({
+  rows = 4,
+  children,
+}: {
+  rows?: number;
+  children: React.ReactNode;
+}) {
   return (
-    <div className='border-foreground/10 bg-card divide-foreground/10 divide-y rounded-2xl border shadow-sm'>
+    <div className='divide-y divide-foreground/10 rounded-2xl border border-foreground/10 bg-card shadow-sm'>
       {Array.from({ length: rows }, (_, index) => (
         <div key={index}>{children}</div>
       ))}
@@ -126,9 +171,20 @@ export function ListSkeleton({ rows = 4, children }: { rows?: number; children: 
 }
 
 /** A section of settings, as on the account page: a title, a line about it, and its controls. */
-export function SettingsSectionSkeleton({ lines = 2, className }: { lines?: number; className?: string }) {
+export function SettingsSectionSkeleton({
+  lines = 2,
+  className,
+}: {
+  lines?: number;
+  className?: string;
+}) {
   return (
-    <div className={cn('border-foreground/10 bg-card rounded-2xl border p-4 shadow-sm', className)}>
+    <div
+      className={cn(
+        'rounded-2xl border border-foreground/10 bg-card p-4 shadow-sm',
+        className
+      )}
+    >
       <Skeleton className='h-6 w-32' />
       <Skeleton className='mt-2 h-4 w-64 max-w-full' />
       <div className='mt-4 space-y-2'>
@@ -144,10 +200,18 @@ export function SettingsSectionSkeleton({ lines = 2, className }: { lines?: numb
  * Text that's coming, as a placeholder: the real words, unseen, on a pulsing
  * bar, so it wraps onto as many lines as the real text will at any width.
  */
-export function GhostText({ as: Tag = 'p', className, children }: { as?: 'p' | 'span'; className?: string; children: React.ReactNode }) {
+export function GhostText({
+  as: Tag = 'p',
+  className,
+  children,
+}: {
+  as?: 'p' | 'span';
+  className?: string;
+  children: React.ReactNode;
+}) {
   return (
     <Tag aria-hidden className={cn('text-sm text-pretty', className)}>
-      <span className='bg-foreground/10 animate-breathe rounded-md [box-decoration-break:clone] text-transparent [-webkit-box-decoration-break:clone] text-shadow-none'>
+      <span className='animate-breathe rounded-md bg-foreground/10 [box-decoration-break:clone] text-transparent [-webkit-box-decoration-break:clone] text-shadow-none'>
         {children}
       </span>
     </Tag>
@@ -155,7 +219,13 @@ export function GhostText({ as: Tag = 'p', className, children }: { as?: 'p' | '
 }
 
 /** A labelled input, as in the forms: its label above it. */
-export function FieldSkeleton({ className, input = 'h-9' }: { className?: string; input?: string }) {
+export function FieldSkeleton({
+  className,
+  input = 'h-9',
+}: {
+  className?: string;
+  input?: string;
+}) {
   return (
     <div className={cn('flex flex-col gap-2', className)}>
       <Skeleton className='h-3.5 w-24' />
@@ -183,7 +253,7 @@ export function ButtonSkeleton({
         // The border's there, unseen, as on every real one
         'inline-flex w-fit shrink-0 items-center justify-center rounded-full border border-transparent text-sm font-medium text-transparent text-shadow-none',
         size === 'sm' ? 'h-8 gap-1 px-3' : 'h-9 gap-1.5 px-3.5',
-        className,
+        className
       )}
     >
       {icon && <span className='size-4' />}

@@ -10,6 +10,6 @@ export class Button {
       /** How long, in milliseconds, before someone can press it again. Defaults to 3 seconds. */
       cooldown?: number;
       execute: (interaction: ButtonInteraction) => unknown;
-    },
+    }
   ) {}
 }

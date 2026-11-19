@@ -5,7 +5,12 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useId, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
-import { KeyRoundIcon, Loader2Icon, MailIcon, SmartphoneIcon } from 'lucide-react';
+import {
+  KeyRoundIcon,
+  Loader2Icon,
+  MailIcon,
+  SmartphoneIcon,
+} from 'lucide-react';
 
 import { authClient } from '@/lib/auth-client';
 
@@ -28,8 +33,10 @@ const messages: Record<string, string> = {
   INVALID_CODE: "That code didn't work. Try again.",
   INVALID_BACKUP_CODE: "That backup code didn't work, or was used already.",
   OTP_HAS_EXPIRED: 'That code has expired. Send a new one.',
-  TOO_MANY_ATTEMPTS_REQUEST_NEW_CODE: 'Too many tries with that code. Send a new one.',
-  ACCOUNT_TEMPORARILY_LOCKED: 'Too many wrong codes. Wait 15 minutes, then sign in again.',
+  TOO_MANY_ATTEMPTS_REQUEST_NEW_CODE:
+    'Too many tries with that code. Send a new one.',
+  ACCOUNT_TEMPORARILY_LOCKED:
+    'Too many wrong codes. Wait 15 minutes, then sign in again.',
 };
 
 /**
@@ -48,7 +55,11 @@ export function TwoFactorForm({ hasApp }: { hasApp: boolean }) {
   const [sent, setSent] = useState(false);
   const [trust, setTrust] = useState(false);
   // A whole 6-digit code; backup codes come in more than one shape, so any.
-  const { ready, onInput, clear } = useFormReady((form) => mode === 'backup' || String(new FormData(form).get('code')).length === CODE_LENGTH);
+  const { ready, onInput, clear } = useFormReady(
+    (form) =>
+      mode === 'backup' ||
+      String(new FormData(form).get('code')).length === CODE_LENGTH
+  );
   const autoSent = useRef(false);
 
   async function sendCode() {
@@ -58,12 +69,19 @@ export function TwoFactorForm({ hasApp }: { hasApp: boolean }) {
     setSending(false);
     if (error) return fail(error);
     setSent(true);
-    toast.success('Code sent. Check your email.', { duration: 5000, position: 'top-center' });
+    toast.success('Code sent. Check your email.', {
+      duration: 5000,
+      position: 'top-center',
+    });
   }
 
   function fail(error: { code?: string; message?: string }) {
     if (error.code === 'INVALID_TWO_FACTOR_COOKIE') return setExpired(true);
-    setError((error.code && messages[error.code]) ?? error.message ?? 'Something went wrong');
+    setError(
+      (error.code && messages[error.code]) ??
+        error.message ??
+        'Something went wrong'
+    );
   }
 
   useEffect(() => {
@@ -105,7 +123,9 @@ export function TwoFactorForm({ hasApp }: { hasApp: boolean }) {
   if (expired) {
     return (
       <div className='flex flex-col gap-4 text-center'>
-        <p className='text-muted-foreground text-sm text-pretty'>This took too long, so you&rsquo;ll need to enter your password again.</p>
+        <p className='text-sm text-pretty text-muted-foreground'>
+          This took too long, so you&rsquo;ll need to enter your password again.
+        </p>
         <Button asChild>
           <Link href='/sign-in'>Sign in again</Link>
         </Button>
@@ -122,7 +142,12 @@ export function TwoFactorForm({ hasApp }: { hasApp: boolean }) {
   // The other kinds of code this account can use.
   const alternatives = [
     mode !== 'app' && hasApp && (
-      <Button key='app' variant='outline' size='lg' onClick={() => switchTo('app')}>
+      <Button
+        key='app'
+        variant='outline'
+        size='lg'
+        onClick={() => switchTo('app')}
+      >
         <SmartphoneIcon />
         Use your authenticator app
       </Button>
@@ -142,7 +167,12 @@ export function TwoFactorForm({ hasApp }: { hasApp: boolean }) {
       </Button>
     ),
     mode !== 'backup' && hasApp && (
-      <Button key='backup' variant='outline' size='lg' onClick={() => switchTo('backup')}>
+      <Button
+        key='backup'
+        variant='outline'
+        size='lg'
+        onClick={() => switchTo('backup')}
+      >
         <KeyRoundIcon />
         Use a backup code
       </Button>
@@ -153,31 +183,64 @@ export function TwoFactorForm({ hasApp }: { hasApp: boolean }) {
   // ways under an "or", as outline buttons like the passkey one there.
   return (
     <div className='flex flex-col gap-4'>
-      <form action={verify} onInput={onInput} className='flex flex-col items-center gap-4'>
-        <Label htmlFor={`${id}-code`} className='text-center text-sm font-normal text-pretty'>
+      <form
+        action={verify}
+        onInput={onInput}
+        className='flex flex-col items-center gap-4'
+      >
+        <Label
+          htmlFor={`${id}-code`}
+          className='text-center text-sm font-normal text-pretty'
+        >
           {prompts[mode]}
         </Label>
         {/* A new field for each kind of code, so none carries over. No
             autofocus: password managers offer a code when the field gains
             focus, which one focused before they notice it never does. */}
         {mode === 'backup' ? (
-          <Input key={mode} id={`${id}-code`} name='code' required autoComplete='off' maxLength={20} className='w-52 text-center tracking-widest' />
+          <Input
+            key={mode}
+            id={`${id}-code`}
+            name='code'
+            required
+            autoComplete='off'
+            maxLength={20}
+            className='w-52 text-center tracking-widest'
+          />
         ) : (
           <CodeInput key={mode} id={`${id}-code`} invalid={!!error} />
         )}
         {mode === 'email' && (
-          <p className='text-muted-foreground text-center text-xs'>
-            {sending ? 'Sending a code…' : sent ? 'It expires in 5 minutes.' : null}{' '}
-            <button type='button' onClick={sendCode} disabled={sending} className='text-primary font-medium hover:underline disabled:opacity-50'>
+          <p className='text-center text-xs text-muted-foreground'>
+            {sending
+              ? 'Sending a code…'
+              : sent
+                ? 'It expires in 5 minutes.'
+                : null}{' '}
+            <button
+              type='button'
+              onClick={sendCode}
+              disabled={sending}
+              className='font-medium text-primary hover:underline disabled:opacity-50'
+            >
               {sent ? 'Send a new one' : 'Send a code'}
             </button>
           </p>
         )}
-        <label htmlFor={`${id}-trust`} className='text-muted-foreground flex cursor-pointer items-center gap-2 text-xs'>
-          <Checkbox id={`${id}-trust`} checked={trust} onCheckedChange={(checked) => setTrust(checked === true)} />
+        <label
+          htmlFor={`${id}-trust`}
+          className='flex cursor-pointer items-center gap-2 text-xs text-muted-foreground'
+        >
+          <Checkbox
+            id={`${id}-trust`}
+            checked={trust}
+            onCheckedChange={(checked) => setTrust(checked === true)}
+          />
           Don&rsquo;t ask again on this device for 30 days
         </label>
-        {error && <p className='text-destructive text-center text-sm'>{error}</p>}
+        {error && (
+          <p className='text-center text-sm text-destructive'>{error}</p>
+        )}
         <Button type='submit' disabled={pending || !ready} className='w-full'>
           {pending && <Loader2Icon className='animate-spin' />}
           Continue
@@ -187,10 +250,10 @@ export function TwoFactorForm({ hasApp }: { hasApp: boolean }) {
       {/* Without an app there's nothing else to offer: email codes are already in use, and backup codes come with an app */}
       {alternatives.length > 0 && (
         <>
-          <div className='text-muted-foreground flex items-center gap-3 text-xs'>
-            <span className='bg-border h-px flex-1' />
+          <div className='flex items-center gap-3 text-xs text-muted-foreground'>
+            <span className='h-px flex-1 bg-border' />
             or
-            <span className='bg-border h-px flex-1' />
+            <span className='h-px flex-1 bg-border' />
           </div>
           <div className='flex flex-col gap-2'>{alternatives}</div>
         </>

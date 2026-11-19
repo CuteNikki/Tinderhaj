@@ -70,7 +70,13 @@ function layout(heading: string, body: string) {
 </html>`;
 }
 
-async function sendEmail(email: { to: string; subject: string; heading: string; body: string; text: string }) {
+async function sendEmail(email: {
+  to: string;
+  subject: string;
+  heading: string;
+  body: string;
+  text: string;
+}) {
   // Our mail server, e.g. smtps://no-reply%40tinderhaj.com:password@mail.niso.moe
   const url = process.env.SMTP_URL;
   if (!url) throw new Error('Set SMTP_URL to send emails.');
@@ -100,7 +106,15 @@ function button(url: string, label: string, color = colors.primary) {
   `;
 }
 
-export async function sendPasswordResetEmail({ email, username, url }: { email: string; username: string; url: string }) {
+export async function sendPasswordResetEmail({
+  email,
+  username,
+  url,
+}: {
+  email: string;
+  username: string;
+  url: string;
+}) {
   await sendEmail({
     to: email,
     subject: 'Reset your Tinderhaj password',
@@ -132,7 +146,9 @@ export async function sendVerificationEmail({
 
   await sendEmail({
     to: email,
-    subject: changing ? 'Confirm your new email for Tinderhaj' : 'Verify your email for Tinderhaj',
+    subject: changing
+      ? 'Confirm your new email for Tinderhaj'
+      : 'Verify your email for Tinderhaj',
     heading: changing ? 'Confirm your new email' : 'Verify your email',
     body: `
       <p>Hi @${escapeHtml(username)}, please confirm this is your email address by clicking the link below. This link expires in 24 hours.</p>
@@ -144,7 +160,17 @@ export async function sendVerificationEmail({
 }
 
 /** First step of changing a verified email: sent to the current address. */
-export async function sendEmailChangeConfirmation({ email, username, newEmail, url }: { email: string; username: string; newEmail: string; url: string }) {
+export async function sendEmailChangeConfirmation({
+  email,
+  username,
+  newEmail,
+  url,
+}: {
+  email: string;
+  username: string;
+  newEmail: string;
+  url: string;
+}) {
   await sendEmail({
     to: email,
     subject: 'Confirm your email change for Tinderhaj',
@@ -158,7 +184,15 @@ export async function sendEmailChangeConfirmation({ email, username, newEmail, u
   });
 }
 
-export async function sendDeleteAccountEmail({ email, username, url }: { email: string; username: string; url: string }) {
+export async function sendDeleteAccountEmail({
+  email,
+  username,
+  url,
+}: {
+  email: string;
+  username: string;
+  url: string;
+}) {
   await sendEmail({
     to: email,
     subject: 'Confirm deleting your Tinderhaj account',
@@ -173,7 +207,15 @@ export async function sendDeleteAccountEmail({ email, username, url }: { email: 
 }
 
 /** The code for the second step of signing in, for accounts using email codes. */
-export async function sendTwoFactorCode({ email, username, code }: { email: string; username: string; code: string }) {
+export async function sendTwoFactorCode({
+  email,
+  username,
+  code,
+}: {
+  email: string;
+  username: string;
+  code: string;
+}) {
   await sendEmail({
     to: email,
     subject: `${code} is your Tinderhaj sign-in code`,
@@ -188,5 +230,9 @@ export async function sendTwoFactorCode({ email, username, code }: { email: stri
 }
 
 function escapeHtml(value: string) {
-  return value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;');
 }

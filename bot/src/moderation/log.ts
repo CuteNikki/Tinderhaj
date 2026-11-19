@@ -1,5 +1,11 @@
-import { ContainerBuilder, MessageFlags, SeparatorBuilder, TextDisplayBuilder, type Guild, type Message } from 'discord.js';
-
+import {
+  ContainerBuilder,
+  MessageFlags,
+  SeparatorBuilder,
+  TextDisplayBuilder,
+  type Guild,
+  type Message,
+} from 'discord.js';
 import { KEYS } from 'utility/keys';
 import { logger } from 'utility/logger';
 
@@ -33,12 +39,22 @@ export type LogPart = string | 'divider';
  * Posts an entry in the log, if there is one. Mentions in it never ping.
  * Discord fits 4000 characters in a message, so very long parts are cut.
  */
-export async function log(guild: Guild, label: string, accent: number, parts: LogPart[], files: LogFile[] = []) {
+export async function log(
+  guild: Guild,
+  label: string,
+  accent: number,
+  parts: LogPart[],
+  files: LogFile[] = []
+) {
   if (!KEYS.DISCORD_CHANNEL_LOG) return;
   const channel = guild.channels.cache.get(KEYS.DISCORD_CHANNEL_LOG);
   if (!channel?.isSendable()) return;
 
-  const container = new ContainerBuilder().setAccentColor(accent).addTextDisplayComponents(new TextDisplayBuilder().setContent(`-# ${label.toUpperCase()}`));
+  const container = new ContainerBuilder()
+    .setAccentColor(accent)
+    .addTextDisplayComponents(
+      new TextDisplayBuilder().setContent(`-# ${label.toUpperCase()}`)
+    );
   let room = 3_800;
   for (const part of parts) {
     if (part === 'divider') {
@@ -48,11 +64,17 @@ export async function log(guild: Guild, label: string, accent: number, parts: Lo
     if (!part || room <= 0) continue;
     const text = part.length > room ? `${part.slice(0, room - 1)}…` : part;
     room -= text.length;
-    container.addTextDisplayComponents(new TextDisplayBuilder().setContent(text));
+    container.addTextDisplayComponents(
+      new TextDisplayBuilder().setContent(text)
+    );
   }
 
   const entry = await channel
-    .send({ components: [container], flags: MessageFlags.IsComponentsV2, allowedMentions: { parse: [] } })
+    .send({
+      components: [container],
+      flags: MessageFlags.IsComponentsV2,
+      allowedMentions: { parse: [] },
+    })
     .catch((err) => logger.error({ err }, 'Failed to post in the log'));
   if (!entry || !files.length) return;
 
@@ -60,10 +82,15 @@ export async function log(guild: Guild, label: string, accent: number, parts: Lo
   // as a download card, in it or under it; a plain one gets Discord's preview, so it can be read where it is.
   await entry
     .reply({
-      files: files.map((file) => ({ attachment: Buffer.from(file.text, 'utf8'), name: file.name })),
+      files: files.map((file) => ({
+        attachment: Buffer.from(file.text, 'utf8'),
+        name: file.name,
+      })),
       allowedMentions: { parse: [], repliedUser: false },
     })
-    .catch((err) => logger.error({ err }, 'Failed to attach a file in the log'));
+    .catch((err) =>
+      logger.error({ err }, 'Failed to attach a file in the log')
+    );
 }
 
 /** A text file to attach to a log entry, e.g. what a purge deleted. */
@@ -74,18 +101,30 @@ export type LogFile = { name: string; text: string };
  * said, and links to what was attached, so moderators can read it all later.
  */
 export function transcript(messages: Message[], heading: string): LogFile {
-  const time = (date: Date) => date.toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
+  const time = (date: Date) =>
+    date.toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
   const lines = [...messages]
     .sort((a, b) => a.createdTimestamp - b.createdTimestamp)
     .flatMap((message) => [
       `[${time(message.createdAt)}] ${message.author.username} (${message.author.id})${message.author.bot ? ' [bot]' : ''}`,
-      ...(message.content ? message.content.split('\n').map((line) => `    ${line}`) : []),
-      ...message.attachments.map((file) => `    Attachment: ${file.name} ${file.url}`),
+      ...(message.content
+        ? message.content.split('\n').map((line) => `    ${line}`)
+        : []),
+      ...message.attachments.map(
+        (file) => `    Attachment: ${file.name} ${file.url}`
+      ),
       ...message.stickers.map((sticker) => `    Sticker: ${sticker.name}`),
-      ...(message.embeds.length ? [`    ${message.embeds.length} embed${message.embeds.length === 1 ? '' : 's'}`] : []),
+      ...(message.embeds.length
+        ? [
+            `    ${message.embeds.length} embed${message.embeds.length === 1 ? '' : 's'}`,
+          ]
+        : []),
       '',
     ]);
-  return { name: `deleted-messages-${Date.now()}.txt`, text: [heading, '', ...lines].join('\n') };
+  return {
+    name: `deleted-messages-${Date.now()}.txt`,
+    text: [heading, '', ...lines].join('\n'),
+  };
 }
 
 /**

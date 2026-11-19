@@ -1,11 +1,12 @@
 'use client';
 
-import { KeyRoundIcon, Loader2Icon } from 'lucide-react';
+import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH } from '@/constants/auth';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { toast } from 'sonner';
 
-import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH } from '@/constants/auth';
+import { KeyRoundIcon, Loader2Icon } from 'lucide-react';
+
 import { setPassword } from '@/lib/actions';
 import { authClient } from '@/lib/auth-client';
 
@@ -29,7 +30,8 @@ export function PasswordForm({ hasPassword }: { hasPassword: boolean }) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const newPassword = String(formData.get('newPassword'));
-    if (newPassword !== formData.get('confirmPassword')) return setError('Passwords do not match!');
+    if (newPassword !== formData.get('confirmPassword'))
+      return setError('Passwords do not match!');
 
     setPending(true);
     setError(undefined);
@@ -40,7 +42,10 @@ export function PasswordForm({ hasPassword }: { hasPassword: boolean }) {
 
       formRef.current?.reset();
       clear();
-      toast.success('Password added. You can now sign in with your email too.', { duration: 5000, position: 'top-center' });
+      toast.success(
+        'Password added. You can now sign in with your email too.',
+        { duration: 5000, position: 'top-center' }
+      );
       return router.refresh();
     }
 
@@ -51,20 +56,40 @@ export function PasswordForm({ hasPassword }: { hasPassword: boolean }) {
     });
     setPending(false);
 
-    if (error) return setError(error.code === 'INVALID_PASSWORD' ? 'Your current password is wrong.' : (error.message ?? 'Unable to change your password!'));
+    if (error)
+      return setError(
+        error.code === 'INVALID_PASSWORD'
+          ? 'Your current password is wrong.'
+          : (error.message ?? 'Unable to change your password!')
+      );
 
     formRef.current?.reset();
     clear();
     setRevokeOthers(false);
-    toast.success('Password changed.', { duration: 5000, position: 'top-center' });
+    toast.success('Password changed.', {
+      duration: 5000,
+      position: 'top-center',
+    });
   }
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} onInput={onInput} className='flex flex-col gap-3'>
+    <form
+      ref={formRef}
+      onSubmit={handleSubmit}
+      onInput={onInput}
+      className='flex flex-col gap-3'
+    >
       {hasPassword && (
         <div className='flex flex-col gap-2'>
           <Label htmlFor='currentPassword'>Current password</Label>
-          <Input id='currentPassword' name='currentPassword' type='password' required autoComplete='current-password' maxLength={MAX_PASSWORD_LENGTH} />
+          <Input
+            id='currentPassword'
+            name='currentPassword'
+            type='password'
+            required
+            autoComplete='current-password'
+            maxLength={MAX_PASSWORD_LENGTH}
+          />
         </div>
       )}
       <div className='grid gap-3 sm:grid-cols-2'>
@@ -93,16 +118,31 @@ export function PasswordForm({ hasPassword }: { hasPassword: boolean }) {
           />
         </div>
       </div>
-      {error && <p className='text-destructive text-sm'>{error}</p>}
+      {error && <p className='text-sm text-destructive'>{error}</p>}
       <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
         {hasPassword && (
-          <label htmlFor='revokeOthers' className='flex cursor-pointer items-center gap-2 text-sm'>
-            <Checkbox id='revokeOthers' checked={revokeOthers} onCheckedChange={(checked) => setRevokeOthers(checked === true)} />
+          <label
+            htmlFor='revokeOthers'
+            className='flex cursor-pointer items-center gap-2 text-sm'
+          >
+            <Checkbox
+              id='revokeOthers'
+              checked={revokeOthers}
+              onCheckedChange={(checked) => setRevokeOthers(checked === true)}
+            />
             Sign out on other devices
           </label>
         )}
-        <Button type='submit' disabled={pending || !ready} className='w-fit sm:ml-auto'>
-          {pending ? <Loader2Icon className='animate-spin' aria-hidden='true' /> : <KeyRoundIcon aria-hidden='true' />}
+        <Button
+          type='submit'
+          disabled={pending || !ready}
+          className='w-fit sm:ml-auto'
+        >
+          {pending ? (
+            <Loader2Icon className='animate-spin' aria-hidden='true' />
+          ) : (
+            <KeyRoundIcon aria-hidden='true' />
+          )}
           {hasPassword ? 'Change password' : 'Add password'}
         </Button>
       </div>

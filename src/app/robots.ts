@@ -1,6 +1,5 @@
-import type { MetadataRoute } from 'next';
-
 import { SITE_URL } from '@/constants/metadata';
+import type { MetadataRoute } from 'next';
 
 /**
  * Keeps crawlers out of the pages that are unlisted in their metadata (only
@@ -11,7 +10,15 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/api/', '/dashboard', '/moderation', '/reset-password', '/two-factor', '/verified', '/banned'],
+      disallow: [
+        '/api/',
+        '/dashboard',
+        '/moderation',
+        '/reset-password',
+        '/two-factor',
+        '/verified',
+        '/banned',
+      ],
     },
     sitemap: new URL('/sitemap.xml', SITE_URL).href,
   };

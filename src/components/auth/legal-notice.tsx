@@ -6,13 +6,21 @@ import Link from 'next/link';
  */
 export function LegalNotice() {
   return (
-    <p className='text-muted-foreground mt-4 text-center text-xs text-balance'>
+    <p className='mt-4 text-center text-xs text-balance text-muted-foreground'>
       By continuing, you agree to our{' '}
-      <Link href='/terms' target='_blank' className='text-foreground underline underline-offset-2'>
+      <Link
+        href='/terms'
+        target='_blank'
+        className='text-foreground underline underline-offset-2'
+      >
         Terms of Service
       </Link>{' '}
       and{' '}
-      <Link href='/privacy' target='_blank' className='text-foreground underline underline-offset-2'>
+      <Link
+        href='/privacy'
+        target='_blank'
+        className='text-foreground underline underline-offset-2'
+      >
         Privacy Policy
       </Link>
       .

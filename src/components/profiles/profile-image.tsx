@@ -9,26 +9,63 @@ import { GhostIcon, SparklesIcon } from 'lucide-react';
  * `eager` for a card in view as the page opens, so its pictures are fetched
  * straight away (see DiscoveryProfile).
  */
-export function ProfileBanner({ src, alt, eager = false }: { src: string | null; alt: string; eager?: boolean }) {
+export function ProfileBanner({
+  src,
+  alt,
+  eager = false,
+}: {
+  src: string | null;
+  alt: string;
+  eager?: boolean;
+}) {
   if (!src) {
     return (
-      <div className='bg-muted text-muted-foreground absolute inset-0 flex items-center justify-center'>
+      <div className='absolute inset-0 flex items-center justify-center bg-muted text-muted-foreground'>
         <GhostIcon className='size-10 shrink-0' />
       </div>
     );
   }
 
-  return <Image unoptimized src={src} alt={alt} loading={eager ? 'eager' : 'lazy'} fill className='object-cover' />;
+  return (
+    <Image
+      unoptimized
+      src={src}
+      alt={alt}
+      loading={eager ? 'eager' : 'lazy'}
+      fill
+      className='object-cover'
+    />
+  );
 }
 
-export function ProfileAvatar({ src, alt, size = 72, eager = false }: { src: string | null; alt: string; size?: number; eager?: boolean }) {
+export function ProfileAvatar({
+  src,
+  alt,
+  size = 72,
+  eager = false,
+}: {
+  src: string | null;
+  alt: string;
+  size?: number;
+  eager?: boolean;
+}) {
   if (!src) {
     return (
-      <div className='bg-muted text-muted-foreground flex h-full w-full items-center justify-center'>
+      <div className='flex h-full w-full items-center justify-center bg-muted text-muted-foreground'>
         <SparklesIcon className='size-6 shrink-0' />
       </div>
     );
   }
 
-  return <Image unoptimized src={src} alt={alt} loading={eager ? 'eager' : 'lazy'} width={size} height={size} className='h-full w-full object-cover' />;
+  return (
+    <Image
+      unoptimized
+      src={src}
+      alt={alt}
+      loading={eager ? 'eager' : 'lazy'}
+      width={size}
+      height={size}
+      className='h-full w-full object-cover'
+    />
+  );
 }

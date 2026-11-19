@@ -15,7 +15,9 @@ export function WebKitCount() {
   useEffect(() => {
     const counter = ref.current?.parentElement;
     if (!counter || navigator.vendor !== 'Apple Computer, Inc.') return;
-    const animation = counter.getAnimations({ subtree: true }).find((a) => a instanceof CSSAnimation && a.animationName === 'count-up');
+    const animation = counter
+      .getAnimations({ subtree: true })
+      .find((a) => a instanceof CSSAnimation && a.animationName === 'count-up');
     if (!animation) return;
     const target = Number(counter.style.getPropertyValue('--count'));
 
@@ -24,7 +26,8 @@ export function WebKitCount() {
       // Eased, as the animation is; 0 while it waits its turn
       const progress = animation.effect?.getComputedTiming().progress ?? 1;
       counter.dataset.now = String(Math.round(progress * target));
-      if (animation.playState !== 'finished') frame = requestAnimationFrame(follow);
+      if (animation.playState !== 'finished')
+        frame = requestAnimationFrame(follow);
     };
     follow();
     return () => cancelAnimationFrame(frame);

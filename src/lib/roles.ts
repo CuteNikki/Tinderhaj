@@ -4,7 +4,11 @@ import { AccountRole } from '@/generated/enums';
 export { AccountRole };
 
 /** Highest first, as the roles page lists them. */
-export const ROLES = [AccountRole.ADMIN, AccountRole.MODERATOR, AccountRole.USER] as const;
+export const ROLES = [
+  AccountRole.ADMIN,
+  AccountRole.MODERATOR,
+  AccountRole.USER,
+] as const;
 
 export const ROLE_LABELS: Record<AccountRole, string> = {
   ADMIN: 'Admin',
@@ -31,13 +35,19 @@ export function isAdmin(role: string | null | undefined) {
  * Who can ban whom: moderators ban users, admins also ban moderators, and
  * nobody bans an admin. Nobody bans themselves either; callers check that.
  */
-export function canBan(actorRole: string | null | undefined, targetRole: AccountRole) {
+export function canBan(
+  actorRole: string | null | undefined,
+  targetRole: AccountRole
+) {
   if (targetRole === AccountRole.ADMIN) return false;
   if (actorRole === AccountRole.ADMIN) return true;
   return actorRole === AccountRole.MODERATOR && targetRole === AccountRole.USER;
 }
 
 /** Admins sign others out, send them password resets and delete them, never another admin's account. */
-export function canManageAccount(actorRole: string | null | undefined, targetRole: AccountRole) {
+export function canManageAccount(
+  actorRole: string | null | undefined,
+  targetRole: AccountRole
+) {
   return isAdmin(actorRole) && targetRole !== AccountRole.ADMIN;
 }

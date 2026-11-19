@@ -1,22 +1,31 @@
-import type { ClientEvents } from 'discord.js';
-import { pathToFileURL } from 'node:url';
 import { performance } from 'node:perf_hooks';
-
+import { pathToFileURL } from 'node:url';
 import { Button } from 'classes/base/button';
 import type { ExtendedClient } from 'classes/base/client';
 import { Command } from 'classes/base/command';
 import { Event } from 'classes/base/event';
 import { Modal } from 'classes/base/modal';
 import { SelectMenu } from 'classes/base/select';
-
-import { getButtonFiles, getCommandFiles, getEventFiles, getModalFiles, getSelectFiles } from 'utility/files';
+import type { ClientEvents } from 'discord.js';
+import {
+  getButtonFiles,
+  getCommandFiles,
+  getEventFiles,
+  getModalFiles,
+  getSelectFiles,
+} from 'utility/files';
 import { logger, table } from 'utility/logger';
 
 /**
  * Imports each file's default export from a folder, logs a table of what was
  * found, and hands back the ones that are what the folder should hold.
  */
-async function loadFolder<T>(kind: string, files: string[], isValid: (value: unknown) => value is T, describe: (value: T) => string) {
+async function loadFolder<T>(
+  kind: string,
+  files: string[],
+  isValid: (value: unknown) => value is T,
+  describe: (value: T) => string
+) {
   const startTime = performance.now();
   const tableData: { file: string; name: string; valid: string }[] = [];
   const loaded: T[] = [];
@@ -32,10 +41,12 @@ async function loadFolder<T>(kind: string, files: string[], isValid: (value: unk
         tableData.push({ file, name: 'undefined', valid: '❌' });
         logger.warn(`${kind} file ${filePath} doesn't export a ${kind}`);
       }
-    }),
+    })
   );
 
-  logger.info(`Loaded ${loaded.length} ${kind}${loaded.length === 1 ? '' : 's'} in ${Math.floor(performance.now() - startTime)}ms\n${table(tableData)}`);
+  logger.info(
+    `Loaded ${loaded.length} ${kind}${loaded.length === 1 ? '' : 's'} in ${Math.floor(performance.now() - startTime)}ms\n${table(tableData)}`
+  );
   return loaded;
 }
 
@@ -45,9 +56,10 @@ export async function loadCommands(client: ExtendedClient) {
     'command',
     await getCommandFiles(),
     (value) => value instanceof Command,
-    (command) => command.options.builder.name,
+    (command) => command.options.builder.name
   );
-  for (const command of commands) client.commands.set(command.options.builder.name, command);
+  for (const command of commands)
+    client.commands.set(command.options.builder.name, command);
 }
 
 export async function loadButtons(client: ExtendedClient) {
@@ -56,9 +68,10 @@ export async function loadButtons(client: ExtendedClient) {
     'button',
     await getButtonFiles(),
     (value) => value instanceof Button,
-    (button) => button.options.customId,
+    (button) => button.options.customId
   );
-  for (const button of buttons) client.buttons.set(button.options.customId, button);
+  for (const button of buttons)
+    client.buttons.set(button.options.customId, button);
 }
 
 export async function loadModals(client: ExtendedClient) {
@@ -67,7 +80,7 @@ export async function loadModals(client: ExtendedClient) {
     'modal',
     await getModalFiles(),
     (value) => value instanceof Modal,
-    (modal) => modal.options.customId,
+    (modal) => modal.options.customId
   );
   for (const modal of modals) client.modals.set(modal.options.customId, modal);
 }
@@ -78,9 +91,10 @@ export async function loadSelectMenus(client: ExtendedClient) {
     'select menu',
     await getSelectFiles(),
     (value) => value instanceof SelectMenu,
-    (select) => select.options.customId,
+    (select) => select.options.customId
   );
-  for (const select of selects) client.selectMenus.set(select.options.customId, select);
+  for (const select of selects)
+    client.selectMenus.set(select.options.customId, select);
 }
 
 export async function loadEvents(client: ExtendedClient) {
@@ -89,19 +103,27 @@ export async function loadEvents(client: ExtendedClient) {
     'event',
     await getEventFiles(),
     (value): value is Event<keyof ClientEvents> => value instanceof Event,
-    (event) => `${event.options.rest ? 'rest:' : ''}${event.options.name}`,
+    (event) => `${event.options.rest ? 'rest:' : ''}${event.options.name}`
   );
   for (const event of events) {
     // Caught here, since an emitter doesn't wait for what it calls: one that failed would otherwise take the whole bot down.
     // Both kinds of event are told apart by `rest`, so these casts only lose what the Event class already checked.
     const handler = async (...args: unknown[]) => {
       try {
-        await event.options.execute(client, ...(args as ClientEvents[keyof ClientEvents]));
+        await event.options.execute(
+          client,
+          ...(args as ClientEvents[keyof ClientEvents])
+        );
       } catch (err) {
-        logger.error({ err, event: event.options.name }, 'Error while handling event');
+        logger.error(
+          { err, event: event.options.name },
+          'Error while handling event'
+        );
       }
     };
-    const emitter = (event.options.rest ? client.rest : client) as unknown as NodeJS.EventEmitter;
+    const emitter = (event.options.rest
+      ? client.rest
+      : client) as unknown as NodeJS.EventEmitter;
     emitter[event.options.once ? 'once' : 'on'](event.options.name, handler);
   }
 }

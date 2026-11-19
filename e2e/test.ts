@@ -1,5 +1,10 @@
-import { test as base, expect, type Locator, type Page } from '@playwright/test';
 import { randomInt } from 'node:crypto';
+import {
+  test as base,
+  expect,
+  type Locator,
+  type Page,
+} from '@playwright/test';
 
 import { PASSWORD } from './db';
 
@@ -11,7 +16,9 @@ export const test = base.extend({
   // the same time don't share the limit. Random rather than counted: Playwright
   // replaces worker processes, and a count would start over in the new one.
   extraHTTPHeaders: async ({}, use) => {
-    await use({ 'x-forwarded-for': `10.${randomInt(256)}.${randomInt(256)}.${randomInt(1, 255)}` });
+    await use({
+      'x-forwarded-for': `10.${randomInt(256)}.${randomInt(256)}.${randomInt(1, 255)}`,
+    });
   },
 });
 
@@ -20,7 +27,13 @@ export const test = base.extend({
  * before then, it goes back to empty when React does.
  */
 export async function hydrated(field: Locator) {
-  await expect.poll(() => field.evaluate((element) => Object.keys(element).some((key) => key.startsWith('__reactProps')))).toBe(true);
+  await expect
+    .poll(() =>
+      field.evaluate((element) =>
+        Object.keys(element).some((key) => key.startsWith('__reactProps'))
+      )
+    )
+    .toBe(true);
 }
 
 export async function signIn(page: Page, email: string) {

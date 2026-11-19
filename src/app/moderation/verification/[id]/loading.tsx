@@ -8,7 +8,11 @@ export default function Loading() {
       eyebrow='Review'
       title='Shark'
       above={<BackLink href='/moderation/verification'>Verification</BackLink>}
-      below={<GhostText className='mt-1 text-base'>From @someone, sent 2 hours ago</GhostText>}
+      below={
+        <GhostText className='mt-1 text-base'>
+          From @someone, sent 2 hours ago
+        </GhostText>
+      }
     >
       <div className='max-w-md'>
         <ProfileCardSkeleton ending='actions' />

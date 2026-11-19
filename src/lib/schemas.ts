@@ -1,7 +1,3 @@
-import { z } from 'zod';
-
-import { PROFILE_FIELDS } from '@/lib/profile-fields';
-
 import {
   MAX_BIO_LENGTH,
   MAX_DISPLAY_NAME_LENGTH,
@@ -24,11 +20,18 @@ import {
   MIN_USERNAME_LENGTH,
 } from '@/constants/auth';
 import { UPLOAD_HOSTNAME } from '@/constants/uploads';
+import { z } from 'zod';
+
+import { PROFILE_FIELDS } from '@/lib/profile-fields';
 
 /** A picture uploaded to our storage, the only place they come from (see ImageUploadField). */
 function uploadUrlSchema(name: string) {
   return z
-    .url({ protocol: /^https$/, hostname: UPLOAD_HOSTNAME, error: `${name} must be a picture uploaded here.` })
+    .url({
+      protocol: /^https$/,
+      hostname: UPLOAD_HOSTNAME,
+      error: `${name} must be a picture uploaded here.`,
+    })
     .max(2000, `${name} URL must be at most 2000 characters.`);
 }
 
@@ -37,13 +40,20 @@ const SIZE_BOUNDS = {
   INCH: { min: MIN_SIZE_INCH, max: MAX_SIZE_INCH },
 } as const;
 
-function refineSize(data: { size: number | null; unit: 'CM' | 'INCH' }, ctx: z.RefinementCtx) {
+function refineSize(
+  data: { size: number | null; unit: 'CM' | 'INCH' },
+  ctx: z.RefinementCtx
+) {
   if (data.size == null) return;
 
   const { min, max } = SIZE_BOUNDS[data.unit];
 
   if (data.size < min || data.size > max) {
-    ctx.addIssue({ code: 'custom', path: ['size'], message: `Size must be between ${min} and ${max}${data.unit.toLowerCase()}.` });
+    ctx.addIssue({
+      code: 'custom',
+      path: ['size'],
+      message: `Size must be between ${min} and ${max}${data.unit.toLowerCase()}.`,
+    });
   }
 }
 
@@ -60,29 +70,50 @@ const birthdaySchema = z
       input.setHours(0, 0, 0, 0);
       return input <= today;
     },
-    { message: 'Birthday must be in the past or today.' },
+    { message: 'Birthday must be in the past or today.' }
   );
 
 /** Also checked by Better Auth on sign-up and username changes (see lib/auth.ts). */
 export const usernameSchema = z
   .string()
   .nonempty('Username is required!')
-  .regex(/^[a-z0-9_]+$/, 'Username can only contain lowercase letters, numbers, and underscores.')
-  .min(MIN_USERNAME_LENGTH, `Username must be at least ${MIN_USERNAME_LENGTH} characters.`)
-  .max(MAX_USERNAME_LENGTH, `Username must be at most ${MAX_USERNAME_LENGTH} characters.`);
+  .regex(
+    /^[a-z0-9_]+$/,
+    'Username can only contain lowercase letters, numbers, and underscores.'
+  )
+  .min(
+    MIN_USERNAME_LENGTH,
+    `Username must be at least ${MIN_USERNAME_LENGTH} characters.`
+  )
+  .max(
+    MAX_USERNAME_LENGTH,
+    `Username must be at most ${MAX_USERNAME_LENGTH} characters.`
+  );
 
 /** The same rule Better Auth applies, so an address it would turn away is caught here first. */
 export const emailSchema = z
   .email(`Email is invalid!`)
-  .min(MIN_EMAIL_LENGTH, `Email must be at least ${MIN_EMAIL_LENGTH} characters.`)
-  .max(MAX_EMAIL_LENGTH, `Email must be at most ${MAX_EMAIL_LENGTH} characters.`);
+  .min(
+    MIN_EMAIL_LENGTH,
+    `Email must be at least ${MIN_EMAIL_LENGTH} characters.`
+  )
+  .max(
+    MAX_EMAIL_LENGTH,
+    `Email must be at most ${MAX_EMAIL_LENGTH} characters.`
+  );
 
 export const signInSchema = z.object({
   email: emailSchema,
   password: z
     .string()
-    .min(MIN_PASSWORD_LENGTH, `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`)
-    .max(MAX_PASSWORD_LENGTH, `Password must be at most ${MAX_PASSWORD_LENGTH} characters.`),
+    .min(
+      MIN_PASSWORD_LENGTH,
+      `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`
+    )
+    .max(
+      MAX_PASSWORD_LENGTH,
+      `Password must be at most ${MAX_PASSWORD_LENGTH} characters.`
+    ),
 });
 
 export const signUpSchema = z.object({
@@ -91,8 +122,14 @@ export const signUpSchema = z.object({
   password: z
     .string()
     .nonempty(`Password is required!`)
-    .min(MIN_PASSWORD_LENGTH, `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`)
-    .max(MAX_PASSWORD_LENGTH, `Password must be at most ${MAX_PASSWORD_LENGTH} characters.`),
+    .min(
+      MIN_PASSWORD_LENGTH,
+      `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`
+    )
+    .max(
+      MAX_PASSWORD_LENGTH,
+      `Password must be at most ${MAX_PASSWORD_LENGTH} characters.`
+    ),
 });
 
 export const updateUsernameSchema = z.object({
@@ -104,7 +141,10 @@ export const updateMatchContactSchema = z.object({
   contact: z
     .string()
     .trim()
-    .max(MAX_MATCH_CONTACT_LENGTH, `Keep it to ${MAX_MATCH_CONTACT_LENGTH} characters.`)
+    .max(
+      MAX_MATCH_CONTACT_LENGTH,
+      `Keep it to ${MAX_MATCH_CONTACT_LENGTH} characters.`
+    )
     .regex(/^[^\r\n]*$/, 'Keep it to one line.'),
 });
 
@@ -118,8 +158,14 @@ export const resetPasswordSchema = z
     password: z
       .string()
       .nonempty(`Password is required!`)
-      .min(MIN_PASSWORD_LENGTH, `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`)
-      .max(MAX_PASSWORD_LENGTH, `Password must be at most ${MAX_PASSWORD_LENGTH} characters.`),
+      .min(
+        MIN_PASSWORD_LENGTH,
+        `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`
+      )
+      .max(
+        MAX_PASSWORD_LENGTH,
+        `Password must be at most ${MAX_PASSWORD_LENGTH} characters.`
+      ),
     confirmPassword: z.string().nonempty('Please confirm your password!'),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -129,8 +175,16 @@ export const resetPasswordSchema = z
 
 export const rejectProfileSchema = z.object({
   profileId: z.string(),
-  rejectedFields: z.array(z.enum(PROFILE_FIELDS.map((field) => field.key) as [string, ...string[]])).max(PROFILE_FIELDS.length),
-  note: z.string().trim().max(300, 'Note must be at most 300 characters.').optional(),
+  rejectedFields: z
+    .array(
+      z.enum(PROFILE_FIELDS.map((field) => field.key) as [string, ...string[]])
+    )
+    .max(PROFILE_FIELDS.length),
+  note: z
+    .string()
+    .trim()
+    .max(300, 'Note must be at most 300 characters.')
+    .optional(),
 });
 
 export const createProfileSchema = z
@@ -139,9 +193,17 @@ export const createProfileSchema = z
       .string()
       .trim()
       .nonempty('Display Name is required!')
-      .min(MIN_DISPLAY_NAME_LENGTH, `Display Name must be at least ${MIN_DISPLAY_NAME_LENGTH} characters.`)
-      .max(MAX_DISPLAY_NAME_LENGTH, `Display Name must be at most ${MAX_DISPLAY_NAME_LENGTH} characters.`)
-      .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
+      .min(
+        MIN_DISPLAY_NAME_LENGTH,
+        `Display Name must be at least ${MIN_DISPLAY_NAME_LENGTH} characters.`
+      )
+      .max(
+        MAX_DISPLAY_NAME_LENGTH,
+        `Display Name must be at most ${MAX_DISPLAY_NAME_LENGTH} characters.`
+      )
+      .transform((val) =>
+        val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')
+      ),
     avatarUrl: uploadUrlSchema('Avatar').nullable().default(null),
     bannerUrl: uploadUrlSchema('Banner').nullable().default(null),
     birthday: birthdaySchema,
@@ -150,28 +212,51 @@ export const createProfileSchema = z
     pronouns: z
       .string()
       .trim()
-      .min(MIN_PRONOUNS_LENGTH, `Pronouns must be at least ${MIN_PRONOUNS_LENGTH} characters.`)
-      .max(MAX_PRONOUNS_LENGTH, `Pronouns must be at most ${MAX_PRONOUNS_LENGTH} characters.`)
-      .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
+      .min(
+        MIN_PRONOUNS_LENGTH,
+        `Pronouns must be at least ${MIN_PRONOUNS_LENGTH} characters.`
+      )
+      .max(
+        MAX_PRONOUNS_LENGTH,
+        `Pronouns must be at most ${MAX_PRONOUNS_LENGTH} characters.`
+      )
+      .transform((val) =>
+        val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')
+      ),
     location: z
       .string()
       .trim()
-      .min(MIN_LOCATION_LENGTH, `Location must be at least ${MIN_LOCATION_LENGTH} characters.`)
-      .max(MAX_LOCATION_LENGTH, `Location must be at most ${MAX_LOCATION_LENGTH} characters.`)
-      .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
+      .min(
+        MIN_LOCATION_LENGTH,
+        `Location must be at least ${MIN_LOCATION_LENGTH} characters.`
+      )
+      .max(
+        MAX_LOCATION_LENGTH,
+        `Location must be at most ${MAX_LOCATION_LENGTH} characters.`
+      )
+      .transform((val) =>
+        val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')
+      ),
     bio: z
       .string()
       .trim()
       .max(MAX_BIO_LENGTH, `Bio must be at most ${MAX_BIO_LENGTH} characters.`)
-      .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
+      .transform((val) =>
+        val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')
+      ),
     interests: z
       .array(
         z
           .string()
           .trim()
           .nonempty('Interest cannot be empty!')
-          .max(MAX_INTEREST_LENGTH, `Interest must be at most ${MAX_INTEREST_LENGTH} characters.`)
-          .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
+          .max(
+            MAX_INTEREST_LENGTH,
+            `Interest must be at most ${MAX_INTEREST_LENGTH} characters.`
+          )
+          .transform((val) =>
+            val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')
+          )
       )
       .max(3, 'You can only have up to 3 interests.'),
   })
@@ -185,9 +270,17 @@ export const updateProfileSchema = z
       .string()
       .trim()
       .nonempty('Display Name is required!')
-      .min(MIN_DISPLAY_NAME_LENGTH, `Display Name must be at least ${MIN_DISPLAY_NAME_LENGTH} characters.`)
-      .max(MAX_DISPLAY_NAME_LENGTH, `Display Name must be at most ${MAX_DISPLAY_NAME_LENGTH} characters.`)
-      .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
+      .min(
+        MIN_DISPLAY_NAME_LENGTH,
+        `Display Name must be at least ${MIN_DISPLAY_NAME_LENGTH} characters.`
+      )
+      .max(
+        MAX_DISPLAY_NAME_LENGTH,
+        `Display Name must be at most ${MAX_DISPLAY_NAME_LENGTH} characters.`
+      )
+      .transform((val) =>
+        val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')
+      ),
     avatarUrl: uploadUrlSchema('Avatar').nullable(),
     bannerUrl: uploadUrlSchema('Banner').nullable(),
     birthday: birthdaySchema,
@@ -196,29 +289,52 @@ export const updateProfileSchema = z
     pronouns: z
       .string()
       .trim()
-      .min(MIN_PRONOUNS_LENGTH, `Pronouns must be at least ${MIN_PRONOUNS_LENGTH} characters.`)
-      .max(MAX_PRONOUNS_LENGTH, `Pronouns must be at most ${MAX_PRONOUNS_LENGTH} characters.`)
-      .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
+      .min(
+        MIN_PRONOUNS_LENGTH,
+        `Pronouns must be at least ${MIN_PRONOUNS_LENGTH} characters.`
+      )
+      .max(
+        MAX_PRONOUNS_LENGTH,
+        `Pronouns must be at most ${MAX_PRONOUNS_LENGTH} characters.`
+      )
+      .transform((val) =>
+        val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')
+      ),
     location: z
       .string()
       .trim()
-      .min(MIN_LOCATION_LENGTH, `Location must be at least ${MIN_LOCATION_LENGTH} characters.`)
-      .max(MAX_LOCATION_LENGTH, `Location must be at most ${MAX_LOCATION_LENGTH} characters.`)
-      .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
+      .min(
+        MIN_LOCATION_LENGTH,
+        `Location must be at least ${MIN_LOCATION_LENGTH} characters.`
+      )
+      .max(
+        MAX_LOCATION_LENGTH,
+        `Location must be at most ${MAX_LOCATION_LENGTH} characters.`
+      )
+      .transform((val) =>
+        val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')
+      ),
     interests: z
       .array(
         z
           .string()
           .trim()
-          .max(MAX_INTEREST_LENGTH, `Interest must be at most ${MAX_INTEREST_LENGTH} characters.`)
-          .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
+          .max(
+            MAX_INTEREST_LENGTH,
+            `Interest must be at most ${MAX_INTEREST_LENGTH} characters.`
+          )
+          .transform((val) =>
+            val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')
+          )
       )
       .max(3, 'You can only have up to 3 interests.'),
     bio: z
       .string()
       .trim()
       .max(MAX_BIO_LENGTH, `Bio must be at most ${MAX_BIO_LENGTH} characters.`)
-      .transform((val) => val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')),
+      .transform((val) =>
+        val.replace(/\n{2,}/g, '\n').replace(/[ \t]{2,}/g, ' ')
+      ),
   })
   .superRefine(refineSize);
 

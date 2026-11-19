@@ -1,18 +1,22 @@
 import 'server-only';
 
+import { AccountRole, Prisma, ProfileStatus } from '@/generated/client';
 import { cacheLife, cacheTag } from 'next/cache';
 
-import { AccountRole, Prisma, ProfileStatus } from '@/generated/client';
-import prisma from '@/lib/prisma';
 import { notBannedWhere } from '@/lib/bans';
+import prisma from '@/lib/prisma';
 import { FRESH_PROFILE_WINDOW_IN_DAYS } from '@/lib/profile-status';
 
 const DAY_IN_MS = 24 * 60 * 60 * 1000;
 
 /** Only the owner's username: profiles go to the browser, emails mustn't. */
-const PROFILE_OWNER = { user: { select: { username: true } } } satisfies Prisma.ProfileInclude;
+const PROFILE_OWNER = {
+  user: { select: { username: true } },
+} satisfies Prisma.ProfileInclude;
 
-export type ProfileWithOwner = Prisma.ProfileGetPayload<{ include: typeof PROFILE_OWNER }>;
+export type ProfileWithOwner = Prisma.ProfileGetPayload<{
+  include: typeof PROFILE_OWNER;
+}>;
 
 /** What anyone may see of a profile: what its card shows. For cards rendered in the browser. */
 export const PUBLIC_PROFILE = {
@@ -33,7 +37,9 @@ export const PUBLIC_PROFILE = {
   user: { select: { username: true } },
 } satisfies Prisma.ProfileSelect;
 
-export type PublicProfile = Prisma.ProfileGetPayload<{ select: typeof PUBLIC_PROFILE }>;
+export type PublicProfile = Prisma.ProfileGetPayload<{
+  select: typeof PUBLIC_PROFILE;
+}>;
 
 function getProfileShuffle(profileId: string, seed: number) {
   let hash = 0;
@@ -51,8 +57,13 @@ function rankDiscoveryProfiles(profiles: ProfileWithOwner[], seed: number) {
   return profiles
     .map((profile) => {
       const verifiedAt = profile.verifiedAt ?? profile.createdAt;
-      const verifiedAgeInDays = Math.max(0, (now - verifiedAt.getTime()) / DAY_IN_MS);
-      const freshnessBoost = Math.max(0, FRESH_PROFILE_WINDOW_IN_DAYS - verifiedAgeInDays) / FRESH_PROFILE_WINDOW_IN_DAYS;
+      const verifiedAgeInDays = Math.max(
+        0,
+        (now - verifiedAt.getTime()) / DAY_IN_MS
+      );
+      const freshnessBoost =
+        Math.max(0, FRESH_PROFILE_WINDOW_IN_DAYS - verifiedAgeInDays) /
+        FRESH_PROFILE_WINDOW_IN_DAYS;
       const shuffledPosition = getProfileShuffle(profile.id, seed);
 
       return { profile, score: freshnessBoost * 0.7 + shuffledPosition * 0.3 };
@@ -61,14 +72,19 @@ function rankDiscoveryProfiles(profiles: ProfileWithOwner[], seed: number) {
     .map(({ profile }) => profile);
 }
 
-async function getRankedDiscoveryProfiles(where: Prisma.ProfileWhereInput, page: number, take: number, seed: number) {
+async function getRankedDiscoveryProfiles(
+  where: Prisma.ProfileWhereInput,
+  page: number,
+  take: number,
+  seed: number
+) {
   const profiles = rankDiscoveryProfiles(
     await prisma.profile.findMany({
       // Banned accounts' profiles stay out of discovery while the ban lasts.
       where: { AND: [where, { user: notBannedWhere() }] },
       include: PROFILE_OWNER,
     }),
-    seed,
+    seed
   );
 
   return {
@@ -90,7 +106,9 @@ export async function getDiscoverableProfileCount() {
   cacheLife('hours');
   cacheTag(PROFILE_COUNT_TAG);
 
-  return prisma.profile.count({ where: { status: ProfileStatus.VERIFIED, user: notBannedWhere() } });
+  return prisma.profile.count({
+    where: { status: ProfileStatus.VERIFIED, user: notBannedWhere() },
+  });
 }
 
 /** The newest profiles discovery shows, newest first. Cached, like the count. */
@@ -113,35 +131,61 @@ export const QUERIES = {
   },
 
   getUserProfiles: async (userId: string) => {
-    return prisma.profile.findMany({ where: { userId }, include: PROFILE_OWNER, orderBy: { createdAt: 'asc' } });
+    return prisma.profile.findMany({
+      where: { userId },
+      include: PROFILE_OWNER,
+      orderBy: { createdAt: 'asc' },
+    });
   },
 
   /** One of someone's own profiles, or null if it isn't theirs. */
   getOwnProfile: async (userId: string, id: string) => {
-    return prisma.profile.findFirst({ where: { id, userId }, include: PROFILE_OWNER });
+    return prisma.profile.findFirst({
+      where: { id, userId },
+      include: PROFILE_OWNER,
+    });
   },
 
-  getProfilesWithQuery: async (query: string, page: number, take: number, seed: number) => {
+  getProfilesWithQuery: async (
+    query: string,
+    page: number,
+    take: number,
+    seed: number
+  ) => {
     const normalizedQuery = query.trim();
 
-    if (!normalizedQuery.length) return getRankedDiscoveryProfiles({ status: ProfileStatus.VERIFIED }, page, take, seed);
+    if (!normalizedQuery.length)
+      return getRankedDiscoveryProfiles(
+        { status: ProfileStatus.VERIFIED },
+        page,
+        take,
+        seed
+      );
 
     // Prisma cannot do partial, case-insensitive matches inside scalar-list elements.
     const verifiedInterests = await prisma.profile.findMany({
       where: { status: ProfileStatus.VERIFIED },
       select: { interests: true },
     });
-    const matchingInterests = Array.from(new Set(verifiedInterests.flatMap((profile) => profile.interests))).filter((interest) =>
-      interest.toLowerCase().includes(normalizedQuery.toLowerCase()),
+    const matchingInterests = Array.from(
+      new Set(verifiedInterests.flatMap((profile) => profile.interests))
+    ).filter((interest) =>
+      interest.toLowerCase().includes(normalizedQuery.toLowerCase())
     );
 
     const where: Prisma.ProfileWhereInput = {
       OR: [
-        { user: { username: { contains: normalizedQuery, mode: 'insensitive' } } },
+        {
+          user: {
+            username: { contains: normalizedQuery, mode: 'insensitive' },
+          },
+        },
         { displayName: { contains: normalizedQuery, mode: 'insensitive' } },
         { bio: { contains: normalizedQuery, mode: 'insensitive' } },
         { location: { contains: normalizedQuery, mode: 'insensitive' } },
-        ...(matchingInterests.length ? [{ interests: { hasSome: matchingInterests } }] : []),
+        ...(matchingInterests.length
+          ? [{ interests: { hasSome: matchingInterests } }]
+          : []),
       ],
       status: ProfileStatus.VERIFIED,
     };
@@ -149,7 +193,12 @@ export const QUERIES = {
   },
 
   getProfiles: async (page: number, take: number, seed: number) => {
-    return getRankedDiscoveryProfiles({ status: ProfileStatus.VERIFIED }, page, take, seed);
+    return getRankedDiscoveryProfiles(
+      { status: ProfileStatus.VERIFIED },
+      page,
+      take,
+      seed
+    );
   },
 
   /**
@@ -171,7 +220,10 @@ export const QUERIES = {
     withEmail: boolean;
   }) => {
     const search = query.trim();
-    const bannedNow = { banned: true, OR: [{ banExpires: null }, { banExpires: { gt: new Date() } }] } satisfies Prisma.UserWhereInput;
+    const bannedNow = {
+      banned: true,
+      OR: [{ banExpires: null }, { banExpires: { gt: new Date() } }],
+    } satisfies Prisma.UserWhereInput;
     const where: Prisma.UserWhereInput = {
       AND: [
         show === 'BANNED' ? bannedNow : show ? { role: show } : {},
@@ -179,7 +231,16 @@ export const QUERIES = {
           ? {
               OR: [
                 { username: { contains: search, mode: 'insensitive' } },
-                ...(withEmail ? [{ email: { contains: search, mode: 'insensitive' as const } }] : []),
+                ...(withEmail
+                  ? [
+                      {
+                        email: {
+                          contains: search,
+                          mode: 'insensitive' as const,
+                        },
+                      },
+                    ]
+                  : []),
               ],
             }
           : {},
@@ -213,7 +274,12 @@ export const QUERIES = {
       users,
       total,
       /** Everyone per role, and banned, ignoring the search, for the filter. */
-      counts: { ...(Object.fromEntries(counts.map((count) => [count.role, count._count._all])) as Partial<Record<AccountRole, number>>), BANNED: banned },
+      counts: {
+        ...(Object.fromEntries(
+          counts.map((count) => [count.role, count._count._all])
+        ) as Partial<Record<AccountRole, number>>),
+        BANNED: banned,
+      },
     };
   },
 
@@ -235,7 +301,12 @@ export const QUERIES = {
         bannedBy: { select: { id: true, username: true } },
         createdAt: true,
         accounts: { select: { providerId: true } },
-        _count: { select: { passkeys: true, sessions: { where: { expiresAt: { gt: new Date() } } } } },
+        _count: {
+          select: {
+            passkeys: true,
+            sessions: { where: { expiresAt: { gt: new Date() } } },
+          },
+        },
         profiles: { include: PROFILE_OWNER, orderBy: { createdAt: 'asc' } },
       },
     });
@@ -258,11 +329,18 @@ export const QUERIES = {
 
   /** One shark in any state of review, for its review page. */
   getProfileForReview: async (id: string) => {
-    return prisma.profile.findUnique({ where: { id }, include: { user: { select: { id: true, username: true } } } });
+    return prisma.profile.findUnique({
+      where: { id },
+      include: { user: { select: { id: true, username: true } } },
+    });
   },
 
   getPendingProfiles: async () => {
-    return prisma.profile.findMany({ where: { status: ProfileStatus.PENDING }, include: PROFILE_OWNER, orderBy: { submittedAt: 'asc' } });
+    return prisma.profile.findMany({
+      where: { status: ProfileStatus.PENDING },
+      include: PROFILE_OWNER,
+      orderBy: { submittedAt: 'asc' },
+    });
   },
 
   /** How many reports wait for a moderator, for the moderation menu. */
@@ -286,7 +364,12 @@ export const QUERIES = {
         status: true,
         createdAt: true,
         handledAt: true,
-        profile: { select: { ...PUBLIC_PROFILE, user: { select: { id: true, username: true } } } },
+        profile: {
+          select: {
+            ...PUBLIC_PROFILE,
+            user: { select: { id: true, username: true } },
+          },
+        },
         reporter: { select: { id: true, username: true } },
         handledBy: { select: { username: true } },
       },

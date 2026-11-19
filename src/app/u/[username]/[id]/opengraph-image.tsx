@@ -1,10 +1,18 @@
+import { SITE_NAME } from '@/constants/metadata';
 import { ImageResponse } from 'next/og';
 
-import { SITE_NAME } from '@/constants/metadata';
 import { getSharkPage } from '@/lib/hearts';
-import { OG_FONTS, OG_HEADERS, OG_SIZE, Ocean, OgPill, OgText, SHARK_SRC, toOgImage } from '@/lib/og';
+import {
+  Ocean,
+  OG_FONTS,
+  OG_HEADERS,
+  OG_SIZE,
+  OgPill,
+  OgText,
+  SHARK_SRC,
+  toOgImage,
+} from '@/lib/og';
 import { calculateAge } from '@/lib/utils';
-
 import SiteImage from '@/app/opengraph-image';
 
 export const alt = `A shark on ${SITE_NAME}: its photo on a card, with its name and what it likes.`;
@@ -16,7 +24,11 @@ const AVATAR = 340;
 const TEXT_WIDTH = 520;
 
 /** A shark's page when it's shared: its photo on a card, and its name and details beside it. */
-export default async function Image({ params }: { params: Promise<{ id: string }> }) {
+export default async function Image({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   // As anyone would see it, so a banned account's shark shares like any other.
   const page = await getSharkPage(id, null);
@@ -33,7 +45,10 @@ export default async function Image({ params }: { params: Promise<{ id: string }
   const interests = shark.interests.slice(0, 4);
   const rest = shark.interests.length - interests.length;
   // As big as fits on one line of the text side (each letter about 3/5 as wide as it's tall); longer ones wrap.
-  const nameSize = Math.max(48, Math.min(120, Math.floor(TEXT_WIDTH / (shark.displayName.length * 0.6))));
+  const nameSize = Math.max(
+    48,
+    Math.min(120, Math.floor(TEXT_WIDTH / (shark.displayName.length * 0.6)))
+  );
 
   return new ImageResponse(
     <Ocean footer={`tinderhaj.com/u/${shark.user.username}`}>
@@ -53,16 +68,45 @@ export default async function Image({ params }: { params: Promise<{ id: string }
         >
           {shark.displayName}
         </div>
-        <div style={{ display: 'flex', marginTop: 12, fontSize: 36, fontWeight: 900, letterSpacing: -1, color: '#8cc8ff', maxWidth: TEXT_WIDTH }}>
-          {shark.pronouns ? `${shark.pronouns} · @${shark.user.username}` : `@${shark.user.username}`}
+        <div
+          style={{
+            display: 'flex',
+            marginTop: 12,
+            fontSize: 36,
+            fontWeight: 900,
+            letterSpacing: -1,
+            color: '#8cc8ff',
+            maxWidth: TEXT_WIDTH,
+          }}
+        >
+          {shark.pronouns
+            ? `${shark.pronouns} · @${shark.user.username}`
+            : `@${shark.user.username}`}
         </div>
         {facts.length > 0 && (
-          <div style={{ display: 'flex', marginTop: 18, fontSize: 28, fontWeight: 600, color: 'rgba(244, 249, 255, 0.78)', maxWidth: TEXT_WIDTH }}>
+          <div
+            style={{
+              display: 'flex',
+              marginTop: 18,
+              fontSize: 28,
+              fontWeight: 600,
+              color: 'rgba(244, 249, 255, 0.78)',
+              maxWidth: TEXT_WIDTH,
+            }}
+          >
             {facts.join(' · ')}
           </div>
         )}
         {interests.length > 0 && (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginTop: 24, maxWidth: TEXT_WIDTH }}>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: 10,
+              marginTop: 24,
+              maxWidth: TEXT_WIDTH,
+            }}
+          >
             {interests.map((interest, i) => (
               <Chip key={i}>{interest}</Chip>
             ))}
@@ -81,13 +125,20 @@ export default async function Image({ params }: { params: Promise<{ id: string }
           padding: 16,
           borderRadius: 32,
           // As the user page's cards: frosted, but solid
-          background: 'linear-gradient(135deg, rgb(84, 142, 204) 0%, rgb(100, 164, 230) 100%)',
+          background:
+            'linear-gradient(135deg, rgb(84, 142, 204) 0%, rgb(100, 164, 230) 100%)',
           border: '1px solid rgba(220, 238, 255, 0.5)',
           boxShadow: '0 24px 48px rgba(2, 20, 45, 0.3)',
         }}
       >
         {src ? (
-          <img src={src} width={AVATAR} height={AVATAR} alt='' style={{ borderRadius: 20 }} />
+          <img
+            src={src}
+            width={AVATAR}
+            height={AVATAR}
+            alt=''
+            style={{ borderRadius: 20 }}
+          />
         ) : (
           <div
             style={{
@@ -100,7 +151,12 @@ export default async function Image({ params }: { params: Promise<{ id: string }
               background: 'rgba(220, 238, 255, 0.25)',
             }}
           >
-            <img src={SHARK_SRC} width={AVATAR - 40} height={AVATAR - 40} alt='' />
+            <img
+              src={SHARK_SRC}
+              width={AVATAR - 40}
+              height={AVATAR - 40}
+              alt=''
+            />
           </div>
         )}
       </div>
@@ -127,11 +183,17 @@ export default async function Image({ params }: { params: Promise<{ id: string }
         </svg>
       </div>
     </Ocean>,
-    { ...OG_SIZE, fonts: OG_FONTS, headers: OG_HEADERS },
+    { ...OG_SIZE, fonts: OG_FONTS, headers: OG_HEADERS }
   );
 }
 
-function Chip({ children, muted }: { children: React.ReactNode; muted?: boolean }) {
+function Chip({
+  children,
+  muted,
+}: {
+  children: React.ReactNode;
+  muted?: boolean;
+}) {
   return (
     <div
       style={{
@@ -140,7 +202,9 @@ function Chip({ children, muted }: { children: React.ReactNode; muted?: boolean 
         padding: '8px 18px',
         borderRadius: 9999,
         background: muted ? 'transparent' : 'rgba(150, 205, 255, 0.5)',
-        border: muted ? '1px solid rgba(140, 200, 255, 0.5)' : '1px solid rgba(220, 238, 255, 0.5)',
+        border: muted
+          ? '1px solid rgba(140, 200, 255, 0.5)'
+          : '1px solid rgba(220, 238, 255, 0.5)',
         color: muted ? '#8cc8ff' : '#f4f9ff',
         fontSize: 24,
         fontWeight: 600,

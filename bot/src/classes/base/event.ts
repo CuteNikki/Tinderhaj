@@ -1,6 +1,5 @@
-import type { ClientEvents, RestEvents } from 'discord.js';
-
 import type { ExtendedClient } from 'classes/base/client';
+import type { ClientEvents, RestEvents } from 'discord.js';
 
 /** Something to do on a gateway event, or with `rest`, on an event from the REST manager. */
 export class Event<T extends keyof ClientEvents | keyof RestEvents> {
@@ -11,8 +10,12 @@ export class Event<T extends keyof ClientEvents | keyof RestEvents> {
       once?: boolean;
       execute: (
         client: ExtendedClient,
-        ...args: T extends keyof ClientEvents ? ClientEvents[T] : T extends keyof RestEvents ? RestEvents[T] : never
+        ...args: T extends keyof ClientEvents
+          ? ClientEvents[T]
+          : T extends keyof RestEvents
+            ? RestEvents[T]
+            : never
       ) => unknown;
-    },
+    }
   ) {}
 }

@@ -14,7 +14,8 @@ export const STAGGER = 0.1;
 export const CONTENT_DELAY = 0.35;
 
 /** The same lift, as classes: for every card you can click, so they all answer the pointer alike. */
-export const LIFT = 'ease-bounce transition-all duration-300 hover:-translate-y-1 hover:rotate-[-0.6deg] hover:shadow-lg';
+export const LIFT =
+  'ease-bounce transition-all duration-300 hover:-translate-y-1 hover:rotate-[-0.6deg] hover:shadow-lg';
 
 /** A big shark under the pointer: grows a little and leans back. */
 export const SHARK_HOVER = 'spring-hover hover:scale-104 hover:-rotate-3';
@@ -27,9 +28,16 @@ export const BOB_SHARK = 'bob-shark';
  * a wrapper of their own: `delay` so they don't all bob together, `rotate`
  * for one set at a slant.
  */
-export function bob({ delay = 0, rotate, className }: { delay?: number; rotate?: number; className?: string } = {}) {
+export function bob({
+  delay = 0,
+  rotate,
+  className,
+}: { delay?: number; rotate?: number; className?: string } = {}) {
   return {
     className: cn(rotate === undefined ? 'bob-small' : 'bob-tilt', className),
-    style: { '--bob-delay': `${delay}s`, ...(rotate === undefined ? {} : { '--bob-rotate': `${rotate}deg` }) } as React.CSSProperties,
+    style: {
+      '--bob-delay': `${delay}s`,
+      ...(rotate === undefined ? {} : { '--bob-rotate': `${rotate}deg` }),
+    } as React.CSSProperties,
   };
 }

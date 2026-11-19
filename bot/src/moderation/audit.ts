@@ -17,7 +17,8 @@ const waiting = new Set<() => void>();
 /** Keeps an audit log entry for a minute, and wakes whatever's waiting for one. */
 export function rememberAuditEntry(entry: GuildAuditLogsEntry) {
   recent.push(entry);
-  while (recent.length && Date.now() - recent[0].createdTimestamp > KEEP) recent.shift();
+  while (recent.length && Date.now() - recent[0].createdTimestamp > KEEP)
+    recent.shift();
   for (const wake of waiting) wake();
 }
 
@@ -30,12 +31,20 @@ export type Doer = { id: string; reason: string | null };
  * the last few seconds. Waits a little for it to arrive. Null if none does,
  * e.g. if the bot can't view the audit log, or Discord didn't record it.
  */
-export async function whoDid(actions: AuditLogEvent | AuditLogEvent[], targetId: string | null): Promise<Doer | null> {
+export async function whoDid(
+  actions: AuditLogEvent | AuditLogEvent[],
+  targetId: string | null
+): Promise<Doer | null> {
   const types = new Set<number>(Array.isArray(actions) ? actions : [actions]);
   const find = () =>
     [...recent]
       .reverse()
-      .find((entry) => types.has(entry.action) && (targetId === null || entry.targetId === targetId) && Date.now() - entry.createdTimestamp < 10_000);
+      .find(
+        (entry) =>
+          types.has(entry.action) &&
+          (targetId === null || entry.targetId === targetId) &&
+          Date.now() - entry.createdTimestamp < 10_000
+      );
 
   const found = find();
   if (found) return { id: found.executorId!, reason: found.reason };

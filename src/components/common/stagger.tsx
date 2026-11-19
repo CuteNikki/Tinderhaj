@@ -2,12 +2,18 @@
 
 import { Children, useRef } from 'react';
 
-import { enter, type EnterVariant } from '@/components/common/enter';
-import { useReveal } from '@/components/common/use-reveal';
 import { STAGGER } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 
-const variants = { section: 'reveal', sink: 'sink', card: 'card', pop: 'pop' } satisfies Record<string, EnterVariant>;
+import { enter, type EnterVariant } from '@/components/common/enter';
+import { useReveal } from '@/components/common/use-reveal';
+
+const variants = {
+  section: 'reveal',
+  sink: 'sink',
+  card: 'card',
+  pop: 'pop',
+} satisfies Record<string, EnterVariant>;
 
 /** How close together things must come into view to count as coming in together. */
 const TOGETHER = 50;
@@ -48,7 +54,8 @@ export function Stagger({
   const batch = useRef({ at: -Infinity, count: 0 });
   const nextInLine = () => {
     const now = performance.now();
-    if (now - batch.current.at > TOGETHER) batch.current = { at: now, count: 0 };
+    if (now - batch.current.at > TOGETHER)
+      batch.current = { at: now, count: 0 };
     return batch.current.count++ * gap;
   };
   let index = 0;
@@ -57,10 +64,16 @@ export function Stagger({
     <Container id={id} className={className}>
       {Children.map(children, (child) =>
         child === null || child === undefined || child === false ? null : (
-          <StaggerItem as={itemAs} variant={variants[variant]} delay={delay + index++ * gap} scrollDelay={nextInLine} className={itemClassName}>
+          <StaggerItem
+            as={itemAs}
+            variant={variants[variant]}
+            delay={delay + index++ * gap}
+            scrollDelay={nextInLine}
+            className={itemClassName}
+          >
             {child}
           </StaggerItem>
-        ),
+        )
       )}
     </Container>
   );
@@ -81,12 +94,26 @@ function StaggerItem({
   className?: string;
   children: React.ReactNode;
 }) {
-  const { ref, waiting, delay: revealDelay } = useReveal<HTMLElement>({ delay, scrollDelay });
-  const { className: enterClassName, style } = enter(variant, revealDelay, { waiting });
+  const {
+    ref,
+    waiting,
+    delay: revealDelay,
+  } = useReveal<HTMLElement>({ delay, scrollDelay });
+  const { className: enterClassName, style } = enter(variant, revealDelay, {
+    waiting,
+  });
 
   return (
     // Transforms don't move inline elements, so spans become inline boxes.
-    <Item ref={ref as React.Ref<never>} className={cn(enterClassName, Item === 'span' && 'inline-flex', className)} style={style}>
+    <Item
+      ref={ref as React.Ref<never>}
+      className={cn(
+        enterClassName,
+        Item === 'span' && 'inline-flex',
+        className
+      )}
+      style={style}
+    >
       {children}
     </Item>
   );

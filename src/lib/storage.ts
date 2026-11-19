@@ -1,9 +1,9 @@
 import 'server-only';
 
+import { UPLOAD_ORIGIN } from '@/constants/uploads';
 import { AwsClient } from 'aws4fetch';
 import { after } from 'next/server';
 
-import { UPLOAD_ORIGIN } from '@/constants/uploads';
 import prisma from '@/lib/prisma';
 
 /**
@@ -26,8 +26,17 @@ const UPLOAD_LINK_SECONDS = 300;
 function storage() {
   const accessKeyId = process.env.STORAGE_ACCESS_KEY_ID;
   const secretAccessKey = process.env.STORAGE_SECRET_ACCESS_KEY;
-  if (!accessKeyId || !secretAccessKey) throw new Error('STORAGE_ACCESS_KEY_ID and STORAGE_SECRET_ACCESS_KEY must be set for uploads');
-  return new AwsClient({ accessKeyId, secretAccessKey, service: 's3', region: process.env.STORAGE_REGION || 'garage', retries: 1 });
+  if (!accessKeyId || !secretAccessKey)
+    throw new Error(
+      'STORAGE_ACCESS_KEY_ID and STORAGE_SECRET_ACCESS_KEY must be set for uploads'
+    );
+  return new AwsClient({
+    accessKeyId,
+    secretAccessKey,
+    service: 's3',
+    region: process.env.STORAGE_REGION || 'garage',
+    retries: 1,
+  });
 }
 
 /**
@@ -72,9 +81,18 @@ export function deleteUploadsLater(urls: (string | null | undefined)[]) {
   after(async () => {
     for (const url of ours) {
       try {
-        if (await prisma.profile.count({ where: { OR: [{ avatarUrl: url }, { bannerUrl: url }] } })) continue;
-        const response = await storage().fetch(apiUrl(new URL(url).pathname), { method: 'DELETE', signal: AbortSignal.timeout(8000) });
-        if (!response.ok) console.error(`Failed to delete ${url}: ${response.status}`);
+        if (
+          await prisma.profile.count({
+            where: { OR: [{ avatarUrl: url }, { bannerUrl: url }] },
+          })
+        )
+          continue;
+        const response = await storage().fetch(apiUrl(new URL(url).pathname), {
+          method: 'DELETE',
+          signal: AbortSignal.timeout(8000),
+        });
+        if (!response.ok)
+          console.error(`Failed to delete ${url}: ${response.status}`);
       } catch (error) {
         console.error(`Failed to delete ${url}`, error);
       }

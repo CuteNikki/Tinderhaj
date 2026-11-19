@@ -1,8 +1,8 @@
 import 'server-only';
 
+import { SITE_URL } from '@/constants/metadata';
 import { after } from 'next/server';
 
-import { SITE_URL } from '@/constants/metadata';
 import { isBanned } from '@/lib/bans';
 import { discord } from '@/lib/discord';
 import prisma from '@/lib/prisma';
@@ -14,7 +14,9 @@ import prisma from '@/lib/prisma';
  * Channel, Send Messages and Embed Links in that channel.
  */
 export function newSharkFeedEnabled() {
-  return !!process.env.DISCORD_BOT_TOKEN && !!process.env.DISCORD_CHANNEL_NEW_SHARKS;
+  return (
+    !!process.env.DISCORD_BOT_TOKEN && !!process.env.DISCORD_CHANNEL_NEW_SHARKS
+  );
 }
 
 /** Discord's markdown in a name, shown as typed rather than formatting the message. */
@@ -30,10 +32,17 @@ function escapeMarkdown(text: string) {
  */
 async function warmSharedImage(page: string) {
   try {
-    const html = await (await fetch(page, { signal: AbortSignal.timeout(10_000) })).text();
+    const html = await (
+      await fetch(page, { signal: AbortSignal.timeout(10_000) })
+    ).text();
     // Exactly the address in the page, with its query, since that's what the CDN keeps it under.
-    const image = html.match(/<meta property="og:image" content="([^"]+)"/)?.[1]?.replaceAll('&amp;', '&');
-    if (image) await fetch(image, { signal: AbortSignal.timeout(10_000) }).then((response) => response.arrayBuffer());
+    const image = html
+      .match(/<meta property="og:image" content="([^"]+)"/)?.[1]
+      ?.replaceAll('&amp;', '&');
+    if (image)
+      await fetch(image, { signal: AbortSignal.timeout(10_000) }).then(
+        (response) => response.arrayBuffer()
+      );
   } catch (error) {
     console.warn('Warming shared image failed', error);
   }
@@ -50,18 +59,34 @@ export function announceNewSharkLater(profileId: string) {
     try {
       const shark = await prisma.profile.findUnique({
         where: { id: profileId },
-        select: { id: true, displayName: true, status: true, user: { select: { username: true, banned: true, banExpires: true } } },
+        select: {
+          id: true,
+          displayName: true,
+          status: true,
+          user: { select: { username: true, banned: true, banExpires: true } },
+        },
       });
       if (!shark || shark.status !== 'VERIFIED' || isBanned(shark.user)) return;
 
-      const link = new URL(`/u/${shark.user.username}/${shark.id}`, SITE_URL).href;
+      const link = new URL(`/u/${shark.user.username}/${shark.id}`, SITE_URL)
+        .href;
       await warmSharedImage(link);
-      const response = await discord('POST', `/channels/${process.env.DISCORD_CHANNEL_NEW_SHARKS}/messages`, {
-        reason: 'Tinderhaj new shark',
-        // A name can't ping anyone, whatever it says.
-        body: { content: `🦈 Say hi to **${escapeMarkdown(shark.displayName)}**, fresh on Tinderhaj! 💙\n${link}`, allowed_mentions: { parse: [] } },
-      });
-      if (!response.ok) throw new Error(`Posting shark ${shark.id}: ${response.status} ${await response.text()}`);
+      const response = await discord(
+        'POST',
+        `/channels/${process.env.DISCORD_CHANNEL_NEW_SHARKS}/messages`,
+        {
+          reason: 'Tinderhaj new shark',
+          // A name can't ping anyone, whatever it says.
+          body: {
+            content: `🦈 Say hi to **${escapeMarkdown(shark.displayName)}**, fresh on Tinderhaj! 💙\n${link}`,
+            allowed_mentions: { parse: [] },
+          },
+        }
+      );
+      if (!response.ok)
+        throw new Error(
+          `Posting shark ${shark.id}: ${response.status} ${await response.text()}`
+        );
     } catch (error) {
       console.error('Discord new shark post failed', error);
     }

@@ -1,14 +1,14 @@
+import { discoveryMetadata } from '@/constants/metadata';
 import { Metadata } from 'next';
 import { SearchParams } from 'next/dist/server/request/search-params';
 import { redirect } from 'next/navigation';
 import { connection } from 'next/server';
 import { z } from 'zod';
 
-import { discoveryMetadata } from '@/constants/metadata';
 import { getHeartStates } from '@/lib/hearts';
+import { STAGGER } from '@/lib/motion';
 import { QUERIES } from '@/lib/queries';
 import { getSession } from '@/lib/session';
-import { STAGGER } from '@/lib/motion';
 
 import { Eyebrow } from '@/components/common/heading';
 import { DiscoveryFilter } from '@/components/discovery/filter';
@@ -18,8 +18,8 @@ import { DiscoveryPagination } from '@/components/discovery/pagination';
 import { DiscoveryProfile, FIRST_ROW } from '@/components/discovery/profile';
 import { ShareButton } from '@/components/discovery/share-button';
 import { CardHearts } from '@/components/hearts/card-hearts';
-import { ReportButton } from '@/components/reports/report-dialog';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
+import { ReportButton } from '@/components/reports/report-dialog';
 
 const DISCOVERY_QUERY_TIMEOUT_MS = 8_000;
 
@@ -27,7 +27,10 @@ export const metadata: Metadata = discoveryMetadata;
 
 function withTimeout<T>(promise: Promise<T>, timeoutMs: number) {
   return new Promise<T>((resolve, reject) => {
-    const timeoutId = setTimeout(() => reject(new Error('Discovery query timed out')), timeoutMs);
+    const timeoutId = setTimeout(
+      () => reject(new Error('Discovery query timed out')),
+      timeoutMs
+    );
 
     promise.then(
       (value) => {
@@ -37,31 +40,56 @@ function withTimeout<T>(promise: Promise<T>, timeoutMs: number) {
       (error: unknown) => {
         clearTimeout(timeoutId);
         reject(error);
-      },
+      }
     );
   });
 }
 
 const searchParamsSchema = z.object({
   q: z.preprocess((val) => val, z.string().optional().default('')),
-  p: z.preprocess((val) => (isNaN(parseInt(val as string)) ? undefined : parseInt(val as string)), z.number().int().positive().default(1)),
-  t: z.preprocess((val) => (isNaN(parseInt(val as string)) ? undefined : parseInt(val as string)), z.number().int().positive().default(6)),
-  s: z.preprocess((val) => (isNaN(parseInt(val as string)) ? undefined : parseInt(val as string)), z.number().int().positive().optional()),
+  p: z.preprocess(
+    (val) =>
+      isNaN(parseInt(val as string)) ? undefined : parseInt(val as string),
+    z.number().int().positive().default(1)
+  ),
+  t: z.preprocess(
+    (val) =>
+      isNaN(parseInt(val as string)) ? undefined : parseInt(val as string),
+    z.number().int().positive().default(6)
+  ),
+  s: z.preprocess(
+    (val) =>
+      isNaN(parseInt(val as string)) ? undefined : parseInt(val as string),
+    z.number().int().positive().optional()
+  ),
 });
 
-export default async function DiscoveryPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
+export default async function DiscoveryPage({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
   // A fresh shuffle, and new sharks boosted by today's date: never prerendered, even when the URL is all there is.
   await connection();
 
-  const { q: query, p: page, t: take, s: seedParam } = searchParamsSchema.parse(await searchParams);
+  const {
+    q: query,
+    p: page,
+    t: take,
+    s: seedParam,
+  } = searchParamsSchema.parse(await searchParams);
   // Arriving without a shuffle, e.g. from a bookmark: a fresh one, which KeepSeed puts in the URL from here on. This
   // renders once per request on the server, so a random seed is what's meant; 1 and up, as `s` must be positive.
-  // eslint-disable-next-line react-hooks/purity
-  const seed = seedParam ?? 1 + Math.floor(Math.random() * (Number.MAX_SAFE_INTEGER - 1));
+  const seed =
+    seedParam ??
+    // eslint-disable-next-line react-hooks/purity
+    1 + Math.floor(Math.random() * (Number.MAX_SAFE_INTEGER - 1));
 
   const { profiles, totalProfiles } = await withTimeout(
-    query?.length ? QUERIES.getProfilesWithQuery(query, page, take, seed) : QUERIES.getProfiles(page, take, seed),
-    DISCOVERY_QUERY_TIMEOUT_MS,
+    query?.length
+      ? QUERIES.getProfilesWithQuery(query, page, take, seed)
+      : QUERIES.getProfiles(page, take, seed),
+    DISCOVERY_QUERY_TIMEOUT_MS
   );
 
   // Where the viewer's sharks stand with each one on this page.
@@ -69,19 +97,24 @@ export default async function DiscoveryPage({ searchParams }: { searchParams: Pr
   const hearts = session
     ? await getHeartStates(
         session.user.id,
-        profiles.map((profile) => profile.id),
+        profiles.map((profile) => profile.id)
       )
     : null;
 
   const totalPages = Math.ceil(totalProfiles / take);
 
   if (totalPages !== 0 && page > totalPages) {
-    const params = new URLSearchParams({ q: query, p: String(totalPages < 1 ? 1 : totalPages), t: String(take), s: String(seed) });
+    const params = new URLSearchParams({
+      q: query,
+      p: String(totalPages < 1 ? 1 : totalPages),
+      t: String(take),
+      s: String(seed),
+    });
     redirect(`/discovery?${params}`);
   }
 
   return (
-    <section className='text-card-foreground w-full flex-1 px-4 pb-8 sm:px-5 lg:px-8'>
+    <section className='w-full flex-1 px-4 pb-8 text-card-foreground sm:px-5 lg:px-8'>
       {!seedParam && <KeepSeed seed={seed} />}
       <div className='container mx-auto max-w-7xl'>
         <div className='-mt-8 mb-4'>
@@ -89,27 +122,49 @@ export default async function DiscoveryPage({ searchParams }: { searchParams: Pr
         </div>
         {totalProfiles ? (
           <>
-            <ScrollReveal id='profiles' className='scroll-m-40 py-6' delay={0.4}>
+            <ScrollReveal
+              id='profiles'
+              className='scroll-m-40 py-6'
+              delay={0.4}
+            >
               <Eyebrow as='h2' className='mb-0'>
                 Fresh possibilities
               </Eyebrow>
             </ScrollReveal>
             <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-3'>
               {profiles.map((profile, index) => (
-                <ScrollReveal key={profile.id} className='h-full' delay={0.5 + index * STAGGER} scrollDelay={(index % 3) * STAGGER} variant='card'>
+                <ScrollReveal
+                  key={profile.id}
+                  className='h-full'
+                  delay={0.5 + index * STAGGER}
+                  scrollDelay={(index % 3) * STAGGER}
+                  variant='card'
+                >
                   <DiscoveryProfile
                     profile={profile}
                     eager={index < FIRST_ROW}
                     action={
                       <div className='flex items-center gap-1'>
-                        <ShareButton shark={{ id: profile.id, displayName: profile.displayName, user: profile.user }} />
+                        <ShareButton
+                          shark={{
+                            id: profile.id,
+                            displayName: profile.displayName,
+                            user: profile.user,
+                          }}
+                        />
                         <ReportButton
-                          shark={{ id: profile.id, displayName: profile.displayName }}
+                          shark={{
+                            id: profile.id,
+                            displayName: profile.displayName,
+                          }}
                           signedIn={!!session}
                           own={profile.userId === session?.user.id}
                         />
                         <CardHearts
-                          target={{ id: profile.id, displayName: profile.displayName }}
+                          target={{
+                            id: profile.id,
+                            displayName: profile.displayName,
+                          }}
                           states={hearts?.[profile.id] ?? null}
                           signedIn={!!session}
                           own={profile.userId === session?.user.id}

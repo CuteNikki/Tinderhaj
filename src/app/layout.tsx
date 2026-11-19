@@ -1,8 +1,7 @@
+import { layoutMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { Suspense } from 'react';
-
-import { layoutMetadata } from '@/constants/metadata';
 
 import { KeepScroll } from '@/components/common/keep-scroll';
 import { PageWater } from '@/components/common/page-water';
@@ -37,10 +36,15 @@ export default function RootLayout({
       data-scroll-behavior='smooth'
       suppressHydrationWarning
     >
-      <body className='bg-background text-foreground flex min-h-full flex-col overflow-y-scroll'>
+      <body className='flex min-h-full flex-col overflow-y-scroll bg-background text-foreground'>
         <KeepScroll />
         <div id='top' />
-        <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
+        <ThemeProvider
+          attribute='class'
+          defaultTheme='system'
+          enableSystem
+          disableTransitionOnChange
+        >
           <Suspense fallback={<NavbarFallback />}>
             <Navbar />
           </Suspense>

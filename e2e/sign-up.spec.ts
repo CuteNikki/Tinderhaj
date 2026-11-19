@@ -2,7 +2,9 @@ import { newAccount } from './db';
 import { MAIL_URL } from './env';
 import { expect, hydrated, test } from './test';
 
-test('signing up lands on your profiles and sends a verification email', async ({ page }) => {
+test('signing up lands on your profiles and sends a verification email', async ({
+  page,
+}) => {
   const { username, email } = newAccount();
 
   await page.goto('/sign-up');
@@ -13,13 +15,19 @@ test('signing up lands on your profiles and sends a verification email', async (
   await page.getByRole('button', { name: 'Sign Up', exact: true }).click();
 
   await expect(page).toHaveURL('/dashboard/profiles');
-  await expect(page.getByText('Account created! Check your inbox to verify your email.')).toBeVisible();
+  await expect(
+    page.getByText('Account created! Check your inbox to verify your email.')
+  ).toBeVisible();
 
   // Sent without waiting on it, so it can arrive a moment after the page.
   await expect
     .poll(async () => {
-      const emails: { to: string | string[]; subject: string }[] = await (await fetch(`${MAIL_URL}/emails`)).json();
-      return emails.filter((sent) => [sent.to].flat().includes(email)).map((sent) => sent.subject);
+      const emails: { to: string | string[]; subject: string }[] = await (
+        await fetch(`${MAIL_URL}/emails`)
+      ).json();
+      return emails
+        .filter((sent) => [sent.to].flat().includes(email))
+        .map((sent) => sent.subject);
     })
     .toEqual([expect.stringMatching(/verify/i)]);
 });

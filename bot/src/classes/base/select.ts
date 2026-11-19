@@ -10,6 +10,6 @@ export class SelectMenu {
       /** How long, in milliseconds, before someone can use it again. Defaults to 3 seconds. */
       cooldown?: number;
       execute: (interaction: AnySelectMenuInteraction) => unknown;
-    },
+    }
   ) {}
 }

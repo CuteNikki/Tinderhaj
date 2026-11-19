@@ -1,8 +1,9 @@
-import { ArrowRight } from 'lucide-react';
+import { homeMetadata } from '@/constants/metadata';
 import { Metadata } from 'next';
 import Link from 'next/link';
 
-import { homeMetadata } from '@/constants/metadata';
+import { ArrowRight } from 'lucide-react';
+
 import { STAGGER } from '@/lib/motion';
 
 import { GuideStep } from '@/components/home/guide-step';
@@ -16,9 +17,24 @@ import { Section } from '@/components/sections/section';
 export const metadata: Metadata = homeMetadata;
 
 const GUIDE = [
-  { number: '01', title: 'Build your vibe', copy: 'Tell the world what makes your fins flutter.', icon: 'sparkles' as const },
-  { number: '02', title: 'Find your people', copy: 'Discover compatible plush from near and far.', icon: 'search' as const },
-  { number: '03', title: 'Make it official', copy: 'Send a little heart. Start something lovely.', icon: 'heart' as const },
+  {
+    number: '01',
+    title: 'Build your vibe',
+    copy: 'Tell the world what makes your fins flutter.',
+    icon: 'sparkles' as const,
+  },
+  {
+    number: '02',
+    title: 'Find your people',
+    copy: 'Discover compatible plush from near and far.',
+    icon: 'search' as const,
+  },
+  {
+    number: '03',
+    title: 'Make it official',
+    copy: 'Send a little heart. Start something lovely.',
+    icon: 'heart' as const,
+  },
 ];
 
 export default function Home() {
@@ -34,12 +50,21 @@ export default function Home() {
       >
         <div className='grid md:grid-cols-3'>
           {GUIDE.map(({ number, title, copy, icon }) => (
-            <GuideStep key={number} number={number} title={title} copy={copy} icon={icon} />
+            <GuideStep
+              key={number}
+              number={number}
+              title={title}
+              copy={copy}
+              icon={icon}
+            />
           ))}
         </div>
         {/* After the steps, as a fourth would come */}
         <ScrollReveal className='mt-6' scrollDelay={GUIDE.length * STAGGER}>
-          <Link href='/guide' className='text-primary inline-flex items-center gap-1 text-sm font-semibold hover:underline'>
+          <Link
+            href='/guide'
+            className='inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline'
+          >
             Read the whole guide
             <ArrowRight className='size-3.5' aria-hidden='true' />
           </Link>

@@ -1,13 +1,18 @@
 'use client';
 
-import { CheckIcon, Link2Icon } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+
+import { CheckIcon, Link2Icon } from 'lucide-react';
 
 import { sharkPath } from '@/lib/utils';
 
 import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 type Shark = { id: string; displayName: string; user: { username: string } };
 
@@ -20,12 +25,20 @@ export function useCopySharkLink(shark: Shark) {
 
   async function copy() {
     try {
-      await navigator.clipboard.writeText(new URL(sharkPath(shark), location.origin).href);
+      await navigator.clipboard.writeText(
+        new URL(sharkPath(shark), location.origin).href
+      );
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-      toast.success(`Link to ${shark.displayName} copied.`, { duration: 3000, position: 'top-center' });
+      toast.success(`Link to ${shark.displayName} copied.`, {
+        duration: 3000,
+        position: 'top-center',
+      });
     } catch {
-      toast.error('Unable to copy the link!', { duration: 5000, position: 'top-center' });
+      toast.error('Unable to copy the link!', {
+        duration: 5000,
+        position: 'top-center',
+      });
     }
   }
 
@@ -40,8 +53,18 @@ export function ShareButton({ shark }: { shark: Shark }) {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Button variant='ghost' size='icon-sm' className='text-muted-foreground' aria-label={label} onClick={copy}>
-          {copied ? <CheckIcon aria-hidden='true' /> : <Link2Icon aria-hidden='true' />}
+        <Button
+          variant='ghost'
+          size='icon-sm'
+          className='text-muted-foreground'
+          aria-label={label}
+          onClick={copy}
+        >
+          {copied ? (
+            <CheckIcon aria-hidden='true' />
+          ) : (
+            <Link2Icon aria-hidden='true' />
+          )}
         </Button>
       </TooltipTrigger>
       <TooltipContent>{label}</TooltipContent>

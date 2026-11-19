@@ -10,7 +10,11 @@ import { useLayoutEffect, useRef, useState } from 'react';
 function inView(element: Element, amount: number) {
   const { top, bottom, height } = element.getBoundingClientRect();
   const shown = Math.min(bottom, window.innerHeight) - Math.max(top, 0);
-  return height > 0 && shown > 0 && (top < 0 || shown >= Math.min(height, window.innerHeight) * amount);
+  return (
+    height > 0 &&
+    shown > 0 &&
+    (top < 0 || shown >= Math.min(height, window.innerHeight) * amount)
+  );
 }
 
 /** Checked at every tenth of the element showing, so even one taller than the window is noticed once enough of it is. */
@@ -20,7 +24,10 @@ type State = 'opening' | 'waiting' | 'scrolled';
 
 /** One of the entrances (see .enter), not something floating forever. */
 function entering(animation: Animation) {
-  return animation instanceof CSSAnimation && animation.animationName.startsWith('enter-');
+  return (
+    animation instanceof CSSAnimation &&
+    animation.animationName.startsWith('enter-')
+  );
 }
 
 /**
@@ -84,13 +91,18 @@ export function useReveal<T extends Element>({
           stop();
         } else check();
       },
-      { threshold: THRESHOLDS },
+      { threshold: THRESHOLDS }
     );
     // Coming in as the page opens only counts once it's done so in view; done out of view, nobody saw it, so it waits after all
     const settle = () => {
       if (
         current.current !== 'opening' ||
-        element.getAnimations({ subtree: true }).some((animation) => entering(animation) && animation.playState === 'running')
+        element
+          .getAnimations({ subtree: true })
+          .some(
+            (animation) =>
+              entering(animation) && animation.playState === 'running'
+          )
       )
         return;
       if (inView(element, amount)) stop();
@@ -104,5 +116,9 @@ export function useReveal<T extends Element>({
     return stop;
   }, [amount]);
 
-  return { ref, waiting: state === 'waiting', delay: state === 'scrolled' ? scrolledDelay : delay };
+  return {
+    ref,
+    waiting: state === 'waiting',
+    delay: state === 'scrolled' ? scrolledDelay : delay,
+  };
 }

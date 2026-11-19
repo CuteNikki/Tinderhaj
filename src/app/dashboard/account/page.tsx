@@ -1,14 +1,12 @@
+import { accountMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 
-import { accountMetadata } from '@/constants/metadata';
 import { getAccountSettings } from '@/lib/account';
 import { enabledProviders } from '@/lib/auth';
 import { discordRoleList, discordRolesEnabled } from '@/lib/discord-roles';
-import { requireUser } from '@/lib/session';
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
+import { requireUser } from '@/lib/session';
 
-import { SettingsSection } from '@/components/common/settings-section';
-import { Eyebrow, PageTitle } from '@/components/common/heading';
 import { DeleteAccount } from '@/components/account/delete-account';
 import { DiscordRoles } from '@/components/account/discord-roles';
 import { EmailSettings } from '@/components/account/email-settings';
@@ -19,23 +17,44 @@ import { PasswordForm } from '@/components/account/password-form';
 import { SessionList } from '@/components/account/session-list';
 import { TwoFactorSettings } from '@/components/account/two-factor-settings';
 import { UsernameForm } from '@/components/account/username-form';
+import { Eyebrow, PageTitle } from '@/components/common/heading';
+import { SettingsSection } from '@/components/common/settings-section';
 import { Stagger } from '@/components/common/stagger';
 
 export const metadata: Metadata = accountMetadata;
 
-export default async function AccountPage({ searchParams }: PageProps<'/dashboard/account'>) {
+export default async function AccountPage({
+  searchParams,
+}: PageProps<'/dashboard/account'>) {
   const { user, session } = await requireUser();
   const { error } = await searchParams;
-  const { accounts, hasPassword, matchContact, twoFactor, trustedDevices, passkeys, sessions } = await getAccountSettings({
+  const {
+    accounts,
+    hasPassword,
+    matchContact,
+    twoFactor,
+    trustedDevices,
+    passkeys,
+    sessions,
+  } = await getAccountSettings({
     userId: user.id,
     sessionId: session.id,
   });
-  const discordLinked = accounts.some((account) => account.providerId === 'discord');
+  const discordLinked = accounts.some(
+    (account) => account.providerId === 'discord'
+  );
   // Only where Discord can be connected, or already is.
-  const discordRoles = discordRolesEnabled() && (discordLinked || enabledProviders.includes('discord')) ? await discordRoleList(user.id) : null;
+  const discordRoles =
+    discordRolesEnabled() &&
+    (discordLinked || enabledProviders.includes('discord'))
+      ? await discordRoleList(user.id)
+      : null;
 
   return (
-    <div data-water='band' className='flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'>
+    <div
+      data-water='band'
+      className='flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'
+    >
       <div className='container mx-auto max-w-7xl'>
         <Stagger id='page-header' variant='sink' className='mb-24'>
           <Eyebrow>Your account</Eyebrow>
@@ -43,7 +62,11 @@ export default async function AccountPage({ searchParams }: PageProps<'/dashboar
         </Stagger>
         <div className='grid grid-cols-1 items-start gap-6 lg:grid-cols-2'>
           <div className='grid grid-cols-1 gap-6'>
-            <SettingsSection title='Username' description='Choose the name people will see across Tinderhaj.' delay={CONTENT_DELAY}>
+            <SettingsSection
+              title='Username'
+              description='Choose the name people will see across Tinderhaj.'
+              delay={CONTENT_DELAY}
+            >
               <UsernameForm username={user.name} />
             </SettingsSection>
             <SettingsSection
@@ -53,20 +76,36 @@ export default async function AccountPage({ searchParams }: PageProps<'/dashboar
             >
               <MatchContactForm contact={matchContact} />
             </SettingsSection>
-            <SettingsSection title='Email' description='Where we send sign-in codes and links to reset your password.' delay={CONTENT_DELAY + 2 * STAGGER}>
+            <SettingsSection
+              title='Email'
+              description='Where we send sign-in codes and links to reset your password.'
+              delay={CONTENT_DELAY + 2 * STAGGER}
+            >
               <EmailSettings email={user.email} verified={user.emailVerified} />
             </SettingsSection>
             <SettingsSection
               title='Password'
-              description={hasPassword ? undefined : 'You sign in with another account. Add a password to also sign in with your email.'}
+              description={
+                hasPassword
+                  ? undefined
+                  : 'You sign in with another account. Add a password to also sign in with your email.'
+              }
               delay={CONTENT_DELAY + 3 * STAGGER}
             >
               <PasswordForm hasPassword={hasPassword} />
             </SettingsSection>
           </div>
           <div className='grid grid-cols-1 gap-6'>
-            <SettingsSection title='Sign-in methods' description='Connect other accounts to sign in with them too.' delay={CONTENT_DELAY + STAGGER}>
-              <LinkedAccounts providers={enabledProviders} accounts={accounts} error={typeof error === 'string' ? error : undefined} />
+            <SettingsSection
+              title='Sign-in methods'
+              description='Connect other accounts to sign in with them too.'
+              delay={CONTENT_DELAY + STAGGER}
+            >
+              <LinkedAccounts
+                providers={enabledProviders}
+                accounts={accounts}
+                error={typeof error === 'string' ? error : undefined}
+              />
             </SettingsSection>
             {discordRoles && (
               <SettingsSection
@@ -77,8 +116,15 @@ export default async function AccountPage({ searchParams }: PageProps<'/dashboar
                 <DiscordRoles roles={discordRoles} linked={discordLinked} />
               </SettingsSection>
             )}
-            <SettingsSection title='Two-step sign-in' delay={CONTENT_DELAY + 2 * STAGGER}>
-              <TwoFactorSettings method={twoFactor} hasPassword={hasPassword} trustedDevices={trustedDevices} />
+            <SettingsSection
+              title='Two-step sign-in'
+              delay={CONTENT_DELAY + 2 * STAGGER}
+            >
+              <TwoFactorSettings
+                method={twoFactor}
+                hasPassword={hasPassword}
+                trustedDevices={trustedDevices}
+              />
             </SettingsSection>
             <SettingsSection
               title='Passkeys'
@@ -88,7 +134,12 @@ export default async function AccountPage({ searchParams }: PageProps<'/dashboar
               <PasskeySettings passkeys={passkeys} />
             </SettingsSection>
           </div>
-          <SettingsSection title='Sessions' description='Everywhere you are signed in right now.' className='lg:col-span-2' delay={CONTENT_DELAY + 4 * STAGGER}>
+          <SettingsSection
+            title='Sessions'
+            description='Everywhere you are signed in right now.'
+            className='lg:col-span-2'
+            delay={CONTENT_DELAY + 4 * STAGGER}
+          >
             <SessionList sessions={sessions} />
           </SettingsSection>
           <SettingsSection

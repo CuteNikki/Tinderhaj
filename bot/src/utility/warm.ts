@@ -9,10 +9,17 @@ import { logger } from 'utility/logger';
  */
 export async function warmSharedImage(page: string) {
   try {
-    const html = await (await fetch(page, { signal: AbortSignal.timeout(8_000) })).text();
+    const html = await (
+      await fetch(page, { signal: AbortSignal.timeout(8_000) })
+    ).text();
     // Exactly the address in the page, with its query, since that's what the CDN keeps it under.
-    const image = html.match(/<meta property="og:image" content="([^"]+)"/)?.[1]?.replaceAll('&amp;', '&');
-    if (image) await fetch(image, { signal: AbortSignal.timeout(8_000) }).then((response) => response.arrayBuffer());
+    const image = html
+      .match(/<meta property="og:image" content="([^"]+)"/)?.[1]
+      ?.replaceAll('&amp;', '&');
+    if (image)
+      await fetch(image, { signal: AbortSignal.timeout(8_000) }).then(
+        (response) => response.arrayBuffer()
+      );
   } catch (err) {
     logger.debug({ err, page }, 'Warming shared image failed');
   }

@@ -1,9 +1,10 @@
 'use client';
 
-import { HeartIcon, HeartOffIcon, Loader2Icon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import { toast } from 'sonner';
+
+import { HeartIcon, HeartOffIcon, Loader2Icon } from 'lucide-react';
 
 import { sendHeart, takeBackHeart } from '@/lib/actions';
 import { cn } from '@/lib/utils';
@@ -20,22 +21,46 @@ export function useHeartActions() {
 
   function send(from: Named, to: Named) {
     startTransition(async () => {
-      const result = await sendHeart({ fromProfileId: from.id, toProfileId: to.id }).catch(() => ({ message: 'Unable to send the heart!' }));
-      if ('message' in result) return void toast.error(result.message, { duration: 5000, position: 'top-center' });
+      const result = await sendHeart({
+        fromProfileId: from.id,
+        toProfileId: to.id,
+      }).catch(() => ({ message: 'Unable to send the heart!' }));
+      if ('message' in result)
+        return void toast.error(result.message, {
+          duration: 5000,
+          position: 'top-center',
+        });
 
       if (result.matched)
-        toast.success(`It's a match! ${from.displayName} and ${to.displayName} hearted each other.`, { duration: 6000, position: 'top-center' });
-      else toast.success(`${from.displayName} sent ${to.displayName} a heart.`, { duration: 5000, position: 'top-center' });
+        toast.success(
+          `It's a match! ${from.displayName} and ${to.displayName} hearted each other.`,
+          { duration: 6000, position: 'top-center' }
+        );
+      else
+        toast.success(`${from.displayName} sent ${to.displayName} a heart.`, {
+          duration: 5000,
+          position: 'top-center',
+        });
       router.refresh();
     });
   }
 
   function takeBack(from: Named, to: Named) {
     startTransition(async () => {
-      const error = await takeBackHeart({ fromProfileId: from.id, toProfileId: to.id }).catch(() => ({ message: 'Unable to take the heart back!' }));
-      if (error) return void toast.error(error.message, { duration: 5000, position: 'top-center' });
+      const error = await takeBackHeart({
+        fromProfileId: from.id,
+        toProfileId: to.id,
+      }).catch(() => ({ message: 'Unable to take the heart back!' }));
+      if (error)
+        return void toast.error(error.message, {
+          duration: 5000,
+          position: 'top-center',
+        });
 
-      toast.success(`${from.displayName} took back the heart.`, { duration: 5000, position: 'top-center' });
+      toast.success(`${from.displayName} took back the heart.`, {
+        duration: 5000,
+        position: 'top-center',
+      });
       router.refresh();
     });
   }
@@ -76,16 +101,35 @@ export function HeartButton({
 
   if (sent) {
     return (
-      <Button variant='ghost' size={size} className={cn('text-muted-foreground', className)} disabled={pending} onClick={() => takeBack(from, to)}>
-        {pending ? <Loader2Icon className='animate-spin' aria-hidden='true' /> : <HeartOffIcon aria-hidden='true' />}
+      <Button
+        variant='ghost'
+        size={size}
+        className={cn('text-muted-foreground', className)}
+        disabled={pending}
+        onClick={() => takeBack(from, to)}
+      >
+        {pending ? (
+          <Loader2Icon className='animate-spin' aria-hidden='true' />
+        ) : (
+          <HeartOffIcon aria-hidden='true' />
+        )}
         Take back
       </Button>
     );
   }
 
   return (
-    <Button size={size} className={className} disabled={pending} onClick={() => send(from, to)}>
-      {pending ? <Loader2Icon className='animate-spin' aria-hidden='true' /> : <PoppingHeart />}
+    <Button
+      size={size}
+      className={className}
+      disabled={pending}
+      onClick={() => send(from, to)}
+    >
+      {pending ? (
+        <Loader2Icon className='animate-spin' aria-hidden='true' />
+      ) : (
+        <PoppingHeart />
+      )}
       {received ? 'Heart back' : 'Send a heart'}
     </Button>
   );

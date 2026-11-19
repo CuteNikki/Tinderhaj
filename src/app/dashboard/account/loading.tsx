@@ -5,7 +5,11 @@ import { configuredRoles, discordRolesEnabled } from '@/lib/discord-roles';
 
 import { PageLoading } from '@/components/common/page-loading';
 import { SettingsSection } from '@/components/common/settings-section';
-import { ButtonSkeleton, FieldSkeleton, GhostText } from '@/components/common/skeletons';
+import {
+  ButtonSkeleton,
+  FieldSkeleton,
+  GhostText,
+} from '@/components/common/skeletons';
 import { Skeleton } from '@/components/ui/skeleton';
 
 /**
@@ -15,13 +19,20 @@ import { Skeleton } from '@/components/ui/skeleton';
  */
 export default function Loading() {
   // Shown when the real page shows it to someone without Discord connected
-  const discordRoles = discordRolesEnabled() && enabledProviders.includes('discord') ? configuredRoles() : null;
+  const discordRoles =
+    discordRolesEnabled() && enabledProviders.includes('discord')
+      ? configuredRoles()
+      : null;
 
   return (
     <PageLoading eyebrow='Your account' title='Settings'>
       <div className='grid grid-cols-1 items-start gap-6 lg:grid-cols-2'>
         <div className='grid grid-cols-1 gap-6'>
-          <SettingsSection still title='Username' description='Choose the name people will see across Tinderhaj.'>
+          <SettingsSection
+            still
+            title='Username'
+            description='Choose the name people will see across Tinderhaj.'
+          >
             <div className='flex flex-col gap-2 sm:flex-row sm:items-end'>
               <FieldSkeleton className='flex-1' />
               <ButtonSkeleton>Change</ButtonSkeleton>
@@ -37,20 +48,25 @@ export default function Loading() {
               <ButtonSkeleton>Save</ButtonSkeleton>
             </div>
           </SettingsSection>
-          <SettingsSection still title='Email' description='Where we send sign-in codes and links to reset your password.'>
+          <SettingsSection
+            still
+            title='Email'
+            description='Where we send sign-in codes and links to reset your password.'
+          >
             <div className='space-y-4'>
               <div className='flex flex-wrap items-center gap-x-3 gap-y-2'>
                 <Skeleton className='h-6 w-52' />
                 <Skeleton className='h-5 w-20 rounded-full' />
               </div>
-              <div className='border-foreground/10 flex flex-col gap-2 border-t pt-4'>
+              <div className='flex flex-col gap-2 border-t border-foreground/10 pt-4'>
                 <Skeleton className='h-3.5 w-20' />
                 <div className='flex flex-col gap-2 sm:flex-row'>
                   <Skeleton className='h-9 w-full rounded-md' />
                   <ButtonSkeleton>Change</ButtonSkeleton>
                 </div>
                 <GhostText className='text-xs'>
-                  For your safety, we first send a confirmation link to your current address, then one to the new address.
+                  For your safety, we first send a confirmation link to your
+                  current address, then one to the new address.
                 </GhostText>
               </div>
             </div>
@@ -64,16 +80,25 @@ export default function Loading() {
               </div>
               <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
                 <Skeleton className='h-5 w-48' />
-                <ButtonSkeleton className='sm:ml-auto'>Change password</ButtonSkeleton>
+                <ButtonSkeleton className='sm:ml-auto'>
+                  Change password
+                </ButtonSkeleton>
               </div>
             </div>
           </SettingsSection>
         </div>
         <div className='grid grid-cols-1 gap-6'>
-          <SettingsSection still title='Sign-in methods' description='Connect other accounts to sign in with them too.'>
-            <div className='divide-foreground/10 border-foreground/10 flex flex-col divide-y rounded-xl border'>
+          <SettingsSection
+            still
+            title='Sign-in methods'
+            description='Connect other accounts to sign in with them too.'
+          >
+            <div className='flex flex-col divide-y divide-foreground/10 rounded-xl border border-foreground/10'>
               {enabledProviders.map((provider) => (
-                <div key={provider} className='flex items-center gap-3 p-3 px-4'>
+                <div
+                  key={provider}
+                  className='flex items-center gap-3 p-3 px-4'
+                >
                   <Skeleton className='size-5 shrink-0 rounded-full' />
                   <Skeleton className='h-5 w-20' />
                   <ButtonSkeleton size='sm' className='ml-auto'>
@@ -92,28 +117,40 @@ export default function Loading() {
               <div className='flex flex-col gap-4'>
                 <ul className='flex flex-col gap-2'>
                   {discordRoles.map((role) => (
-                    <li key={role.key} className='flex items-start gap-3 text-sm'>
+                    <li
+                      key={role.key}
+                      className='flex items-start gap-3 text-sm'
+                    >
                       <Skeleton className='mt-0.5 size-5 shrink-0 rounded-full' />
                       {/* The real words, unseen, so each wraps as the real one does */}
                       <GhostText as='span' className='text-wrap'>
-                        <span className='font-semibold'>{role.label}</span> · {role.about}
+                        <span className='font-semibold'>{role.label}</span> ·{' '}
+                        {role.about}
                       </GhostText>
                     </li>
                   ))}
                 </ul>
-                <GhostText>Connect Discord under Sign-in methods to get them.</GhostText>
+                <GhostText>
+                  Connect Discord under Sign-in methods to get them.
+                </GhostText>
               </div>
             </SettingsSection>
           )}
           <SettingsSection still title='Two-step sign-in'>
             <div className='flex flex-col gap-3'>
-              <GhostText>Asks for a code after your password, so your password alone isn&apos;t enough to sign in. Choose where the code comes from:</GhostText>
+              <GhostText>
+                Asks for a code after your password, so your password alone
+                isn&apos;t enough to sign in. Choose where the code comes from:
+              </GhostText>
               <div className='grid gap-3 sm:grid-cols-2'>
                 {[
                   'A code from an app like Google Authenticator, 1Password or Bitwarden. The safest choice.',
                   'We email you a code each time you sign in with your password.',
                 ].map((text) => (
-                  <div key={text} className='ring-foreground/10 flex flex-col gap-2 rounded-xl p-4 ring-1'>
+                  <div
+                    key={text}
+                    className='flex flex-col gap-2 rounded-xl p-4 ring-1 ring-foreground/10'
+                  >
                     <span className='flex items-center gap-3'>
                       <Skeleton className='size-9 shrink-0 rounded-full' />
                       <Skeleton className='h-5 w-32' />
@@ -135,8 +172,13 @@ export default function Loading() {
             </div>
           </SettingsSection>
         </div>
-        <SettingsSection still title='Sessions' description='Everywhere you are signed in right now.' className='lg:col-span-2'>
-          <div className='divide-foreground/10 border-foreground/10 flex flex-col divide-y rounded-xl border'>
+        <SettingsSection
+          still
+          title='Sessions'
+          description='Everywhere you are signed in right now.'
+          className='lg:col-span-2'
+        >
+          <div className='flex flex-col divide-y divide-foreground/10 rounded-xl border border-foreground/10'>
             <div className='flex flex-col gap-1 p-3 px-4'>
               <span className='flex h-6 items-center gap-2'>
                 <Skeleton className='size-5 shrink-0 rounded-full' />
@@ -148,7 +190,11 @@ export default function Loading() {
                 <GhostText as='span'>IP 000.000.000.000</GhostText>
               </ul>
               <ul className='flex flex-wrap gap-x-3 gap-y-0.5 text-xs'>
-                {['Signed in Oct 9, 2026, 10:00 AM', 'Active just now', 'Expires in 3 days'].map((detail) => (
+                {[
+                  'Signed in Oct 9, 2026, 10:00 AM',
+                  'Active just now',
+                  'Expires in 3 days',
+                ].map((detail) => (
                   <GhostText key={detail} as='span' className='text-xs'>
                     <span className='inline-block w-3.5' /> {detail}
                   </GhostText>

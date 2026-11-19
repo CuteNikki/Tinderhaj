@@ -1,7 +1,5 @@
-import { AuditLogEvent, Events } from 'discord.js';
-
 import { Event } from 'classes/base/event';
-
+import { AuditLogEvent, Events } from 'discord.js';
 import { logChange, mentionWithDetails, oldNew } from 'moderation/changes';
 import { KEYS } from 'utility/keys';
 
@@ -14,14 +12,22 @@ export default new Event({
   async execute(_client, before, after) {
     if (after.guild.id !== KEYS.DISCORD_GUILD_ID) return;
     const tagName = (id: string) =>
-      after.parent && 'availableTags' in after.parent ? (after.parent.availableTags.find((tag) => tag.id === id)?.name ?? id) : id;
-    const tags = (ids: unknown) => ((ids as string[]).length ? (ids as string[]).map(tagName).join(', ') : '*none*');
+      after.parent && 'availableTags' in after.parent
+        ? (after.parent.availableTags.find((tag) => tag.id === id)?.name ?? id)
+        : id;
+    const tags = (ids: unknown) =>
+      (ids as string[]).length
+        ? (ids as string[]).map(tagName).join(', ')
+        : '*none*';
     const changes = [
       oldNew('Name', before.name, after.name, { asName: true }),
       oldNew('Closed', before.archived, after.archived),
       oldNew('Locked', before.locked, after.locked),
-      oldNew('Slowmode', before.rateLimitPerUser, after.rateLimitPerUser, { format: (value) => (value ? `${value} seconds` : 'off') }),
-      before.appliedTags.join() !== after.appliedTags.join() && oldNew('Tags', before.appliedTags, after.appliedTags, { format: tags }),
+      oldNew('Slowmode', before.rateLimitPerUser, after.rateLimitPerUser, {
+        format: (value) => (value ? `${value} seconds` : 'off'),
+      }),
+      before.appliedTags.join() !== after.appliedTags.join() &&
+        oldNew('Tags', before.appliedTags, after.appliedTags, { format: tags }),
     ];
     if (!changes.some(Boolean)) return;
     await logChange(after.guild, 'Thread updated', {

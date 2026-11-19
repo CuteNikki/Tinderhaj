@@ -1,8 +1,9 @@
 'use client';
 
-import { Loader2Icon, Trash2Icon } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
+
+import { Loader2Icon, Trash2Icon } from 'lucide-react';
 
 import { authClient } from '@/lib/auth-client';
 
@@ -23,7 +24,7 @@ export function ConfirmDeleteAccount({ token }: { token: string }) {
       return setError(
         error.code === 'INVALID_TOKEN'
           ? 'This link has expired or was for another account. Ask for a new one in your account settings.'
-          : (error.message ?? 'Unable to delete your account!'),
+          : (error.message ?? 'Unable to delete your account!')
       );
     }
 
@@ -34,9 +35,13 @@ export function ConfirmDeleteAccount({ token }: { token: string }) {
 
   return (
     <div className='flex flex-col gap-2'>
-      {error && <p className='text-destructive text-center text-sm'>{error}</p>}
+      {error && <p className='text-center text-sm text-destructive'>{error}</p>}
       <Button variant='destructive' disabled={pending} onClick={confirm}>
-        {pending ? <Loader2Icon className='animate-spin' aria-hidden='true' /> : <Trash2Icon aria-hidden='true' />}
+        {pending ? (
+          <Loader2Icon className='animate-spin' aria-hidden='true' />
+        ) : (
+          <Trash2Icon aria-hidden='true' />
+        )}
         Delete my account
       </Button>
       <Button variant='secondary' asChild>

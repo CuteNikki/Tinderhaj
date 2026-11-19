@@ -1,7 +1,5 @@
-import { AuditLogEvent, Events } from 'discord.js';
-
 import { Event } from 'classes/base/event';
-
+import { AuditLogEvent, Events } from 'discord.js';
 import { logChange } from 'moderation/changes';
 import { when } from 'moderation/log';
 import { KEYS } from 'utility/keys';
@@ -15,7 +13,11 @@ export default new Event({
       actions: AuditLogEvent.GuildScheduledEventCreate,
       targetId: event.id,
       what: `${code(event.name)}\n-# ${event.id}`,
-      changes: [event.scheduledStartAt && `**Starts:** ${when(event.scheduledStartAt, 'f')}`, event.channelId && `**Where:** <#${event.channelId}>`],
+      changes: [
+        event.scheduledStartAt &&
+          `**Starts:** ${when(event.scheduledStartAt, 'f')}`,
+        event.channelId && `**Where:** <#${event.channelId}>`,
+      ],
     });
   },
 });

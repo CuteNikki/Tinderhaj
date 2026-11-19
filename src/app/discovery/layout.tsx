@@ -7,7 +7,11 @@ import { AddYourShark } from '@/components/sections/add-your-shark';
  * does the nudge to add your own after them, on another color, so the
  * profiles don't run straight into the footer.
  */
-export default function DiscoveryLayout({ children }: { children: React.ReactNode }) {
+export default function DiscoveryLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <div className='flex flex-1 flex-col'>
       <DiscoveryHero />

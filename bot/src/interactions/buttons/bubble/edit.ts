@@ -1,9 +1,12 @@
-import { LabelBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
-
-import { Button } from 'classes/base/button';
-
 import { bubbleLabel, LABEL_MAX } from 'bubbles/bubble';
 import { controlledBubble } from 'bubbles/controls';
+import { Button } from 'classes/base/button';
+import {
+  LabelBuilder,
+  ModalBuilder,
+  TextInputBuilder,
+  TextInputStyle,
+} from 'discord.js';
 
 export default new Button({
   customId: 'bubble-edit',
@@ -26,16 +29,22 @@ export default new Button({
                 .setValue(bubbleLabel(bubble.channel.name))
                 .setMaxLength(LABEL_MAX)
                 .setStyle(TextInputStyle.Short)
-                .setRequired(false),
+                .setRequired(false)
             ),
-          new LabelBuilder().setLabel('User limit (empty for none)').setTextInputComponent(limitInput(bubble.channel.userLimit)),
-        ),
+          new LabelBuilder()
+            .setLabel('User limit (empty for none)')
+            .setTextInputComponent(limitInput(bubble.channel.userLimit))
+        )
     );
   },
 });
 
 /** The limit field: empty while there's no limit, rather than a 0 to clear first. Left out, not set to "", when empty. */
 function limitInput(userLimit: number) {
-  const input = new TextInputBuilder().setCustomId('limit').setMaxLength(2).setStyle(TextInputStyle.Short).setRequired(false);
+  const input = new TextInputBuilder()
+    .setCustomId('limit')
+    .setMaxLength(2)
+    .setStyle(TextInputStyle.Short)
+    .setRequired(false);
   return userLimit ? input.setValue(String(userLimit)) : input;
 }

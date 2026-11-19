@@ -1,24 +1,31 @@
-import { HeartHandshakeIcon, HeartIcon, InboxIcon, MessageCircleIcon, SendIcon } from 'lucide-react';
+import { heartsMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { heartsMetadata } from '@/constants/metadata';
+import {
+  HeartHandshakeIcon,
+  HeartIcon,
+  InboxIcon,
+  MessageCircleIcon,
+  SendIcon,
+} from 'lucide-react';
+
 import { getHearts, type HeartRow } from '@/lib/hearts';
 import { CONTENT_DELAY } from '@/lib/motion';
 import { requireUser } from '@/lib/session';
 import { cn } from '@/lib/utils';
 
-import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
 import { EmptyState } from '@/components/common/empty-state';
+import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
 import { LinkedText } from '@/components/common/linked-text';
 import { LocalTime } from '@/components/common/local-time';
 import { Stagger } from '@/components/common/stagger';
 import { HeartButton } from '@/components/hearts/heart-button';
 import { MarkHeartsSeen } from '@/components/hearts/mark-hearts-seen';
-import { ReportDialog } from '@/components/reports/report-dialog';
 import { SharkAvatar } from '@/components/hearts/shark-avatar';
 import { SharkDialog } from '@/components/hearts/shark-dialog';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
+import { ReportDialog } from '@/components/reports/report-dialog';
 import { Badge } from '@/components/ui/badge';
 
 export const metadata: Metadata = heartsMetadata;
@@ -27,40 +34,60 @@ const TABS = {
   matches: {
     label: 'Matches',
     icon: HeartHandshakeIcon,
-    empty: { title: 'No matches yet.', description: "When a shark you hearted hearts you back, or the other way round, you'll find them here." },
+    empty: {
+      title: 'No matches yet.',
+      description:
+        "When a shark you hearted hearts you back, or the other way round, you'll find them here.",
+    },
   },
   received: {
     label: 'Received',
     icon: InboxIcon,
-    empty: { title: 'No hearts yet.', description: 'Hearts other sharks send yours show up here. Heart them back to make it a match.' },
+    empty: {
+      title: 'No hearts yet.',
+      description:
+        'Hearts other sharks send yours show up here. Heart them back to make it a match.',
+    },
   },
   sent: {
     label: 'Sent',
     icon: SendIcon,
-    empty: { title: 'Nothing sent yet.', description: 'Find a shark you like in discovery, and send them a heart from their profile.' },
+    empty: {
+      title: 'Nothing sent yet.',
+      description:
+        'Find a shark you like in discovery, and send them a heart from their profile.',
+    },
   },
 } as const;
 
 type Tab = keyof typeof TABS;
 
 /** The user's matches, and the hearts their sharks received and sent. */
-export default async function HeartsPage({ searchParams }: PageProps<'/dashboard/hearts'>) {
+export default async function HeartsPage({
+  searchParams,
+}: PageProps<'/dashboard/hearts'>) {
   const session = await requireUser();
   const { tab: tabParam } = await searchParams;
   const hearts = await getHearts(session.user.id);
-  const unseen = [...hearts.matches, ...hearts.received].filter((row) => row.unseen).length;
+  const unseen = [...hearts.matches, ...hearts.received].filter(
+    (row) => row.unseen
+  ).length;
 
   // Opens on whatever is new, else on matches.
   const tab: Tab =
     typeof tabParam === 'string' && tabParam in TABS
       ? (tabParam as Tab)
-      : hearts.received.some((row) => row.unseen) && !hearts.matches.some((row) => row.unseen)
+      : hearts.received.some((row) => row.unseen) &&
+          !hearts.matches.some((row) => row.unseen)
         ? 'received'
         : 'matches';
   const rows = hearts[tab];
 
   return (
-    <div data-water='band' className='flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'>
+    <div
+      data-water='band'
+      className='flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'
+    >
       <MarkHeartsSeen unseen={unseen} />
       <div className='container mx-auto max-w-7xl'>
         <Stagger id='page-header' variant='sink' className='mb-24'>
@@ -71,24 +98,44 @@ export default async function HeartsPage({ searchParams }: PageProps<'/dashboard
 
         <ScrollReveal delay={CONTENT_DELAY}>
           {/* On phones three labels don't fit: the open tab shows its label, the others only their icon and count */}
-          <nav aria-label='Hearts' className='bg-muted mb-4 flex max-w-md gap-1 rounded-full p-1 sm:grid sm:grid-cols-3'>
+          <nav
+            aria-label='Hearts'
+            className='mb-4 flex max-w-md gap-1 rounded-full bg-muted p-1 sm:grid sm:grid-cols-3'
+          >
             {(Object.keys(TABS) as Tab[]).map((key) => {
               const { label, icon: Icon } = TABS[key];
               const fresh = hearts[key].filter((row) => row.unseen).length;
               return (
                 <Link
                   key={key}
-                  href={key === 'matches' ? '/dashboard/hearts?tab=matches' : `/dashboard/hearts?tab=${key}`}
+                  href={
+                    key === 'matches'
+                      ? '/dashboard/hearts?tab=matches'
+                      : `/dashboard/hearts?tab=${key}`
+                  }
                   aria-current={key === tab ? 'page' : undefined}
                   className={cn(
                     'flex items-center justify-center gap-2 rounded-full py-2 text-sm font-medium transition-colors sm:px-2',
-                    key === tab ? 'bg-background min-w-0 flex-1 px-2 shadow-sm' : 'text-muted-foreground hover:text-foreground px-3',
+                    key === tab
+                      ? 'min-w-0 flex-1 bg-background px-2 shadow-sm'
+                      : 'px-3 text-muted-foreground hover:text-foreground'
                   )}
                 >
                   <Icon className='size-4 shrink-0' aria-hidden='true' />
-                  <span className={cn('truncate', key !== tab && 'max-sm:sr-only')}>{label}</span>
-                  <span className='text-muted-foreground text-xs tabular-nums'>{hearts[key].length}</span>
-                  {fresh > 0 && <span className='bg-primary size-2 shrink-0 rounded-full' aria-label={`${fresh} new`} />}
+                  <span
+                    className={cn('truncate', key !== tab && 'max-sm:sr-only')}
+                  >
+                    {label}
+                  </span>
+                  <span className='text-xs text-muted-foreground tabular-nums'>
+                    {hearts[key].length}
+                  </span>
+                  {fresh > 0 && (
+                    <span
+                      className='size-2 shrink-0 rounded-full bg-primary'
+                      aria-label={`${fresh} new`}
+                    />
+                  )}
                 </Link>
               );
             })}
@@ -97,9 +144,12 @@ export default async function HeartsPage({ searchParams }: PageProps<'/dashboard
 
         {tab === 'matches' && rows.length > 0 && !hearts.sharesContact && (
           <ScrollReveal delay={CONTENT_DELAY}>
-            <p className='text-muted-foreground mb-4 text-sm'>
+            <p className='mb-4 text-sm text-muted-foreground'>
               Your matches can&apos;t see a way to reach you yet.{' '}
-              <Link href='/dashboard/account#top' className='text-foreground font-medium underline'>
+              <Link
+                href='/dashboard/account#top'
+                className='font-medium text-foreground underline'
+              >
                 Add one in Settings
               </Link>
               .
@@ -111,7 +161,7 @@ export default async function HeartsPage({ searchParams }: PageProps<'/dashboard
           <Stagger
             as='ul'
             itemAs='li'
-            className='border-foreground/10 bg-card divide-foreground/10 divide-y rounded-2xl border shadow-sm'
+            className='divide-y divide-foreground/10 rounded-2xl border border-foreground/10 bg-card shadow-sm'
             gap={0.05}
             delay={CONTENT_DELAY + 0.1}
           >
@@ -121,7 +171,11 @@ export default async function HeartsPage({ searchParams }: PageProps<'/dashboard
           </Stagger>
         ) : (
           <ScrollReveal delay={CONTENT_DELAY + 0.1}>
-            <EmptyState icon={HeartIcon} title={TABS[tab].empty.title} description={TABS[tab].empty.description} />
+            <EmptyState
+              icon={HeartIcon}
+              title={TABS[tab].empty.title}
+              description={TABS[tab].empty.description}
+            />
           </ScrollReveal>
         )}
       </div>
@@ -142,24 +196,47 @@ function HeartListRow({ row, tab }: { row: HeartRow; tab: Tab }) {
     <div className='p-4'>
       <div className='flex items-center gap-3'>
         <SharkDialog shark={theirs}>
-          <button type='button' className='group flex min-w-0 flex-1 items-center gap-3 text-left'>
+          <button
+            type='button'
+            className='group flex min-w-0 flex-1 items-center gap-3 text-left'
+          >
             <span className='relative shrink-0'>
               <SharkAvatar shark={theirs} className='size-12' />
-              <SharkAvatar shark={mine} className='border-card absolute -right-1 -bottom-1 size-6 border-2' />
+              <SharkAvatar
+                shark={mine}
+                className='absolute -right-1 -bottom-1 size-6 border-2 border-card'
+              />
             </span>
             <span className='min-w-0'>
               <span className='flex flex-wrap items-center gap-x-2'>
-                <span className='truncate font-semibold group-hover:underline'>{theirs.displayName}</span>
+                <span className='truncate font-semibold group-hover:underline'>
+                  {theirs.displayName}
+                </span>
                 {row.unseen && <Badge className='shrink-0'>New</Badge>}
               </span>
-              <span className='text-muted-foreground block truncate text-xs'>
-                @{theirs.user.username} · {what} <LocalTime iso={row.at.toISOString()} />
+              <span className='block truncate text-xs text-muted-foreground'>
+                @{theirs.user.username} · {what}{' '}
+                <LocalTime iso={row.at.toISOString()} />
               </span>
             </span>
           </button>
         </SharkDialog>
-        {tab === 'received' && <HeartButton from={mine} to={{ id: theirs.id, displayName: theirs.displayName }} sent={false} received />}
-        {tab === 'sent' && <HeartButton from={mine} to={{ id: theirs.id, displayName: theirs.displayName }} sent received={false} />}
+        {tab === 'received' && (
+          <HeartButton
+            from={mine}
+            to={{ id: theirs.id, displayName: theirs.displayName }}
+            sent={false}
+            received
+          />
+        )}
+        {tab === 'sent' && (
+          <HeartButton
+            from={mine}
+            to={{ id: theirs.id, displayName: theirs.displayName }}
+            sent
+            received={false}
+          />
+        )}
         {tab === 'matches' && (
           <Badge className='shrink-0'>
             <HeartIcon className='fill-current' aria-hidden='true' />
@@ -168,7 +245,11 @@ function HeartListRow({ row, tab }: { row: HeartRow; tab: Tab }) {
         )}
       </div>
       {tab === 'matches' && (
-        <MatchContact shark={{ id: theirs.id, displayName: theirs.displayName }} username={theirs.user.username} contact={row.contact ?? null} />
+        <MatchContact
+          shark={{ id: theirs.id, displayName: theirs.displayName }}
+          username={theirs.user.username}
+          contact={row.contact ?? null}
+        />
       )}
     </div>
   );
@@ -178,10 +259,21 @@ function HeartListRow({ row, tab }: { row: HeartRow; tab: Tab }) {
  * How to reach a match's owner, with a way to report it: a footnote to the line above, as small and
  * right under it, lined up with its text. Only the way to reach them is brighter, to find at a glance.
  */
-function MatchContact({ shark, username, contact }: { shark: { id: string; displayName: string }; username: string; contact: string | null }) {
+function MatchContact({
+  shark,
+  username,
+  contact,
+}: {
+  shark: { id: string; displayName: string };
+  username: string;
+  contact: string | null;
+}) {
   return (
-    <p className='text-muted-foreground mt-1.5 flex items-start gap-1.5 pl-15 text-xs'>
-      <MessageCircleIcon className='mt-px size-3.5 shrink-0' aria-hidden='true' />
+    <p className='mt-1.5 flex items-start gap-1.5 pl-15 text-xs text-muted-foreground'>
+      <MessageCircleIcon
+        className='mt-px size-3.5 shrink-0'
+        aria-hidden='true'
+      />
       {contact ? (
         <>
           <span className='min-w-0 flex-1 wrap-break-word'>
@@ -192,7 +284,10 @@ function MatchContact({ shark, username, contact }: { shark: { id: string; displ
           </span>
           {/* Moderators never see these otherwise, so their matches are the ones to say */}
           <ReportDialog shark={shark} contact>
-            <button type='button' className='hover:text-foreground shrink-0 underline-offset-4 hover:underline'>
+            <button
+              type='button'
+              className='shrink-0 underline-offset-4 hover:text-foreground hover:underline'
+            >
               Report
             </button>
           </ReportDialog>

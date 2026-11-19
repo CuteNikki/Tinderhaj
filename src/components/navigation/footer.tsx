@@ -37,14 +37,20 @@ const signedInLinks = [
 export function Footer() {
   return (
     <footer className='bg-floor text-foreground'>
-      <div className='xs:pt-12 container mx-auto max-w-7xl px-6 py-6'>
-        <Stagger className='xs:grid-cols-2 grid gap-8 md:grid-cols-[1.75fr_repeat(3,1fr)]' gap={0.08}>
+      <div className='container mx-auto max-w-7xl px-6 py-6 xs:pt-12'>
+        <Stagger
+          className='grid gap-8 xs:grid-cols-2 md:grid-cols-[1.75fr_repeat(3,1fr)]'
+          gap={0.08}
+        >
           <div>
-            <Link href='/#top' className='group flex items-center gap-2 text-lg font-bold'>
-              <Logo className='group-hover:animate-wiggle h-6 w-6' />
+            <Link
+              href='/#top'
+              className='group flex items-center gap-2 text-lg font-bold'
+            >
+              <Logo className='h-6 w-6 group-hover:animate-wiggle' />
               Tinderhaj
             </Link>
-            <p className='text-muted-foreground mt-4 max-w-xs text-sm leading-relaxed text-balance'>
+            <p className='mt-4 max-w-xs text-sm leading-relaxed text-balance text-muted-foreground'>
               The world&apos;s first dating site exclusively for plush sharks.
             </p>
             <div className='mt-4 flex items-center gap-4'>
@@ -53,11 +59,15 @@ export function Footer() {
                 target='_blank'
                 rel='noreferrer'
                 aria-label='Tinderhaj on GitHub'
-                className='text-muted-foreground hover:text-foreground transition-colors'
+                className='text-muted-foreground transition-colors hover:text-foreground'
               >
                 <Code2 className='h-4 w-4' />
               </a>
-              <Link href='/contact' aria-label='Contact Tinderhaj' className='text-muted-foreground hover:text-foreground transition-colors'>
+              <Link
+                href='/contact'
+                aria-label='Contact Tinderhaj'
+                className='text-muted-foreground transition-colors hover:text-foreground'
+              >
                 <Mail className='h-4 w-4' />
               </Link>
             </div>
@@ -65,26 +75,39 @@ export function Footer() {
           <FooterColumn title='Product' links={productLinks} />
           <FooterColumn title='Community' links={communityLinks} />
           {/* Who's signed in streams in after the rest, like the navbar; until then, as for someone signed out */}
-          <Suspense fallback={<FooterColumn title='Account' links={signedOutLinks} />}>
+          <Suspense
+            fallback={<FooterColumn title='Account' links={signedOutLinks} />}
+          >
             <AccountColumn />
           </Suspense>
         </Stagger>
-        <div className='border-border mt-10 border-t pt-6'>
+        <div className='mt-10 border-t border-border pt-6'>
           <div className='flex flex-col gap-6 text-xs md:flex-row md:items-center md:justify-between'>
-            <p className='text-muted-foreground'>© 2026 Tinderhaj. All rights reserved.</p>
-            <p className='text-muted-foreground max-w-sm text-left leading-relaxed md:text-center'>
+            <p className='text-muted-foreground'>
+              © 2026 Tinderhaj. All rights reserved.
+            </p>
+            <p className='max-w-sm text-left leading-relaxed text-muted-foreground md:text-center'>
               Blåhaj is a trademark of IKEA.
               <br />
               Tinderhaj is not affiliated with IKEA or Tinder.
             </p>
-            <div className='text-muted-foreground flex gap-4 md:justify-end'>
-              <Link href='/privacy' className='hover:text-foreground transition-colors'>
+            <div className='flex gap-4 text-muted-foreground md:justify-end'>
+              <Link
+                href='/privacy'
+                className='transition-colors hover:text-foreground'
+              >
                 Privacy
               </Link>
-              <Link href='/terms' className='hover:text-foreground transition-colors'>
+              <Link
+                href='/terms'
+                className='transition-colors hover:text-foreground'
+              >
                 Terms
               </Link>
-              <Link href='/imprint' className='hover:text-foreground transition-colors'>
+              <Link
+                href='/imprint'
+                className='transition-colors hover:text-foreground'
+              >
                 Imprint
               </Link>
             </div>
@@ -97,24 +120,42 @@ export function Footer() {
 
 async function AccountColumn() {
   const session = await getSession();
-  return <FooterColumn title='Account' links={session ? signedInLinks : signedOutLinks} />;
+  return (
+    <FooterColumn
+      title='Account'
+      links={session ? signedInLinks : signedOutLinks}
+    />
+  );
 }
 
-function FooterColumn({ title, links }: { title: string; links: { label: string; href: string }[] }) {
+function FooterColumn({
+  title,
+  links,
+}: {
+  title: string;
+  links: { label: string; href: string }[];
+}) {
   return (
     <div>
       <h2 className='text-sm font-bold'>{title}</h2>
-      <div className='text-muted-foreground mt-4 flex flex-col items-start gap-2 text-sm'>
+      <div className='mt-4 flex flex-col items-start gap-2 text-sm text-muted-foreground'>
         {links.map((link) =>
           link.href.startsWith('/discovery') ? (
-            <DiscoveryLink key={link.label} className='hover:text-foreground transition-colors'>
+            <DiscoveryLink
+              key={link.label}
+              className='transition-colors hover:text-foreground'
+            >
               {link.label}
             </DiscoveryLink>
           ) : (
-            <Link key={link.label} href={link.href} className='hover:text-foreground transition-colors'>
+            <Link
+              key={link.label}
+              href={link.href}
+              className='transition-colors hover:text-foreground'
+            >
               {link.label}
             </Link>
-          ),
+          )
         )}
       </div>
     </div>

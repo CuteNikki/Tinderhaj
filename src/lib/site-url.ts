@@ -10,13 +10,24 @@ import 'server-only';
  * it out entirely.
  */
 function readSiteURL() {
-  const { BETTER_AUTH_URL, VERCEL_ENV, VERCEL_PROJECT_PRODUCTION_URL, VERCEL_URL } = process.env;
+  const {
+    BETTER_AUTH_URL,
+    VERCEL_ENV,
+    VERCEL_PROJECT_PRODUCTION_URL,
+    VERCEL_URL,
+  } = process.env;
 
   if (BETTER_AUTH_URL) return new URL(BETTER_AUTH_URL);
-  if (VERCEL_ENV === 'production' && VERCEL_PROJECT_PRODUCTION_URL) return new URL(`https://${VERCEL_PROJECT_PRODUCTION_URL}`);
+  if (VERCEL_ENV === 'production' && VERCEL_PROJECT_PRODUCTION_URL)
+    return new URL(`https://${VERCEL_PROJECT_PRODUCTION_URL}`);
   if (VERCEL_URL) return new URL(`https://${VERCEL_URL}`);
-  if (process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE !== 'phase-production-build') {
-    throw new Error('BETTER_AUTH_URL is not set. Set it to the public address of the site, e.g. https://tinderhaj.com.');
+  if (
+    process.env.NODE_ENV === 'production' &&
+    process.env.NEXT_PHASE !== 'phase-production-build'
+  ) {
+    throw new Error(
+      'BETTER_AUTH_URL is not set. Set it to the public address of the site, e.g. https://tinderhaj.com.'
+    );
   }
   return new URL('http://localhost:3000');
 }

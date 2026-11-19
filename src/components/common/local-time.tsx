@@ -13,16 +13,28 @@ const subscribe = () => () => {};
  * it, so its render leaves the time out, and the browser fills it in once
  * the page is running.
  */
-export function LocalTime({ iso, absolute, className }: { iso: string; absolute?: boolean; className?: string }) {
+export function LocalTime({
+  iso,
+  absolute,
+  className,
+}: {
+  iso: string;
+  absolute?: boolean;
+  className?: string;
+}) {
   // False on the server and while hydrating, which has to match it; true right after
   const inBrowser = useSyncExternalStore(
     subscribe,
     () => true,
-    () => false,
+    () => false
   );
 
   return (
-    <time dateTime={iso} title={absolute || !inBrowser ? undefined : formatDate(iso)} className={className}>
+    <time
+      dateTime={iso}
+      title={absolute || !inBrowser ? undefined : formatDate(iso)}
+      className={className}
+    >
       {inBrowser && (absolute ? formatDate(iso) : relative(iso))}
     </time>
   );

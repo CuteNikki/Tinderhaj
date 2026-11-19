@@ -22,7 +22,8 @@ export function formatDate(iso: string) {
   return date.toLocaleString('en-US', {
     month: 'short',
     day: 'numeric',
-    year: date.getFullYear() === new Date().getFullYear() ? undefined : 'numeric',
+    year:
+      date.getFullYear() === new Date().getFullYear() ? undefined : 'numeric',
     hour: 'numeric',
     minute: '2-digit',
   });

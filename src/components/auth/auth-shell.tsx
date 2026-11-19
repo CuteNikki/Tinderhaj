@@ -2,8 +2,8 @@ import Link from 'next/link';
 
 import { AUTH_HEIGHT } from '@/components/auth/height';
 import { Enter } from '@/components/common/enter';
-import { Logo } from '@/components/common/logo';
 import { HeroBadge } from '@/components/common/hero-badge';
+import { Logo } from '@/components/common/logo';
 import { Card, CardContent } from '@/components/ui/card';
 
 export function AuthShell({
@@ -23,10 +23,17 @@ export function AuthShell({
 }) {
   return (
     // Set in the water from the layout (see PageWater): the band every page's header is in, stretched to fit it all, so going to or from it the water carries on and moves to fit
-    <div id='page-header' data-water='full' className={`${AUTH_HEIGHT} relative flex flex-1 items-center justify-center px-4 py-28`}>
+    <div
+      id='page-header'
+      data-water='full'
+      className={`${AUTH_HEIGHT} relative flex flex-1 items-center justify-center px-4 py-28`}
+    >
       <div className='on-water relative z-10 flex w-full max-w-md flex-col items-center'>
         <Enter variant='pop' delay={0.05}>
-          <Link href='/' className='hover:animate-wiggle mb-6 flex items-center gap-2'>
+          <Link
+            href='/'
+            className='mb-6 flex items-center gap-2 hover:animate-wiggle'
+          >
             <Logo className='h-8 w-8' />
           </Link>
         </Enter>
@@ -36,16 +43,20 @@ export function AuthShell({
         </HeroBadge>
 
         <Enter variant='sink' delay={0.2}>
-          <h1 className='mt-4 text-center text-3xl leading-none font-black tracking-tight sm:text-4xl'>{title}</h1>
+          <h1 className='mt-4 text-center text-3xl leading-none font-black tracking-tight sm:text-4xl'>
+            {title}
+          </h1>
         </Enter>
 
         <Enter variant='sink' delay={0.3}>
-          <p className='text-muted-foreground mt-3 max-w-sm text-center text-sm leading-relaxed text-balance'>{description}</p>
+          <p className='mt-3 max-w-sm text-center text-sm leading-relaxed text-balance text-muted-foreground'>
+            {description}
+          </p>
         </Enter>
 
         <Enter variant='reveal' delay={0.4} className='mt-8 w-full'>
           {/* Frosted, but enough to keep the form clear of what drifts behind it */}
-          <Card className='ring-glass-border bg-background/75 shadow-glass-shadow shadow-xl backdrop-blur-xl'>
+          <Card className='bg-background/75 shadow-xl shadow-glass-shadow ring-glass-border backdrop-blur-xl'>
             <CardContent className='pt-2'>{children}</CardContent>
           </Card>
         </Enter>

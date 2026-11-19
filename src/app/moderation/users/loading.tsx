@@ -1,7 +1,11 @@
 import { ROLE_DESCRIPTIONS, ROLE_LABELS, ROLES } from '@/lib/roles';
 
 import { PageLoading } from '@/components/common/page-loading';
-import { ButtonSkeleton, GhostText, ListSkeleton } from '@/components/common/skeletons';
+import {
+  ButtonSkeleton,
+  GhostText,
+  ListSkeleton,
+} from '@/components/common/skeletons';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const FILTERS = [
@@ -17,10 +21,17 @@ const FILTERS = [
  */
 export default function Loading() {
   return (
-    <PageLoading eyebrow='Moderation' title='Users' placeholder='Open someone to see their profiles, change their role, ban them, or manage their account.'>
+    <PageLoading
+      eyebrow='Moderation'
+      title='Users'
+      placeholder='Open someone to see their profiles, change their role, ban them, or manage their account.'
+    >
       <div className='mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5'>
         {FILTERS.map(([label, description]) => (
-          <div key={label} className='border-foreground/10 bg-card rounded-2xl border p-4 shadow-sm'>
+          <div
+            key={label}
+            className='rounded-2xl border border-foreground/10 bg-card p-4 shadow-sm'
+          >
             <span className='flex h-8 items-center justify-between gap-2'>
               <GhostText as='span' className='text-base font-bold'>
                 {label}
@@ -42,7 +53,9 @@ export default function Loading() {
               <Skeleton className='h-4 w-32' />
             </div>
             <GhostText>someone@example.com</GhostText>
-            <GhostText className='text-xs'>Joined Oct 9, 2026 · 3 profiles</GhostText>
+            <GhostText className='text-xs'>
+              Joined Oct 9, 2026 · 3 profiles
+            </GhostText>
           </div>
           <Skeleton className='h-5 w-12 rounded-full' />
           <Skeleton className='size-4 shrink-0 rounded-sm' />

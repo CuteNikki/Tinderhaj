@@ -1,13 +1,17 @@
-import { Client, Collection, GatewayIntentBits, Partials } from 'discord.js';
 import { performance } from 'node:perf_hooks';
-
+import { isRenameLimit } from 'bubbles/bubble';
 import type { Button } from 'classes/base/button';
 import type { Command } from 'classes/base/command';
 import type { Modal } from 'classes/base/modal';
 import type { SelectMenu } from 'classes/base/select';
-
-import { isRenameLimit } from 'bubbles/bubble';
-import { loadButtons, loadCommands, loadEvents, loadModals, loadSelectMenus } from 'loaders/index';
+import { Client, Collection, GatewayIntentBits, Partials } from 'discord.js';
+import {
+  loadButtons,
+  loadCommands,
+  loadEvents,
+  loadModals,
+  loadSelectMenus,
+} from 'loaders/index';
 import { KEYS } from 'utility/keys';
 import { logger } from 'utility/logger';
 
@@ -41,7 +45,12 @@ export class ExtendedClient extends Client {
         GatewayIntentBits.GuildScheduledEvents,
       ],
       // Deletes and edits of messages from before the bot started, and leaves of members it never saw, still arrive.
-      partials: [Partials.Message, Partials.Channel, Partials.GuildMember, Partials.User],
+      partials: [
+        Partials.Message,
+        Partials.Channel,
+        Partials.GuildMember,
+        Partials.User,
+      ],
       // Rather than wait minutes in a queue, tell the owner a bubble can't be renamed again yet.
       rest: { rejectOnRateLimit: isRenameLimit },
     });
@@ -50,8 +59,16 @@ export class ExtendedClient extends Client {
 
   private async initialize() {
     const startTime = performance.now();
-    await Promise.all([loadCommands(this), loadEvents(this), loadButtons(this), loadModals(this), loadSelectMenus(this)]);
-    logger.info(`Loaded everything in ${Math.floor(performance.now() - startTime)}ms!`);
+    await Promise.all([
+      loadCommands(this),
+      loadEvents(this),
+      loadButtons(this),
+      loadModals(this),
+      loadSelectMenus(this),
+    ]);
+    logger.info(
+      `Loaded everything in ${Math.floor(performance.now() - startTime)}ms!`
+    );
 
     await this.login(KEYS.DISCORD_BOT_TOKEN);
   }

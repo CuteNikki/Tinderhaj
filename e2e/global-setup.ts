@@ -21,8 +21,12 @@ export default async function globalSetup() {
   });
   const smtp = smtpServer(emails);
   await Promise.all([
-    new Promise<void>((resolve) => reader.listen(MAIL_PORT, '127.0.0.1', resolve)),
-    new Promise<void>((resolve) => smtp.listen(SMTP_PORT, '127.0.0.1', resolve)),
+    new Promise<void>((resolve) =>
+      reader.listen(MAIL_PORT, '127.0.0.1', resolve)
+    ),
+    new Promise<void>((resolve) =>
+      smtp.listen(SMTP_PORT, '127.0.0.1', resolve)
+    ),
   ]);
 
   return async () => {
@@ -53,7 +57,10 @@ function smtpServer(emails: Email[]) {
             message.push(line);
             continue;
           }
-          const subject = message.find((header) => header.startsWith('Subject: '))?.slice('Subject: '.length) ?? '';
+          const subject =
+            message
+              .find((header) => header.startsWith('Subject: '))
+              ?.slice('Subject: '.length) ?? '';
           emails.push({ to, subject });
           message = null;
           socket.write('250 OK\r\n');

@@ -2,7 +2,12 @@ import { MAX_AVATAR_SIZE_MB, MAX_BANNER_SIZE_MB } from '@/constants/uploads';
 
 import { Eyebrow } from '@/components/common/heading';
 import { SettingsSection } from '@/components/common/settings-section';
-import { ButtonSkeleton, FieldSkeleton, GhostText, ProfileCardSkeleton } from '@/components/common/skeletons';
+import {
+  ButtonSkeleton,
+  FieldSkeleton,
+  GhostText,
+  ProfileCardSkeleton,
+} from '@/components/common/skeletons';
 import { Skeleton } from '@/components/ui/skeleton';
 
 /**
@@ -10,36 +15,58 @@ import { Skeleton } from '@/components/ui/skeleton';
  * they are, with placeholders laid out like their fields, and the card beside it.
  * `editing` for an existing one, whose interests show as chips above their field.
  */
-export function ProfileFormSkeleton({ editing = false }: { editing?: boolean }) {
+export function ProfileFormSkeleton({
+  editing = false,
+}: {
+  editing?: boolean;
+}) {
   return (
     <div className='grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_26rem] lg:gap-x-8'>
       <div className='grid gap-6'>
         {editing && (
           // On small screens, the note a live one has (see ProfileForm): most sharks being edited are verified. A div
           // where the real one is a p, which can't hold the Skeleton's div.
-          <div aria-hidden className='border-foreground/10 flex items-start gap-2 rounded-lg border p-3 text-sm sm:hidden'>
+          <div
+            aria-hidden
+            className='flex items-start gap-2 rounded-lg border border-foreground/10 p-3 text-sm sm:hidden'
+          >
             <Skeleton className='mt-0.5 size-4 shrink-0 rounded-full' />
             {/* Wrapped as plainly as the real one, so onto as many lines */}
             <GhostText as='span' className='text-wrap'>
-              This profile is live in discovery. Saving changes takes it out until you send it for review again and it&apos;s verified.
+              This profile is live in discovery. Saving changes takes it out
+              until you send it for review again and it&apos;s verified.
             </GhostText>
           </div>
         )}
-        <SettingsSection still title='Name' description='What everyone sees first, and what they call it.'>
+        <SettingsSection
+          still
+          title='Name'
+          description='What everyone sees first, and what they call it.'
+        >
           <div className='grid gap-4 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]'>
             <FieldSkeleton />
             <FieldSkeleton />
           </div>
         </SettingsSection>
-        <SettingsSection still title='Pictures' description='A wide one across the top of its card, and a round one for its face, laid out as they show.'>
+        <SettingsSection
+          still
+          title='Pictures'
+          description='A wide one across the top of its card, and a round one for its face, laid out as they show.'
+        >
           <div className='@container'>
             {/* Side by side only when the card itself has room, whatever the screen */}
             <div className='grid items-start gap-5 @2xl:grid-cols-[minmax(0,1fr)_28rem]'>
               <div className='grid gap-3'>
                 <div className='grid gap-3 text-sm'>
                   {[
-                    ['Banner', `5:2, like 1200×480px, up to ${MAX_BANNER_SIZE_MB}MB.`],
-                    ['Avatar', `Square, like 512×512px, up to ${MAX_AVATAR_SIZE_MB}MB.`],
+                    [
+                      'Banner',
+                      `5:2, like 1200×480px, up to ${MAX_BANNER_SIZE_MB}MB.`,
+                    ],
+                    [
+                      'Avatar',
+                      `Square, like 512×512px, up to ${MAX_AVATAR_SIZE_MB}MB.`,
+                    ],
                   ].map(([name, hint]) => (
                     <div key={name}>
                       <GhostText className='font-medium'>{name}</GhostText>
@@ -47,18 +74,24 @@ export function ProfileFormSkeleton({ editing = false }: { editing?: boolean }) 
                     </div>
                   ))}
                 </div>
-                <GhostText className='text-xs'>Click either picture to upload a new one.</GhostText>
+                <GhostText className='text-xs'>
+                  Click either picture to upload a new one.
+                </GhostText>
               </div>
               <div className='relative w-full max-w-md pb-10'>
                 <Skeleton className='aspect-5/2 w-full rounded-md' />
-                <span className='bg-card ring-card absolute bottom-0 left-4 size-24 rounded-full shadow-md ring-4 sm:left-6'>
+                <span className='absolute bottom-0 left-4 size-24 rounded-full bg-card shadow-md ring-4 ring-card sm:left-6'>
                   <Skeleton className='size-full rounded-full' />
                 </span>
               </div>
             </div>
           </div>
         </SettingsSection>
-        <SettingsSection still title='About' description='In its own words, and the things it loves.'>
+        <SettingsSection
+          still
+          title='About'
+          description='In its own words, and the things it loves.'
+        >
           <div className='grid gap-4'>
             <div className='flex flex-col gap-2'>
               {/* As tall as the label row with its counter */}
@@ -84,7 +117,11 @@ export function ProfileFormSkeleton({ editing = false }: { editing?: boolean }) 
             </div>
           </div>
         </SettingsSection>
-        <SettingsSection still title='Details' description='All optional, to help the right sharks find it.'>
+        <SettingsSection
+          still
+          title='Details'
+          description='All optional, to help the right sharks find it.'
+        >
           <div className='grid gap-4 sm:grid-cols-2'>
             <FieldSkeleton />
             <FieldSkeleton />
@@ -94,7 +131,9 @@ export function ProfileFormSkeleton({ editing = false }: { editing?: boolean }) 
                 <Skeleton className='h-9 w-full rounded-md sm:max-w-40' />
                 <Skeleton className='h-9 w-24 shrink-0 rounded-md' />
               </div>
-              <GhostText className='text-xs'>IKEA BLÅHAJ come in two sizes: small, 55cm, and large, 100cm.</GhostText>
+              <GhostText className='text-xs'>
+                IKEA BLÅHAJ come in two sizes: small, 55cm, and large, 100cm.
+              </GhostText>
             </div>
           </div>
         </SettingsSection>
@@ -105,9 +144,11 @@ export function ProfileFormSkeleton({ editing = false }: { editing?: boolean }) 
       </div>
       {/* Floating along the bottom of the screen, as the real one does */}
       <div className='sticky bottom-4 z-30 px-2 lg:col-start-1'>
-        <div className='border-foreground/10 bg-background/85 xs:pl-5 flex w-full items-center gap-2 rounded-full border p-2 shadow-lg backdrop-blur-md'>
-          <GhostText className='xs:block hidden text-xs leading-tight sm:text-sm'>{editing ? 'No changes yet' : 'Give it a name to start'}</GhostText>
-          <div className='max-xs:w-full ml-auto flex shrink-0 gap-2'>
+        <div className='flex w-full items-center gap-2 rounded-full border border-foreground/10 bg-background/85 p-2 shadow-lg backdrop-blur-md xs:pl-5'>
+          <GhostText className='hidden text-xs leading-tight xs:block sm:text-sm'>
+            {editing ? 'No changes yet' : 'Give it a name to start'}
+          </GhostText>
+          <div className='ml-auto flex shrink-0 gap-2 max-xs:w-full'>
             <ButtonSkeleton icon={false} className='max-xs:flex-1'>
               Cancel
             </ButtonSkeleton>

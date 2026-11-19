@@ -10,6 +10,6 @@ export class Modal {
       /** How long, in milliseconds, before someone can submit it again. Defaults to 3 seconds. */
       cooldown?: number;
       execute: (interaction: ModalSubmitInteraction) => unknown;
-    },
+    }
   ) {}
 }

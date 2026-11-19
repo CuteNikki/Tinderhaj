@@ -18,19 +18,32 @@ type PageLoadingProps = {
  * A page while it loads: its header, as tall as the page's own, so the water
  * across it stays put (see PageWater), and placeholders shaped like the rest.
  */
-export function PageLoading({ eyebrow, title, description, placeholder, above, below, children }: PageLoadingProps) {
+export function PageLoading({
+  eyebrow,
+  title,
+  description,
+  placeholder,
+  above,
+  below,
+  children,
+}: PageLoadingProps) {
   return (
-    <div data-water='band' className='flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'>
+    <div
+      data-water='band'
+      className='flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'
+    >
       <div className='container mx-auto max-w-7xl'>
         {/* Shown only if the page takes a while, so it usually comes in once, with the page, rather than showing and coming in again */}
-        <div id='page-header' className='animate-late mb-24'>
+        <div id='page-header' className='mb-24 animate-late'>
           {above}
           <Eyebrow>{eyebrow}</Eyebrow>
           <PageTitle>{title}</PageTitle>
           {description && <PageNote>{description}</PageNote>}
           {placeholder && (
             <p aria-hidden className='mt-2 text-sm'>
-              <span className='bg-foreground/10 animate-breathe rounded-md text-transparent text-shadow-none'>{placeholder}</span>
+              <span className='animate-breathe rounded-md bg-foreground/10 text-transparent text-shadow-none'>
+                {placeholder}
+              </span>
             </p>
           )}
           {below}

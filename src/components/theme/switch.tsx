@@ -1,10 +1,16 @@
 'use client';
 
-import { MonitorIcon, Moon, MoonIcon, Sun, SunIcon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
+import { MonitorIcon, Moon, MoonIcon, Sun, SunIcon } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 const THEMES = [
   { value: 'light', label: 'Light', icon: SunIcon },
@@ -26,7 +32,10 @@ export function ThemeButton() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end'>
         {THEMES.map((theme) => (
-          <DropdownMenuItem key={theme.value} onClick={() => setTheme(theme.value)}>
+          <DropdownMenuItem
+            key={theme.value}
+            onClick={() => setTheme(theme.value)}
+          >
             {/* Blue, as the icons in the site's other menus */}
             <theme.icon className='text-primary' aria-hidden='true' />
             {theme.label}

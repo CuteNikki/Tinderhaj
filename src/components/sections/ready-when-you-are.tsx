@@ -32,10 +32,16 @@ export function ReadyWhenYouAre({ id }: { id?: string }) {
         </Button>
       }
     >
-      <Stagger className='text-muted-foreground flex flex-wrap gap-x-8 gap-y-4 text-sm' itemAs='span' variant='pop' gap={0.1} delay={0.2}>
+      <Stagger
+        className='flex flex-wrap gap-x-8 gap-y-4 text-sm text-muted-foreground'
+        itemAs='span'
+        variant='pop'
+        gap={0.1}
+        delay={0.2}
+      >
         {PROMISES.map(({ label, Icon }) => (
           <span key={label} className='flex items-center gap-2'>
-            <Icon className='text-primary h-4 w-4' aria-hidden='true' /> {label}
+            <Icon className='h-4 w-4 text-primary' aria-hidden='true' /> {label}
           </span>
         ))}
       </Stagger>

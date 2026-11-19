@@ -1,7 +1,5 @@
-import { Events } from 'discord.js';
-
 import { Event } from 'classes/base/event';
-
+import { Events } from 'discord.js';
 import { findByCustomId, run } from 'utility/interactions';
 
 export default new Event({
@@ -13,6 +11,12 @@ export default new Event({
     if (!selectMenu) return;
 
     // Prefixed, since select menus, buttons, modals and commands can share a name.
-    await run(client, interaction, `sel_${selectMenu.options.customId}`, selectMenu.options.cooldown, selectMenu.options.execute);
+    await run(
+      client,
+      interaction,
+      `sel_${selectMenu.options.customId}`,
+      selectMenu.options.cooldown,
+      selectMenu.options.execute
+    );
   },
 });

@@ -1,9 +1,13 @@
-import { AuditLogEvent, Events, PermissionsBitField, type GuildAuditLogsEntry, type User } from 'discord.js';
-
 import { Event } from 'classes/base/event';
-
-import { LOG_COLORS, log, quote, when, who } from 'moderation/log';
+import {
+  AuditLogEvent,
+  Events,
+  PermissionsBitField,
+  type GuildAuditLogsEntry,
+  type User,
+} from 'discord.js';
 import { CHANNELS_MOVED, rememberAuditEntry } from 'moderation/audit';
+import { log, LOG_COLORS, quote, when, who } from 'moderation/log';
 import { recordModeration } from 'moderation/moderation';
 import { KEYS } from 'utility/keys';
 import { logger } from 'utility/logger';
@@ -27,26 +31,47 @@ export default new Event({
 
     try {
       const executor = await client.users.fetch(entry.executorId);
-      const moderation = await asModeration(entry, client.users.fetch.bind(client.users));
+      const moderation = await asModeration(
+        entry,
+        client.users.fetch.bind(client.users)
+      );
       if (moderation) {
-        await recordModeration(guild, { ...moderation, moderator: executor, reason: entry.reason }, 'discord');
+        await recordModeration(
+          guild,
+          { ...moderation, moderator: executor, reason: entry.reason },
+          'discord'
+        );
         return;
       }
       const handled = FROM_EVENTS.get(entry.action);
       if (handled === 'all') return;
       // Something deleted lists every setting it had, which says nothing: its name is in What.
-      const changes = entry.actionType === 'Delete' ? [] : entry.changes.filter((change) => !handled?.has(change.key)).flatMap(describeChange);
+      const changes =
+        entry.actionType === 'Delete'
+          ? []
+          : entry.changes
+              .filter((change) => !handled?.has(change.key))
+              .flatMap(describeChange);
       // Everything in it was logged by an event already.
       if (handled && !changes.length) return;
 
       const target = describeTarget(entry);
       await log(guild, actionLabel(entry.action), LOG_COLORS.server, [
-        [`**By:** ${who(executor)}`, target && `**What:** ${target}`, ...describeExtra(entry.extra)].filter(Boolean).join('\n'),
+        [
+          `**By:** ${who(executor)}`,
+          target && `**What:** ${target}`,
+          ...describeExtra(entry.extra),
+        ]
+          .filter(Boolean)
+          .join('\n'),
         changes.join('\n'),
         entry.reason ? quote(entry.reason) : '',
       ]);
     } catch (err) {
-      logger.error({ err, action: entry.action }, 'Failed to log audit log entry');
+      logger.error(
+        { err, action: entry.action },
+        'Failed to log audit log entry'
+      );
     }
   },
 });
@@ -100,10 +125,25 @@ const FROM_EVENTS = new Map<AuditLogEvent, 'all' | Set<string>>([
   [AuditLogEvent.ChannelOverwriteDelete, 'all'],
   [CHANNELS_MOVED, 'all'],
   // Timeouts are kept as cases above; mutes and deafens aren't in member-update.ts, so they're logged from here.
-  [AuditLogEvent.MemberUpdate, new Set(['nick', 'communication_disabled_until'])],
+  [
+    AuditLogEvent.MemberUpdate,
+    new Set(['nick', 'communication_disabled_until']),
+  ],
   [AuditLogEvent.MemberRoleUpdate, 'all'],
   [AuditLogEvent.RoleCreate, 'all'],
-  [AuditLogEvent.RoleUpdate, new Set(['name', 'color', 'colors', 'hoist', 'mentionable', 'icon_hash', 'unicode_emoji', 'permissions'])],
+  [
+    AuditLogEvent.RoleUpdate,
+    new Set([
+      'name',
+      'color',
+      'colors',
+      'hoist',
+      'mentionable',
+      'icon_hash',
+      'unicode_emoji',
+      'permissions',
+    ]),
+  ],
   [AuditLogEvent.RoleDelete, 'all'],
   [AuditLogEvent.InviteCreate, 'all'],
   [AuditLogEvent.InviteUpdate, 'all'],
@@ -115,17 +155,43 @@ const FROM_EVENTS = new Map<AuditLogEvent, 'all' | Set<string>>([
   [AuditLogEvent.StickerUpdate, new Set(['name', 'description', 'tags'])],
   [AuditLogEvent.StickerDelete, 'all'],
   [AuditLogEvent.ThreadCreate, 'all'],
-  [AuditLogEvent.ThreadUpdate, new Set(['name', 'archived', 'locked', 'rate_limit_per_user', 'applied_tags'])],
+  [
+    AuditLogEvent.ThreadUpdate,
+    new Set([
+      'name',
+      'archived',
+      'locked',
+      'rate_limit_per_user',
+      'applied_tags',
+    ]),
+  ],
   [AuditLogEvent.ThreadDelete, 'all'],
   [AuditLogEvent.GuildScheduledEventCreate, 'all'],
-  [AuditLogEvent.GuildScheduledEventUpdate, new Set(['name', 'description', 'scheduled_start_time', 'channel_id', 'status'])],
+  [
+    AuditLogEvent.GuildScheduledEventUpdate,
+    new Set([
+      'name',
+      'description',
+      'scheduled_start_time',
+      'channel_id',
+      'status',
+    ]),
+  ],
   [AuditLogEvent.GuildScheduledEventDelete, 'all'],
 ]);
 
 /** A ban, unban, kick, or timeout given or taken away, as a moderation. */
-async function asModeration(entry: GuildAuditLogsEntry, fetchUser: (id: string) => Promise<User>) {
+async function asModeration(
+  entry: GuildAuditLogsEntry,
+  fetchUser: (id: string) => Promise<User>
+) {
   if (!entry.targetId) return null;
-  const timeout = entry.action === AuditLogEvent.MemberUpdate ? entry.changes.find((change) => change.key === 'communication_disabled_until') : undefined;
+  const timeout =
+    entry.action === AuditLogEvent.MemberUpdate
+      ? entry.changes.find(
+          (change) => change.key === 'communication_disabled_until'
+        )
+      : undefined;
   const action =
     entry.action === AuditLogEvent.MemberBanAdd
       ? 'BAN'
@@ -139,7 +205,11 @@ async function asModeration(entry: GuildAuditLogsEntry, fetchUser: (id: string) 
               : 'UNTIMEOUT'
             : null;
   if (!action) return null;
-  return { action, user: await fetchUser(entry.targetId), until: typeof timeout?.new === 'string' ? new Date(timeout.new) : null } as const;
+  return {
+    action,
+    user: await fetchUser(entry.targetId),
+    until: typeof timeout?.new === 'string' ? new Date(timeout.new) : null,
+  } as const;
 }
 
 /** "ChannelOverwriteUpdate" as "Channel overwrite updated". */
@@ -174,8 +244,10 @@ export function describeTarget(entry: GuildAuditLogsEntry) {
   const id = entry.targetId;
   const nameChange = entry.changes.find((change) => change.key === 'name');
   const target = entry.target as { code?: string; name?: string } | null;
-  const name = (nameChange?.new ?? target?.name ?? nameChange?.old) as string | undefined;
-  const withDetails = (mention: string) => (name ? `${mention}\n-# ${code(name)} · ${id}` : `${mention}\n-# ${id}`);
+  const name = (nameChange?.new ?? target?.name ?? nameChange?.old) as
+    string | undefined;
+  const withDetails = (mention: string) =>
+    name ? `${mention}\n-# ${code(name)} · ${id}` : `${mention}\n-# ${id}`;
 
   switch (entry.targetType) {
     case 'Guild':
@@ -200,13 +272,20 @@ export function describeTarget(entry: GuildAuditLogsEntry) {
 /** What else an entry says, e.g. which channel a message was deleted in, or which AutoMod rule acted. */
 function describeExtra(extra: unknown) {
   if (!extra || typeof extra !== 'object') return [];
-  const fields = extra as { channel?: { id: string }; count?: number; removed?: number; days?: number; autoModerationRuleName?: string };
+  const fields = extra as {
+    channel?: { id: string };
+    count?: number;
+    removed?: number;
+    days?: number;
+    autoModerationRuleName?: string;
+  };
   return [
     fields.channel?.id && `**Channel:** <#${fields.channel.id}>`,
     fields.count != null && `**How many:** ${fields.count}`,
     fields.removed != null && `**Removed:** ${fields.removed}`,
     fields.days != null && `**Inactive for:** ${fields.days} days`,
-    fields.autoModerationRuleName && `**Rule:** ${escapeMarkdown(fields.autoModerationRuleName)}`,
+    fields.autoModerationRuleName &&
+      `**Rule:** ${escapeMarkdown(fields.autoModerationRuleName)}`,
   ];
 }
 
@@ -234,32 +313,55 @@ function keyLabel(key: string) {
 /** Permission names, "BanMembers" as "Ban Members". */
 function permissionNames(bits: bigint) {
   // As Discord's settings call them, where that differs from the API's name.
-  const SHOWN_AS: Record<string, string> = { ModerateMembers: 'Timeout Members', ManageGuild: 'Manage Server' };
-  return new PermissionsBitField(bits).toArray().map((name) => SHOWN_AS[name] ?? name.split(/(?=[A-Z])/).join(' '));
+  const SHOWN_AS: Record<string, string> = {
+    ModerateMembers: 'Timeout Members',
+    ManageGuild: 'Manage Server',
+  };
+  return new PermissionsBitField(bits)
+    .toArray()
+    .map((name) => SHOWN_AS[name] ?? name.split(/(?=[A-Z])/).join(' '));
 }
 
 /** A value from a change, as it reads best. */
 function describeValue(key: string, value: unknown): string {
   if (value === undefined || value === null || value === '') return '*none*';
   if (typeof value === 'boolean') return value ? 'yes' : 'no';
-  if (key === 'communication_disabled_until' && typeof value === 'string') return when(new Date(value), 'f');
-  if (key === 'color' && typeof value === 'number') return `#${value.toString(16).padStart(6, '0')}`;
-  if (key.endsWith('channel_id') && typeof value === 'string') return `<#${value}>`;
+  if (key === 'communication_disabled_until' && typeof value === 'string')
+    return when(new Date(value), 'f');
+  if (key === 'color' && typeof value === 'number')
+    return `#${value.toString(16).padStart(6, '0')}`;
+  if (key.endsWith('channel_id') && typeof value === 'string')
+    return `<#${value}>`;
   // Names in inline code; other text, like a topic, as plain text, which reads better when it's long.
-  if (typeof value === 'string' && (key === 'name' || key === 'nick')) return code(value);
-  if (typeof value === 'string') return escapeMarkdown(value.length > 200 ? `${value.slice(0, 199)}…` : value);
-  if (typeof value === 'number' || typeof value === 'bigint') return String(value);
+  if (typeof value === 'string' && (key === 'name' || key === 'nick'))
+    return code(value);
+  if (typeof value === 'string')
+    return escapeMarkdown(
+      value.length > 200 ? `${value.slice(0, 199)}…` : value
+    );
+  if (typeof value === 'number' || typeof value === 'bigint')
+    return String(value);
   const json = JSON.stringify(value);
   return `\`${json.length > 150 ? `${json.slice(0, 149)}…` : json}\``;
 }
 
 /** One change from an entry, as lines like "**Name:** old → new". */
-export function describeChange(change: { key: string; old?: unknown; new?: unknown }): string[] {
+export function describeChange(change: {
+  key: string;
+  old?: unknown;
+  new?: unknown;
+}): string[] {
   const { key } = change;
   // Roles given or taken, as lists of roles.
   if (key === '$add' || key === '$remove') {
-    const roles = ((change.new ?? []) as { id: string }[]).map((role) => `<@&${role.id}>`);
-    return roles.length ? [`**${key === '$add' ? 'Roles given' : 'Roles taken'}:** ${listOf(roles)}`] : [];
+    const roles = ((change.new ?? []) as { id: string }[]).map(
+      (role) => `<@&${role.id}>`
+    );
+    return roles.length
+      ? [
+          `**${key === '$add' ? 'Roles given' : 'Roles taken'}:** ${listOf(roles)}`,
+        ]
+      : [];
   }
   // Permissions, as which were allowed or taken away.
   if (key === 'permissions' || key === 'allow' || key === 'deny') {
@@ -268,13 +370,26 @@ export function describeChange(change: { key: string; old?: unknown; new?: unkno
     const added = permissionNames(after & ~before);
     const removed = permissionNames(before & ~after);
     const label = key === 'deny' ? 'Denied' : 'Allowed';
-    return [added.length && `**${label}:** ${added.join(', ')}`, removed.length && `**No longer ${label.toLowerCase()}:** ${removed.join(', ')}`].filter(
-      (line): line is string => !!line,
-    );
+    return [
+      added.length && `**${label}:** ${added.join(', ')}`,
+      removed.length &&
+        `**No longer ${label.toLowerCase()}:** ${removed.join(', ')}`,
+    ].filter((line): line is string => !!line);
   }
-  if (key === 'id' || key === 'type' || key.endsWith('_hash') || key === 'avatar' || key === 'icon') return [];
-  if (!('old' in change)) return [`**${keyLabel(key)}:** ${describeValue(key, change.new)}`];
-  if (!('new' in change)) return [`**${keyLabel(key)}:** ~~${describeValue(key, change.old)}~~`];
+  if (
+    key === 'id' ||
+    key === 'type' ||
+    key.endsWith('_hash') ||
+    key === 'avatar' ||
+    key === 'icon'
+  )
+    return [];
+  if (!('old' in change))
+    return [`**${keyLabel(key)}:** ${describeValue(key, change.new)}`];
+  if (!('new' in change))
+    return [`**${keyLabel(key)}:** ~~${describeValue(key, change.old)}~~`];
   // Each on a line of its own, which reads more easily than both on one.
-  return [`**Old ${keyLabel(key)}:** ${describeValue(key, change.old)}\n**New ${keyLabel(key)}:** ${describeValue(key, change.new)}`];
+  return [
+    `**Old ${keyLabel(key)}:** ${describeValue(key, change.old)}\n**New ${keyLabel(key)}:** ${describeValue(key, change.new)}`,
+  ];
 }

@@ -1,5 +1,6 @@
 'use client';
 
+import { MAX_EMAIL_LENGTH, MAX_PASSWORD_LENGTH } from '@/constants/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -8,7 +9,8 @@ import { useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-import { MAX_EMAIL_LENGTH, MAX_PASSWORD_LENGTH } from '@/constants/auth';
+import { ArrowRightIcon, FingerprintIcon, Loader2Icon } from 'lucide-react';
+
 import { authClient } from '@/lib/auth-client';
 import type { SocialProviderId } from '@/lib/providers';
 import { signInSchema } from '@/lib/schemas';
@@ -20,10 +22,15 @@ import { SEND_CODE_KEY } from '@/components/auth/two-factor-form';
 import { Enter } from '@/components/common/enter';
 import { Button } from '@/components/ui/button';
 import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form';
-import { ArrowRightIcon, FingerprintIcon, Loader2Icon } from 'lucide-react';
 
 /** `error` says why signing in with a provider just failed. */
-export function SignInForm({ providers, error }: { providers: SocialProviderId[]; error?: string }) {
+export function SignInForm({
+  providers,
+  error,
+}: {
+  providers: SocialProviderId[];
+  error?: string;
+}) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -31,7 +38,10 @@ export function SignInForm({ providers, error }: { providers: SocialProviderId[]
     resolver: zodResolver(signInSchema),
     defaultValues: { email: '', password: '' },
   });
-  const filled = useWatch({ control: form.control, name: ['email', 'password'] }).every((value) => value.trim());
+  const filled = useWatch({
+    control: form.control,
+    name: ['email', 'password'],
+  }).every((value) => value.trim());
   const formRef = useRef<HTMLFormElement>(null);
   const autofilled = useAutofilled(formRef);
 
@@ -51,17 +61,23 @@ export function SignInForm({ providers, error }: { providers: SocialProviderId[]
     const code = 'code' in error ? error.code : undefined;
     if (code === 'BANNED_USER') return router.push('/banned');
     // Closing the browser's prompt, or ignoring the suggestions, is fine.
-    if (autoFill || code === 'AUTH_CANCELLED' || code?.startsWith('ERROR_')) return;
+    if (autoFill || code === 'AUTH_CANCELLED' || code?.startsWith('ERROR_'))
+      return;
 
-    toast.error(error.message ?? 'That passkey didn\u2019t work.', { duration: 5000, position: 'top-center' });
+    toast.error(error.message ?? 'That passkey didn\u2019t work.', {
+      duration: 5000,
+      position: 'top-center',
+    });
   }
 
   useEffect(() => {
     // Only where the browser can offer passkeys among the autofill
     // suggestions; elsewhere the button below opens its prompt.
-    void window.PublicKeyCredential?.isConditionalMediationAvailable?.().then((available) => {
-      if (available) void signInWithPasskey(true);
-    });
+    void window.PublicKeyCredential?.isConditionalMediationAvailable?.().then(
+      (available) => {
+        if (available) void signInWithPasskey(true);
+      }
+    );
     // Once, when the form shows.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -76,19 +92,29 @@ export function SignInForm({ providers, error }: { providers: SocialProviderId[]
 
     if (error) {
       setIsSubmitting(false);
-      toast.error(error.status === 401 ? 'Unable to sign in!' : (error.message ?? 'Unable to sign in!'), { duration: 5000, position: 'top-center' });
+      toast.error(
+        error.status === 401
+          ? 'Unable to sign in!'
+          : (error.message ?? 'Unable to sign in!'),
+        { duration: 5000, position: 'top-center' }
+      );
       return;
     }
 
     // Two-step sign-in is on: the code comes next, on its own page.
     if (result && 'twoFactorRedirect' in result && result.twoFactorRedirect) {
-      const methods = 'twoFactorMethods' in result && Array.isArray(result.twoFactorMethods) ? (result.twoFactorMethods as string[]) : [];
+      const methods =
+        'twoFactorMethods' in result && Array.isArray(result.twoFactorMethods)
+          ? (result.twoFactorMethods as string[])
+          : [];
       try {
         sessionStorage.setItem(SEND_CODE_KEY, '1');
       } catch {
         // Without storage, the next page offers a button to send the code.
       }
-      return router.push(`/two-factor?${new URLSearchParams({ methods: methods.join(',') })}`);
+      return router.push(
+        `/two-factor?${new URLSearchParams({ methods: methods.join(',') })}`
+      );
     }
 
     router.push('/dashboard/profiles');
@@ -97,9 +123,19 @@ export function SignInForm({ providers, error }: { providers: SocialProviderId[]
 
   return (
     <Form {...form}>
-      <form ref={formRef} onSubmit={form.handleSubmit(onSubmit)} className='space-y-2'>
+      <form
+        ref={formRef}
+        onSubmit={form.handleSubmit(onSubmit)}
+        className='space-y-2'
+      >
         {error && (
-          <Enter as='p' variant='reveal' spring='pop' role='alert' className='bg-destructive/10 text-destructive rounded-lg px-3 py-2 text-sm text-pretty'>
+          <Enter
+            as='p'
+            variant='reveal'
+            spring='pop'
+            role='alert'
+            className='rounded-lg bg-destructive/10 px-3 py-2 text-sm text-pretty text-destructive'
+          >
             {error}
           </Enter>
         )}
@@ -109,7 +145,14 @@ export function SignInForm({ providers, error }: { providers: SocialProviderId[]
             name='email'
             render={({ field }) => (
               <FormItem className='gap-1.5'>
-                <AuthInput label='Email' type='email' autoComplete='email webauthn' maxLength={MAX_EMAIL_LENGTH} {...field} required />
+                <AuthInput
+                  label='Email'
+                  type='email'
+                  autoComplete='email webauthn'
+                  maxLength={MAX_EMAIL_LENGTH}
+                  {...field}
+                  required
+                />
                 <FormMessage />
               </FormItem>
             )}
@@ -121,9 +164,19 @@ export function SignInForm({ providers, error }: { providers: SocialProviderId[]
             name='password'
             render={({ field }) => (
               <FormItem className='gap-1.5'>
-                <AuthInput label='Password' type='password' autoComplete='current-password' maxLength={MAX_PASSWORD_LENGTH} {...field} required />
+                <AuthInput
+                  label='Password'
+                  type='password'
+                  autoComplete='current-password'
+                  maxLength={MAX_PASSWORD_LENGTH}
+                  {...field}
+                  required
+                />
                 <FormMessage />
-                <Link href='/forgot-password' className='text-muted-foreground hover:text-foreground justify-self-end text-xs transition-colors duration-150'>
+                <Link
+                  href='/forgot-password'
+                  className='justify-self-end text-xs text-muted-foreground transition-colors duration-150 hover:text-foreground'
+                >
                   Forgot password?
                 </Link>
               </FormItem>
@@ -131,10 +184,17 @@ export function SignInForm({ providers, error }: { providers: SocialProviderId[]
           />
         </Enter>
         <Enter variant='reveal' spring='pop' delay={fieldDelay(2)}>
-          <Button type='submit' className='w-full' disabled={isSubmitting || (!filled && !autofilled)}>
+          <Button
+            type='submit'
+            className='w-full'
+            disabled={isSubmitting || (!filled && !autofilled)}
+          >
             {isSubmitting ? (
               <>
-                <Loader2Icon className='shrink-0 animate-spin' aria-hidden='true' />
+                <Loader2Icon
+                  className='shrink-0 animate-spin'
+                  aria-hidden='true'
+                />
                 Signing in...
               </>
             ) : (
@@ -145,13 +205,28 @@ export function SignInForm({ providers, error }: { providers: SocialProviderId[]
             )}
           </Button>
         </Enter>
-        <Enter variant='reveal' spring='pop' delay={fieldDelay(3)} className='text-muted-foreground flex items-center gap-3 text-xs'>
-          <span className='bg-border h-px flex-1' />
+        <Enter
+          variant='reveal'
+          spring='pop'
+          delay={fieldDelay(3)}
+          className='flex items-center gap-3 text-xs text-muted-foreground'
+        >
+          <span className='h-px flex-1 bg-border' />
           or
-          <span className='bg-border h-px flex-1' />
+          <span className='h-px flex-1 bg-border' />
         </Enter>
-        <Enter variant='reveal' spring='pop' delay={fieldDelay(4)} className='space-y-2'>
-          <Button type='button' variant='outline' className='w-full' onClick={() => signInWithPasskey()}>
+        <Enter
+          variant='reveal'
+          spring='pop'
+          delay={fieldDelay(4)}
+          className='space-y-2'
+        >
+          <Button
+            type='button'
+            variant='outline'
+            className='w-full'
+            onClick={() => signInWithPasskey()}
+          >
             <FingerprintIcon className='shrink-0' aria-hidden='true' />
             Sign in with a passkey
           </Button>
@@ -182,7 +257,9 @@ function useAutofilled(formRef: React.RefObject<HTMLFormElement | null>) {
       }
     };
     // Browsers fill in soon after the page appears, not at a set moment.
-    const timers = [100, 500, 1000, 2000].map((delay) => setTimeout(check, delay));
+    const timers = [100, 500, 1000, 2000].map((delay) =>
+      setTimeout(check, delay)
+    );
     return () => timers.forEach(clearTimeout);
   }, [formRef]);
 

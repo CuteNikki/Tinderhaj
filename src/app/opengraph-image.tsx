@@ -1,14 +1,25 @@
+import { SITE_NAME, SITE_TAGLINE } from '@/constants/metadata';
 import { ImageResponse } from 'next/og';
 
-import { SITE_NAME, SITE_TAGLINE } from '@/constants/metadata';
-import { OG_FONTS, OG_SIZE, Ocean, OgPill, OgText, publicImage } from '@/lib/og';
+import {
+  Ocean,
+  OG_FONTS,
+  OG_SIZE,
+  OgPill,
+  OgText,
+  publicImage,
+} from '@/lib/og';
 
 export const alt = `${SITE_NAME}: ${SITE_TAGLINE}. A Blåhaj plush shark next to the words “Meet sharks”.`;
 export const size = OG_SIZE;
 export const contentType = 'image/png';
 
 // The hero's little extras on the home page, around our own Blåhaj.
-const [shark, hug, heart] = await Promise.all([publicImage('blahajSmall.png'), publicImage('blahajHug.webp'), publicImage('blahajHeart.webp')]);
+const [shark, hug, heart] = await Promise.all([
+  publicImage('blahajSmall.png'),
+  publicImage('blahajHug.webp'),
+  publicImage('blahajHeart.webp'),
+]);
 
 /** What a link to Tinderhaj looks like when it's shared: the home page's hero, in brief. */
 export default function Image() {
@@ -16,9 +27,40 @@ export default function Image() {
     <Ocean footer='tinderhaj.com'>
       <OgText>
         <OgPill>{SITE_TAGLINE}</OgPill>
-        <div style={{ display: 'flex', marginTop: 28, fontSize: 120, fontWeight: 900, letterSpacing: -4.5, lineHeight: 1 }}>{SITE_NAME}</div>
-        <div style={{ display: 'flex', marginTop: 8, fontSize: 64, fontWeight: 900, letterSpacing: -2, color: '#8cc8ff' }}>Meet sharks.</div>
-        <div style={{ display: 'flex', marginTop: 14, fontSize: 30, fontWeight: 600, lineHeight: 1.35, color: 'rgba(244, 249, 255, 0.78)' }}>
+        <div
+          style={{
+            display: 'flex',
+            marginTop: 28,
+            fontSize: 120,
+            fontWeight: 900,
+            letterSpacing: -4.5,
+            lineHeight: 1,
+          }}
+        >
+          {SITE_NAME}
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            marginTop: 8,
+            fontSize: 64,
+            fontWeight: 900,
+            letterSpacing: -2,
+            color: '#8cc8ff',
+          }}
+        >
+          Meet sharks.
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            marginTop: 14,
+            fontSize: 30,
+            fontWeight: 600,
+            lineHeight: 1.35,
+            color: 'rgba(244, 249, 255, 0.78)',
+          }}
+        >
           Find your perfect match by color, size, and squishiness.
         </div>
       </OgText>
@@ -32,10 +74,21 @@ export default function Image() {
           width: 410,
           height: 410,
           borderRadius: 9999,
-          background: 'radial-gradient(circle closest-side, rgba(140, 200, 255, 0.3) 0%, rgba(140, 200, 255, 0.08) 100%)',
+          background:
+            'radial-gradient(circle closest-side, rgba(140, 200, 255, 0.3) 0%, rgba(140, 200, 255, 0.08) 100%)',
         }}
       />
-      <div style={{ position: 'absolute', left: 697, top: 62, width: 456, height: 456, borderRadius: 9999, border: '2px dashed rgba(220, 238, 255, 0.3)' }} />
+      <div
+        style={{
+          position: 'absolute',
+          left: 697,
+          top: 62,
+          width: 456,
+          height: 456,
+          borderRadius: 9999,
+          border: '2px dashed rgba(220, 238, 255, 0.3)',
+        }}
+      />
 
       <div
         style={{
@@ -61,7 +114,18 @@ export default function Image() {
         A match worth meeting
       </div>
       {/* Above the pill, peeking over it, but below the card */}
-      <img src={shark} width={430} height={430} alt='' style={{ position: 'absolute', left: 706, top: 84, transform: 'rotate(6deg)' }} />
+      <img
+        src={shark}
+        width={430}
+        height={430}
+        alt=''
+        style={{
+          position: 'absolute',
+          left: 706,
+          top: 84,
+          transform: 'rotate(6deg)',
+        }}
+      />
 
       <div
         style={{
@@ -112,9 +176,18 @@ export default function Image() {
         >
           <img src={hug} width={62} height={62} alt='' />
         </div>
-        <div style={{ display: 'flex', fontSize: 30, fontWeight: 900, letterSpacing: -0.5 }}>It&apos;s a match!</div>
+        <div
+          style={{
+            display: 'flex',
+            fontSize: 30,
+            fontWeight: 900,
+            letterSpacing: -0.5,
+          }}
+        >
+          It&apos;s a match!
+        </div>
       </div>
     </Ocean>,
-    { ...OG_SIZE, fonts: OG_FONTS },
+    { ...OG_SIZE, fonts: OG_FONTS }
   );
 }

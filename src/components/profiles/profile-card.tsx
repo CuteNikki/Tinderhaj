@@ -1,20 +1,33 @@
 'use client';
 
-import { useState, useTransition } from 'react';
-
-import { ArrowRightIcon, CakeIcon, CheckIcon, Link2Icon, MapPinIcon, PencilIcon, RulerIcon, SendIcon, Trash2Icon } from 'lucide-react';
 import Link from 'next/link';
+import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
-import type { ProfileWithOwner } from '@/lib/queries';
+import {
+  ArrowRightIcon,
+  CakeIcon,
+  CheckIcon,
+  Link2Icon,
+  MapPinIcon,
+  PencilIcon,
+  RulerIcon,
+  SendIcon,
+  Trash2Icon,
+} from 'lucide-react';
+
 import { deleteProfile, submitProfileForReview } from '@/lib/actions';
+import { LIFT } from '@/lib/motion';
 import { profileFieldLabel } from '@/lib/profile-fields';
 import { PROFILE_STATUS_META } from '@/lib/profile-status';
-import { LIFT } from '@/lib/motion';
+import type { ProfileWithOwner } from '@/lib/queries';
 import { calculateAge, cn } from '@/lib/utils';
 
 import { useCopySharkLink } from '@/components/discovery/share-button';
-import { ProfileAvatar, ProfileBanner } from '@/components/profiles/profile-image';
+import {
+  ProfileAvatar,
+  ProfileBanner,
+} from '@/components/profiles/profile-image';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,10 +42,20 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 /** One of your sharks, to edit, send for review or delete. `eager` for one in view as the page opens (see ProfileBanner). */
-export function ProfileCard({ profile, eager = false }: { profile: ProfileWithOwner; eager?: boolean }) {
+export function ProfileCard({
+  profile,
+  eager = false,
+}: {
+  profile: ProfileWithOwner;
+  eager?: boolean;
+}) {
   const [isDeleting, startDeleteTransition] = useTransition();
   const [isSubmitting, startSubmitTransition] = useTransition();
   const [isDeleted, setIsDeleted] = useState(false);
@@ -48,7 +71,10 @@ export function ProfileCard({ profile, eager = false }: { profile: ProfileWithOw
         toast.error(error.message, { duration: 5000, position: 'top-center' });
       } else {
         setIsDeleted(true);
-        toast.success('Profile deleted.', { duration: 4000, position: 'top-center' });
+        toast.success('Profile deleted.', {
+          duration: 4000,
+          position: 'top-center',
+        });
       }
     });
   }
@@ -60,7 +86,10 @@ export function ProfileCard({ profile, eager = false }: { profile: ProfileWithOw
       if (error) {
         toast.error(error.message, { duration: 5000, position: 'top-center' });
       } else {
-        toast.success('Submitted for review!', { duration: 4000, position: 'top-center' });
+        toast.success('Submitted for review!', {
+          duration: 4000,
+          position: 'top-center',
+        });
       }
     });
   }
@@ -68,88 +97,137 @@ export function ProfileCard({ profile, eager = false }: { profile: ProfileWithOw
   if (isDeleted) return null;
 
   return (
-    <Card className={cn('group bg-background h-full w-full overflow-hidden pt-0 shadow-sm', LIFT)}>
+    <Card
+      className={cn(
+        'group h-full w-full overflow-hidden bg-background pt-0 shadow-sm',
+        LIFT
+      )}
+    >
       <div className='relative aspect-5/2 overflow-hidden'>
-        <ProfileBanner src={profile.bannerUrl} alt={`${profile.displayName}'s banner`} eager={eager} />
+        <ProfileBanner
+          src={profile.bannerUrl}
+          alt={`${profile.displayName}'s banner`}
+          eager={eager}
+        />
         <Tooltip>
           <TooltipTrigger asChild>
-            <Badge className={cn('absolute top-3 right-3 gap-1 rounded-full font-semibold shadow-sm', PROFILE_STATUS_META[profile.status].badgeClassName)}>
+            <Badge
+              className={cn(
+                'absolute top-3 right-3 gap-1 rounded-full font-semibold shadow-sm',
+                PROFILE_STATUS_META[profile.status].badgeClassName
+              )}
+            >
               <StatusIcon className='h-3 w-3' />
               {PROFILE_STATUS_META[profile.status].label}
             </Badge>
           </TooltipTrigger>
-          <TooltipContent>{PROFILE_STATUS_META[profile.status].description}</TooltipContent>
+          <TooltipContent>
+            {PROFILE_STATUS_META[profile.status].description}
+          </TooltipContent>
         </Tooltip>
       </div>
 
       <CardContent className='-mt-8 px-4 pb-5 sm:px-6'>
         <div className='relative flex items-start gap-4'>
-          <div className='border-background bg-muted h-18 w-18 shrink-0 overflow-hidden rounded-full border-4 shadow-md'>
-            <ProfileAvatar src={profile.avatarUrl} alt={`${profile.displayName}'s avatar`} eager={eager} />
+          <div className='h-18 w-18 shrink-0 overflow-hidden rounded-full border-4 border-background bg-muted shadow-md'>
+            <ProfileAvatar
+              src={profile.avatarUrl}
+              alt={`${profile.displayName}'s avatar`}
+              eager={eager}
+            />
           </div>
           <div className='min-w-0 flex-1 pt-4'>
             <div className='flex flex-wrap items-center gap-x-2'>
-              <h2 className='text-foreground max-w-full truncate text-xl font-black tracking-tight'>{profile.displayName}</h2>
-              {profile.pronouns && <span className='text-muted-foreground text-sm'>({profile.pronouns})</span>}
+              <h2 className='max-w-full truncate text-xl font-black tracking-tight text-foreground'>
+                {profile.displayName}
+              </h2>
+              {profile.pronouns && (
+                <span className='text-sm text-muted-foreground'>
+                  ({profile.pronouns})
+                </span>
+              )}
             </div>
-            <p className='text-muted-foreground truncate text-sm'>@{profile.user.username}</p>
+            <p className='truncate text-sm text-muted-foreground'>
+              @{profile.user.username}
+            </p>
           </div>
         </div>
 
-        <div className='text-muted-foreground mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm'>
+        <div className='mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground'>
           {profile.birthday && (
             <span className='flex items-center gap-1.5'>
-              <CakeIcon className='text-primary h-3.5 w-3.5' />
+              <CakeIcon className='h-3.5 w-3.5 text-primary' />
               {calculateAge(profile.birthday)} years old
             </span>
           )}
           {profile.location && (
             <span className='flex items-center gap-1.5'>
-              <MapPinIcon className='text-primary h-3.5 w-3.5' />
+              <MapPinIcon className='h-3.5 w-3.5 text-primary' />
               {profile.location}
             </span>
           )}
           {profile.size != null && (
             <span className='flex items-center gap-1.5'>
-              <RulerIcon className='text-primary h-3.5 w-3.5' />
+              <RulerIcon className='h-3.5 w-3.5 text-primary' />
               {profile.size}
               {profile.unit.toLowerCase()}
             </span>
           )}
         </div>
 
-        {profile.status === 'REJECTED' && (profile.rejectedFields.length > 0 || profile.rejectionNote) && (
-          <div className='border-destructive/30 bg-destructive/10 text-destructive mt-4 rounded-lg border p-3 text-sm'>
-            {profile.rejectedFields.length > 0 && (
-              <div className='flex flex-wrap items-center gap-1.5'>
-                <span className='font-semibold'>Needs fixing:</span>
-                {/* Solid, as a tinted one on the box's own tint is too faint to read */}
-                {profile.rejectedFields.map((field) => (
-                  <Badge key={field} className='bg-destructive dark:bg-destructive rounded-full text-xs font-semibold text-white'>
-                    {profileFieldLabel(field)}
-                  </Badge>
-                ))}
-              </div>
-            )}
-            {profile.rejectionNote && (
-              <p className={cn('leading-relaxed', profile.rejectedFields.length > 0 && 'mt-2')}>
-                <span className='font-semibold'>Note:</span> {profile.rejectionNote}
-              </p>
-            )}
-            {/* Underlined throughout, since in the box's red it doesn't stand out as a link otherwise */}
-            <Link href='/guidelines' className='mt-2 inline-flex items-center gap-1 font-semibold underline underline-offset-4'>
-              View Guidelines
-              <ArrowRightIcon className='size-3.5' aria-hidden='true' />
-            </Link>
-          </div>
-        )}
+        {profile.status === 'REJECTED' &&
+          (profile.rejectedFields.length > 0 || profile.rejectionNote) && (
+            <div className='mt-4 rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive'>
+              {profile.rejectedFields.length > 0 && (
+                <div className='flex flex-wrap items-center gap-1.5'>
+                  <span className='font-semibold'>Needs fixing:</span>
+                  {/* Solid, as a tinted one on the box's own tint is too faint to read */}
+                  {profile.rejectedFields.map((field) => (
+                    <Badge
+                      key={field}
+                      className='rounded-full bg-destructive text-xs font-semibold text-white dark:bg-destructive'
+                    >
+                      {profileFieldLabel(field)}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+              {profile.rejectionNote && (
+                <p
+                  className={cn(
+                    'leading-relaxed',
+                    profile.rejectedFields.length > 0 && 'mt-2'
+                  )}
+                >
+                  <span className='font-semibold'>Note:</span>{' '}
+                  {profile.rejectionNote}
+                </p>
+              )}
+              {/* Underlined throughout, since in the box's red it doesn't stand out as a link otherwise */}
+              <Link
+                href='/guidelines'
+                className='mt-2 inline-flex items-center gap-1 font-semibold underline underline-offset-4'
+              >
+                View Guidelines
+                <ArrowRightIcon className='size-3.5' aria-hidden='true' />
+              </Link>
+            </div>
+          )}
 
-        {profile.bio && <p className='text-foreground/80 mt-4 line-clamp-3 text-sm leading-relaxed'>{profile.bio}</p>}
+        {profile.bio && (
+          <p className='mt-4 line-clamp-3 text-sm leading-relaxed text-foreground/80'>
+            {profile.bio}
+          </p>
+        )}
 
         {profile.interests.length > 0 && (
           <div className='mt-4 flex flex-wrap gap-1.5'>
             {profile.interests.map((interest) => (
-              <Badge key={interest} variant='secondary' className='rounded-full text-xs font-semibold'>
+              <Badge
+                key={interest}
+                variant='secondary'
+                className='rounded-full text-xs font-semibold'
+              >
                 {interest}
               </Badge>
             ))}
@@ -165,32 +243,56 @@ export function ProfileCard({ profile, eager = false }: { profile: ProfileWithOw
           </Button>
           {/* Only a verified shark has a page of its own to share */}
           {profile.status === 'VERIFIED' && (
-            <Button variant='outline' size='sm' className='flex-1' onClick={copyLink}>
+            <Button
+              variant='outline'
+              size='sm'
+              className='flex-1'
+              onClick={copyLink}
+            >
               {copied ? <CheckIcon /> : <Link2Icon />}
               {copied ? 'Copied' : 'Share'}
             </Button>
           )}
           {profile.status === 'CREATED' && (
-            <Button variant='outline' size='sm' className='flex-1' onClick={handleSubmitForReview} disabled={isSubmitting || isDeleting}>
+            <Button
+              variant='outline'
+              size='sm'
+              className='flex-1'
+              onClick={handleSubmitForReview}
+              disabled={isSubmitting || isDeleting}
+            >
               <SendIcon />
               {isSubmitting ? 'Submitting…' : 'Submit'}
             </Button>
           )}
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant='destructive' size='sm' className='flex-1' disabled={isDeleting || isSubmitting}>
+              <Button
+                variant='destructive'
+                size='sm'
+                className='flex-1'
+                disabled={isDeleting || isSubmitting}
+              >
                 <Trash2Icon />
                 {isDeleting ? 'Deleting…' : 'Delete'}
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Delete &quot;{profile.displayName}&quot;?</AlertDialogTitle>
-                <AlertDialogDescription>This cannot be undone. The profile will be permanently deleted.</AlertDialogDescription>
+                <AlertDialogTitle>
+                  Delete &quot;{profile.displayName}&quot;?
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  This cannot be undone. The profile will be permanently
+                  deleted.
+                </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction className={buttonVariants({ variant: 'destructive' })} onClick={handleDelete}>
+                <AlertDialogAction
+                  className={buttonVariants({ variant: 'destructive' })}
+                  onClick={handleDelete}
+                >
                   Delete
                 </AlertDialogAction>
               </AlertDialogFooter>

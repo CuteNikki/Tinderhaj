@@ -1,14 +1,21 @@
-import { ArrowRightIcon, BadgeCheckIcon, Code2Icon, type LucideIcon, SmileIcon } from 'lucide-react';
+import { aboutMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { socialLink } from '@/lib/social-link';
-import { aboutMetadata } from '@/constants/metadata';
+import {
+  ArrowRightIcon,
+  BadgeCheckIcon,
+  Code2Icon,
+  SmileIcon,
+  type LucideIcon,
+} from 'lucide-react';
+
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
+import { socialLink } from '@/lib/social-link';
 
 import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
-import { Logo } from '@/components/common/logo';
 import { IconCard } from '@/components/common/icon-card';
+import { Logo } from '@/components/common/logo';
 import { Stagger } from '@/components/common/stagger';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
 import { ReadyWhenYouAre } from '@/components/sections/ready-when-you-are';
@@ -26,7 +33,12 @@ const FACTS: { label: string; value: React.ReactNode }[] = [
   {
     label: 'Made by',
     value: (
-      <a href='https://niso.moe' target='_blank' rel='noreferrer' className='hover:text-primary underline'>
+      <a
+        href='https://niso.moe'
+        target='_blank'
+        rel='noreferrer'
+        className='underline hover:text-primary'
+      >
         One person
       </a>
     ),
@@ -34,7 +46,12 @@ const FACTS: { label: string; value: React.ReactNode }[] = [
   {
     label: 'Code',
     value: (
-      <a href={socialLink('github')} target='_blank' rel='noreferrer' className='hover:text-primary underline'>
+      <a
+        href={socialLink('github')}
+        target='_blank'
+        rel='noreferrer'
+        className='underline hover:text-primary'
+      >
         Open source
       </a>
     ),
@@ -45,7 +62,12 @@ const FACTS: { label: string; value: React.ReactNode }[] = [
   { label: 'Moderated', value: 'Every profile' },
 ];
 
-const VALUES: { title: string; copy: string; icon: LucideIcon; link?: { label: string; href: string } }[] = [
+const VALUES: {
+  title: string;
+  copy: string;
+  icon: LucideIcon;
+  link?: { label: string; href: string };
+}[] = [
   {
     title: 'Sharks, not people',
     copy: "Every profile is a plush. That keeps it light, and keeps people's own lives out of it.",
@@ -68,7 +90,11 @@ const VALUES: { title: string; copy: string; icon: LucideIcon; link?: { label: s
 export default function AboutPage() {
   return (
     <>
-      <div data-water='band' data-tone='muted' className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'>
+      <div
+        data-water='band'
+        data-tone='muted'
+        className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'
+      >
         <div className='container mx-auto max-w-7xl'>
           <Stagger id='page-header' variant='sink' className='mb-24'>
             <Eyebrow>About</Eyebrow>
@@ -78,41 +104,63 @@ export default function AboutPage() {
 
           {/* The story, and beside it on wide screens, the short version */}
           <div className='grid grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-16'>
-            <Stagger gap={STAGGER} delay={CONTENT_DELAY} className='text-foreground/85 flex max-w-2xl flex-col gap-4 text-base leading-relaxed text-pretty'>
+            <Stagger
+              gap={STAGGER}
+              delay={CONTENT_DELAY}
+              className='flex max-w-2xl flex-col gap-4 text-base leading-relaxed text-pretty text-foreground/85'
+            >
               <p>
-                Blåhaj is IKEA&apos;s big blue plush shark. Plenty of people have one, a lot of people have several, and every one of them has a personality its
-                people could tell you all about.
+                Blåhaj is IKEA&apos;s big blue plush shark. Plenty of people
+                have one, a lot of people have several, and every one of them
+                has a personality its people could tell you all about.
               </p>
               <p>
-                Tinderhaj gives those sharks somewhere to show it: a profile of their own, a place to be found, and other sharks to meet. It&apos;s a dating
-                site, but the daters are plush, and the point is the fun of it.
+                Tinderhaj gives those sharks somewhere to show it: a profile of
+                their own, a place to be found, and other sharks to meet.
+                It&apos;s a dating site, but the daters are plush, and the point
+                is the fun of it.
               </p>
               <p>
-                It started in December 2024 as a small side project, and it&apos;s still made by one person, in the open on GitHub. There&apos;s nothing to buy
-                and nothing to unlock.
+                It started in December 2024 as a small side project, and
+                it&apos;s still made by one person, in the open on GitHub.
+                There&apos;s nothing to buy and nothing to unlock.
               </p>
               <p>
                 Questions, ideas, or just want to say hi?
-                <Link href='/contact' className='text-primary flex w-fit items-center gap-1 font-semibold hover:underline'>
+                <Link
+                  href='/contact'
+                  className='flex w-fit items-center gap-1 font-semibold text-primary hover:underline'
+                >
                   Contact us
                   <ArrowRightIcon className='size-4' aria-hidden='true' />
                 </Link>
               </p>
               {/* The small print, right under the story, before the card on small screens too */}
-              <p className='text-muted-foreground border-border mt-2 border-t pt-4 text-xs leading-relaxed'>
-                Blåhaj is a trademark of IKEA. Tinderhaj is an independent project, not affiliated with IKEA or Tinder.
+              <p className='mt-2 border-t border-border pt-4 text-xs leading-relaxed text-muted-foreground'>
+                Blåhaj is a trademark of IKEA. Tinderhaj is an independent
+                project, not affiliated with IKEA or Tinder.
               </p>
             </Stagger>
-            <ScrollReveal delay={CONTENT_DELAY + STAGGER} variant='card' className='max-w-2xl'>
-              <aside aria-labelledby='at-a-glance' className='border-foreground/10 bg-card rounded-2xl border p-6 shadow-sm'>
+            <ScrollReveal
+              delay={CONTENT_DELAY + STAGGER}
+              variant='card'
+              className='max-w-2xl'
+            >
+              <aside
+                aria-labelledby='at-a-glance'
+                className='rounded-2xl border border-foreground/10 bg-card p-6 shadow-sm'
+              >
                 {/* Headed across the top, over a line: the words centered, and the logo beside them, not counted in */}
-                <div className='border-border -mx-6 -mt-6 mb-6 flex justify-center border-b px-6 py-5'>
+                <div className='-mx-6 -mt-6 mb-6 flex justify-center border-b border-border px-6 py-5'>
                   <div className='relative text-center'>
                     <Logo className='absolute top-1/2 right-full mr-3 size-10 -translate-y-1/2' />
-                    <h2 id='at-a-glance' className='text-lg leading-tight font-black tracking-tight'>
+                    <h2
+                      id='at-a-glance'
+                      className='text-lg leading-tight font-black tracking-tight'
+                    >
                       Tinderhaj
                     </h2>
-                    <p className='text-muted-foreground text-sm'>At a glance</p>
+                    <p className='text-sm text-muted-foreground'>At a glance</p>
                   </div>
                 </div>
                 <dl className='grid gap-3 text-sm'>
@@ -136,7 +184,15 @@ export default function AboutPage() {
         note='The few things everything else here is built around.'
         tone='background'
       >
-        <Stagger as='ul' itemAs='li' variant='card' gap={STAGGER} delay={0.1} className='grid gap-4 md:grid-cols-3' itemClassName='h-full'>
+        <Stagger
+          as='ul'
+          itemAs='li'
+          variant='card'
+          gap={STAGGER}
+          delay={0.1}
+          className='grid gap-4 md:grid-cols-3'
+          itemClassName='h-full'
+        >
           {VALUES.map((value) => (
             <IconCard key={value.title} {...value} heading='h3' />
           ))}

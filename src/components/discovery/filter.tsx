@@ -10,56 +10,94 @@ import { enter } from '@/components/common/enter';
 import { useReveal } from '@/components/common/use-reveal';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 function getDiscoverySeed() {
   return crypto.getRandomValues(new Uint32Array(1))[0];
 }
 
-export function DiscoveryFilter({ take, page, query, seed, disabled }: { take?: number; page?: number; query?: string; seed?: number; disabled?: boolean }) {
+export function DiscoveryFilter({
+  take,
+  page,
+  query,
+  seed,
+  disabled,
+}: {
+  take?: number;
+  page?: number;
+  query?: string;
+  seed?: number;
+  disabled?: boolean;
+}) {
   const router = useRouter();
-  const { ref, waiting } = useReveal<HTMLFormElement>({ delay: 0.4, scrollDelay: 0.4, amount: 0.45 });
+  const { ref, waiting } = useReveal<HTMLFormElement>({
+    delay: 0.4,
+    scrollDelay: 0.4,
+    amount: 0.45,
+  });
   const { className, style } = enter('reveal', 0.4, { waiting });
 
   return (
     <form
       ref={ref}
       style={style}
-      className={cn('border-foreground/10 bg-background/85 rounded-3xl border p-3 shadow-lg backdrop-blur-md sm:rounded-full', className)}
+      className={cn(
+        'rounded-3xl border border-foreground/10 bg-background/85 p-3 shadow-lg backdrop-blur-md sm:rounded-full',
+        className
+      )}
       onSubmit={(e) => {
         e.preventDefault();
         const formData = new FormData(e.target as HTMLFormElement);
         const submittedQuery = String(formData.get('q') ?? '');
-        const searchSeed = submittedQuery.trim() === (query ?? '').trim() && seed ? seed : getDiscoverySeed();
-        const params = new URLSearchParams({ q: submittedQuery, p: '1', t: String(take ?? 6), s: String(searchSeed) });
+        const searchSeed =
+          submittedQuery.trim() === (query ?? '').trim() && seed
+            ? seed
+            : getDiscoverySeed();
+        const params = new URLSearchParams({
+          q: submittedQuery,
+          p: '1',
+          t: String(take ?? 6),
+          s: String(searchSeed),
+        });
         router.push(`/discovery?${params}#profiles`, { scroll: false });
         document.getElementById('profiles')?.scrollIntoView();
       }}
     >
-      <div className='xs:flex-row xs:items-center flex flex-col gap-1'>
+      <div className='flex flex-col gap-1 xs:flex-row xs:items-center'>
         <label className='relative min-w-0 flex-1'>
           <span className='sr-only'>Search profiles</span>
-          <Search className='text-muted-foreground pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2' />
+          <Search className='pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
           <Input
             name='q'
             type='search'
             placeholder='Search profiles...'
             defaultValue={query}
             disabled={disabled}
-            className='xs:rounded-tr-sm xs:rounded-br-sm xs:rounded-bl-2xl rounded-2xl rounded-br-sm rounded-bl-sm pl-11'
+            className='rounded-2xl rounded-br-sm rounded-bl-sm pl-11 xs:rounded-tr-sm xs:rounded-br-sm xs:rounded-bl-2xl'
           />
         </label>
         <Select
           defaultValue={take?.toString()}
           onValueChange={(value) => {
-            const params = new URLSearchParams({ q: query ?? '', p: String(page ?? 1), t: value, ...(seed ? { s: String(seed) } : {}) });
+            const params = new URLSearchParams({
+              q: query ?? '',
+              p: String(page ?? 1),
+              t: value,
+              ...(seed ? { s: String(seed) } : {}),
+            });
             router.push(`/discovery?${params}`, { scroll: false });
           }}
           disabled={disabled}
         >
           <SelectTrigger
             aria-label='Select number of items per page'
-            className='bg-background xs:w-24 xs:rounded-tl-sm xs:rounded-tr-sm xs:rounded-br-sm xs:rounded-bl-sm w-full rounded-sm px-4'
+            className='w-full rounded-sm bg-background px-4 xs:w-24 xs:rounded-tl-sm xs:rounded-tr-sm xs:rounded-br-sm xs:rounded-bl-sm'
           >
             <span className='flex items-center gap-2 sm:contents'>
               <Grid2X2Icon className='text-muted-foreground' />
@@ -83,7 +121,7 @@ export function DiscoveryFilter({ take, page, query, seed, disabled }: { take?: 
           type='submit'
           disabled={disabled}
           variant='default'
-          className='xs:rounded-tl-sm xs:rounded-tr-2xl xs:rounded-bl-sm rounded-2xl rounded-tl-sm rounded-tr-sm border-none'
+          className='rounded-2xl rounded-tl-sm rounded-tr-sm border-none xs:rounded-tl-sm xs:rounded-tr-2xl xs:rounded-bl-sm'
         >
           <span>Search</span>
           <SearchIcon />

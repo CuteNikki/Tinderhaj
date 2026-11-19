@@ -15,5 +15,8 @@ export function socialLink(id: SocialId, path = '') {
  * a short link to a social, which only looks like one of the site's pages.
  */
 export function isExternalLink(href: string) {
-  return href.startsWith('http') || SOCIALS.some(({ id }) => href === `/${id}` || href.startsWith(`/${id}/`));
+  return (
+    href.startsWith('http') ||
+    SOCIALS.some(({ id }) => href === `/${id}` || href.startsWith(`/${id}/`))
+  );
 }

@@ -1,8 +1,9 @@
-import { ArrowRight } from 'lucide-react';
 import { cacheLife, cacheTag } from 'next/cache';
 
-import { getNewestSharks, PROFILE_COUNT_TAG } from '@/lib/queries';
+import { ArrowRight } from 'lucide-react';
+
 import { STAGGER } from '@/lib/motion';
+import { getNewestSharks, PROFILE_COUNT_TAG } from '@/lib/queries';
 
 import { DiscoveryLink } from '@/components/discovery/link';
 import { DiscoveryProfile } from '@/components/discovery/profile';
@@ -15,7 +16,11 @@ import { Button } from '@/components/ui/button';
  * all while there are none. Cached as a whole, like the sharks it shows, so
  * their cards can tell which are new (by the time) while the page prerenders.
  */
-export async function FreshSharks({ tone }: { tone?: 'muted' | 'card' | 'background' }) {
+export async function FreshSharks({
+  tone,
+}: {
+  tone?: 'muted' | 'card' | 'background';
+}) {
   'use cache';
   cacheLife('hours');
   cacheTag(PROFILE_COUNT_TAG);
@@ -33,7 +38,13 @@ export async function FreshSharks({ tone }: { tone?: 'muted' | 'card' | 'backgro
     >
       <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-3'>
         {sharks.map((shark, index) => (
-          <ScrollReveal key={shark.id} className='h-full' delay={0.1 + index * STAGGER} scrollDelay={index * STAGGER} variant='card'>
+          <ScrollReveal
+            key={shark.id}
+            className='h-full'
+            delay={0.1 + index * STAGGER}
+            scrollDelay={index * STAGGER}
+            variant='card'
+          >
             <DiscoveryProfile profile={shark} />
           </ScrollReveal>
         ))}

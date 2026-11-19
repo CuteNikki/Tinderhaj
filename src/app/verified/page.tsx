@@ -1,8 +1,8 @@
-import { MailCheckIcon, MailXIcon, SendIcon } from 'lucide-react';
+import { verifiedMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { verifiedMetadata } from '@/constants/metadata';
+import { MailCheckIcon, MailXIcon, SendIcon } from 'lucide-react';
 
 import { AuthShell } from '@/components/auth/auth-shell';
 import { Button } from '@/components/ui/button';
@@ -31,7 +31,9 @@ const messages = {
 };
 
 /** Where the links in verification and email change emails land. */
-export default async function VerifiedPage({ searchParams }: PageProps<'/verified'>) {
+export default async function VerifiedPage({
+  searchParams,
+}: PageProps<'/verified'>) {
   const { error, step } = await searchParams;
 
   if (error) {
@@ -49,19 +51,28 @@ export default async function VerifiedPage({ searchParams }: PageProps<'/verifie
     );
   }
 
-  const message = step === 'confirmed' || step === 'changed' ? messages[step] : messages.verified;
+  const message =
+    step === 'confirmed' || step === 'changed'
+      ? messages[step]
+      : messages.verified;
 
   return (
     <AuthShell
       badge={message.badge}
       icon={
-        step === 'confirmed' ? <SendIcon className='size-4 shrink-0' aria-hidden='true' /> : <MailCheckIcon className='size-4 shrink-0' aria-hidden='true' />
+        step === 'confirmed' ? (
+          <SendIcon className='size-4 shrink-0' aria-hidden='true' />
+        ) : (
+          <MailCheckIcon className='size-4 shrink-0' aria-hidden='true' />
+        )
       }
       title={message.title}
       description={message.text}
     >
       <Button asChild className='w-full'>
-        <Link href={step ? '/dashboard/account' : '/dashboard/profiles'}>{step ? 'Go to account settings' : 'Go to your profiles'}</Link>
+        <Link href={step ? '/dashboard/account' : '/dashboard/profiles'}>
+          {step ? 'Go to account settings' : 'Go to your profiles'}
+        </Link>
       </Button>
     </AuthShell>
   );

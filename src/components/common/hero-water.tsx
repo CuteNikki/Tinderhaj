@@ -15,7 +15,11 @@ export function HeroWater({ floor }: { floor: 'muted' | 'card' }) {
         <Ocean into={floor === 'card' ? 'fill-card' : 'fill-muted'} />
       </div>
       {/* Where the band of water across the top ends (see PageBand): the waves' height above the bottom, so they roll in where the hero ends */}
-      <div id='page-header' aria-hidden='true' className='absolute inset-x-0 bottom-22 sm:bottom-26' />
+      <div
+        id='page-header'
+        aria-hidden='true'
+        className='absolute inset-x-0 bottom-22 sm:bottom-26'
+      />
     </>
   );
 }

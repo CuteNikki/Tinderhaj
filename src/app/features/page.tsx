@@ -1,7 +1,18 @@
-import { BadgeCheckIcon, FingerprintIcon, GiftIcon, HeartIcon, type LucideIcon, MoonStarIcon, SearchIcon, Share2Icon, UsersRoundIcon } from 'lucide-react';
+import { featuresMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 
-import { featuresMetadata } from '@/constants/metadata';
+import {
+  BadgeCheckIcon,
+  FingerprintIcon,
+  GiftIcon,
+  HeartIcon,
+  MoonStarIcon,
+  SearchIcon,
+  Share2Icon,
+  UsersRoundIcon,
+  type LucideIcon,
+} from 'lucide-react';
+
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 
 import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
@@ -58,12 +69,18 @@ const FEATURES: { title: string; copy: string; icon: LucideIcon }[] = [
 export default function FeaturesPage() {
   return (
     <>
-      <div data-water='band' data-tone='muted' className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'>
+      <div
+        data-water='band'
+        data-tone='muted'
+        className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'
+      >
         <div className='container mx-auto max-w-7xl'>
           <Stagger id='page-header' variant='sink' className='mb-24'>
             <Eyebrow>Features</Eyebrow>
             <PageTitle>Everything for your sharks</PageTitle>
-            <PageNote>All that Tinderhaj does to help them find each other.</PageNote>
+            <PageNote>
+              All that Tinderhaj does to help them find each other.
+            </PageNote>
           </Stagger>
 
           <Stagger

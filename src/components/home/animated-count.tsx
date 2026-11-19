@@ -7,10 +7,33 @@ import { WebKitCount } from '@/components/home/webkit-count';
  * has loaded, apart from Safari's, which WebKitCount draws. `localize` groups
  * thousands in the number it lands on.
  */
-export function AnimatedCount({ target, duration = 1000, delay = 0, localize }: { target: number; duration?: number; delay?: number; localize?: boolean }) {
+export function AnimatedCount({
+  target,
+  duration = 1000,
+  delay = 0,
+  localize,
+}: {
+  target: number;
+  duration?: number;
+  delay?: number;
+  localize?: boolean;
+}) {
   return (
-    <span className='count-up' style={{ '--count': target, '--count-duration': `${duration}ms`, '--count-delay': `${delay}s` } as React.CSSProperties}>
-      <span>{localize ? target.toLocaleString('en-US', { maximumFractionDigits: 0 }) : target}</span>
+    <span
+      className='count-up'
+      style={
+        {
+          '--count': target,
+          '--count-duration': `${duration}ms`,
+          '--count-delay': `${delay}s`,
+        } as React.CSSProperties
+      }
+    >
+      <span>
+        {localize
+          ? target.toLocaleString('en-US', { maximumFractionDigits: 0 })
+          : target}
+      </span>
       <WebKitCount />
     </span>
   );

@@ -1,6 +1,7 @@
 import 'server-only';
 
 import { Prisma, ProfileStatus } from '@/generated/client';
+
 import { notBannedWhere } from '@/lib/bans';
 import prisma from '@/lib/prisma';
 import { PUBLIC_PROFILE, type PublicProfile } from '@/lib/queries';
@@ -33,15 +34,24 @@ export type HeartState = { shark: Shark; sent: boolean; received: boolean };
  * stands with it: a heart sent, one received, or both (a match). One query
  * for a whole page of cards.
  */
-export async function getHeartStates(userId: string, profileIds: string[]): Promise<Record<string, HeartState[]>> {
+export async function getHeartStates(
+  userId: string,
+  profileIds: string[]
+): Promise<Record<string, HeartState[]>> {
   if (!profileIds.length) return {};
 
   const sharks = await prisma.profile.findMany({
     where: { userId, status: ProfileStatus.VERIFIED },
     select: {
       ...SHARK,
-      heartsSent: { where: { toProfileId: { in: profileIds } }, select: { toProfileId: true } },
-      heartsReceived: { where: { fromProfileId: { in: profileIds } }, select: { fromProfileId: true } },
+      heartsSent: {
+        where: { toProfileId: { in: profileIds } },
+        select: { toProfileId: true },
+      },
+      heartsReceived: {
+        where: { fromProfileId: { in: profileIds } },
+        select: { fromProfileId: true },
+      },
     },
     orderBy: { createdAt: 'asc' },
   });
@@ -54,9 +64,11 @@ export async function getHeartStates(userId: string, profileIds: string[]): Prom
         .map(({ heartsSent, heartsReceived, ...shark }) => ({
           shark,
           sent: heartsSent.some((heart) => heart.toProfileId === profileId),
-          received: heartsReceived.some((heart) => heart.fromProfileId === profileId),
+          received: heartsReceived.some(
+            (heart) => heart.fromProfileId === profileId
+          ),
         })),
-    ]),
+    ])
   );
 }
 
@@ -80,33 +92,66 @@ export async function getHearts(userId: string) {
   const [received, sent, user] = await Promise.all([
     prisma.heart.findMany({
       where: { to: { userId }, from: { ...live, userId: { not: userId } } },
-      select: { id: true, createdAt: true, seenAt: true, from: { select: PUBLIC_PROFILE }, to: { select: SHARK } },
+      select: {
+        id: true,
+        createdAt: true,
+        seenAt: true,
+        from: { select: PUBLIC_PROFILE },
+        to: { select: SHARK },
+      },
       orderBy: { createdAt: 'desc' },
     }),
     prisma.heart.findMany({
       where: { from: { userId }, to: { ...live, userId: { not: userId } } },
-      select: { id: true, createdAt: true, from: { select: SHARK }, to: { select: PUBLIC_PROFILE } },
+      select: {
+        id: true,
+        createdAt: true,
+        from: { select: SHARK },
+        to: { select: PUBLIC_PROFILE },
+      },
       orderBy: { createdAt: 'desc' },
     }),
-    prisma.user.findUnique({ where: { id: userId }, select: { matchContact: true } }),
+    prisma.user.findUnique({
+      where: { id: userId },
+      select: { matchContact: true },
+    }),
   ]);
 
   const pair = (mine: string, theirs: string) => `${mine}:${theirs}`;
-  const sentPairs = new Map(sent.map((heart) => [pair(heart.from.id, heart.to.id), heart]));
-  const receivedPairs = new Set(received.map((heart) => pair(heart.to.id, heart.from.id)));
+  const sentPairs = new Map(
+    sent.map((heart) => [pair(heart.from.id, heart.to.id), heart])
+  );
+  const receivedPairs = new Set(
+    received.map((heart) => pair(heart.to.id, heart.from.id))
+  );
 
   const matches: HeartRow[] = [];
   const onlyReceived: HeartRow[] = [];
   for (const heart of received) {
     const back = sentPairs.get(pair(heart.to.id, heart.from.id));
-    const row = { id: heart.id, mine: heart.to, theirs: heart.from, unseen: !heart.seenAt };
+    const row = {
+      id: heart.id,
+      mine: heart.to,
+      theirs: heart.from,
+      unseen: !heart.seenAt,
+    };
     // A match dates from whichever heart came second.
-    if (back) matches.push({ ...row, at: back.createdAt > heart.createdAt ? back.createdAt : heart.createdAt });
+    if (back)
+      matches.push({
+        ...row,
+        at: back.createdAt > heart.createdAt ? back.createdAt : heart.createdAt,
+      });
     else onlyReceived.push({ ...row, at: heart.createdAt });
   }
   const onlySent: HeartRow[] = sent
     .filter((heart) => !receivedPairs.has(pair(heart.from.id, heart.to.id)))
-    .map((heart) => ({ id: heart.id, mine: heart.from, theirs: heart.to, at: heart.createdAt, unseen: false }));
+    .map((heart) => ({
+      id: heart.id,
+      mine: heart.from,
+      theirs: heart.to,
+      at: heart.createdAt,
+      unseen: false,
+    }));
 
   matches.sort((a, b) => b.at.getTime() - a.at.getTime());
 
@@ -117,30 +162,53 @@ export async function getHearts(userId: string) {
         select: { id: true, user: { select: { matchContact: true } } },
       })
     : [];
-  const contacts = new Map(owners.map((profile) => [profile.id, profile.user.matchContact]));
+  const contacts = new Map(
+    owners.map((profile) => [profile.id, profile.user.matchContact])
+  );
   for (const row of matches) row.contact = contacts.get(row.theirs.id) ?? null;
 
-  return { matches, received: onlyReceived, sent: onlySent, sharesContact: !!user?.matchContact };
+  return {
+    matches,
+    received: onlyReceived,
+    sent: onlySent,
+    sharesContact: !!user?.matchContact,
+  };
 }
 
 /** Hearts to the user's sharks they haven't seen yet, for the nav. */
 export async function countUnseenHearts(userId: string) {
-  return prisma.heart.count({ where: { seenAt: null, to: { userId }, from: { ...liveProfileWhere(), userId: { not: userId } } } });
+  return prisma.heart.count({
+    where: {
+      seenAt: null,
+      to: { userId },
+      from: { ...liveProfileWhere(), userId: { not: userId } },
+    },
+  });
 }
 
 /**
  * Someone's page: their name, when they joined, and their live sharks. Hidden
  * while they're banned, except from moderators, who also see every shark.
  */
-export async function getUserPage(username: string, viewer: { id: string; role?: string | null } | null) {
+export async function getUserPage(
+  username: string,
+  viewer: { id: string; role?: string | null } | null
+) {
   const user = await prisma.user.findUnique({
     where: { username },
-    select: { id: true, username: true, createdAt: true, banned: true, banExpires: true },
+    select: {
+      id: true,
+      username: true,
+      createdAt: true,
+      banned: true,
+      banExpires: true,
+    },
   });
   if (!user) return null;
 
   const moderator = isModerator(viewer?.role);
-  const banned = user.banned && (!user.banExpires || user.banExpires > new Date());
+  const banned =
+    user.banned && (!user.banExpires || user.banExpires > new Date());
   if (banned && !moderator) return null;
 
   const sharks = await prisma.profile.findMany({
@@ -149,7 +217,13 @@ export async function getUserPage(username: string, viewer: { id: string; role?:
     orderBy: { createdAt: 'asc' },
   });
 
-  return { user: { id: user.id, username: user.username, createdAt: user.createdAt }, sharks, banned, own: viewer?.id === user.id, moderator };
+  return {
+    user: { id: user.id, username: user.username, createdAt: user.createdAt },
+    sharks,
+    banned,
+    own: viewer?.id === user.id,
+    moderator,
+  };
 }
 
 /**
@@ -158,17 +232,34 @@ export async function getUserPage(username: string, viewer: { id: string; role?:
  * themselves. Null if it isn't verified, or its owner is banned, but for
  * moderators.
  */
-export async function getSharkPage(id: string, viewer: { id: string; role?: string | null } | null) {
+export async function getSharkPage(
+  id: string,
+  viewer: { id: string; role?: string | null } | null
+) {
   const shark = await prisma.profile.findUnique({
     where: { id, status: ProfileStatus.VERIFIED },
-    select: { ...PUBLIC_PROFILE, userId: true, user: { select: { username: true, banned: true, banExpires: true } } },
+    select: {
+      ...PUBLIC_PROFILE,
+      userId: true,
+      user: { select: { username: true, banned: true, banExpires: true } },
+    },
   });
   if (!shark) return null;
 
   const moderator = isModerator(viewer?.role);
   const { userId, user, ...rest } = shark;
-  const banned = user.banned && (!user.banExpires || user.banExpires > new Date());
+  const banned =
+    user.banned && (!user.banExpires || user.banExpires > new Date());
   if (banned && !moderator) return null;
 
-  return { shark: { ...rest, user: { username: user.username } } satisfies PublicProfile, userId, banned, own: viewer?.id === userId, moderator };
+  return {
+    shark: {
+      ...rest,
+      user: { username: user.username },
+    } satisfies PublicProfile,
+    userId,
+    banned,
+    own: viewer?.id === userId,
+    moderator,
+  };
 }

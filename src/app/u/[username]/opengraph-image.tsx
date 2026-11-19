@@ -1,9 +1,17 @@
+import { SITE_NAME } from '@/constants/metadata';
 import { ImageResponse } from 'next/og';
 
-import { SITE_NAME } from '@/constants/metadata';
 import { getUserPage } from '@/lib/hearts';
-import { OG_FONTS, OG_HEADERS, OG_SIZE, Ocean, OgPill, OgText, SHARK_SRC, toOgImage } from '@/lib/og';
-
+import {
+  Ocean,
+  OG_FONTS,
+  OG_HEADERS,
+  OG_SIZE,
+  OgPill,
+  OgText,
+  SHARK_SRC,
+  toOgImage,
+} from '@/lib/og';
 import SiteImage from '@/app/opengraph-image';
 
 export const alt = `Someone's sharks on ${SITE_NAME}, shown as photos fanned out like cards.`;
@@ -30,7 +38,11 @@ const FANS = [
 ];
 
 /** Someone's page when it's shared: their name and a fan of their sharks. */
-export default async function Image({ params }: { params: Promise<{ username: string }> }) {
+export default async function Image({
+  params,
+}: {
+  params: Promise<{ username: string }>;
+}) {
   const { username } = await params;
   // As anyone would see it, so a banned account's page shares like any other.
   const page = await getUserPage(decodeURIComponent(username), null);
@@ -40,8 +52,9 @@ export default async function Image({ params }: { params: Promise<{ username: st
   const shown = await Promise.all(
     sharks.slice(0, 3).map(async (shark) => ({
       name: shark.displayName,
-      src: (shark.avatarUrl && (await toOgImage(shark.avatarUrl, AVATAR))) || null,
-    })),
+      src:
+        (shark.avatarUrl && (await toOgImage(shark.avatarUrl, AVATAR))) || null,
+    }))
   );
   // The next few beyond the fan, by name, and how many past those.
   const more = sharks.slice(3, 5).map((shark) => shark.displayName);
@@ -49,7 +62,10 @@ export default async function Image({ params }: { params: Promise<{ username: st
   const fan = FANS[shown.length];
   const handle = `@${user.username}`;
   // As big as fits on one line of the text side (each letter about 3/4 as wide as it's tall); longer ones wrap.
-  const handleSize = Math.max(40, Math.min(112, Math.floor(TEXT_WIDTH / (handle.length * 0.75))));
+  const handleSize = Math.max(
+    40,
+    Math.min(112, Math.floor(TEXT_WIDTH / (handle.length * 0.75)))
+  );
 
   return new ImageResponse(
     <Ocean footer={`tinderhaj.com/u/${user.username}`}>
@@ -70,14 +86,48 @@ export default async function Image({ params }: { params: Promise<{ username: st
         >
           {handle.replaceAll('_', '_​')}
         </div>
-        <div style={{ display: 'flex', marginTop: 16, fontSize: 44, fontWeight: 900, letterSpacing: -1, color: '#8cc8ff' }}>
-          {sharks.length === 0 ? 'No sharks here yet.' : sharks.length === 1 ? '1 shark to meet.' : `${sharks.length} sharks to meet.`}
+        <div
+          style={{
+            display: 'flex',
+            marginTop: 16,
+            fontSize: 44,
+            fontWeight: 900,
+            letterSpacing: -1,
+            color: '#8cc8ff',
+          }}
+        >
+          {sharks.length === 0
+            ? 'No sharks here yet.'
+            : sharks.length === 1
+              ? '1 shark to meet.'
+              : `${sharks.length} sharks to meet.`}
         </div>
-        <div style={{ display: 'flex', marginTop: 20, fontSize: 28, fontWeight: 600, color: 'rgba(244, 249, 255, 0.78)' }}>
-          Joined {user.createdAt.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}.
+        <div
+          style={{
+            display: 'flex',
+            marginTop: 20,
+            fontSize: 28,
+            fontWeight: 600,
+            color: 'rgba(244, 249, 255, 0.78)',
+          }}
+        >
+          Joined{' '}
+          {user.createdAt.toLocaleDateString('en-US', {
+            month: 'long',
+            year: 'numeric',
+          })}
+          .
         </div>
         {more.length > 0 && (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginTop: 24, maxWidth: TEXT_WIDTH }}>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: 10,
+              marginTop: 24,
+              maxWidth: TEXT_WIDTH,
+            }}
+          >
             {more.map((name, i) => (
               <Chip key={i}>{name}</Chip>
             ))}
@@ -87,7 +137,18 @@ export default async function Image({ params }: { params: Promise<{ username: st
       </OgText>
 
       {shown.length === 0 ? (
-        <img src={SHARK_SRC} width={560} height={560} alt='' style={{ position: 'absolute', right: -10, top: 40, transform: 'rotate(8deg)' }} />
+        <img
+          src={SHARK_SRC}
+          width={560}
+          height={560}
+          alt=''
+          style={{
+            position: 'absolute',
+            right: -10,
+            top: 40,
+            transform: 'rotate(8deg)',
+          }}
+        />
       ) : (
         shown.map((shark, i) => (
           <div
@@ -103,13 +164,20 @@ export default async function Image({ params }: { params: Promise<{ username: st
               padding: 14,
               borderRadius: 28,
               // Frosted like the site image's cards, but solid, so the cards beneath don't show through
-              background: 'linear-gradient(135deg, rgb(84, 142, 204) 0%, rgb(100, 164, 230) 100%)',
+              background:
+                'linear-gradient(135deg, rgb(84, 142, 204) 0%, rgb(100, 164, 230) 100%)',
               border: '1px solid rgba(220, 238, 255, 0.5)',
               boxShadow: '0 24px 48px rgba(2, 20, 45, 0.3)',
             }}
           >
             {shark.src ? (
-              <img src={shark.src} width={AVATAR} height={AVATAR} alt='' style={{ borderRadius: 18 }} />
+              <img
+                src={shark.src}
+                width={AVATAR}
+                height={AVATAR}
+                alt=''
+                style={{ borderRadius: 18 }}
+              />
             ) : (
               <div
                 style={{
@@ -122,10 +190,22 @@ export default async function Image({ params }: { params: Promise<{ username: st
                   background: 'rgba(220, 238, 255, 0.25)',
                 }}
               >
-                <img src={SHARK_SRC} width={AVATAR - 30} height={AVATAR - 30} alt='' />
+                <img
+                  src={SHARK_SRC}
+                  width={AVATAR - 30}
+                  height={AVATAR - 30}
+                  alt=''
+                />
               </div>
             )}
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 12, padding: '0 4px' }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                marginTop: 12,
+                padding: '0 4px',
+              }}
+            >
               <div
                 style={{
                   display: 'block',
@@ -146,11 +226,17 @@ export default async function Image({ params }: { params: Promise<{ username: st
         ))
       )}
     </Ocean>,
-    { ...OG_SIZE, fonts: OG_FONTS, headers: OG_HEADERS },
+    { ...OG_SIZE, fonts: OG_FONTS, headers: OG_HEADERS }
   );
 }
 
-function Chip({ children, muted }: { children: React.ReactNode; muted?: boolean }) {
+function Chip({
+  children,
+  muted,
+}: {
+  children: React.ReactNode;
+  muted?: boolean;
+}) {
   return (
     <div
       style={{
@@ -159,7 +245,9 @@ function Chip({ children, muted }: { children: React.ReactNode; muted?: boolean 
         padding: '8px 18px',
         borderRadius: 9999,
         background: muted ? 'transparent' : 'rgba(150, 205, 255, 0.5)',
-        border: muted ? '1px solid rgba(140, 200, 255, 0.5)' : '1px solid rgba(220, 238, 255, 0.5)',
+        border: muted
+          ? '1px solid rgba(140, 200, 255, 0.5)'
+          : '1px solid rgba(220, 238, 255, 0.5)',
         color: muted ? '#8cc8ff' : '#f4f9ff',
         fontSize: 24,
         fontWeight: 600,

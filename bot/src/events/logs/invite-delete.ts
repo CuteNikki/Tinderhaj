@@ -1,7 +1,5 @@
-import { AuditLogEvent, Events } from 'discord.js';
-
 import { Event } from 'classes/base/event';
-
+import { AuditLogEvent, Events } from 'discord.js';
 import { logChange } from 'moderation/changes';
 import { KEYS } from 'utility/keys';
 import { code } from 'utility/markdown';
@@ -10,7 +8,12 @@ import { code } from 'utility/markdown';
 export default new Event({
   name: Events.InviteDelete,
   async execute(_client, invite) {
-    if (!invite.guild || invite.guild.id !== KEYS.DISCORD_GUILD_ID || !('members' in invite.guild)) return;
+    if (
+      !invite.guild ||
+      invite.guild.id !== KEYS.DISCORD_GUILD_ID ||
+      !('members' in invite.guild)
+    )
+      return;
     await logChange(invite.guild, 'Invite deleted', {
       actions: AuditLogEvent.InviteDelete,
       targetId: null,

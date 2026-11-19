@@ -1,7 +1,5 @@
-import { Events } from 'discord.js';
-
 import { Event } from 'classes/base/event';
-
+import { Events } from 'discord.js';
 import { findByCustomId, run } from 'utility/interactions';
 
 export default new Event({
@@ -13,6 +11,12 @@ export default new Event({
     if (!button) return;
 
     // Prefixed, since buttons, modals and commands can share a name.
-    await run(client, interaction, `btn_${button.options.customId}`, button.options.cooldown, button.options.execute);
+    await run(
+      client,
+      interaction,
+      `btn_${button.options.customId}`,
+      button.options.cooldown,
+      button.options.execute
+    );
   },
 });

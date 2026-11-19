@@ -5,7 +5,6 @@ import {
   FlagIcon,
   HeartIcon,
   InfoIcon,
-  type LucideIcon,
   MailIcon,
   MenuIcon,
   MessagesSquareIcon,
@@ -17,6 +16,7 @@ import {
   UserCheckIcon,
   UserRoundIcon,
   UsersRoundIcon,
+  type LucideIcon,
 } from 'lucide-react';
 
 import { countUnseenHearts } from '@/lib/hearts';
@@ -24,8 +24,11 @@ import { QUERIES } from '@/lib/queries';
 import type { AccountRole } from '@/lib/roles';
 import { getSession, isModerator } from '@/lib/session';
 
+import {
+  LogOutButton,
+  LogOutDropdownMenuItem,
+} from '@/components/auth/logout-button';
 import { Eyebrow } from '@/components/common/heading';
-import { LogOutButton, LogOutDropdownMenuItem } from '@/components/auth/logout-button';
 import { Logo } from '@/components/common/logo';
 import { DiscoveryLink } from '@/components/discovery/link';
 import { ThemeButton } from '@/components/theme/switch';
@@ -40,7 +43,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 
 type NavLink = {
   name: string;
@@ -59,8 +71,18 @@ const siteLinks: NavLink[] = [
   { name: 'Guide', href: '/guide#top', icon: SignpostIcon },
   { name: 'Features', href: '/features#top', icon: SparklesIcon },
   { name: 'Discovery', href: '/discovery#top', icon: SearchIcon },
-  { name: 'Community', href: '/community#top', icon: MessagesSquareIcon, more: true },
-  { name: 'Guidelines', href: '/guidelines#top', icon: ScrollTextIcon, more: true },
+  {
+    name: 'Community',
+    href: '/community#top',
+    icon: MessagesSquareIcon,
+    more: true,
+  },
+  {
+    name: 'Guidelines',
+    href: '/guidelines#top',
+    icon: ScrollTextIcon,
+    more: true,
+  },
   { name: 'About', href: '/about#top', icon: InfoIcon, more: true },
   { name: 'Contact', href: '/contact#top', icon: MailIcon, more: true },
 ];
@@ -69,12 +91,21 @@ const siteLinks: NavLink[] = [
 function sharkLinks(unseenHearts: number): NavLink[] {
   return [
     { name: 'Profiles', href: '/dashboard/profiles#top', icon: UserRoundIcon },
-    { name: 'Hearts', href: '/dashboard/hearts#top', icon: HeartIcon, count: unseenHearts },
+    {
+      name: 'Hearts',
+      href: '/dashboard/hearts#top',
+      icon: HeartIcon,
+      count: unseenHearts,
+    },
   ];
 }
 
 /** Sits with Log out, as the other thing about you rather than your sharks. */
-const accountLink: NavLink = { name: 'Settings', href: '/dashboard/account#top', icon: SettingsIcon };
+const accountLink: NavLink = {
+  name: 'Settings',
+  href: '/dashboard/account#top',
+  icon: SettingsIcon,
+};
 
 export async function Navbar() {
   const session = await getSession();
@@ -85,11 +116,27 @@ export async function Navbar() {
     session ? countUnseenHearts(session.user.id) : 0,
   ]);
 
-  return <NavbarContent user={user} pending={pending} reports={reports} hearts={hearts} showAuthElements />;
+  return (
+    <NavbarContent
+      user={user}
+      pending={pending}
+      reports={reports}
+      hearts={hearts}
+      showAuthElements
+    />
+  );
 }
 
 export function NavbarFallback() {
-  return <NavbarContent user={null} pending={0} reports={0} hearts={0} showAuthElements={false} />;
+  return (
+    <NavbarContent
+      user={null}
+      pending={0}
+      reports={0}
+      hearts={0}
+      showAuthElements={false}
+    />
+  );
 }
 
 function NavbarContent({
@@ -109,31 +156,56 @@ function NavbarContent({
   const moderationLinks: NavLink[] =
     user && isModerator(user.role)
       ? [
-          { name: 'Verification', href: '/moderation/verification#top', icon: UserCheckIcon, count: pending },
-          { name: 'Reports', href: '/moderation/reports#top', icon: FlagIcon, count: reports },
-          { name: 'Users', href: '/moderation/users#top', icon: UsersRoundIcon },
+          {
+            name: 'Verification',
+            href: '/moderation/verification#top',
+            icon: UserCheckIcon,
+            count: pending,
+          },
+          {
+            name: 'Reports',
+            href: '/moderation/reports#top',
+            icon: FlagIcon,
+            count: reports,
+          },
+          {
+            name: 'Users',
+            href: '/moderation/users#top',
+            icon: UsersRoundIcon,
+          },
         ]
       : [];
 
   return (
-    <header className='bg-background/60 fixed top-0 z-50 w-svw backdrop-blur-lg'>
+    <header className='fixed top-0 z-50 w-svw bg-background/60 backdrop-blur-lg'>
       <nav className='container mx-auto flex h-16 max-w-7xl items-center gap-4 px-5 md:gap-6 lg:px-8'>
         {/* Home, there being no link for it on the bar */}
-        <Link href='/#top' aria-label='Tinderhaj, home' className='group mr-4 flex items-center gap-2'>
-          <Logo className='group-hover:animate-wiggle h-6 w-6' />
+        <Link
+          href='/#top'
+          aria-label='Tinderhaj, home'
+          className='group mr-4 flex items-center gap-2'
+        >
+          <Logo className='h-6 w-6 group-hover:animate-wiggle' />
           <TypographyLarge className='font-bold'>Tinderhaj</TypographyLarge>
         </Link>
         <div className='hidden flex-1 items-center gap-4 text-sm font-medium md:flex md:gap-6'>
           {siteLinks
             .filter((link) => !link.more)
             .map((link) => (
-              <SiteLink key={link.href} link={link} className='text-muted-foreground hover:text-foreground transition-colors duration-150' />
+              <SiteLink
+                key={link.href}
+                link={link}
+                className='text-muted-foreground transition-colors duration-150 hover:text-foreground'
+              />
             ))}
           {/* The rest of the pages, a click away */}
           <DropdownMenu>
-            <DropdownMenuTrigger className='text-muted-foreground hover:text-foreground data-open:text-foreground flex items-center gap-1 transition-colors duration-150 [&[data-state=open]>svg]:rotate-180'>
+            <DropdownMenuTrigger className='flex items-center gap-1 text-muted-foreground transition-colors duration-150 hover:text-foreground data-open:text-foreground [&[data-state=open]>svg]:rotate-180'>
               More
-              <ChevronDownIcon className='size-4 transition-transform duration-150' aria-hidden='true' />
+              <ChevronDownIcon
+                className='size-4 transition-transform duration-150'
+                aria-hidden='true'
+              />
             </DropdownMenuTrigger>
             <DropdownMenuContent side='bottom' align='start' className='w-44'>
               {siteLinks
@@ -155,10 +227,18 @@ function NavbarContent({
                   <DropdownMenuTrigger asChild>
                     <Button variant='outline' size='icon' className='relative'>
                       <MenuIcon />
-                      <MenuDot pending={pending} reports={reports} hearts={hearts} />
+                      <MenuDot
+                        pending={pending}
+                        reports={reports}
+                        hearts={hearts}
+                      />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent side='bottom' align='end' className='w-56'>
+                  <DropdownMenuContent
+                    side='bottom'
+                    align='end'
+                    className='w-56'
+                  >
                     <DropdownMenuGroup>
                       {yourLinks.map((link) => (
                         <MenuLink key={link.href} link={link} />
@@ -201,22 +281,26 @@ function NavbarContent({
               </Button>
             </SheetTrigger>
             <SheetContent side='right' className='w-4/5 gap-0 sm:w-88'>
-              <SheetHeader className='border-foreground/10 border-b pr-12'>
+              <SheetHeader className='border-b border-foreground/10 pr-12'>
                 <SheetTitle className='flex items-center gap-2'>
                   <Logo className='h-6 w-6' />
                   <span className='text-lg font-bold'>Tinderhaj</span>
                 </SheetTitle>
-                <SheetDescription className='text-balance'>The best place to find your perfect match</SheetDescription>
+                <SheetDescription className='text-balance'>
+                  The best place to find your perfect match
+                </SheetDescription>
               </SheetHeader>
 
               <div className='flex flex-1 flex-col gap-6 overflow-y-auto p-4'>
                 <SheetSection title='Explore' links={siteLinks} />
                 {user && <SheetSection title='Your sharks' links={yourLinks} />}
-                {moderationLinks.length > 0 && <SheetSection title='Moderation' links={moderationLinks} />}
+                {moderationLinks.length > 0 && (
+                  <SheetSection title='Moderation' links={moderationLinks} />
+                )}
               </div>
 
               {showAuthElements && (
-                <SheetFooter className='border-foreground/10 border-t'>
+                <SheetFooter className='border-t border-foreground/10'>
                   {user ? (
                     <>
                       <SheetClose asChild>
@@ -254,7 +338,15 @@ function NavbarContent({
 }
 
 /** Discovery gets a fresh shuffle each time it's opened from here. */
-function SiteLink({ link, className, children }: { link: NavLink; className?: string; children?: React.ReactNode }) {
+function SiteLink({
+  link,
+  className,
+  children,
+}: {
+  link: NavLink;
+  className?: string;
+  children?: React.ReactNode;
+}) {
   return link.href.startsWith('/discovery') ? (
     <DiscoveryLink className={className}>{children ?? link.name}</DiscoveryLink>
   ) : (
@@ -265,15 +357,29 @@ function SiteLink({ link, className, children }: { link: NavLink; className?: st
 }
 
 /** Marks the menu button while there are new hearts, or profiles or reports wait for a moderator. */
-function MenuDot({ pending, reports, hearts }: { pending: number; reports: number; hearts: number }) {
+function MenuDot({
+  pending,
+  reports,
+  hearts,
+}: {
+  pending: number;
+  reports: number;
+  hearts: number;
+}) {
   const news = [
     hearts > 0 && `${hearts} new ${hearts === 1 ? 'heart' : 'hearts'}`,
-    pending > 0 && `${pending} ${pending === 1 ? 'profile' : 'profiles'} waiting for review`,
+    pending > 0 &&
+      `${pending} ${pending === 1 ? 'profile' : 'profiles'} waiting for review`,
     reports > 0 && `${reports} ${reports === 1 ? 'report' : 'reports'} waiting`,
   ].filter(Boolean);
   return (
     <>
-      {news.length > 0 && <span className='bg-primary absolute -top-1 -right-1 size-2.5 rounded-full' aria-hidden='true' />}
+      {news.length > 0 && (
+        <span
+          className='absolute -top-1 -right-1 size-2.5 rounded-full bg-primary'
+          aria-hidden='true'
+        />
+      )}
       <span className='sr-only'>{['Open menu', ...news].join(', ')}</span>
     </>
   );
@@ -310,8 +416,11 @@ function SheetSection({ title, links }: { title: string; links: NavLink[] }) {
         {links.map((link) => (
           <li key={link.href}>
             <SheetClose asChild>
-              <SiteLink link={link} className='hover:bg-muted flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors'>
-                <link.icon className='text-primary size-4' aria-hidden='true' />
+              <SiteLink
+                link={link}
+                className='flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors hover:bg-muted'
+              >
+                <link.icon className='size-4 text-primary' aria-hidden='true' />
                 {link.name}
                 <Count count={link.count} />
               </SiteLink>

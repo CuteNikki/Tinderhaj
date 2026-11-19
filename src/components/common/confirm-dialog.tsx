@@ -43,7 +43,7 @@ export function useConfirm() {
         setPending({ ...options, resolve });
         setOpen(true);
       }),
-    [],
+    []
   );
 
   // Resolving twice does nothing, so closing after confirming stays a yes.
@@ -58,11 +58,22 @@ export function useConfirm() {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{pending?.title}</AlertDialogTitle>
-          {pending?.description && <AlertDialogDescription>{pending.description}</AlertDialogDescription>}
+          {pending?.description && (
+            <AlertDialogDescription>
+              {pending.description}
+            </AlertDialogDescription>
+          )}
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction className={pending?.destructive ? buttonVariants({ variant: 'destructive' }) : undefined} onClick={() => settle(true)}>
+          <AlertDialogAction
+            className={
+              pending?.destructive
+                ? buttonVariants({ variant: 'destructive' })
+                : undefined
+            }
+            onClick={() => settle(true)}
+          >
             {pending?.action}
           </AlertDialogAction>
         </AlertDialogFooter>

@@ -20,7 +20,13 @@ export async function hashPassword(password: string) {
   return `${salt}:${await scryptHex(password, salt)}`;
 }
 
-export async function verifyPassword({ hash, password }: { hash: string; password: string }) {
+export async function verifyPassword({
+  hash,
+  password,
+}: {
+  hash: string;
+  password: string;
+}) {
   const [salt, expected] = hash.split(':');
 
   if (!salt || !expected) return false;

@@ -1,8 +1,9 @@
-import { SparklesIcon } from 'lucide-react';
+import { signUpMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { signUpMetadata } from '@/constants/metadata';
+import { SparklesIcon } from 'lucide-react';
+
 import { enabledProviders } from '@/lib/auth';
 import { requireSignedOut } from '@/lib/session';
 
@@ -23,9 +24,12 @@ export default async function SignUpPage() {
       title='Create your account'
       description='Join Tinderhaj to find your perfect plush match.'
       footer={
-        <p className='text-muted-foreground text-center text-sm'>
+        <p className='text-center text-sm text-muted-foreground'>
           Already have an account?{' '}
-          <Link href='/sign-in' className='text-foreground font-medium underline'>
+          <Link
+            href='/sign-in'
+            className='font-medium text-foreground underline'
+          >
             Sign in
           </Link>
         </p>
@@ -34,13 +38,16 @@ export default async function SignUpPage() {
       <SignUpForm />
       {enabledProviders.length > 0 && (
         <>
-          <div className='text-muted-foreground my-2 flex items-center gap-3 text-xs'>
-            <span className='bg-border h-px flex-1' />
+          <div className='my-2 flex items-center gap-3 text-xs text-muted-foreground'>
+            <span className='h-px flex-1 bg-border' />
             or
-            <span className='bg-border h-px flex-1' />
+            <span className='h-px flex-1 bg-border' />
           </div>
           {/* Signing up with a provider lands on sign-in if it fails, which says why. */}
-          <SocialButtons providers={enabledProviders} errorCallbackURL='/sign-in' />
+          <SocialButtons
+            providers={enabledProviders}
+            errorCallbackURL='/sign-in'
+          />
         </>
       )}
       <LegalNotice />

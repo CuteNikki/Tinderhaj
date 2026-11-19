@@ -1,7 +1,8 @@
-import { ShieldCheckIcon } from 'lucide-react';
+import { twoFactorMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 
-import { twoFactorMetadata } from '@/constants/metadata';
+import { ShieldCheckIcon } from 'lucide-react';
+
 import { requireSignedOut } from '@/lib/session';
 
 import { AuthShell } from '@/components/auth/auth-shell';
@@ -13,11 +14,14 @@ export const metadata: Metadata = twoFactorMetadata;
  * The second step of signing in with a password, for accounts with
  * two-step sign-in on. The sign-in form sends people here.
  */
-export default async function TwoFactorPage({ searchParams }: PageProps<'/two-factor'>) {
+export default async function TwoFactorPage({
+  searchParams,
+}: PageProps<'/two-factor'>) {
   await requireSignedOut();
 
   const { methods } = await searchParams;
-  const hasApp = typeof methods === 'string' && methods.split(',').includes('totp');
+  const hasApp =
+    typeof methods === 'string' && methods.split(',').includes('totp');
 
   return (
     <AuthShell

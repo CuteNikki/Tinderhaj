@@ -1,15 +1,22 @@
+import { SOCIALS } from '@/constants/contact';
+
 import { ArrowUpRightIcon } from 'lucide-react';
 
-import { SOCIALS } from '@/constants/contact';
-import { socialLink } from '@/lib/social-link';
 import { LIFT, STAGGER } from '@/lib/motion';
+import { socialLink } from '@/lib/social-link';
+import { cn } from '@/lib/utils';
 
 import { Stagger } from '@/components/common/stagger';
 import { SocialIcon } from '@/components/contact/social-icon';
-import { cn } from '@/lib/utils';
 
 /** Where to find Tinderhaj around the internet, as cards coming in after `delay`; nothing at all if none has a link yet. */
-export function SocialLinks({ delay, className }: { delay: number; className?: string }) {
+export function SocialLinks({
+  delay,
+  className,
+}: {
+  delay: number;
+  className?: string;
+}) {
   const socials = SOCIALS.filter((social) => social.href);
   if (socials.length === 0) return null;
 
@@ -20,7 +27,10 @@ export function SocialLinks({ delay, className }: { delay: number; className?: s
       variant='card'
       gap={STAGGER}
       delay={delay}
-      className={cn('grid grid-cols-[repeat(auto-fit,minmax(min(100%,20rem),1fr))] gap-3', className)}
+      className={cn(
+        'grid grid-cols-[repeat(auto-fit,minmax(min(100%,20rem),1fr))] gap-3',
+        className
+      )}
       itemClassName='h-full'
     >
       {socials.map((social) => (
@@ -30,17 +40,22 @@ export function SocialLinks({ delay, className }: { delay: number; className?: s
           target='_blank'
           rel='noreferrer'
           title={social.handle ?? undefined}
-          className={`group/social border-foreground/10 bg-card dark:bg-accent flex h-full items-start gap-4 rounded-2xl border p-4 shadow-sm ${LIFT}`}
+          className={`group/social flex h-full items-start gap-4 rounded-2xl border border-foreground/10 bg-card p-4 shadow-sm dark:bg-accent ${LIFT}`}
         >
-          <span className='bg-foreground/5 ease-bounce flex size-10 shrink-0 items-center justify-center rounded-full transition-transform duration-300 group-hover/social:scale-110'>
-            <SocialIcon id={social.id} className='group-hover/social:animate-wiggle size-5' />
+          <span className='flex size-10 shrink-0 items-center justify-center rounded-full bg-foreground/5 transition-transform duration-300 ease-bounce group-hover/social:scale-110'>
+            <SocialIcon
+              id={social.id}
+              className='size-5 group-hover/social:animate-wiggle'
+            />
           </span>
           <span className='min-w-0 flex-1'>
             <span className='block font-bold'>{social.name}</span>
-            <span className='text-muted-foreground block text-sm text-pretty'>{social.blurb}</span>
+            <span className='block text-sm text-pretty text-muted-foreground'>
+              {social.blurb}
+            </span>
           </span>
           <ArrowUpRightIcon
-            className='text-muted-foreground ease-bounce mt-1 size-4 shrink-0 transition-transform duration-300 group-hover/social:translate-x-0.5 group-hover/social:-translate-y-0.5'
+            className='mt-1 size-4 shrink-0 text-muted-foreground transition-transform duration-300 ease-bounce group-hover/social:translate-x-0.5 group-hover/social:-translate-y-0.5'
             aria-hidden='true'
           />
         </a>

@@ -4,7 +4,8 @@
  */
 function required(name: string) {
   const value = process.env[name];
-  if (!value) throw new Error(`${name} is not defined in the environment variables`);
+  if (!value)
+    throw new Error(`${name} is not defined in the environment variables`);
   return value;
 }
 

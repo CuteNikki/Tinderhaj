@@ -1,27 +1,53 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-
-import { BadgeCheckIcon, CakeIcon, MapPinIcon, RulerIcon, XCircleIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
-import type { ProfileWithOwner } from '@/lib/queries';
+import {
+  BadgeCheckIcon,
+  CakeIcon,
+  MapPinIcon,
+  RulerIcon,
+  XCircleIcon,
+} from 'lucide-react';
+
 import { rejectProfile, verifyProfile } from '@/lib/actions';
 import { PROFILE_FIELDS } from '@/lib/profile-fields';
+import type { ProfileWithOwner } from '@/lib/queries';
 import { calculateAge, cn } from '@/lib/utils';
 
-import { ProfileAvatar, ProfileBanner } from '@/components/profiles/profile-image';
+import {
+  ProfileAvatar,
+  ProfileBanner,
+} from '@/components/profiles/profile-image';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 
 /**
  * A shark waiting for review, to verify or reject. `fullBio` shows all of the bio, for the shark's own review page; `eager` for one in view as the
  * page opens (see ProfileBanner).
  */
-export function VerifyProfileCard({ profile, fullBio = false, eager = false }: { profile: ProfileWithOwner; fullBio?: boolean; eager?: boolean }) {
+export function VerifyProfileCard({
+  profile,
+  fullBio = false,
+  eager = false,
+}: {
+  profile: ProfileWithOwner;
+  fullBio?: boolean;
+  eager?: boolean;
+}) {
   const [isVerifying, startVerifyTransition] = useTransition();
   const [isRejecting, startRejectTransition] = useTransition();
   const [isHandled, setIsHandled] = useState(false);
@@ -30,32 +56,48 @@ export function VerifyProfileCard({ profile, fullBio = false, eager = false }: {
   const [note, setNote] = useState('');
 
   function toggleField(key: string) {
-    setRejectedFields((current) => (current.includes(key) ? current.filter((field) => field !== key) : [...current, key]));
+    setRejectedFields((current) =>
+      current.includes(key)
+        ? current.filter((field) => field !== key)
+        : [...current, key]
+    );
   }
 
   function handleVerify() {
     startVerifyTransition(async () => {
-      const error = await verifyProfile({ profileId: profile.id }).catch(() => ({ message: 'Unable to verify this profile.' }));
+      const error = await verifyProfile({ profileId: profile.id }).catch(
+        () => ({ message: 'Unable to verify this profile.' })
+      );
 
       if (error) {
         toast.error(error.message, { duration: 5000, position: 'top-center' });
       } else {
         setIsHandled(true);
-        toast.success(`"${profile.displayName}" verified!`, { duration: 4000, position: 'top-center' });
+        toast.success(`"${profile.displayName}" verified!`, {
+          duration: 4000,
+          position: 'top-center',
+        });
       }
     });
   }
 
   function handleReject() {
     startRejectTransition(async () => {
-      const error = await rejectProfile({ profileId: profile.id, rejectedFields, note: note.trim() || undefined });
+      const error = await rejectProfile({
+        profileId: profile.id,
+        rejectedFields,
+        note: note.trim() || undefined,
+      });
 
       if (error) {
         toast.error(error.message, { duration: 5000, position: 'top-center' });
       } else {
         setRejectOpen(false);
         setIsHandled(true);
-        toast.success(`"${profile.displayName}" rejected.`, { duration: 4000, position: 'top-center' });
+        toast.success(`"${profile.displayName}" rejected.`, {
+          duration: 4000,
+          position: 'top-center',
+        });
       }
     });
   }
@@ -63,41 +105,57 @@ export function VerifyProfileCard({ profile, fullBio = false, eager = false }: {
   if (isHandled) return null;
 
   return (
-    <Card className='border-foreground/10 bg-background h-full w-full overflow-hidden pt-0 shadow-sm'>
+    <Card className='h-full w-full overflow-hidden border-foreground/10 bg-background pt-0 shadow-sm'>
       <div className='relative aspect-5/2 overflow-hidden'>
-        <ProfileBanner src={profile.bannerUrl} alt={`${profile.displayName}'s banner`} eager={eager} />
+        <ProfileBanner
+          src={profile.bannerUrl}
+          alt={`${profile.displayName}'s banner`}
+          eager={eager}
+        />
       </div>
 
       <CardContent className='-mt-8 px-4 pb-5 sm:px-6'>
         <div className='relative flex items-start gap-4'>
-          <div className='border-background bg-muted h-18 w-18 shrink-0 overflow-hidden rounded-full border-4 shadow-md'>
-            <ProfileAvatar src={profile.avatarUrl} alt={`${profile.displayName}'s avatar`} eager={eager} />
+          <div className='h-18 w-18 shrink-0 overflow-hidden rounded-full border-4 border-background bg-muted shadow-md'>
+            <ProfileAvatar
+              src={profile.avatarUrl}
+              alt={`${profile.displayName}'s avatar`}
+              eager={eager}
+            />
           </div>
           <div className='min-w-0 flex-1 pt-4'>
             <div className='flex flex-wrap items-center gap-x-2'>
-              <h2 className='text-foreground max-w-full truncate text-xl font-black tracking-tight'>{profile.displayName}</h2>
-              {profile.pronouns && <span className='text-muted-foreground text-sm'>({profile.pronouns})</span>}
+              <h2 className='max-w-full truncate text-xl font-black tracking-tight text-foreground'>
+                {profile.displayName}
+              </h2>
+              {profile.pronouns && (
+                <span className='text-sm text-muted-foreground'>
+                  ({profile.pronouns})
+                </span>
+              )}
             </div>
-            <p className='text-muted-foreground truncate text-sm'>@{profile.user.username}</p>
+            <p className='truncate text-sm text-muted-foreground'>
+              @{profile.user.username}
+            </p>
           </div>
         </div>
 
-        <div className='text-muted-foreground mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm'>
+        <div className='mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground'>
           {profile.birthday && (
             <span className='flex items-center gap-1.5'>
-              <CakeIcon className='text-primary h-3.5 w-3.5' />
+              <CakeIcon className='h-3.5 w-3.5 text-primary' />
               {calculateAge(profile.birthday)} years old
             </span>
           )}
           {profile.location && (
             <span className='flex items-center gap-1.5'>
-              <MapPinIcon className='text-primary h-3.5 w-3.5' />
+              <MapPinIcon className='h-3.5 w-3.5 text-primary' />
               {profile.location}
             </span>
           )}
           {profile.size != null && (
             <span className='flex items-center gap-1.5'>
-              <RulerIcon className='text-primary h-3.5 w-3.5' />
+              <RulerIcon className='h-3.5 w-3.5 text-primary' />
               {profile.size}
               {profile.unit.toLowerCase()}
             </span>
@@ -105,7 +163,12 @@ export function VerifyProfileCard({ profile, fullBio = false, eager = false }: {
         </div>
 
         {profile.bio && (
-          <p className={cn('text-foreground/80 mt-4 text-sm leading-relaxed', fullBio ? 'wrap-break-word whitespace-pre-line' : 'line-clamp-3')}>
+          <p
+            className={cn(
+              'mt-4 text-sm leading-relaxed text-foreground/80',
+              fullBio ? 'wrap-break-word whitespace-pre-line' : 'line-clamp-3'
+            )}
+          >
             {profile.bio}
           </p>
         )}
@@ -113,7 +176,11 @@ export function VerifyProfileCard({ profile, fullBio = false, eager = false }: {
         {profile.interests.length > 0 && (
           <div className='mt-4 flex flex-wrap gap-1.5'>
             {profile.interests.map((interest) => (
-              <Badge key={interest} variant='secondary' className='rounded-full text-xs font-semibold'>
+              <Badge
+                key={interest}
+                variant='secondary'
+                className='rounded-full text-xs font-semibold'
+              >
                 {interest}
               </Badge>
             ))}
@@ -121,33 +188,57 @@ export function VerifyProfileCard({ profile, fullBio = false, eager = false }: {
         )}
 
         <div className='mt-4 flex gap-2'>
-          <Button variant='default' size='sm' className='flex-1' onClick={handleVerify} disabled={isVerifying || isRejecting}>
+          <Button
+            variant='default'
+            size='sm'
+            className='flex-1'
+            onClick={handleVerify}
+            disabled={isVerifying || isRejecting}
+          >
             <BadgeCheckIcon />
             {isVerifying ? 'Verifying…' : 'Verify'}
           </Button>
           <Dialog open={rejectOpen} onOpenChange={setRejectOpen}>
             <DialogTrigger asChild>
-              <Button variant='destructive' size='sm' className='flex-1' disabled={isVerifying || isRejecting}>
+              <Button
+                variant='destructive'
+                size='sm'
+                className='flex-1'
+                disabled={isVerifying || isRejecting}
+              >
                 <XCircleIcon />
                 Reject
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Reject &quot;{profile.displayName}&quot;?</DialogTitle>
+                <DialogTitle>
+                  Reject &quot;{profile.displayName}&quot;?
+                </DialogTitle>
                 <DialogDescription>
-                  Pick which fields need fixing, leave a note, or both, so they know what to change. Nothing is changed except the status.
+                  Pick which fields need fixing, leave a note, or both, so they
+                  know what to change. Nothing is changed except the status.
                 </DialogDescription>
               </DialogHeader>
 
               <div className='space-y-4'>
                 <div className='space-y-2'>
-                  <p className='text-sm leading-none font-medium'>Fields that need fixing</p>
+                  <p className='text-sm leading-none font-medium'>
+                    Fields that need fixing
+                  </p>
                   <div className='flex flex-wrap gap-1.5'>
                     {PROFILE_FIELDS.map((field) => (
-                      <button key={field.key} type='button' onClick={() => toggleField(field.key)}>
+                      <button
+                        key={field.key}
+                        type='button'
+                        onClick={() => toggleField(field.key)}
+                      >
                         <Badge
-                          variant={rejectedFields.includes(field.key) ? 'destructive' : 'outline'}
+                          variant={
+                            rejectedFields.includes(field.key)
+                              ? 'destructive'
+                              : 'outline'
+                          }
                           className='cursor-pointer rounded-full px-3 py-1 text-xs font-semibold'
                         >
                           {field.label}
@@ -172,7 +263,13 @@ export function VerifyProfileCard({ profile, fullBio = false, eager = false }: {
                   <Button variant='secondary'>Cancel</Button>
                 </DialogClose>
                 {/* Something to go on: a field to fix, a note, or both */}
-                <Button variant='destructive' onClick={handleReject} disabled={isRejecting || (!rejectedFields.length && !note.trim())}>
+                <Button
+                  variant='destructive'
+                  onClick={handleReject}
+                  disabled={
+                    isRejecting || (!rejectedFields.length && !note.trim())
+                  }
+                >
                   {isRejecting ? 'Rejecting…' : 'Reject'}
                 </Button>
               </DialogFooter>

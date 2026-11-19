@@ -1,9 +1,9 @@
 'use client';
 
-import { CheckIcon, CopyIcon } from 'lucide-react';
+import { CONTACT_EMAIL } from '@/constants/contact';
 import { useState } from 'react';
 
-import { CONTACT_EMAIL } from '@/constants/contact';
+import { CheckIcon, CopyIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 

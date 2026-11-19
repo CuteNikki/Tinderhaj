@@ -1,8 +1,9 @@
-import { LockKeyholeIcon } from 'lucide-react';
+import { signInMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { signInMetadata } from '@/constants/metadata';
+import { LockKeyholeIcon } from 'lucide-react';
+
 import { enabledProviders } from '@/lib/auth';
 import { socialErrorMessage } from '@/lib/providers';
 import { requireSignedOut } from '@/lib/session';
@@ -13,7 +14,9 @@ import { SignInForm } from '@/components/auth/sign-in-form';
 
 export const metadata: Metadata = signInMetadata;
 
-export default async function SignInPage({ searchParams }: PageProps<'/sign-in'>) {
+export default async function SignInPage({
+  searchParams,
+}: PageProps<'/sign-in'>) {
   await requireSignedOut();
 
   const { error } = await searchParams;
@@ -25,15 +28,23 @@ export default async function SignInPage({ searchParams }: PageProps<'/sign-in'>
       title='Sign in to Tinderhaj'
       description='Pick up right where you left off with your plush matches.'
       footer={
-        <p className='text-muted-foreground text-center text-sm'>
+        <p className='text-center text-sm text-muted-foreground'>
           Don&apos;t have an account?{' '}
-          <Link href='/sign-up' className='text-foreground font-medium underline'>
+          <Link
+            href='/sign-up'
+            className='font-medium text-foreground underline'
+          >
             Sign up
           </Link>
         </p>
       }
     >
-      <SignInForm providers={enabledProviders} error={typeof error === 'string' ? socialErrorMessage(error) : undefined} />
+      <SignInForm
+        providers={enabledProviders}
+        error={
+          typeof error === 'string' ? socialErrorMessage(error) : undefined
+        }
+      />
       <LegalNotice />
     </AuthShell>
   );

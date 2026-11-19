@@ -1,8 +1,13 @@
-import { Eyebrow } from '@/components/common/heading';
-import { ScrollReveal } from '@/components/home/scroll-reveal';
 import { cn } from '@/lib/utils';
 
-const TONES = { muted: 'bg-muted', card: 'bg-card text-card-foreground', background: 'bg-background' };
+import { Eyebrow } from '@/components/common/heading';
+import { ScrollReveal } from '@/components/home/scroll-reveal';
+
+const TONES = {
+  muted: 'bg-muted',
+  card: 'bg-card text-card-foreground',
+  background: 'bg-background',
+};
 
 /**
  * A section of a page after its hero: a small blue label over a big heading,
@@ -46,7 +51,11 @@ export function Section({
             </>
           )}
         </h2>
-        {note && <p className='text-muted-foreground mt-3 max-w-xl text-sm leading-relaxed'>{note}</p>}
+        {note && (
+          <p className='mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground'>
+            {note}
+          </p>
+        )}
       </div>
       {children}
     </>
@@ -54,11 +63,19 @@ export function Section({
 
   return (
     // Inset like the pages they follow, so their edges line up
-    <section id={id} className={cn('text-foreground relative scroll-m-16 px-4 py-18 sm:px-5 lg:px-8', TONES[tone])}>
+    <section
+      id={id}
+      className={cn(
+        'relative scroll-m-16 px-4 py-18 text-foreground sm:px-5 lg:px-8',
+        TONES[tone]
+      )}
+    >
       {edge && (
         // Standing on the line, over what's above it
         <div className='pointer-events-none absolute inset-x-0 bottom-full px-4 sm:px-5 lg:px-8'>
-          <div className='container mx-auto flex max-w-7xl justify-end pr-6'>{edge}</div>
+          <div className='container mx-auto flex max-w-7xl justify-end pr-6'>
+            {edge}
+          </div>
         </div>
       )}
       <ScrollReveal>

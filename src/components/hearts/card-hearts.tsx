@@ -1,7 +1,8 @@
 'use client';
 
-import { HeartIcon, Loader2Icon } from 'lucide-react';
 import Link from 'next/link';
+
+import { HeartIcon, Loader2Icon } from 'lucide-react';
 
 import type { HeartState } from '@/lib/hearts';
 import { cn } from '@/lib/utils';
@@ -18,7 +19,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 type Target = { id: string; displayName: string };
 
@@ -45,11 +50,21 @@ export function CardHearts({
   if (own) return null;
 
   if (!signedIn || !states?.length) {
-    const label = signedIn ? 'Get one of your sharks verified to send hearts' : `Sign in to send ${target.displayName} a heart`;
+    const label = signedIn
+      ? 'Get one of your sharks verified to send hearts'
+      : `Sign in to send ${target.displayName} a heart`;
     return (
       <Hint label={label}>
-        <Button variant='outline' size='icon-sm' className='text-muted-foreground' asChild>
-          <Link href={signedIn ? '/dashboard/profiles' : '/sign-in'} aria-label={label}>
+        <Button
+          variant='outline'
+          size='icon-sm'
+          className='text-muted-foreground'
+          asChild
+        >
+          <Link
+            href={signedIn ? '/dashboard/profiles' : '/sign-in'}
+            aria-label={label}
+          >
             <HeartIcon aria-hidden='true' />
           </Link>
         </Button>
@@ -79,29 +94,59 @@ export function CardHearts({
           received={received}
           pending={pending}
           label={label}
-          onClick={() => (state.sent ? takeBack(shark, target) : send(shark, target))}
+          onClick={() =>
+            state.sent ? takeBack(shark, target) : send(shark, target)
+          }
         />
       </Hint>
     );
   }
 
-  const label = matched ? 'Matched. Choose a shark' : received ? `${target.displayName} hearted one of your sharks` : `Heart ${target.displayName}`;
+  const label = matched
+    ? 'Matched. Choose a shark'
+    : received
+      ? `${target.displayName} hearted one of your sharks`
+      : `Heart ${target.displayName}`;
   return (
     <DropdownMenu>
       <Hint label={label}>
         <DropdownMenuTrigger asChild>
-          <HeartCircle matched={matched} sent={sent} received={received} pending={pending} label={label} />
+          <HeartCircle
+            matched={matched}
+            sent={sent}
+            received={received}
+            pending={pending}
+            label={label}
+          />
         </DropdownMenuTrigger>
       </Hint>
       <DropdownMenuContent align='end' className='w-64'>
-        <DropdownMenuLabel className='text-muted-foreground text-xs font-normal'>Heart {target.displayName} as</DropdownMenuLabel>
+        <DropdownMenuLabel className='text-xs font-normal text-muted-foreground'>
+          Heart {target.displayName} as
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         {states.map(({ shark, sent, received }) => (
-          <DropdownMenuItem key={shark.id} onSelect={() => (sent ? takeBack(shark, target) : send(shark, target))}>
+          <DropdownMenuItem
+            key={shark.id}
+            onSelect={() =>
+              sent ? takeBack(shark, target) : send(shark, target)
+            }
+          >
             <SharkAvatar shark={shark} className='size-6' />
             <span className='min-w-0 flex-1 truncate'>{shark.displayName}</span>
-            <span className='text-muted-foreground text-xs'>{sent && received ? 'Match' : sent ? 'Hearted' : received ? 'Heart back' : ''}</span>
-            <HeartIcon className={cn('text-primary', sent && 'fill-current')} aria-hidden='true' />
+            <span className='text-xs text-muted-foreground'>
+              {sent && received
+                ? 'Match'
+                : sent
+                  ? 'Hearted'
+                  : received
+                    ? 'Heart back'
+                    : ''}
+            </span>
+            <HeartIcon
+              className={cn('text-primary', sent && 'fill-current')}
+              aria-hidden='true'
+            />
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
@@ -109,7 +154,13 @@ export function CardHearts({
   );
 }
 
-function Hint({ label, children }: { label: string; children: React.ReactNode }) {
+function Hint({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
   return (
     <Tooltip>
       <TooltipTrigger asChild>{children}</TooltipTrigger>
@@ -125,7 +176,13 @@ function HeartCircle({
   pending,
   label,
   ...props
-}: React.ComponentProps<typeof Button> & { matched: boolean; sent: boolean; received: boolean; pending: boolean; label: string }) {
+}: React.ComponentProps<typeof Button> & {
+  matched: boolean;
+  sent: boolean;
+  received: boolean;
+  pending: boolean;
+  label: string;
+}) {
   return (
     <Button
       variant={matched ? 'default' : 'outline'}
@@ -139,14 +196,25 @@ function HeartCircle({
         <Loader2Icon className='animate-spin' aria-hidden='true' />
       ) : (
         // A new key when it fills in, so the heart pops each time.
-        <Enter as='span' key={String(sent)} variant='pop' className='inline-flex'>
-          <HeartIcon className={cn(sent && 'fill-current')} aria-hidden='true' />
+        <Enter
+          as='span'
+          key={String(sent)}
+          variant='pop'
+          className='inline-flex'
+        >
+          <HeartIcon
+            className={cn(sent && 'fill-current')}
+            aria-hidden='true'
+          />
         </Enter>
       )}
       {received && (
-        <span className='absolute -top-0.5 -right-0.5 flex size-2.5' aria-hidden='true'>
-          <span className='bg-primary absolute inline-flex size-full animate-ping rounded-full opacity-75' />
-          <span className='bg-primary relative inline-flex size-2.5 rounded-full' />
+        <span
+          className='absolute -top-0.5 -right-0.5 flex size-2.5'
+          aria-hidden='true'
+        >
+          <span className='absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-75' />
+          <span className='relative inline-flex size-2.5 rounded-full bg-primary' />
         </span>
       )}
     </Button>

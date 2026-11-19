@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { cn } from '@/lib/utils';
+
 import { Eyebrow } from '@/components/common/heading';
 
 const LEGAL_PAGES = [
@@ -17,7 +18,11 @@ const LEGAL_PAGES = [
 const READING_LINE = 120;
 
 /** Beside a legal page: its sections, the one being read marked, and the other legal pages. */
-export function LegalContents({ sections }: { sections: { id: string; title: string }[] }) {
+export function LegalContents({
+  sections,
+}: {
+  sections: { id: string; title: string }[];
+}) {
   const pathname = usePathname();
   const [reading, setReading] = useState<string | null>(null);
 
@@ -26,9 +31,19 @@ export function LegalContents({ sections }: { sections: { id: string; title: str
     const update = () => {
       frame = 0;
       // At the very bottom, the last one, even if it's too short to reach the top
-      const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
-      const passed = sections.filter(({ id }) => (document.getElementById(id)?.getBoundingClientRect().top ?? Infinity) <= READING_LINE);
-      setReading(atBottom ? sections[sections.length - 1]?.id : (passed[passed.length - 1]?.id ?? sections[0]?.id));
+      const atBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 2;
+      const passed = sections.filter(
+        ({ id }) =>
+          (document.getElementById(id)?.getBoundingClientRect().top ??
+            Infinity) <= READING_LINE
+      );
+      setReading(
+        atBottom
+          ? sections[sections.length - 1]?.id
+          : (passed[passed.length - 1]?.id ?? sections[0]?.id)
+      );
     };
     const schedule = () => {
       if (!frame) frame = requestAnimationFrame(update);
@@ -48,7 +63,7 @@ export function LegalContents({ sections }: { sections: { id: string; title: str
       <Eyebrow as='h2' className='mb-4'>
         On this page
       </Eyebrow>
-      <ol className='border-border border-l'>
+      <ol className='border-l border-border'>
         {sections.map(({ id, title }) => (
           <li key={id}>
             <a
@@ -57,7 +72,9 @@ export function LegalContents({ sections }: { sections: { id: string; title: str
               className={cn(
                 '-ml-px block border-l-2 py-1.5 pl-3 leading-snug transition-colors',
                 // Marked by color and the line alone: bolder, it'd be wider, and could wrap and push the rest down
-                reading === id ? 'border-primary text-foreground' : 'text-muted-foreground hover:text-foreground border-transparent',
+                reading === id
+                  ? 'border-primary text-foreground'
+                  : 'border-transparent text-muted-foreground hover:text-foreground'
               )}
             >
               {title.replace(/^\d+\.\s*/, '')}
@@ -74,7 +91,12 @@ export function LegalContents({ sections }: { sections: { id: string; title: str
             <Link
               href={href}
               aria-current={pathname === href ? 'page' : undefined}
-              className={cn('transition-colors', pathname === href ? 'text-foreground' : 'text-muted-foreground hover:text-foreground')}
+              className={cn(
+                'transition-colors',
+                pathname === href
+                  ? 'text-foreground'
+                  : 'text-muted-foreground hover:text-foreground'
+              )}
             >
               {name}
             </Link>

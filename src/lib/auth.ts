@@ -1,15 +1,6 @@
 import 'server-only';
 
-import { passkey } from '@better-auth/passkey';
-import { betterAuth } from 'better-auth';
-import { prismaAdapter } from 'better-auth/adapters/prisma';
-import { APIError, createAuthMiddleware, getSessionFromCtx, isAPIError } from 'better-auth/api';
-import { nextCookies } from 'better-auth/next-js';
-import { twoFactor } from 'better-auth/plugins';
-import type { DiscordProfile, GithubProfile, SocialProviders, TwitchProfile, TwitterProfile } from 'better-auth/social-providers';
 import { randomInt } from 'crypto';
-import { after } from 'next/server';
-
 import {
   MAX_PASSWORD_LENGTH,
   MAX_USERNAME_LENGTH,
@@ -18,18 +9,51 @@ import {
   PASSWORD_RESET_TOKEN_EXPIRATION,
   SESSION_EXPIRATION,
 } from '@/constants/auth';
-import { BAN_NOTICE_COOKIE, BAN_NOTICE_MAX_AGE, signBanNotice } from '@/lib/ban-notice';
+import { passkey } from '@better-auth/passkey';
+import { betterAuth } from 'better-auth';
+import { prismaAdapter } from 'better-auth/adapters/prisma';
+import {
+  APIError,
+  createAuthMiddleware,
+  getSessionFromCtx,
+  isAPIError,
+} from 'better-auth/api';
+import { nextCookies } from 'better-auth/next-js';
+import { twoFactor } from 'better-auth/plugins';
+import type {
+  DiscordProfile,
+  GithubProfile,
+  SocialProviders,
+  TwitchProfile,
+  TwitterProfile,
+} from 'better-auth/social-providers';
+import { after } from 'next/server';
+
+import {
+  BAN_NOTICE_COOKIE,
+  BAN_NOTICE_MAX_AGE,
+  signBanNotice,
+} from '@/lib/ban-notice';
 import { isBanned } from '@/lib/bans';
-import { clearDiscordRolesLater, syncDiscordRolesLater } from '@/lib/discord-roles';
 import { dropReviewsLater } from '@/lib/discord-review';
-import { sendDeleteAccountEmail, sendEmailChangeConfirmation, sendPasswordResetEmail, sendTwoFactorCode, sendVerificationEmail } from '@/lib/email';
+import {
+  clearDiscordRolesLater,
+  syncDiscordRolesLater,
+} from '@/lib/discord-roles';
+import {
+  sendDeleteAccountEmail,
+  sendEmailChangeConfirmation,
+  sendPasswordResetEmail,
+  sendTwoFactorCode,
+  sendVerificationEmail,
+} from '@/lib/email';
 import { hashPassword, verifyPassword } from '@/lib/password-hasher';
-import { isAdmin } from '@/lib/roles';
-import { siteURL } from '@/lib/site-url';
 import prisma from '@/lib/prisma';
 import { SOCIAL_PROVIDERS, type SocialProviderId } from '@/lib/providers';
-import { deleteUploadsLater } from '@/lib/storage';
+import { isAdmin } from '@/lib/roles';
 import { usernameSchema } from '@/lib/schemas';
+import { siteURL } from '@/lib/site-url';
+import { deleteUploadsLater } from '@/lib/storage';
 
 /**
  * Where Better Auth keeps the devices that skip two-step sign-in ("Don't ask
@@ -55,13 +79,22 @@ async function assertUsernameAvailable(name: unknown, ownUserId?: string) {
   const { success, data, error } = usernameSchema.safeParse(name);
 
   if (!success) {
-    throw new APIError('BAD_REQUEST', { code: 'INVALID_USERNAME', message: error.issues[0]?.message ?? 'Username is invalid!' });
+    throw new APIError('BAD_REQUEST', {
+      code: 'INVALID_USERNAME',
+      message: error.issues[0]?.message ?? 'Username is invalid!',
+    });
   }
 
-  const taken = await prisma.user.findUnique({ where: { username: data }, select: { id: true } });
+  const taken = await prisma.user.findUnique({
+    where: { username: data },
+    select: { id: true },
+  });
 
   if (taken && taken.id !== ownUserId) {
-    throw new APIError('BAD_REQUEST', { code: 'USERNAME_TAKEN', message: 'Username is already in use!' });
+    throw new APIError('BAD_REQUEST', {
+      code: 'USERNAME_TAKEN',
+      message: 'Username is already in use!',
+    });
   }
 }
 
@@ -70,7 +103,10 @@ async function assertUsernameAvailable(name: unknown, ownUserId?: string) {
  * "nikki_b", or "nikki_b_4821" if that's taken. For people signing up with a
  * provider, whose name there rarely fits.
  */
-async function availableUsername(wanted: string | null | undefined, email: string) {
+async function availableUsername(
+  wanted: string | null | undefined,
+  email: string
+) {
   const slug = (value: string) =>
     value
       .normalize('NFKD')
@@ -79,7 +115,11 @@ async function availableUsername(wanted: string | null | undefined, email: strin
       .replace(/[^a-z0-9_]+/g, '_')
       .replace(/^_+|_+$/g, '')
       .slice(0, MAX_USERNAME_LENGTH);
-  const isFree = async (username: string) => !(await prisma.user.findUnique({ where: { username }, select: { id: true } }));
+  const isFree = async (username: string) =>
+    !(await prisma.user.findUnique({
+      where: { username },
+      select: { id: true },
+    }));
 
   let base = slug(wanted ?? '');
   if (base.length < MIN_USERNAME_LENGTH) base = slug(email.split('@')[0]);
@@ -101,21 +141,40 @@ function credentials(id: SocialProviderId) {
 }
 
 /** Social providers with credentials set, so their buttons show. */
-export const enabledProviders: SocialProviderId[] = SOCIAL_PROVIDERS.map((provider) => provider.id).filter((id) => credentials(id));
+export const enabledProviders: SocialProviderId[] = SOCIAL_PROVIDERS.map(
+  (provider) => provider.id
+).filter((id) => credentials(id));
 
 // Where providers have a handle, it makes a better username than a full name.
 const providerOptions = {
   google: {},
   apple: { appBundleIdentifier: process.env.APPLE_APP_BUNDLE_IDENTIFIER },
   microsoft: {},
-  github: { mapProfileToUser: (profile: GithubProfile) => ({ name: profile.login }) },
-  discord: { mapProfileToUser: (profile: DiscordProfile) => ({ name: profile.username }) },
-  twitter: { mapProfileToUser: (profile: TwitterProfile) => ({ name: profile.data.username }) },
-  twitch: { mapProfileToUser: (profile: TwitchProfile) => ({ name: profile.preferred_username }) },
+  github: {
+    mapProfileToUser: (profile: GithubProfile) => ({ name: profile.login }),
+  },
+  discord: {
+    mapProfileToUser: (profile: DiscordProfile) => ({ name: profile.username }),
+  },
+  twitter: {
+    mapProfileToUser: (profile: TwitterProfile) => ({
+      name: profile.data.username,
+    }),
+  },
+  twitch: {
+    mapProfileToUser: (profile: TwitchProfile) => ({
+      name: profile.preferred_username,
+    }),
+  },
   facebook: {},
 } satisfies Record<SocialProviderId, object>;
 
-const socialProviders = Object.fromEntries(enabledProviders.map((id) => [id, { ...credentials(id), ...providerOptions[id] }])) as SocialProviders;
+const socialProviders = Object.fromEntries(
+  enabledProviders.map((id) => [
+    id,
+    { ...credentials(id), ...providerOptions[id] },
+  ])
+) as SocialProviders;
 
 /** Stops the only admin from deleting their account and leaving nobody to manage roles. */
 async function assertNotLastAdmin(user: { role?: string | null }) {
@@ -124,7 +183,8 @@ async function assertNotLastAdmin(user: { role?: string | null }) {
   if ((await prisma.user.count({ where: { role: 'ADMIN' } })) <= 1) {
     throw new APIError('BAD_REQUEST', {
       code: 'LAST_ADMIN',
-      message: "You're the only admin. Make someone else an admin before deleting your account.",
+      message:
+        "You're the only admin. Make someone else an admin before deleting your account.",
     });
   }
 }
@@ -139,7 +199,9 @@ export const auth = betterAuth({
     cookiePrefix: 'tinderhaj',
   },
   // Apple sends people back with a form post from its own site.
-  trustedOrigins: enabledProviders.includes('apple') ? ['https://appleid.apple.com'] : [],
+  trustedOrigins: enabledProviders.includes('apple')
+    ? ['https://appleid.apple.com']
+    : [],
   socialProviders,
   account: {
     // Provider tokens aren't used after sign-in, but shouldn't sit in the
@@ -158,14 +220,23 @@ export const auth = betterAuth({
     session: {
       create: {
         before: async (session, ctx) => {
-          const user = await prisma.user.findUnique({ where: { id: session.userId }, select: { banned: true, banExpires: true } });
+          const user = await prisma.user.findUnique({
+            where: { id: session.userId },
+            select: { banned: true, banExpires: true },
+          });
           if (!user?.banned) return;
 
           if (!isBanned(user)) {
             // Ended by itself.
             await prisma.user.update({
               where: { id: session.userId },
-              data: { banned: false, banReason: null, banExpires: null, bannedAt: null, bannedById: null },
+              data: {
+                banned: false,
+                banReason: null,
+                banExpires: null,
+                bannedAt: null,
+                bannedById: null,
+              },
             });
             return;
           }
@@ -179,8 +250,12 @@ export const auth = betterAuth({
             maxAge: BAN_NOTICE_MAX_AGE,
           });
           // Coming back from a provider, there's no form to show an error.
-          if (ctx?.path.startsWith('/callback')) throw ctx.redirect(new URL('/banned', siteURL).toString());
-          throw new APIError('FORBIDDEN', { code: 'BANNED_USER', message: 'This account is banned.' });
+          if (ctx?.path.startsWith('/callback'))
+            throw ctx.redirect(new URL('/banned', siteURL).toString());
+          throw new APIError('FORBIDDEN', {
+            code: 'BANNED_USER',
+            message: 'This account is banned.',
+          });
         },
       },
     },
@@ -188,17 +263,31 @@ export const auth = betterAuth({
       create: {
         // Sign-up with a password already checked the username; this is for
         // providers. Their profile picture isn't used, so isn't kept.
-        before: async (user) => ({ data: { ...user, name: await availableUsername(user.name, user.email), image: null } }),
+        before: async (user) => ({
+          data: {
+            ...user,
+            name: await availableUsername(user.name, user.email),
+            image: null,
+          },
+        }),
       },
       delete: {
         // Their Discord connection goes with the account, so the roles it earned go too.
         before: async (user) => {
-          const discord = await prisma.account.findFirst({ where: { userId: user.id, providerId: 'discord' }, select: { accountId: true } });
+          const discord = await prisma.account.findFirst({
+            where: { userId: user.id, providerId: 'discord' },
+            select: { accountId: true },
+          });
           if (discord) clearDiscordRolesLater(discord.accountId);
-          const sharks = await prisma.profile.findMany({ where: { userId: user.id }, select: { reviewMessageId: true, avatarUrl: true, bannerUrl: true } });
+          const sharks = await prisma.profile.findMany({
+            where: { userId: user.id },
+            select: { reviewMessageId: true, avatarUrl: true, bannerUrl: true },
+          });
           dropReviewsLater(sharks.map((profile) => profile.reviewMessageId));
           // Once they're gone, after the response, so their sharks no longer have them
-          deleteUploadsLater(sharks.flatMap((profile) => [profile.avatarUrl, profile.bannerUrl]));
+          deleteUploadsLater(
+            sharks.flatMap((profile) => [profile.avatarUrl, profile.bannerUrl])
+          );
         },
       },
     },
@@ -208,12 +297,14 @@ export const auth = betterAuth({
     account: {
       create: {
         after: async (account) => {
-          if (account.providerId === 'discord') syncDiscordRolesLater(account.userId);
+          if (account.providerId === 'discord')
+            syncDiscordRolesLater(account.userId);
         },
       },
       delete: {
         after: async (account) => {
-          if (account.providerId === 'discord') clearDiscordRolesLater(account.accountId);
+          if (account.providerId === 'discord')
+            clearDiscordRolesLater(account.accountId);
         },
       },
     },
@@ -228,7 +319,13 @@ export const auth = betterAuth({
     sendResetPassword: async ({ user, url }) => {
       // After the response, so its timing doesn't reveal whether the email exists.
       after(() =>
-        sendPasswordResetEmail({ email: user.email, username: user.name, url }).catch((error) => console.error('Failed to send password reset email', error)),
+        sendPasswordResetEmail({
+          email: user.email,
+          username: user.name,
+          url,
+        }).catch((error) =>
+          console.error('Failed to send password reset email', error)
+        )
       );
     },
   },
@@ -240,7 +337,10 @@ export const auth = betterAuth({
     sendVerificationEmail: async ({ user, url }) => {
       // During an email change, the last link goes to the new address, which
       // no account uses yet. It gets its own wording and landing message.
-      const changing = !(await prisma.user.findUnique({ where: { email: user.email }, select: { id: true } }));
+      const changing = !(await prisma.user.findUnique({
+        where: { email: user.email },
+        select: { id: true },
+      }));
 
       after(() =>
         sendVerificationEmail({
@@ -248,7 +348,9 @@ export const auth = betterAuth({
           username: user.name,
           url: changing ? withCallback(url, '/verified?step=changed') : url,
           changing,
-        }).catch((error) => console.error('Failed to send verification email', error)),
+        }).catch((error) =>
+          console.error('Failed to send verification email', error)
+        )
       );
     },
   },
@@ -256,7 +358,12 @@ export const auth = betterAuth({
     // The column is `username`; Better Auth calls it `name`.
     fields: { name: 'username' },
     additionalFields: {
-      role: { type: 'string', input: false, required: false, defaultValue: 'USER' },
+      role: {
+        type: 'string',
+        input: false,
+        required: false,
+        defaultValue: 'USER',
+      },
     },
     changeEmail: {
       enabled: true,
@@ -272,7 +379,9 @@ export const auth = betterAuth({
             username: user.name,
             newEmail,
             url: withCallback(url, '/verified?step=confirmed'),
-          }).catch((error) => console.error('Failed to send email change confirmation', error)),
+          }).catch((error) =>
+            console.error('Failed to send email change confirmation', error)
+          )
         );
       },
     },
@@ -285,14 +394,19 @@ export const auth = betterAuth({
         link.searchParams.set('token', token);
 
         after(() =>
-          sendDeleteAccountEmail({ email: user.email, username: user.name, url: link.toString() }).catch((error) =>
-            console.error('Failed to send delete account email', error),
-          ),
+          sendDeleteAccountEmail({
+            email: user.email,
+            username: user.name,
+            url: link.toString(),
+          }).catch((error) =>
+            console.error('Failed to send delete account email', error)
+          )
         );
       },
       deleteTokenExpiresIn: 60 * 60,
       // Checked when it's asked for (in hooks) and again when it happens.
-      beforeDelete: (user) => assertNotLastAdmin(user as typeof user & { role?: string }),
+      beforeDelete: (user) =>
+        assertNotLastAdmin(user as typeof user & { role?: string }),
     },
   },
   rateLimit: {
@@ -312,7 +426,8 @@ export const auth = betterAuth({
       // sending it are only logged, so the page would still say "sent".
       if (ctx.path === '/delete-user' && !ctx.body?.token) {
         const session = await getSessionFromCtx(ctx);
-        if (session) await assertNotLastAdmin(session.user as { role?: string });
+        if (session)
+          await assertNotLastAdmin(session.user as { role?: string });
       }
       if (ctx.path === '/sign-up/email') {
         await assertUsernameAvailable(ctx.body?.name);
@@ -344,7 +459,13 @@ export const auth = betterAuth({
         storeOTP: 'hashed',
         sendOTP: ({ user, otp }) => {
           after(() =>
-            sendTwoFactorCode({ email: user.email, username: user.name, code: otp }).catch((error) => console.error('Failed to send sign-in code', error)),
+            sendTwoFactorCode({
+              email: user.email,
+              username: user.name,
+              code: otp,
+            }).catch((error) =>
+              console.error('Failed to send sign-in code', error)
+            )
           );
         },
       },

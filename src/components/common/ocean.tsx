@@ -3,7 +3,8 @@
  * Fade it in on itself, never through a parent: while a parent is see-through, the blur can't see the water behind it,
  * so the glass comes in clear and only frosts once the fade is done.
  */
-export const glass = 'border-glass-border bg-glass text-glass-foreground shadow-glass-shadow border backdrop-blur-md backdrop-saturate-120';
+export const glass =
+  'border-glass-border bg-glass text-glass-foreground shadow-glass-shadow border backdrop-blur-md backdrop-saturate-120';
 
 /** For the main button in the water: sunlit from above, with a glint along the top like a bubble's. */
 export const sunlit =
@@ -74,23 +75,39 @@ const WAVES = [
  * water behind the waves is, when it shouldn't stretch with them: as they
  * move, the light and bubbles hold still and only more or less of it shows.
  */
-export function Ocean({ into = 'fill-muted', depth = 'bottom-0' }: { into?: string; depth?: string }) {
+export function Ocean({
+  into = 'fill-muted',
+  depth = 'bottom-0',
+}: {
+  into?: string;
+  depth?: string;
+}) {
   return (
-    <div aria-hidden className='pointer-events-none absolute inset-0 -z-10 overflow-hidden'>
-      <div className={`${depth} absolute inset-x-0 top-0 bg-[linear-gradient(135deg,var(--ocean-from)_0%,var(--ocean-to)_100%)]`}>
+    <div
+      aria-hidden
+      className='pointer-events-none absolute inset-0 -z-10 overflow-hidden'
+    >
+      <div
+        className={`${depth} absolute inset-x-0 top-0 bg-[linear-gradient(135deg,var(--ocean-from)_0%,var(--ocean-to)_100%)]`}
+      >
         {/* Light falling through the water, behind the shark */}
         <div className='absolute inset-0 bg-[radial-gradient(circle_at_75%_30%,var(--ocean-light)_0%,transparent_45%)]' />
         {RAYS.map((ray, i) => (
           <div
             key={i}
-            className='animate-sway absolute -top-16 h-[85%] origin-top bg-[linear-gradient(to_bottom,var(--ocean-ray),transparent)] blur-md'
-            style={{ left: `${ray.left}%`, width: `${ray.width}%`, animationDelay: `${ray.delay}s`, transform: 'skewX(-18deg)' }}
+            className='absolute -top-16 h-[85%] origin-top animate-sway bg-[linear-gradient(to_bottom,var(--ocean-ray),transparent)] blur-md'
+            style={{
+              left: `${ray.left}%`,
+              width: `${ray.width}%`,
+              animationDelay: `${ray.delay}s`,
+              transform: 'skewX(-18deg)',
+            }}
           />
         ))}
         {BUBBLES.map((bubble, i) => (
           <span
             key={i}
-            className='animate-rise absolute -bottom-8 rounded-full border-2 border-(--ocean-bubble) bg-(--ocean-bubble)/30 motion-reduce:bottom-(--rest)'
+            className='absolute -bottom-8 animate-rise rounded-full border-2 border-(--ocean-bubble) bg-(--ocean-bubble)/30 motion-reduce:bottom-(--rest)'
             style={
               {
                 left: `${bubble.left}%`,
@@ -110,10 +127,16 @@ export function Ocean({ into = 'fill-muted', depth = 'bottom-0' }: { into?: stri
           key={i}
           viewBox='0 0 2880 120'
           preserveAspectRatio='none'
-          className='animate-roll absolute bottom-0 left-0 h-24 w-[max(200%,100rem)] sm:h-28'
-          style={{ animationDuration: layer.duration, animationDirection: layer.reverse ? 'reverse' : 'normal' }}
+          className='absolute bottom-0 left-0 h-24 w-[max(200%,100rem)] animate-roll sm:h-28'
+          style={{
+            animationDuration: layer.duration,
+            animationDirection: layer.reverse ? 'reverse' : 'normal',
+          }}
         >
-          <path d={layer.d} className={i === WAVES.length - 1 ? into : 'fill-(--ocean-wave)'} />
+          <path
+            d={layer.d}
+            className={i === WAVES.length - 1 ? into : 'fill-(--ocean-wave)'}
+          />
         </svg>
       ))}
     </div>

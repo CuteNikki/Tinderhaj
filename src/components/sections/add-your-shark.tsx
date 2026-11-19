@@ -1,5 +1,11 @@
-import { ArrowRight, BadgeCheckIcon, SearchIcon, UserRoundPlusIcon } from 'lucide-react';
 import Link from 'next/link';
+
+import {
+  ArrowRight,
+  BadgeCheckIcon,
+  SearchIcon,
+  UserRoundPlusIcon,
+} from 'lucide-react';
 
 import { sunlit } from '@/components/common/ocean';
 import { Stagger } from '@/components/common/stagger';
@@ -17,7 +23,11 @@ const STEPS = [
  * Signing up, or for someone already signed in, their profiles (see
  * requireSignedOut), a click from a new one.
  */
-export function AddYourShark({ tone }: { tone?: 'muted' | 'card' | 'background' }) {
+export function AddYourShark({
+  tone,
+}: {
+  tone?: 'muted' | 'card' | 'background';
+}) {
   return (
     <Section
       eyebrow='Your turn'
@@ -34,10 +44,16 @@ export function AddYourShark({ tone }: { tone?: 'muted' | 'card' | 'background' 
         </Button>
       }
     >
-      <Stagger className='text-muted-foreground flex flex-wrap gap-x-8 gap-y-4 text-sm' itemAs='span' variant='pop' gap={0.1} delay={0.2}>
+      <Stagger
+        className='flex flex-wrap gap-x-8 gap-y-4 text-sm text-muted-foreground'
+        itemAs='span'
+        variant='pop'
+        gap={0.1}
+        delay={0.2}
+      >
         {STEPS.map(({ label, Icon }) => (
           <span key={label} className='flex items-center gap-2'>
-            <Icon className='text-primary h-4 w-4' aria-hidden='true' /> {label}
+            <Icon className='h-4 w-4 text-primary' aria-hidden='true' /> {label}
           </span>
         ))}
       </Stagger>

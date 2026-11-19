@@ -15,10 +15,21 @@ import { AccountRole } from '@/lib/roles';
  */
 
 /** What earns each role, from what's known about the account. */
-type Facts = { verifiedSharks: number; matched: boolean; moderator: boolean; admin: boolean };
+type Facts = {
+  verifiedSharks: number;
+  matched: boolean;
+  moderator: boolean;
+  admin: boolean;
+};
 
 export const DISCORD_ROLES = [
-  { key: 'linked', env: 'DISCORD_ROLE_LINKED', label: 'Linked', about: 'Connected Discord to Tinderhaj', earned: () => true },
+  {
+    key: 'linked',
+    env: 'DISCORD_ROLE_LINKED',
+    label: 'Linked',
+    about: 'Connected Discord to Tinderhaj',
+    earned: () => true,
+  },
   {
     key: 'verified',
     env: 'DISCORD_ROLE_VERIFIED',
@@ -26,7 +37,13 @@ export const DISCORD_ROLES = [
     about: 'Has a verified shark',
     earned: (facts: Facts) => facts.verifiedSharks > 0,
   },
-  { key: 'matched', env: 'DISCORD_ROLE_MATCHED', label: 'Matched', about: 'One of their sharks has a match', earned: (facts: Facts) => facts.matched },
+  {
+    key: 'matched',
+    env: 'DISCORD_ROLE_MATCHED',
+    label: 'Matched',
+    about: 'One of their sharks has a match',
+    earned: (facts: Facts) => facts.matched,
+  },
   {
     key: 'moderator',
     env: 'DISCORD_ROLE_MODERATOR',
@@ -35,7 +52,13 @@ export const DISCORD_ROLES = [
     about: 'Moderates Tinderhaj',
     earned: (facts: Facts) => facts.moderator,
   },
-  { key: 'admin', env: 'DISCORD_ROLE_ADMIN', label: 'Site Admin', about: 'Runs Tinderhaj', earned: (facts: Facts) => facts.admin },
+  {
+    key: 'admin',
+    env: 'DISCORD_ROLE_ADMIN',
+    label: 'Site Admin',
+    about: 'Runs Tinderhaj',
+    earned: (facts: Facts) => facts.admin,
+  },
 ] as const;
 
 export type DiscordRoleKey = (typeof DISCORD_ROLES)[number]['key'];
@@ -50,19 +73,28 @@ export function configuredRoles() {
 
 /** Whether the site gives roles at all. */
 export function discordRolesEnabled() {
-  return !!process.env.DISCORD_BOT_TOKEN && !!process.env.DISCORD_GUILD_ID && configuredRoles().length > 0;
+  return (
+    !!process.env.DISCORD_BOT_TOKEN &&
+    !!process.env.DISCORD_GUILD_ID &&
+    configuredRoles().length > 0
+  );
 }
 
 /** The roles there are to earn, and whether this account has, for the account page. Worked out here, without asking Discord. */
 export async function discordRoleList(userId: string) {
   const known = await facts(userId);
-  return configuredRoles().map(({ key, label, about, earned }) => ({ key, label, about, earned: !!known && earned(known) }));
+  return configuredRoles().map(({ key, label, about, earned }) => ({
+    key,
+    label,
+    about,
+    earned: !!known && earned(known),
+  }));
 }
 
 class DiscordError extends Error {
   constructor(
     readonly status: number,
-    message: string,
+    message: string
   ) {
     super(message);
   }
@@ -72,27 +104,55 @@ const SYNC = { reason: 'Tinderhaj role sync' };
 
 /** The roles someone has on the server, or null if they aren't on it. */
 async function memberRoles(discordId: string) {
-  const response = await discord('GET', `/guilds/${process.env.DISCORD_GUILD_ID}/members/${discordId}`, SYNC);
+  const response = await discord(
+    'GET',
+    `/guilds/${process.env.DISCORD_GUILD_ID}/members/${discordId}`,
+    SYNC
+  );
   if (response.status === 404) return null;
-  if (!response.ok) throw new DiscordError(response.status, `Reading member ${discordId}: ${await response.text()}`);
+  if (!response.ok)
+    throw new DiscordError(
+      response.status,
+      `Reading member ${discordId}: ${await response.text()}`
+    );
   return new Set(((await response.json()) as { roles: string[] }).roles);
 }
 
 /** Gives `want` of the site's roles and takes back the rest, leaving roles the site doesn't manage alone. */
-async function setRoles(discordId: string, have: Set<string>, want: Set<string>) {
+async function setRoles(
+  discordId: string,
+  have: Set<string>,
+  want: Set<string>
+) {
   const guild = process.env.DISCORD_GUILD_ID;
   for (const { id } of configuredRoles()) {
-    const method = want.has(id) && !have.has(id) ? 'PUT' : !want.has(id) && have.has(id) ? 'DELETE' : null;
+    const method =
+      want.has(id) && !have.has(id)
+        ? 'PUT'
+        : !want.has(id) && have.has(id)
+          ? 'DELETE'
+          : null;
     if (!method) continue;
-    const response = await discord(method, `/guilds/${guild}/members/${discordId}/roles/${id}`, SYNC);
+    const response = await discord(
+      method,
+      `/guilds/${guild}/members/${discordId}/roles/${id}`,
+      SYNC
+    );
     // 403: the bot lacks Manage Roles, or its role sits below this one.
-    if (!response.ok) throw new DiscordError(response.status, `${method} role ${id} for ${discordId}: ${await response.text()}`);
+    if (!response.ok)
+      throw new DiscordError(
+        response.status,
+        `${method} role ${id} for ${discordId}: ${await response.text()}`
+      );
   }
 }
 
 /** What's known about an account, for the roles it's earned. */
 async function facts(userId: string): Promise<Facts | null> {
-  const user = await prisma.user.findUnique({ where: { id: userId }, select: { role: true, banned: true, banExpires: true } });
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { role: true, banned: true, banExpires: true },
+  });
   // A banned account earns nothing while it lasts.
   if (!user || isBanned(user)) return null;
 
@@ -101,20 +161,31 @@ async function facts(userId: string): Promise<Facts | null> {
   const [verifiedSharks, sent, received] = await Promise.all([
     prisma.profile.count({ where: { userId, status: 'VERIFIED' } }),
     prisma.heart.findMany({
-      where: { from: { userId, status: 'VERIFIED' }, to: { ...live, userId: { not: userId } } },
+      where: {
+        from: { userId, status: 'VERIFIED' },
+        to: { ...live, userId: { not: userId } },
+      },
       select: { fromProfileId: true, toProfileId: true },
     }),
     prisma.heart.findMany({
-      where: { to: { userId, status: 'VERIFIED' }, from: { ...live, userId: { not: userId } } },
+      where: {
+        to: { userId, status: 'VERIFIED' },
+        from: { ...live, userId: { not: userId } },
+      },
       select: { fromProfileId: true, toProfileId: true },
     }),
   ]);
-  const back = new Set(received.map((heart) => `${heart.toProfileId}:${heart.fromProfileId}`));
+  const back = new Set(
+    received.map((heart) => `${heart.toProfileId}:${heart.fromProfileId}`)
+  );
 
   return {
     verifiedSharks,
-    matched: sent.some((heart) => back.has(`${heart.fromProfileId}:${heart.toProfileId}`)),
-    moderator: user.role === AccountRole.MODERATOR || user.role === AccountRole.ADMIN,
+    matched: sent.some((heart) =>
+      back.has(`${heart.fromProfileId}:${heart.toProfileId}`)
+    ),
+    moderator:
+      user.role === AccountRole.MODERATOR || user.role === AccountRole.ADMIN,
     admin: user.role === AccountRole.ADMIN,
   };
 }
@@ -132,7 +203,10 @@ export type DiscordSync =
 export async function syncDiscordRoles(userId: string): Promise<DiscordSync> {
   if (!discordRolesEnabled()) return { status: 'off' };
 
-  const account = await prisma.account.findFirst({ where: { userId, providerId: 'discord' }, select: { accountId: true } });
+  const account = await prisma.account.findFirst({
+    where: { userId, providerId: 'discord' },
+    select: { accountId: true },
+  });
   if (!account) return { status: 'unlinked' };
 
   try {
@@ -140,8 +214,14 @@ export async function syncDiscordRoles(userId: string): Promise<DiscordSync> {
     if (!have) return { status: 'not-member' };
 
     const known = await facts(userId);
-    const earned = known ? configuredRoles().filter((role) => role.earned(known)) : [];
-    await setRoles(account.accountId, have, new Set(earned.map((role) => role.id)));
+    const earned = known
+      ? configuredRoles().filter((role) => role.earned(known))
+      : [];
+    await setRoles(
+      account.accountId,
+      have,
+      new Set(earned.map((role) => role.id))
+    );
     return { status: 'synced', roles: earned.map((role) => role.label) };
   } catch (error) {
     console.error('Discord role sync failed', error);

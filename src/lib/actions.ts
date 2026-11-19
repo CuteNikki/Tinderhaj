@@ -1,5 +1,12 @@
 'use server';
 
+import { MAX_PROFILES } from '@/constants/auth';
+import { REPORTS_PER_DAY } from '@/constants/reports';
+import {
+  UPLOAD_KINDS,
+  UPLOAD_TYPES,
+  type UploadKind,
+} from '@/constants/uploads';
 import { isAPIError } from 'better-auth/api';
 import { revalidatePath, updateTag } from 'next/cache';
 import { headers } from 'next/headers';
@@ -7,19 +14,31 @@ import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
 import { auth, forgetTrustedDevices as forget } from '@/lib/auth';
-import prisma from '@/lib/prisma';
-import { MAX_PROFILES } from '@/constants/auth';
-import { UPLOAD_KINDS, UPLOAD_TYPES, type UploadKind } from '@/constants/uploads';
-import { PROFILE_COUNT_TAG, QUERIES } from '@/lib/queries';
 import { BAN_REASON_MAX, banExpiry, isBanDuration, isBanned } from '@/lib/bans';
 import { announceNewSharkLater } from '@/lib/discord-feed';
-import { dropReviewsLater, postReviewLater, settleReviewLater } from '@/lib/discord-review';
-import { clearDiscordRolesLater, syncDiscordRoles, syncDiscordRolesLater, type DiscordSync } from '@/lib/discord-roles';
+import {
+  dropReviewsLater,
+  postReviewLater,
+  settleReviewLater,
+} from '@/lib/discord-review';
+import {
+  clearDiscordRolesLater,
+  syncDiscordRoles,
+  syncDiscordRolesLater,
+  type DiscordSync,
+} from '@/lib/discord-roles';
 import { HEARTS_PER_DAY, liveProfileWhere } from '@/lib/hearts';
-import { REPORTS_PER_DAY } from '@/constants/reports';
+import prisma from '@/lib/prisma';
+import { PROFILE_COUNT_TAG, QUERIES } from '@/lib/queries';
 import { reportSchema } from '@/lib/reports';
 import { canBan, canManageAccount, isAdmin, isRole } from '@/lib/roles';
-import { createProfileSchema, rejectProfileSchema, updateMatchContactSchema, updateProfileSchema, updateUsernameSchema } from '@/lib/schemas';
+import {
+  createProfileSchema,
+  rejectProfileSchema,
+  updateMatchContactSchema,
+  updateProfileSchema,
+  updateUsernameSchema,
+} from '@/lib/schemas';
 import { getSession, isModerator, requireUser } from '@/lib/session';
 import { deleteUploadsLater, signUpload } from '@/lib/storage';
 
@@ -29,18 +48,24 @@ export async function logOut() {
   redirect('/');
 }
 
-export async function updateUsername(unsafeData: z.infer<typeof updateUsernameSchema>) {
+export async function updateUsername(
+  unsafeData: z.infer<typeof updateUsernameSchema>
+) {
   const { success, data } = updateUsernameSchema.safeParse(unsafeData);
 
   if (!success) return { message: 'Unable to update username!' };
 
   const session = await requireUser();
 
-  if (session.user.name === data.username) return { message: 'That is already your username.' };
+  if (session.user.name === data.username)
+    return { message: 'That is already your username.' };
 
   // Better Auth checks the username is free (see lib/auth.ts).
   try {
-    await auth.api.updateUser({ body: { name: data.username }, headers: await headers() });
+    await auth.api.updateUser({
+      body: { name: data.username },
+      headers: await headers(),
+    });
   } catch (error) {
     if (isAPIError(error) && error.body?.code === 'USERNAME_TAKEN') {
       return { field: 'username', message: error.message };
@@ -58,14 +83,24 @@ export async function updateUsername(unsafeData: z.infer<typeof updateUsernameSc
 }
 
 /** What the owners of sharks that match one of theirs see, to reach them. Empty shares nothing. */
-export async function updateMatchContact(unsafeData: z.infer<typeof updateMatchContactSchema>) {
-  const { success, data, error } = updateMatchContactSchema.safeParse(unsafeData);
+export async function updateMatchContact(
+  unsafeData: z.infer<typeof updateMatchContactSchema>
+) {
+  const { success, data, error } =
+    updateMatchContactSchema.safeParse(unsafeData);
 
-  if (!success) return { message: error.issues[0]?.message ?? 'Unable to save how matches can reach you!' };
+  if (!success)
+    return {
+      message:
+        error.issues[0]?.message ?? 'Unable to save how matches can reach you!',
+    };
 
   const session = await requireUser();
 
-  await prisma.user.update({ where: { id: session.user.id }, data: { matchContact: data.contact || null } });
+  await prisma.user.update({
+    where: { id: session.user.id },
+    data: { matchContact: data.contact || null },
+  });
 
   revalidatePath('/dashboard/account');
   revalidatePath('/dashboard/hearts');
@@ -74,7 +109,10 @@ export async function updateMatchContact(unsafeData: z.infer<typeof updateMatchC
 /** For accounts without a password yet, e.g. signed up with a provider. */
 export async function setPassword(newPassword: string) {
   try {
-    await auth.api.setPassword({ body: { newPassword }, headers: await headers() });
+    await auth.api.setPassword({
+      body: { newPassword },
+      headers: await headers(),
+    });
   } catch (error) {
     if (isAPIError(error)) return { message: error.message };
     console.error(error);
@@ -89,10 +127,15 @@ export async function revokeSession(sessionId: string) {
   if (!session) return { message: 'You are not signed in.' };
 
   // Looked up by id, so session tokens never have to be sent to the browser.
-  const target = await prisma.session.findFirst({ where: { id: sessionId, userId: session.user.id } });
+  const target = await prisma.session.findFirst({
+    where: { id: sessionId, userId: session.user.id },
+  });
   if (!target) return { message: 'That session has already ended.' };
 
-  await auth.api.revokeSession({ body: { token: target.token }, headers: await headers() });
+  await auth.api.revokeSession({
+    body: { token: target.token },
+    headers: await headers(),
+  });
 
   revalidatePath('/dashboard/account');
 }
@@ -122,10 +165,19 @@ export async function forgetTrustedDevices() {
  */
 async function moderationTarget(userId: string) {
   const session = await requireUser();
-  if (session.user.id === userId) return { error: { message: "You can't do that to your own account." } } as const;
+  if (session.user.id === userId)
+    return {
+      error: { message: "You can't do that to your own account." },
+    } as const;
 
-  const target = await prisma.user.findUnique({ where: { id: userId }, select: { id: true, username: true, email: true, role: true } });
-  if (!target) return { error: { message: "That account doesn't exist anymore." } } as const;
+  const target = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { id: true, username: true, email: true, role: true },
+  });
+  if (!target)
+    return {
+      error: { message: "That account doesn't exist anymore." },
+    } as const;
 
   return { session, target } as const;
 }
@@ -140,12 +192,17 @@ export async function setUserRole(userId: string, role: string) {
   const found = await moderationTarget(userId);
   if (found.error) return found.error;
 
-  if (!isAdmin(found.session.user.role)) return { message: 'Only admins can change roles.' };
+  if (!isAdmin(found.session.user.role))
+    return { message: 'Only admins can change roles.' };
   if (!isRole(role)) return { message: 'Unknown role.' };
   if (role === 'ADMIN') {
     // Nobody can ban or unban an admin, so their ban could never be lifted.
-    const ban = await prisma.user.findUniqueOrThrow({ where: { id: userId }, select: { banned: true, banExpires: true } });
-    if (isBanned(ban)) return { message: 'Lift their ban before making them an admin.' };
+    const ban = await prisma.user.findUniqueOrThrow({
+      where: { id: userId },
+      select: { banned: true, banExpires: true },
+    });
+    if (isBanned(ban))
+      return { message: 'Lift their ban before making them an admin.' };
   }
 
   await prisma.user.update({ where: { id: userId }, data: { role } });
@@ -155,12 +212,16 @@ export async function setUserRole(userId: string, role: string) {
 }
 
 /** Signs them out everywhere and stops them signing in until the ban ends or is lifted. */
-export async function banUser(userId: string, input: { reason: string; duration: string }) {
+export async function banUser(
+  userId: string,
+  input: { reason: string; duration: string }
+) {
   const found = await moderationTarget(userId);
   if (found.error) return found.error;
 
   const { session, target } = found;
-  if (!canBan(session.user.role, target.role)) return { message: "You can't ban this account." };
+  if (!canBan(session.user.role, target.role))
+    return { message: "You can't ban this account." };
   if (!isBanDuration(input.duration)) return { message: 'Unknown ban length.' };
 
   const reason = input.reason.trim().slice(0, BAN_REASON_MAX) || null;
@@ -168,7 +229,13 @@ export async function banUser(userId: string, input: { reason: string; duration:
   await prisma.$transaction([
     prisma.user.update({
       where: { id: userId },
-      data: { banned: true, banReason: reason, banExpires: banExpiry(input.duration), bannedAt: new Date(), bannedById: session.user.id },
+      data: {
+        banned: true,
+        banReason: reason,
+        banExpires: banExpiry(input.duration),
+        bannedAt: new Date(),
+        bannedById: session.user.id,
+      },
     }),
     prisma.session.deleteMany({ where: { userId } }),
   ]);
@@ -183,11 +250,18 @@ export async function unbanUser(userId: string) {
   const found = await moderationTarget(userId);
   if (found.error) return found.error;
 
-  if (!canBan(found.session.user.role, found.target.role)) return { message: "You can't lift this ban." };
+  if (!canBan(found.session.user.role, found.target.role))
+    return { message: "You can't lift this ban." };
 
   await prisma.user.update({
     where: { id: userId },
-    data: { banned: false, banReason: null, banExpires: null, bannedAt: null, bannedById: null },
+    data: {
+      banned: false,
+      banReason: null,
+      banExpires: null,
+      bannedAt: null,
+      bannedById: null,
+    },
   });
 
   revalidateUser(userId);
@@ -200,7 +274,8 @@ export async function signOutUserEverywhere(userId: string) {
   const found = await moderationTarget(userId);
   if (found.error) return found.error;
 
-  if (!canManageAccount(found.session.user.role, found.target.role)) return { message: 'Only admins can sign others out.' };
+  if (!canManageAccount(found.session.user.role, found.target.role))
+    return { message: 'Only admins can sign others out.' };
 
   await prisma.session.deleteMany({ where: { userId } });
 
@@ -212,9 +287,12 @@ export async function sendUserPasswordReset(userId: string) {
   const found = await moderationTarget(userId);
   if (found.error) return found.error;
 
-  if (!canManageAccount(found.session.user.role, found.target.role)) return { message: 'Only admins can send password resets.' };
+  if (!canManageAccount(found.session.user.role, found.target.role))
+    return { message: 'Only admins can send password resets.' };
 
-  await auth.api.requestPasswordReset({ body: { email: found.target.email, redirectTo: '/reset-password' } });
+  await auth.api.requestPasswordReset({
+    body: { email: found.target.email, redirectTo: '/reset-password' },
+  });
 }
 
 /** Deletes the account with all its profiles, right away. */
@@ -222,15 +300,24 @@ export async function deleteUserAccount(userId: string) {
   const found = await moderationTarget(userId);
   if (found.error) return found.error;
 
-  if (!canManageAccount(found.session.user.role, found.target.role)) return { message: 'Only admins can delete accounts.' };
+  if (!canManageAccount(found.session.user.role, found.target.role))
+    return { message: 'Only admins can delete accounts.' };
 
   // Their Discord connection goes with the account, so the roles it earned go too.
-  const discord = await prisma.account.findFirst({ where: { userId, providerId: 'discord' }, select: { accountId: true } });
-  const sharks = await prisma.profile.findMany({ where: { userId }, select: { reviewMessageId: true, avatarUrl: true, bannerUrl: true } });
+  const discord = await prisma.account.findFirst({
+    where: { userId, providerId: 'discord' },
+    select: { accountId: true },
+  });
+  const sharks = await prisma.profile.findMany({
+    where: { userId },
+    select: { reviewMessageId: true, avatarUrl: true, bannerUrl: true },
+  });
   await prisma.user.delete({ where: { id: userId } });
   if (discord) clearDiscordRolesLater(discord.accountId);
   dropReviewsLater(sharks.map((profile) => profile.reviewMessageId));
-  deleteUploadsLater(sharks.flatMap((profile) => [profile.avatarUrl, profile.bannerUrl]));
+  deleteUploadsLater(
+    sharks.flatMap((profile) => [profile.avatarUrl, profile.bannerUrl])
+  );
 
   revalidatePath('/moderation/users');
   revalidatePath('/discovery');
@@ -243,28 +330,42 @@ export async function deleteUserAccount(userId: string) {
  * to storage (see ImageUploadField), at a new address of its own. Only for
  * someone signed in, and only a picture of a kind and size we take.
  */
-export async function requestUpload(kind: UploadKind, type: string, size: number) {
+export async function requestUpload(
+  kind: UploadKind,
+  type: string,
+  size: number
+) {
   if (!(await getSession())) return { message: 'Sign in to upload pictures.' };
 
   const limit = Object.hasOwn(UPLOAD_KINDS, kind) ? UPLOAD_KINDS[kind] : null;
-  const extension = Object.hasOwn(UPLOAD_TYPES, type) ? UPLOAD_TYPES[type as keyof typeof UPLOAD_TYPES] : null;
-  if (!limit || !extension) return { message: 'Pictures can be JPEG, PNG, WebP or AVIF.' };
-  if (!Number.isInteger(size) || size <= 0 || size > limit * 1024 * 1024) return { message: `Pictures can be at most ${limit}MB.` };
+  const extension = Object.hasOwn(UPLOAD_TYPES, type)
+    ? UPLOAD_TYPES[type as keyof typeof UPLOAD_TYPES]
+    : null;
+  if (!limit || !extension)
+    return { message: 'Pictures can be JPEG, PNG, WebP or AVIF.' };
+  if (!Number.isInteger(size) || size <= 0 || size > limit * 1024 * 1024)
+    return { message: `Pictures can be at most ${limit}MB.` };
 
   return signUpload(`${kind}s/${crypto.randomUUID()}.${extension}`, type, size);
 }
 
-export async function createProfile(unsafeData: z.infer<typeof createProfileSchema>) {
+export async function createProfile(
+  unsafeData: z.infer<typeof createProfileSchema>
+) {
   const { success, data } = createProfileSchema.safeParse(unsafeData);
 
   if (!success) return { message: 'Unable to create profile!' };
 
   const session = await requireUser();
 
-  const profileCount = await prisma.profile.count({ where: { userId: session.user.id } });
+  const profileCount = await prisma.profile.count({
+    where: { userId: session.user.id },
+  });
 
   if (profileCount >= MAX_PROFILES) {
-    return { message: "You've reached the most profiles one account can have." };
+    return {
+      message: "You've reached the most profiles one account can have.",
+    };
   }
 
   await prisma.profile.create({
@@ -278,7 +379,9 @@ export async function createProfile(unsafeData: z.infer<typeof createProfileSche
   revalidatePath('/dashboard/profiles');
 }
 
-export async function updateProfile(unsafeData: z.infer<typeof updateProfileSchema>) {
+export async function updateProfile(
+  unsafeData: z.infer<typeof updateProfileSchema>
+) {
   const { success, data } = updateProfileSchema.safeParse(unsafeData);
 
   if (!success) return { message: 'Unable to update profile!' };
@@ -287,16 +390,27 @@ export async function updateProfile(unsafeData: z.infer<typeof updateProfileSche
   const profiles = await QUERIES.getUserProfiles(session.user.id);
 
   if (!profiles.map((profile) => profile.id).includes(data.id)) {
-    return { message: 'Profile not found or you do not have permission to update it.' };
+    return {
+      message: 'Profile not found or you do not have permission to update it.',
+    };
   }
 
   const { id, isVerified: _isVerified, ...profileData } = data;
 
   // Editing a shark that's waiting for review takes it out of the queue until it's sent again.
-  const before = await prisma.profile.findUnique({ where: { id }, select: { reviewMessageId: true, avatarUrl: true, bannerUrl: true } });
+  const before = await prisma.profile.findUnique({
+    where: { id },
+    select: { reviewMessageId: true, avatarUrl: true, bannerUrl: true },
+  });
   await prisma.profile.update({
     where: { id },
-    data: { ...profileData, status: 'CREATED', rejectedFields: [], rejectionNote: null, reviewMessageId: null },
+    data: {
+      ...profileData,
+      status: 'CREATED',
+      rejectedFields: [],
+      rejectionNote: null,
+      reviewMessageId: null,
+    },
   });
   dropReviewsLater([before?.reviewMessageId]);
   // Its pictures from before, if it has new ones
@@ -306,7 +420,11 @@ export async function updateProfile(unsafeData: z.infer<typeof updateProfileSche
   updateTag(PROFILE_COUNT_TAG);
 }
 
-export async function submitProfileForReview({ profileId }: { profileId: string }) {
+export async function submitProfileForReview({
+  profileId,
+}: {
+  profileId: string;
+}) {
   const session = await requireUser();
 
   const profile = await prisma.profile.findUnique({
@@ -314,11 +432,16 @@ export async function submitProfileForReview({ profileId }: { profileId: string 
   });
 
   if (!profile || profile.userId !== session.user.id) {
-    return { message: 'Profile not found or you do not have permission to submit it.' };
+    return {
+      message: 'Profile not found or you do not have permission to submit it.',
+    };
   }
 
   if (profile.status !== 'CREATED') {
-    return { message: 'Only draft profiles can be submitted for review. Edit this profile to move it back to draft.' };
+    return {
+      message:
+        'Only draft profiles can be submitted for review. Edit this profile to move it back to draft.',
+    };
   }
 
   await prisma.profile.update({
@@ -338,7 +461,9 @@ export async function deleteProfile({ profileId }: { profileId: string }) {
   });
 
   if (!profile || profile.userId !== session.user.id) {
-    return { message: 'Profile not found or you do not have permission to delete it.' };
+    return {
+      message: 'Profile not found or you do not have permission to delete it.',
+    };
   }
 
   await prisma.profile.delete({
@@ -353,21 +478,31 @@ export async function deleteProfile({ profileId }: { profileId: string }) {
 }
 
 /** When a review finds the profile isn't waiting anymore. */
-const REVIEWED_ALREADY = 'That profile has changed since you opened it, or someone already reviewed it. Reload to see it as it is now.';
+const REVIEWED_ALREADY =
+  'That profile has changed since you opened it, or someone already reviewed it. Reload to see it as it is now.';
 
 export async function verifyProfile({ profileId }: { profileId: string }) {
   const session = await requireUser();
 
-  if (!isModerator(session.user.role)) return { message: 'Only moderators can verify profiles.' };
+  if (!isModerator(session.user.role))
+    return { message: 'Only moderators can verify profiles.' };
 
   // Editing a verified shark sends it back for review but keeps when it was first verified, so a shark
   // without one is new to Tinderhaj (or was unverified, as a mistake), and gets posted on Discord.
-  const before = await prisma.profile.findUnique({ where: { id: profileId }, select: { verifiedAt: true, userId: true } });
+  const before = await prisma.profile.findUnique({
+    where: { id: profileId },
+    select: { verifiedAt: true, userId: true },
+  });
   // Only while it's waiting: edited since the moderator opened it, it's a draft again, and verifying it
   // would put what nobody has seen into discovery.
   const { count } = await prisma.profile.updateMany({
     where: { id: profileId, status: 'PENDING' },
-    data: { status: 'VERIFIED', rejectedFields: [], rejectionNote: null, verifiedAt: new Date() },
+    data: {
+      status: 'VERIFIED',
+      rejectedFields: [],
+      rejectionNote: null,
+      verifiedAt: new Date(),
+    },
   });
   if (!before || !count) return { message: REVIEWED_ALREADY };
   syncDiscordRolesLater(before.userId);
@@ -387,14 +522,18 @@ export async function verifyProfile({ profileId }: { profileId: string }) {
 export async function unverifyProfile({ profileId }: { profileId: string }) {
   const session = await requireUser();
 
-  if (!isModerator(session.user.role)) return { message: 'Only moderators can unverify profiles.' };
+  if (!isModerator(session.user.role))
+    return { message: 'Only moderators can unverify profiles.' };
 
   const { count } = await prisma.profile.updateMany({
     where: { id: profileId, status: 'VERIFIED' },
     data: { status: 'PENDING', verifiedAt: null, submittedAt: new Date() },
   });
   if (!count) return { message: "That profile isn't verified anymore." };
-  const { userId } = await prisma.profile.findUniqueOrThrow({ where: { id: profileId }, select: { userId: true } });
+  const { userId } = await prisma.profile.findUniqueOrThrow({
+    where: { id: profileId },
+    select: { userId: true },
+  });
   syncDiscordRolesLater(userId);
 
   revalidatePath('/moderation/verification', 'layout');
@@ -404,22 +543,32 @@ export async function unverifyProfile({ profileId }: { profileId: string }) {
   updateTag(PROFILE_COUNT_TAG);
 }
 
-export async function rejectProfile(unsafeData: z.infer<typeof rejectProfileSchema>) {
+export async function rejectProfile(
+  unsafeData: z.infer<typeof rejectProfileSchema>
+) {
   const { success, data } = rejectProfileSchema.safeParse(unsafeData);
 
   if (!success) return { message: 'Unable to reject this profile.' };
 
   const session = await requireUser();
 
-  if (!isModerator(session.user.role)) return { message: 'Unable to reject this profile.' };
+  if (!isModerator(session.user.role))
+    return { message: 'Unable to reject this profile.' };
 
   // Only while it's waiting, like verifying
   const { count } = await prisma.profile.updateMany({
     where: { id: data.profileId, status: 'PENDING' },
-    data: { status: 'REJECTED', rejectedFields: data.rejectedFields, rejectionNote: data.note ?? null },
+    data: {
+      status: 'REJECTED',
+      rejectedFields: data.rejectedFields,
+      rejectionNote: data.note ?? null,
+    },
   });
   if (!count) return { message: REVIEWED_ALREADY };
-  const { userId } = await prisma.profile.findUniqueOrThrow({ where: { id: data.profileId }, select: { userId: true } });
+  const { userId } = await prisma.profile.findUniqueOrThrow({
+    where: { id: data.profileId },
+    select: { userId: true },
+  });
   syncDiscordRolesLater(userId);
   settleReviewLater(data.profileId, session.user);
 
@@ -432,23 +581,50 @@ export async function rejectProfile(unsafeData: z.infer<typeof rejectProfileSche
  * One of the user's verified sharks hearts someone else's live shark.
  * Returns whether that made a match.
  */
-export async function sendHeart({ fromProfileId, toProfileId }: { fromProfileId: string; toProfileId: string }) {
+export async function sendHeart({
+  fromProfileId,
+  toProfileId,
+}: {
+  fromProfileId: string;
+  toProfileId: string;
+}) {
   const session = await requireUser();
 
-  const from = await prisma.profile.findFirst({ where: { id: fromProfileId, userId: session.user.id }, select: { status: true, displayName: true } });
+  const from = await prisma.profile.findFirst({
+    where: { id: fromProfileId, userId: session.user.id },
+    select: { status: true, displayName: true },
+  });
   if (!from) return { message: "That shark isn't yours." };
-  if (from.status !== 'VERIFIED') return { message: 'Only verified sharks can send hearts.' };
+  if (from.status !== 'VERIFIED')
+    return { message: 'Only verified sharks can send hearts.' };
 
-  const to = await prisma.profile.findFirst({ where: { id: toProfileId, ...liveProfileWhere() }, select: { userId: true } });
+  const to = await prisma.profile.findFirst({
+    where: { id: toProfileId, ...liveProfileWhere() },
+    select: { userId: true },
+  });
   if (!to) return { message: "That shark isn't around anymore." };
-  if (to.userId === session.user.id) return { message: "Your sharks can't heart each other." };
+  if (to.userId === session.user.id)
+    return { message: "Your sharks can't heart each other." };
 
-  const today = await prisma.heart.count({ where: { fromProfileId, createdAt: { gt: new Date(Date.now() - 24 * 60 * 60 * 1000) } } });
-  if (today >= HEARTS_PER_DAY) return { message: `${from.displayName} is out of hearts for today. Try again tomorrow.` };
+  const today = await prisma.heart.count({
+    where: {
+      fromProfileId,
+      createdAt: { gt: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+    },
+  });
+  if (today >= HEARTS_PER_DAY)
+    return {
+      message: `${from.displayName} is out of hearts for today. Try again tomorrow.`,
+    };
 
   // Sending twice does nothing.
-  await prisma.heart.createMany({ data: { fromProfileId, toProfileId }, skipDuplicates: true });
-  const back = await prisma.heart.count({ where: { fromProfileId: toProfileId, toProfileId: fromProfileId } });
+  await prisma.heart.createMany({
+    data: { fromProfileId, toProfileId },
+    skipDuplicates: true,
+  });
+  const back = await prisma.heart.count({
+    where: { fromProfileId: toProfileId, toProfileId: fromProfileId },
+  });
   if (back) syncDiscordRolesLater(session.user.id, to.userId);
 
   revalidatePath('/discovery');
@@ -457,13 +633,24 @@ export async function sendHeart({ fromProfileId, toProfileId }: { fromProfileId:
 }
 
 /** Takes a heart back, which also ends a match. */
-export async function takeBackHeart({ fromProfileId, toProfileId }: { fromProfileId: string; toProfileId: string }) {
+export async function takeBackHeart({
+  fromProfileId,
+  toProfileId,
+}: {
+  fromProfileId: string;
+  toProfileId: string;
+}) {
   const session = await requireUser();
 
-  const { count } = await prisma.heart.deleteMany({ where: { fromProfileId, toProfileId, from: { userId: session.user.id } } });
+  const { count } = await prisma.heart.deleteMany({
+    where: { fromProfileId, toProfileId, from: { userId: session.user.id } },
+  });
   if (!count) return { message: 'That heart was already taken back.' };
   // It may have ended a match, for either owner.
-  const to = await prisma.profile.findUnique({ where: { id: toProfileId }, select: { userId: true } });
+  const to = await prisma.profile.findUnique({
+    where: { id: toProfileId },
+    select: { userId: true },
+  });
   syncDiscordRolesLater(session.user.id, ...(to ? [to.userId] : []));
 
   revalidatePath('/discovery');
@@ -474,7 +661,10 @@ export async function takeBackHeart({ fromProfileId, toProfileId }: { fromProfil
 export async function markHeartsSeen() {
   const session = await requireUser();
 
-  await prisma.heart.updateMany({ where: { seenAt: null, to: { userId: session.user.id } }, data: { seenAt: new Date() } });
+  await prisma.heart.updateMany({
+    where: { seenAt: null, to: { userId: session.user.id } },
+    data: { seenAt: new Date() },
+  });
 }
 
 /**
@@ -483,7 +673,10 @@ export async function markHeartsSeen() {
  */
 export async function reportProfile(unsafeData: z.input<typeof reportSchema>) {
   const { success, data, error } = reportSchema.safeParse(unsafeData);
-  if (!success) return { message: error.issues[0]?.message ?? 'Unable to send the report!' };
+  if (!success)
+    return {
+      message: error.issues[0]?.message ?? 'Unable to send the report!',
+    };
 
   const session = await requireUser();
 
@@ -492,46 +685,91 @@ export async function reportProfile(unsafeData: z.input<typeof reportSchema>) {
     select: { userId: true, user: { select: { matchContact: true } } },
   });
   if (!profile) return { message: "That shark isn't around anymore." };
-  if (profile.userId === session.user.id) return { message: "You can't report your own shark." };
+  if (profile.userId === session.user.id)
+    return { message: "You can't report your own shark." };
 
   // Only a match sees how to reach the owner, so only a match can report it,
   // and the copy for moderators comes from here rather than the browser.
   let contactNote: string | null = null;
   if (data.contact) {
     const match = await prisma.heart.findFirst({
-      where: { fromProfileId: data.profileId, to: { userId: session.user.id, heartsSent: { some: { toProfileId: data.profileId } } } },
+      where: {
+        fromProfileId: data.profileId,
+        to: {
+          userId: session.user.id,
+          heartsSent: { some: { toProfileId: data.profileId } },
+        },
+      },
       select: { id: true },
     });
-    if (!match || !profile.user.matchContact) return { message: "Only a match can report how to reach this shark's owner." };
+    if (!match || !profile.user.matchContact)
+      return {
+        message: "Only a match can report how to reach this shark's owner.",
+      };
     contactNote = profile.user.matchContact;
   }
 
   const [open, today] = await Promise.all([
     prisma.report.count({
-      where: { reporterId: session.user.id, profileId: data.profileId, status: 'OPEN', contactNote: data.contact ? { not: null } : null },
+      where: {
+        reporterId: session.user.id,
+        profileId: data.profileId,
+        status: 'OPEN',
+        contactNote: data.contact ? { not: null } : null,
+      },
     }),
-    prisma.report.count({ where: { reporterId: session.user.id, createdAt: { gt: new Date(Date.now() - 24 * 60 * 60 * 1000) } } }),
+    prisma.report.count({
+      where: {
+        reporterId: session.user.id,
+        createdAt: { gt: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+      },
+    }),
   ]);
-  if (open) return { message: "You've reported this already. A moderator will look at it soon." };
-  if (today >= REPORTS_PER_DAY) return { message: `That's ${REPORTS_PER_DAY} reports today. Try again tomorrow, or write to us.` };
+  if (open)
+    return {
+      message:
+        "You've reported this already. A moderator will look at it soon.",
+    };
+  if (today >= REPORTS_PER_DAY)
+    return {
+      message: `That's ${REPORTS_PER_DAY} reports today. Try again tomorrow, or write to us.`,
+    };
 
   await prisma.report.create({
-    data: { profileId: data.profileId, reporterId: session.user.id, reason: data.reason, details: data.details || null, contactNote },
+    data: {
+      profileId: data.profileId,
+      reporterId: session.user.id,
+      reason: data.reason,
+      details: data.details || null,
+      contactNote,
+    },
   });
 
   revalidatePath('/moderation/reports');
 }
 
 /** Closes a report: dealt with (`RESOLVED`), or nothing wrong (`DISMISSED`). */
-export async function handleReport({ reportId, outcome }: { reportId: string; outcome: 'RESOLVED' | 'DISMISSED' }) {
+export async function handleReport({
+  reportId,
+  outcome,
+}: {
+  reportId: string;
+  outcome: 'RESOLVED' | 'DISMISSED';
+}) {
   const session = await requireUser();
 
-  if (!isModerator(session.user.role)) return { message: 'You need moderator access to handle reports.' };
-  if (outcome !== 'RESOLVED' && outcome !== 'DISMISSED') return { message: 'Unknown outcome.' };
+  if (!isModerator(session.user.role))
+    return { message: 'You need moderator access to handle reports.' };
+  if (outcome !== 'RESOLVED' && outcome !== 'DISMISSED')
+    return { message: 'Unknown outcome.' };
 
   const { count } = await prisma.report.updateMany({
     where: { id: reportId, status: 'OPEN' },
-    data: { status: outcome, handledAt: new Date(), handledById: session.user.id },
+    data: {
+      status: outcome,
+      handledAt: new Date(),
+      handledById: session.user.id,
+    },
   });
   if (!count) return { message: 'Someone already handled this report.' };
 

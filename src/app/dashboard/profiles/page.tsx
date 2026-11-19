@@ -1,18 +1,19 @@
-import { PlusIcon, UserRoundIcon } from 'lucide-react';
-import Link from 'next/link';
-import type { Metadata } from 'next';
-
 import { MAX_PROFILES } from '@/constants/auth';
 import { profilesMetadata } from '@/constants/metadata';
+import type { Metadata } from 'next';
+import Link from 'next/link';
+
+import { PlusIcon, UserRoundIcon } from 'lucide-react';
+
+import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 import { QUERIES } from '@/lib/queries';
 import { requireUser } from '@/lib/session';
-import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 
-import { Eyebrow, PageTitle } from '@/components/common/heading';
 import { EmptyState } from '@/components/common/empty-state';
+import { Eyebrow, PageTitle } from '@/components/common/heading';
 import { Stagger } from '@/components/common/stagger';
-import { ScrollReveal } from '@/components/home/scroll-reveal';
 import { FIRST_ROW } from '@/components/discovery/profile';
+import { ScrollReveal } from '@/components/home/scroll-reveal';
 import { ProfileCard } from '@/components/profiles/profile-card';
 import { Button } from '@/components/ui/button';
 
@@ -23,9 +24,16 @@ export default async function ProfilesPage() {
   const profiles = await QUERIES.getUserProfiles(session.user.id);
 
   return (
-    <div data-water='band' className='flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'>
+    <div
+      data-water='band'
+      className='flex flex-1 flex-col px-4 py-28 sm:px-5 lg:px-8'
+    >
       <div className='container mx-auto max-w-7xl'>
-        <Stagger id='page-header' variant='sink' className='mb-24 flex flex-col items-start gap-4'>
+        <Stagger
+          id='page-header'
+          variant='sink'
+          className='mb-24 flex flex-col items-start gap-4'
+        >
           <div>
             <Eyebrow>Your sharks</Eyebrow>
             <PageTitle>Profiles</PageTitle>
@@ -38,7 +46,10 @@ export default async function ProfilesPage() {
               </Link>
             </Button>
           ) : (
-            <Button disabled title="You've reached the most profiles one account can have.">
+            <Button
+              disabled
+              title="You've reached the most profiles one account can have."
+            >
               <PlusIcon />
               New profile
             </Button>
@@ -48,7 +59,13 @@ export default async function ProfilesPage() {
         {profiles.length ? (
           <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-3'>
             {profiles.map((profile, index) => (
-              <ScrollReveal key={profile.id} className='h-full' delay={CONTENT_DELAY + index * STAGGER} scrollDelay={(index % 3) * STAGGER} variant='card'>
+              <ScrollReveal
+                key={profile.id}
+                className='h-full'
+                delay={CONTENT_DELAY + index * STAGGER}
+                scrollDelay={(index % 3) * STAGGER}
+                variant='card'
+              >
                 <ProfileCard profile={profile} eager={index < FIRST_ROW} />
               </ScrollReveal>
             ))}

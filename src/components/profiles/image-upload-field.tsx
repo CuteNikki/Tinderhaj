@@ -1,9 +1,15 @@
-import { ImageUpIcon, Loader2Icon, XIcon } from 'lucide-react';
+import {
+  MAX_AVATAR_SIZE_MB,
+  MAX_BANNER_SIZE_MB,
+  UPLOAD_TYPES,
+  type UploadKind,
+} from '@/constants/uploads';
 import Image from 'next/image';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-import { MAX_AVATAR_SIZE_MB, MAX_BANNER_SIZE_MB, UPLOAD_TYPES, type UploadKind } from '@/constants/uploads';
+import { ImageUpIcon, Loader2Icon, XIcon } from 'lucide-react';
+
 import { requestUpload } from '@/lib/actions';
 import { IMAGE_BOXES, shrinkImage } from '@/lib/shrink-image';
 import { cn } from '@/lib/utils';
@@ -11,15 +17,28 @@ import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 
 /** Sends `file` to the link it was given (see requestUpload), telling `onProgress` how far along it is, in percent. */
-function send(uploadUrl: string, file: File, onProgress: (percent: number) => void) {
+function send(
+  uploadUrl: string,
+  file: File,
+  onProgress: (percent: number) => void
+) {
   // XMLHttpRequest rather than fetch, which can't tell how much of an upload has gone
   return new Promise<void>((resolve, reject) => {
     const request = new XMLHttpRequest();
     request.open('PUT', uploadUrl);
     request.setRequestHeader('Content-Type', file.type);
-    request.upload.onprogress = (event) => event.lengthComputable && onProgress((event.loaded / event.total) * 100);
-    request.onload = () => (request.status >= 200 && request.status < 300 ? resolve() : reject(new Error('The picture could not be uploaded.')));
-    request.onerror = () => reject(new Error('The picture could not be uploaded. Check your connection and try again.'));
+    request.upload.onprogress = (event) =>
+      event.lengthComputable && onProgress((event.loaded / event.total) * 100);
+    request.onload = () =>
+      request.status >= 200 && request.status < 300
+        ? resolve()
+        : reject(new Error('The picture could not be uploaded.'));
+    request.onerror = () =>
+      reject(
+        new Error(
+          'The picture could not be uploaded. Check your connection and try again.'
+        )
+      );
     request.send(file);
   });
 }
@@ -60,7 +79,12 @@ export function ImageUploadField({
       await send(link.uploadUrl, shrunk, setProgress);
       onChange(link.url);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'The picture could not be uploaded.', { duration: 5000, position: 'top-center' });
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : 'The picture could not be uploaded.',
+        { duration: 5000, position: 'top-center' }
+      );
     } finally {
       setProgress(null);
     }
@@ -72,30 +96,55 @@ export function ImageUploadField({
         <p className='flex items-center gap-1.5 text-sm leading-none font-medium'>
           {label}
           {flagged && (
-            <Badge variant='destructive' className='rounded-full text-[10px] font-semibold'>
+            <Badge
+              variant='destructive'
+              className='rounded-full text-[10px] font-semibold'
+            >
               Needs update
             </Badge>
           )}
         </p>
       )}
-      <div className={cn('group relative', shape === 'circle' ? 'h-20 w-20' : 'aspect-5/2 w-full', className)}>
-        <div className={cn('bg-muted border-input absolute inset-0 overflow-hidden border', shape === 'circle' ? 'rounded-full' : 'rounded-md')}>
-          {value && <Image unoptimized src={value} alt={label} fill className='object-cover' />}
+      <div
+        className={cn(
+          'group relative',
+          shape === 'circle' ? 'h-20 w-20' : 'aspect-5/2 w-full',
+          className
+        )}
+      >
+        <div
+          className={cn(
+            'absolute inset-0 overflow-hidden border border-input bg-muted',
+            shape === 'circle' ? 'rounded-full' : 'rounded-md'
+          )}
+        >
+          {value && (
+            <Image
+              unoptimized
+              src={value}
+              alt={label}
+              fill
+              className='object-cover'
+            />
+          )}
 
           {progress !== null && (
             <div className='absolute inset-0 z-10 flex flex-col items-center justify-center gap-1 bg-black/60 text-white'>
               <Loader2Icon className='h-4 w-4 animate-spin' />
-              <span className='text-xs font-semibold tabular-nums'>{Math.round(progress)}%</span>
+              <span className='text-xs font-semibold tabular-nums'>
+                {Math.round(progress)}%
+              </span>
             </div>
           )}
 
           <label
             className={cn(
-              'text-muted-foreground absolute inset-0 flex cursor-pointer items-center justify-center gap-1 text-xs font-medium',
-              'has-focus-visible:ring-ring/50 has-focus-visible:ring-3 has-focus-visible:ring-inset',
+              'absolute inset-0 flex cursor-pointer items-center justify-center gap-1 text-xs font-medium text-muted-foreground',
+              'has-focus-visible:ring-3 has-focus-visible:ring-ring/50 has-focus-visible:ring-inset',
               // Shown on hover, and when it has keyboard focus, which can't hover
-              value && 'bg-black/50 opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100',
-              progress !== null && 'pointer-events-none opacity-0',
+              value &&
+                'bg-black/50 opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100',
+              progress !== null && 'pointer-events-none opacity-0'
             )}
           >
             <input
@@ -110,9 +159,17 @@ export function ImageUploadField({
                 if (file) void upload(file);
               }}
             />
-            <ImageUpIcon className={cn('shrink-0', value ? 'text-white' : 'text-muted-foreground', shape === 'circle' ? 'h-4 w-4' : 'h-5 w-5')} />
+            <ImageUpIcon
+              className={cn(
+                'shrink-0',
+                value ? 'text-white' : 'text-muted-foreground',
+                shape === 'circle' ? 'h-4 w-4' : 'h-5 w-5'
+              )}
+            />
             {shape === 'banner' ? (
-              <span className={value ? 'text-white' : 'text-muted-foreground'}>{value ? 'Change banner' : 'Upload banner'}</span>
+              <span className={value ? 'text-white' : 'text-muted-foreground'}>
+                {value ? 'Change banner' : 'Upload banner'}
+              </span>
             ) : (
               // Only an icon shows, so this names it for screen readers
               <span className='sr-only'>{`${value ? 'Change' : 'Upload'} ${label.toLowerCase()}`}</span>
@@ -125,9 +182,9 @@ export function ImageUploadField({
             type='button'
             onClick={() => onChange(null)}
             className={cn(
-              'bg-background text-foreground ring-foreground/10 hover:bg-destructive hover:text-destructive-foreground absolute z-20 flex h-6 w-6 items-center justify-center rounded-full shadow-md ring-1 transition-colors',
+              'hover:text-destructive-foreground absolute z-20 flex h-6 w-6 items-center justify-center rounded-full bg-background text-foreground shadow-md ring-1 ring-foreground/10 transition-colors hover:bg-destructive',
               // On a circle, on its edge where it meets the corner, rather than out past it
-              shape === 'circle' ? 'top-0.5 right-0.5' : '-top-1.5 -right-1.5',
+              shape === 'circle' ? 'top-0.5 right-0.5' : '-top-1.5 -right-1.5'
             )}
             aria-label={`Remove ${label.toLowerCase()}`}
           >
@@ -136,7 +193,7 @@ export function ImageUploadField({
         )}
       </div>
       {!bare && (
-        <p className='text-muted-foreground text-xs'>
+        <p className='text-xs text-muted-foreground'>
           {shape === 'circle'
             ? `Recommended: square image, 512\u00d7512px. Max ${MAX_AVATAR_SIZE_MB}MB.`
             : `Recommended: 5:2 aspect ratio, 1200\u00d7480px. Max ${MAX_BANNER_SIZE_MB}MB.`}

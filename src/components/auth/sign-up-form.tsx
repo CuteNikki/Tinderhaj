@@ -1,5 +1,10 @@
 'use client';
 
+import {
+  MAX_EMAIL_LENGTH,
+  MAX_PASSWORD_LENGTH,
+  MAX_USERNAME_LENGTH,
+} from '@/constants/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -7,7 +12,8 @@ import { useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-import { MAX_EMAIL_LENGTH, MAX_PASSWORD_LENGTH, MAX_USERNAME_LENGTH } from '@/constants/auth';
+import { ArrowRightIcon, Loader2Icon } from 'lucide-react';
+
 import { authClient } from '@/lib/auth-client';
 import { signUpSchema } from '@/lib/schemas';
 
@@ -16,7 +22,6 @@ import { fieldDelay } from '@/components/auth/motion';
 import { Enter } from '@/components/common/enter';
 import { Button } from '@/components/ui/button';
 import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form';
-import { ArrowRightIcon, Loader2Icon } from 'lucide-react';
 
 export function SignUpForm() {
   const router = useRouter();
@@ -26,7 +31,10 @@ export function SignUpForm() {
     resolver: zodResolver(signUpSchema),
     defaultValues: { username: '', email: '', password: '' },
   });
-  const filled = useWatch({ control: form.control, name: ['username', 'email', 'password'] }).every((value) => value.trim());
+  const filled = useWatch({
+    control: form.control,
+    name: ['username', 'email', 'password'],
+  }).every((value) => value.trim());
 
   async function onSubmit(data: z.infer<typeof signUpSchema>) {
     setIsSubmitting(true);
@@ -43,14 +51,24 @@ export function SignUpForm() {
       setIsSubmitting(false);
 
       const message = error.message ?? 'Unable to create account!';
-      if (error.code === 'USERNAME_TAKEN' || error.code === 'INVALID_USERNAME') form.setError('username', { message });
-      if (error.code?.startsWith('USER_ALREADY_EXISTS')) form.setError('email', { message: 'Email is already in use!' });
+      if (error.code === 'USERNAME_TAKEN' || error.code === 'INVALID_USERNAME')
+        form.setError('username', { message });
+      if (error.code?.startsWith('USER_ALREADY_EXISTS'))
+        form.setError('email', { message: 'Email is already in use!' });
 
-      toast.error(error.code?.startsWith('USER_ALREADY_EXISTS') ? 'Email is already in use!' : message, { duration: 5000, position: 'top-center' });
+      toast.error(
+        error.code?.startsWith('USER_ALREADY_EXISTS')
+          ? 'Email is already in use!'
+          : message,
+        { duration: 5000, position: 'top-center' }
+      );
       return;
     }
 
-    toast.success('Account created! Check your inbox to verify your email.', { duration: 5000, position: 'top-center' });
+    toast.success('Account created! Check your inbox to verify your email.', {
+      duration: 5000,
+      position: 'top-center',
+    });
     router.push('/dashboard/profiles');
     router.refresh();
   }
@@ -64,7 +82,14 @@ export function SignUpForm() {
             name='username'
             render={({ field }) => (
               <FormItem className='gap-1.5'>
-                <AuthInput label='Username' type='text' autoComplete='username' maxLength={MAX_USERNAME_LENGTH} {...field} required />
+                <AuthInput
+                  label='Username'
+                  type='text'
+                  autoComplete='username'
+                  maxLength={MAX_USERNAME_LENGTH}
+                  {...field}
+                  required
+                />
                 <FormMessage />
               </FormItem>
             )}
@@ -76,7 +101,14 @@ export function SignUpForm() {
             name='email'
             render={({ field }) => (
               <FormItem className='gap-1.5'>
-                <AuthInput label='Email' type='email' autoComplete='email' maxLength={MAX_EMAIL_LENGTH} {...field} required />
+                <AuthInput
+                  label='Email'
+                  type='email'
+                  autoComplete='email'
+                  maxLength={MAX_EMAIL_LENGTH}
+                  {...field}
+                  required
+                />
                 <FormMessage />
               </FormItem>
             )}
@@ -88,17 +120,31 @@ export function SignUpForm() {
             name='password'
             render={({ field }) => (
               <FormItem className='gap-1.5'>
-                <AuthInput label='Password' type='password' autoComplete='new-password' maxLength={MAX_PASSWORD_LENGTH} {...field} required />
+                <AuthInput
+                  label='Password'
+                  type='password'
+                  autoComplete='new-password'
+                  maxLength={MAX_PASSWORD_LENGTH}
+                  {...field}
+                  required
+                />
                 <FormMessage />
               </FormItem>
             )}
           />
         </Enter>
         <Enter variant='reveal' spring='pop' delay={fieldDelay(3)}>
-          <Button type='submit' className='w-full' disabled={isSubmitting || !filled}>
+          <Button
+            type='submit'
+            className='w-full'
+            disabled={isSubmitting || !filled}
+          >
             {isSubmitting ? (
               <>
-                <Loader2Icon className='shrink-0 animate-spin' aria-hidden='true' />
+                <Loader2Icon
+                  className='shrink-0 animate-spin'
+                  aria-hidden='true'
+                />
                 Creating Account...
               </>
             ) : (

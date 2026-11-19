@@ -1,7 +1,5 @@
-import { Events } from 'discord.js';
-
 import { Event } from 'classes/base/event';
-
+import { Events } from 'discord.js';
 import { run } from 'utility/interactions';
 
 export default new Event({
@@ -12,6 +10,12 @@ export default new Event({
     const command = client.commands.get(interaction.commandName);
     if (!command) return;
 
-    await run(client, interaction, interaction.commandName, command.options.cooldown, command.options.execute);
+    await run(
+      client,
+      interaction,
+      interaction.commandName,
+      command.options.cooldown,
+      command.options.execute
+    );
   },
 });

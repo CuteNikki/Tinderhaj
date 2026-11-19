@@ -4,8 +4,15 @@ import { useRouter } from 'next/navigation';
 import { useEffect, type MouseEvent } from 'react';
 
 import { ButtonSkeleton, GhostText } from '@/components/common/skeletons';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 
 const scrollToProfilesKey = 'discovery-scroll-to-profiles';
 
@@ -28,21 +35,28 @@ export function DiscoveryPagination({
 }) {
   const router = useRouter();
   const pageHref = (targetPage: number) => {
-    const params = new URLSearchParams({ q: query, p: String(targetPage), t: String(take), s: String(seed) });
+    const params = new URLSearchParams({
+      q: query,
+      p: String(targetPage),
+      t: String(take),
+      s: String(seed),
+    });
     return `/discovery?${params}`;
   };
-  const scrollToProfiles = () => document.getElementById('profiles')?.scrollIntoView();
-  const navigateToPage = (targetPage: number) => (event: MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
+  const scrollToProfiles = () =>
+    document.getElementById('profiles')?.scrollIntoView();
+  const navigateToPage =
+    (targetPage: number) => (event: MouseEvent<HTMLAnchorElement>) => {
+      event.preventDefault();
 
-    if (targetPage === page) {
-      scrollToProfiles();
-      return;
-    }
+      if (targetPage === page) {
+        scrollToProfiles();
+        return;
+      }
 
-    sessionStorage.setItem(scrollToProfilesKey, 'true');
-    router.push(pageHref(targetPage), { scroll: false });
-  };
+      sessionStorage.setItem(scrollToProfilesKey, 'true');
+      router.push(pageHref(targetPage), { scroll: false });
+    };
 
   useEffect(() => {
     if (sessionStorage.getItem(scrollToProfilesKey) !== 'true') {
@@ -60,36 +74,54 @@ export function DiscoveryPagination({
 
   return (
     <div className='flex flex-col items-center gap-4 px-5 pt-8 text-center text-balance'>
-      <p className='text-muted-foreground text-sm'>
-        Showing {displayedUsers} of {totalUsers} {totalUsers === 1 ? 'profile' : 'profiles'} (page {page} of {totalPages})
+      <p className='text-sm text-muted-foreground'>
+        Showing {displayedUsers} of {totalUsers}{' '}
+        {totalUsers === 1 ? 'profile' : 'profiles'} (page {page} of {totalPages}
+        )
       </p>
       <Pagination>
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious href={pageHref(Math.max(page - 1, 1))} onClick={navigateToPage(Math.max(page - 1, 1))} />
+            <PaginationPrevious
+              href={pageHref(Math.max(page - 1, 1))}
+              onClick={navigateToPage(Math.max(page - 1, 1))}
+            />
           </PaginationItem>
           {totalPages > 2 && page === totalPages && (
             <PaginationItem>
-              <PaginationLink href={pageHref(page - 2)} onClick={navigateToPage(page - 2)}>
+              <PaginationLink
+                href={pageHref(page - 2)}
+                onClick={navigateToPage(page - 2)}
+              >
                 {page - 2}
               </PaginationLink>
             </PaginationItem>
           )}
           {page > 1 && (
             <PaginationItem>
-              <PaginationLink href={pageHref(page - 1)} onClick={navigateToPage(page - 1)}>
+              <PaginationLink
+                href={pageHref(page - 1)}
+                onClick={navigateToPage(page - 1)}
+              >
                 {page - 1}
               </PaginationLink>
             </PaginationItem>
           )}
           <PaginationItem>
-            <PaginationLink href={pageHref(page)} isActive onClick={navigateToPage(page)}>
+            <PaginationLink
+              href={pageHref(page)}
+              isActive
+              onClick={navigateToPage(page)}
+            >
               {page}
             </PaginationLink>
           </PaginationItem>
           {page < totalPages && (
             <PaginationItem>
-              <PaginationLink href={pageHref(page + 1)} onClick={navigateToPage(page + 1)}>
+              <PaginationLink
+                href={pageHref(page + 1)}
+                onClick={navigateToPage(page + 1)}
+              >
                 {page + 1}
               </PaginationLink>
             </PaginationItem>
@@ -102,7 +134,10 @@ export function DiscoveryPagination({
             </PaginationItem>
           )}
           <PaginationItem>
-            <PaginationNext href={pageHref(Math.min(page + 1, totalPages))} onClick={navigateToPage(Math.min(page + 1, totalPages))} />
+            <PaginationNext
+              href={pageHref(Math.min(page + 1, totalPages))}
+              onClick={navigateToPage(Math.min(page + 1, totalPages))}
+            />
           </PaginationItem>
         </PaginationContent>
       </Pagination>
@@ -113,7 +148,10 @@ export function DiscoveryPagination({
 /** The page links while they load: placed as the real ones are, on the page itself, not in a box of their own. */
 export function DiscoveryPaginationSkeleton() {
   return (
-    <div className='flex flex-col items-center gap-4 px-5 pt-8 text-center text-balance' aria-hidden>
+    <div
+      className='flex flex-col items-center gap-4 px-5 pt-8 text-center text-balance'
+      aria-hidden
+    >
       <GhostText>Showing 6 of 10 profiles (page 1 of 2)</GhostText>
       <div className='flex items-center gap-1'>
         <ButtonSkeleton className='pl-2'>Previous</ButtonSkeleton>

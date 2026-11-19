@@ -12,12 +12,21 @@ export function LinkedText({ text }: { text: string }) {
     if (index % 2 === 0) return <Fragment key={index}>{part}</Fragment>;
 
     // Punctuation right after an address usually ends the sentence, not the address.
-    const [, address, after] = part.match(/^(.*?)([.,!?;:)\]]*)$/) ?? [part, part, ''];
+    const [, address, after] = part.match(/^(.*?)([.,!?;:)\]]*)$/) ?? [
+      part,
+      part,
+      '',
+    ];
     if (!URL.canParse(address)) return <Fragment key={index}>{part}</Fragment>;
 
     return (
       <Fragment key={index}>
-        <a href={address} target='_blank' rel='noopener noreferrer nofollow ugc' className='text-foreground font-medium break-all underline'>
+        <a
+          href={address}
+          target='_blank'
+          rel='noopener noreferrer nofollow ugc'
+          className='font-medium break-all text-foreground underline'
+        >
           {address}
         </a>
         {after}

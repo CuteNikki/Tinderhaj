@@ -5,7 +5,11 @@ import { Skeleton } from '@/components/ui/skeleton';
 /** Hearts while it loads: rows shaped like matches, the tab it usually opens on, each with the way to reach them under it. */
 export default function Loading() {
   return (
-    <PageLoading eyebrow='Your sharks' title='Hearts' description='Two sharks hearting each other is a match.'>
+    <PageLoading
+      eyebrow='Your sharks'
+      title='Hearts'
+      description='Two sharks hearting each other is a match.'
+    >
       <TabsSkeleton count={3} compact className='mb-4' />
       <ListSkeleton>
         <div className='p-4'>

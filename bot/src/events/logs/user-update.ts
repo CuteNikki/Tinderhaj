@@ -1,8 +1,6 @@
-import { Events } from 'discord.js';
-
 import { Event } from 'classes/base/event';
-
-import { LOG_COLORS, log, who } from 'moderation/log';
+import { Events } from 'discord.js';
+import { log, LOG_COLORS, who } from 'moderation/log';
 import { KEYS } from 'utility/keys';
 import { code } from 'utility/markdown';
 
@@ -19,10 +17,14 @@ export default new Event({
 
     const name = (value: string | null) => (value ? code(value) : '*none*');
     const changes = [
-      before.username !== after.username && `**Old Username:** ${name(before.username)}\n**New Username:** ${name(after.username)}`,
-      before.globalName !== after.globalName && `**Old Display name:** ${name(before.globalName)}\n**New Display name:** ${name(after.globalName)}`,
+      before.username !== after.username &&
+        `**Old Username:** ${name(before.username)}\n**New Username:** ${name(after.username)}`,
+      before.globalName !== after.globalName &&
+        `**Old Display name:** ${name(before.globalName)}\n**New Display name:** ${name(after.globalName)}`,
     ].filter(Boolean);
     if (!changes.length) return;
-    await log(guild, 'Name changed', LOG_COLORS.join, [[who(after), ...changes].join('\n')]);
+    await log(guild, 'Name changed', LOG_COLORS.join, [
+      [who(after), ...changes].join('\n'),
+    ]);
   },
 });

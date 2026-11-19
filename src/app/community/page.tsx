@@ -1,9 +1,16 @@
-import { BugIcon, Code2Icon, HeartHandshakeIcon, type LucideIcon, Share2Icon } from 'lucide-react';
+import { communityMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 
-import { socialLink } from '@/lib/social-link';
-import { communityMetadata } from '@/constants/metadata';
+import {
+  BugIcon,
+  Code2Icon,
+  HeartHandshakeIcon,
+  Share2Icon,
+  type LucideIcon,
+} from 'lucide-react';
+
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
+import { socialLink } from '@/lib/social-link';
 
 import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
 import { IconCard } from '@/components/common/icon-card';
@@ -15,7 +22,12 @@ import { Section } from '@/components/sections/section';
 
 export const metadata: Metadata = communityMetadata;
 
-const WAYS_IN: { title: string; copy: string; icon: LucideIcon; link: { label: string; href: string } }[] = [
+const WAYS_IN: {
+  title: string;
+  copy: string;
+  icon: LucideIcon;
+  link: { label: string; href: string };
+}[] = [
   {
     title: 'Show off your sharks',
     copy: 'Every account has a page at its username with all its verified sharks on it. Share the link anywhere.',
@@ -45,12 +57,19 @@ const WAYS_IN: { title: string; copy: string; icon: LucideIcon; link: { label: s
 export default function CommunityPage() {
   return (
     <>
-      <div data-water='band' data-tone='muted' className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'>
+      <div
+        data-water='band'
+        data-tone='muted'
+        className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'
+      >
         <div className='container mx-auto max-w-7xl'>
           <Stagger id='page-header' variant='sink' className='mb-24'>
             <Eyebrow>Community</Eyebrow>
             <PageTitle>Find the pod</PageTitle>
-            <PageNote>Where sharks and their people hang out, here and around the internet.</PageNote>
+            <PageNote>
+              Where sharks and their people hang out, here and around the
+              internet.
+            </PageNote>
           </Stagger>
 
           <ScrollReveal delay={CONTENT_DELAY}>
@@ -69,7 +88,15 @@ export default function CommunityPage() {
         note="A few ways to be part of it, beyond your sharks' profiles."
         tone='background'
       >
-        <Stagger as='ul' itemAs='li' variant='card' gap={STAGGER} delay={0.1} className='grid gap-4 sm:grid-cols-2 xl:grid-cols-4' itemClassName='h-full'>
+        <Stagger
+          as='ul'
+          itemAs='li'
+          variant='card'
+          gap={STAGGER}
+          delay={0.1}
+          className='grid gap-4 sm:grid-cols-2 xl:grid-cols-4'
+          itemClassName='h-full'
+        >
           {WAYS_IN.map((way) => (
             <IconCard key={way.title} {...way} heading='h3' />
           ))}

@@ -1,3 +1,8 @@
+import { CONTACT_EMAIL } from '@/constants/contact';
+import { guidelinesMetadata } from '@/constants/metadata';
+import type { Metadata } from 'next';
+import Link from 'next/link';
+
 import {
   BanIcon,
   BotOffIcon,
@@ -8,15 +13,11 @@ import {
   EyeOffIcon,
   FilePenLineIcon,
   FlagIcon,
-  type LucideIcon,
   SmileIcon,
   UndoIcon,
+  type LucideIcon,
 } from 'lucide-react';
-import type { Metadata } from 'next';
-import Link from 'next/link';
 
-import { CONTACT_EMAIL } from '@/constants/contact';
-import { guidelinesMetadata } from '@/constants/metadata';
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 
 import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
@@ -64,9 +65,21 @@ const RULES: { title: string; copy: string; icon: LucideIcon }[] = [
 
 /** A profile's way through review, as named on the profiles page. */
 const REVIEW: { title: string; copy: string; icon: LucideIcon }[] = [
-  { title: 'Draft', copy: "Saved, and only you can see it. Send it in when it's ready.", icon: FilePenLineIcon },
-  { title: 'Pending Review', copy: 'Waiting for a moderator, who looks at every profile by hand.', icon: ClockIcon },
-  { title: 'Verified', copy: 'In discovery for everyone to find. Editing it sends it back to draft, to be checked again.', icon: CircleCheckIcon },
+  {
+    title: 'Draft',
+    copy: "Saved, and only you can see it. Send it in when it's ready.",
+    icon: FilePenLineIcon,
+  },
+  {
+    title: 'Pending Review',
+    copy: 'Waiting for a moderator, who looks at every profile by hand.',
+    icon: ClockIcon,
+  },
+  {
+    title: 'Verified',
+    copy: 'In discovery for everyone to find. Editing it sends it back to draft, to be checked again.',
+    icon: CircleCheckIcon,
+  },
 ];
 
 /** What happens when a shark or its owner breaks the rules above. */
@@ -91,12 +104,18 @@ const CONSEQUENCES: { title: string; copy: string; icon: LucideIcon }[] = [
 export default function GuidelinesPage() {
   return (
     <>
-      <div data-water='band' data-tone='muted' className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'>
+      <div
+        data-water='band'
+        data-tone='muted'
+        className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'
+      >
         <div className='container mx-auto max-w-7xl'>
           <Stagger id='page-header' variant='sink' className='mb-24'>
             <Eyebrow>Guidelines</Eyebrow>
             <PageTitle>Guidelines for sharks</PageTitle>
-            <PageNote>What moderators look for, so your shark sails through review.</PageNote>
+            <PageNote>
+              What moderators look for, so your shark sails through review.
+            </PageNote>
           </Stagger>
 
           <ScrollReveal delay={CONTENT_DELAY}>
@@ -118,9 +137,12 @@ export default function GuidelinesPage() {
             ))}
           </Stagger>
           <ScrollReveal delay={CONTENT_DELAY + STAGGER * 3}>
-            <p className='text-muted-foreground mt-6 text-sm text-pretty'>
+            <p className='mt-6 text-sm text-pretty text-muted-foreground'>
               These go along with the community rules in the{' '}
-              <Link href='/terms' className='text-foreground font-medium underline'>
+              <Link
+                href='/terms'
+                className='font-medium text-foreground underline'
+              >
                 Terms of Service
               </Link>
               , which apply too.
@@ -129,10 +151,29 @@ export default function GuidelinesPage() {
         </div>
       </div>
 
-      <Section eyebrow='Review' title='From draft' highlight='to discovery.' note='Every shark goes through the same three steps.' tone='background'>
-        <Stagger as='ul' itemAs='li' variant='card' gap={STAGGER} delay={0.1} className='grid gap-4 md:grid-cols-3' itemClassName='h-full'>
+      <Section
+        eyebrow='Review'
+        title='From draft'
+        highlight='to discovery.'
+        note='Every shark goes through the same three steps.'
+        tone='background'
+      >
+        <Stagger
+          as='ul'
+          itemAs='li'
+          variant='card'
+          gap={STAGGER}
+          delay={0.1}
+          className='grid gap-4 md:grid-cols-3'
+          itemClassName='h-full'
+        >
           {REVIEW.map((step, index) => (
-            <IconCard key={step.title} {...step} step={index + 1} heading='h3' />
+            <IconCard
+              key={step.title}
+              {...step}
+              step={index + 1}
+              heading='h3'
+            />
           ))}
         </Stagger>
       </Section>
@@ -143,7 +184,15 @@ export default function GuidelinesPage() {
         highlight='Banned, rarely.'
         note='Most profiles that come back need a small change, nothing more.'
       >
-        <Stagger as='ul' itemAs='li' variant='card' gap={STAGGER} delay={0.1} className='grid gap-4 md:grid-cols-3' itemClassName='h-full'>
+        <Stagger
+          as='ul'
+          itemAs='li'
+          variant='card'
+          gap={STAGGER}
+          delay={0.1}
+          className='grid gap-4 md:grid-cols-3'
+          itemClassName='h-full'
+        >
           {CONSEQUENCES.map((item) => (
             <IconCard key={item.title} {...item} heading='h3' />
           ))}

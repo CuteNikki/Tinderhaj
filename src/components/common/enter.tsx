@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
 
-export type EnterVariant = 'sink' | 'reveal' | 'ring' | 'pop' | 'swim' | 'card' | 'peek';
+export type EnterVariant =
+  'sink' | 'reveal' | 'ring' | 'pop' | 'swim' | 'card' | 'peek';
 
 /**
  * The classes and delay that bring something in, played by the browser (see
@@ -11,9 +12,15 @@ export type EnterVariant = 'sink' | 'reveal' | 'ring' | 'pop' | 'swim' | 'card' 
  * bouncier spring. `waiting` keeps it hidden until it's scrolled to (see
  * useReveal).
  */
-export function enter(variant: EnterVariant, delay = 0, { spring, waiting }: { spring?: 'pop'; waiting?: boolean } = {}) {
+export function enter(
+  variant: EnterVariant,
+  delay = 0,
+  { spring, waiting }: { spring?: 'pop'; waiting?: boolean } = {}
+) {
   return {
-    className: waiting ? 'enter-waiting' : cn('enter', `enter-${variant}`, spring === 'pop' && 'spring-pop'),
+    className: waiting
+      ? 'enter-waiting'
+      : cn('enter', `enter-${variant}`, spring === 'pop' && 'spring-pop'),
     style: { '--enter-delay': `${delay}s` } as React.CSSProperties,
   };
 }
@@ -34,8 +41,13 @@ export function Enter({
   spring?: 'pop';
   className?: string;
   children?: React.ReactNode;
-} & Omit<React.HTMLAttributes<HTMLElement>, 'className' | 'children' | 'style'>) {
-  const { className: enterClassName, style } = enter(variant, delay, { spring });
+} & Omit<
+  React.HTMLAttributes<HTMLElement>,
+  'className' | 'children' | 'style'
+>) {
+  const { className: enterClassName, style } = enter(variant, delay, {
+    spring,
+  });
 
   return (
     <Tag className={cn(enterClassName, className)} style={style} {...props}>

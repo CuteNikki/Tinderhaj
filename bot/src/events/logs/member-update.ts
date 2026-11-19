@@ -1,7 +1,5 @@
-import { AuditLogEvent, Events } from 'discord.js';
-
 import { Event } from 'classes/base/event';
-
+import { AuditLogEvent, Events } from 'discord.js';
 import { logChange, oldNew } from 'moderation/changes';
 import { who } from 'moderation/log';
 import { KEYS } from 'utility/keys';
@@ -16,8 +14,12 @@ export default new Event({
   name: Events.GuildMemberUpdate,
   async execute(_client, before, after) {
     if (after.guild.id !== KEYS.DISCORD_GUILD_ID || before.partial) return;
-    const given = after.roles.cache.filter((role) => !before.roles.cache.has(role.id)).map((role) => `${role}`);
-    const taken = before.roles.cache.filter((role) => !after.roles.cache.has(role.id)).map((role) => `${role}`);
+    const given = after.roles.cache
+      .filter((role) => !before.roles.cache.has(role.id))
+      .map((role) => `${role}`);
+    const taken = before.roles.cache
+      .filter((role) => !after.roles.cache.has(role.id))
+      .map((role) => `${role}`);
     const changes = [
       oldNew('Nickname', before.nickname, after.nickname, { asName: true }),
       given.length > 0 && `**Roles given:** ${listOf(given)}`,

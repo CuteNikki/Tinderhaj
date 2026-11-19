@@ -1,8 +1,10 @@
-import { AuditLogEvent, Events } from 'discord.js';
-
 import { Event } from 'classes/base/event';
-
-import { logChange, mentionWithDetails, permissionNames } from 'moderation/changes';
+import { AuditLogEvent, Events } from 'discord.js';
+import {
+  logChange,
+  mentionWithDetails,
+  permissionNames,
+} from 'moderation/changes';
 import { KEYS } from 'utility/keys';
 
 export default new Event({
@@ -14,7 +16,9 @@ export default new Event({
       actions: AuditLogEvent.RoleCreate,
       targetId: role.id,
       what: mentionWithDetails(`${role}`, role.name, role.id),
-      changes: [permissions.length > 0 && `**Allowed:** ${permissions.join(', ')}`],
+      changes: [
+        permissions.length > 0 && `**Allowed:** ${permissions.join(', ')}`,
+      ],
     });
   },
 });

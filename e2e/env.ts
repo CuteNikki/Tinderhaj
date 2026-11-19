@@ -16,6 +16,9 @@ export const EMAIL_DOMAIN = 'e2e.test';
  */
 export function databaseURL() {
   const url = process.env.E2E_DATABASE_URL;
-  if (!url) throw new Error('Set E2E_DATABASE_URL to a database the tests may fill with accounts, with the migrations applied.');
+  if (!url)
+    throw new Error(
+      'Set E2E_DATABASE_URL to a database the tests may fill with accounts, with the migrations applied.'
+    );
   return url;
 }

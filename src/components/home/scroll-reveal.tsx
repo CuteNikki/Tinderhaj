@@ -1,8 +1,9 @@
 'use client';
 
+import { cn } from '@/lib/utils';
+
 import { enter } from '@/components/common/enter';
 import { useReveal } from '@/components/common/use-reveal';
-import { cn } from '@/lib/utils';
 
 /**
  * Springs into place as the page opens, or once scrolled into view. `card`
@@ -25,11 +26,24 @@ export function ScrollReveal({
   scrollDelay?: number;
   variant?: 'section' | 'card';
 }) {
-  const { ref, waiting, delay: revealDelay } = useReveal<HTMLDivElement>({ delay, scrollDelay });
-  const { className: enterClassName, style } = enter(variant === 'card' ? 'card' : 'reveal', revealDelay, { waiting });
+  const {
+    ref,
+    waiting,
+    delay: revealDelay,
+  } = useReveal<HTMLDivElement>({ delay, scrollDelay });
+  const { className: enterClassName, style } = enter(
+    variant === 'card' ? 'card' : 'reveal',
+    revealDelay,
+    { waiting }
+  );
 
   return (
-    <div id={id} ref={ref} className={cn(enterClassName, className)} style={style}>
+    <div
+      id={id}
+      ref={ref}
+      className={cn(enterClassName, className)}
+      style={style}
+    >
       {children}
     </div>
   );

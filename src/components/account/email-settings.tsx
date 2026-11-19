@@ -1,11 +1,12 @@
 'use client';
 
-import { BadgeCheckIcon, Loader2Icon, MailIcon, SendIcon } from 'lucide-react';
+import { MAX_EMAIL_LENGTH } from '@/constants/auth';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { toast } from 'sonner';
 
-import { MAX_EMAIL_LENGTH } from '@/constants/auth';
+import { BadgeCheckIcon, Loader2Icon, MailIcon, SendIcon } from 'lucide-react';
+
 import { authClient } from '@/lib/auth-client';
 import { emailSchema } from '@/lib/schemas';
 
@@ -16,37 +17,70 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 /** Current address with its verification state, and a form to change it. */
-export function EmailSettings({ email, verified }: { email: string; verified: boolean }) {
+export function EmailSettings({
+  email,
+  verified,
+}: {
+  email: string;
+  verified: boolean;
+}) {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const [resending, setResending] = useState(false);
   const [changing, setChanging] = useState(false);
   // A new address, not the one it already is.
-  const { ready, onInput, clear } = useFormReady((form) => String(new FormData(form).get('newEmail')).trim().toLowerCase() !== email.toLowerCase());
+  const { ready, onInput, clear } = useFormReady(
+    (form) =>
+      String(new FormData(form).get('newEmail')).trim().toLowerCase() !==
+      email.toLowerCase()
+  );
 
   async function resend() {
     setResending(true);
-    const { error } = await authClient.sendVerificationEmail({ email, callbackURL: '/verified' });
+    const { error } = await authClient.sendVerificationEmail({
+      email,
+      callbackURL: '/verified',
+    });
     setResending(false);
 
-    if (error) return void toast.error(error.message ?? 'Unable to send the email!', { duration: 5000, position: 'top-center' });
+    if (error)
+      return void toast.error(error.message ?? 'Unable to send the email!', {
+        duration: 5000,
+        position: 'top-center',
+      });
 
-    toast.success('Verification email sent. Check your inbox.', { duration: 5000, position: 'top-center' });
+    toast.success('Verification email sent. Check your inbox.', {
+      duration: 5000,
+      position: 'top-center',
+    });
   }
 
   async function changeEmail(event: React.FormEvent<HTMLFormElement>) {
     // Not a form action: React would empty the field after a mistake, too.
     event.preventDefault();
-    const newEmail = String(new FormData(event.currentTarget).get('newEmail')).trim();
+    const newEmail = String(
+      new FormData(event.currentTarget).get('newEmail')
+    ).trim();
     // Better Auth turns away addresses the browser lets through, like one without a dot after the @.
     const { error: invalid } = emailSchema.safeParse(newEmail);
-    if (invalid) return void toast.error(invalid.issues[0]?.message ?? 'Email is invalid!', { duration: 5000, position: 'top-center' });
+    if (invalid)
+      return void toast.error(
+        invalid.issues[0]?.message ?? 'Email is invalid!',
+        { duration: 5000, position: 'top-center' }
+      );
 
     setChanging(true);
-    const { error } = await authClient.changeEmail({ newEmail, callbackURL: '/verified' });
+    const { error } = await authClient.changeEmail({
+      newEmail,
+      callbackURL: '/verified',
+    });
     setChanging(false);
 
-    if (error) return void toast.error(error.message ?? 'Unable to change your email!', { duration: 5000, position: 'top-center' });
+    if (error)
+      return void toast.error(error.message ?? 'Unable to change your email!', {
+        duration: 5000,
+        position: 'top-center',
+      });
 
     formRef.current?.reset();
     clear();
@@ -56,7 +90,7 @@ export function EmailSettings({ email, verified }: { email: string; verified: bo
       verified
         ? `If ${newEmail} is available, we sent a confirmation link to ${email}. Open it to continue.`
         : `If ${newEmail} is available, it is now your email. Check it for a verification link.`,
-      { duration: 8000, position: 'top-center' },
+      { duration: 8000, position: 'top-center' }
     );
     router.refresh();
   }
@@ -74,23 +108,49 @@ export function EmailSettings({ email, verified }: { email: string; verified: bo
           <Badge variant='outline'>Unverified</Badge>
         )}
         {!verified && (
-          <Button size='sm' disabled={resending} onClick={resend} className='ml-auto'>
-            {resending ? <Loader2Icon className='animate-spin' aria-hidden='true' /> : <SendIcon aria-hidden='true' />}
+          <Button
+            size='sm'
+            disabled={resending}
+            onClick={resend}
+            className='ml-auto'
+          >
+            {resending ? (
+              <Loader2Icon className='animate-spin' aria-hidden='true' />
+            ) : (
+              <SendIcon aria-hidden='true' />
+            )}
             Send verification
           </Button>
         )}
       </div>
 
-      <form ref={formRef} onSubmit={changeEmail} onInput={onInput} className='border-foreground/10 flex flex-col gap-2 border-t pt-4'>
+      <form
+        ref={formRef}
+        onSubmit={changeEmail}
+        onInput={onInput}
+        className='flex flex-col gap-2 border-t border-foreground/10 pt-4'
+      >
         <Label htmlFor='newEmail'>New email</Label>
         <div className='flex flex-col gap-2 sm:flex-row'>
-          <Input id='newEmail' name='newEmail' type='email' required autoComplete='email' maxLength={MAX_EMAIL_LENGTH} placeholder='new@example.com' />
+          <Input
+            id='newEmail'
+            name='newEmail'
+            type='email'
+            required
+            autoComplete='email'
+            maxLength={MAX_EMAIL_LENGTH}
+            placeholder='new@example.com'
+          />
           <Button type='submit' disabled={changing || !ready}>
-            {changing ? <Loader2Icon className='animate-spin' aria-hidden='true' /> : <MailIcon aria-hidden='true' />}
+            {changing ? (
+              <Loader2Icon className='animate-spin' aria-hidden='true' />
+            ) : (
+              <MailIcon aria-hidden='true' />
+            )}
             Change
           </Button>
         </div>
-        <p className='text-muted-foreground text-xs'>
+        <p className='text-xs text-muted-foreground'>
           {verified
             ? 'For your safety, we first send a confirmation link to your current address, then one to the new address.'
             : 'Your email changes right away, and we send a verification link to the new address.'}

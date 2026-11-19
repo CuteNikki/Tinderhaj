@@ -1,6 +1,6 @@
-import { BadgeCheckIcon, ClockIcon, FileIcon, XCircleIcon } from 'lucide-react';
-
 import { ProfileStatus } from '@/generated/enums';
+
+import { BadgeCheckIcon, ClockIcon, FileIcon, XCircleIcon } from 'lucide-react';
 
 const DAY_IN_MS = 24 * 60 * 60 * 1000;
 
@@ -8,34 +8,47 @@ const DAY_IN_MS = 24 * 60 * 60 * 1000;
 export const FRESH_PROFILE_WINDOW_IN_DAYS = 3;
 
 export function isFreshProfile(verifiedAt: Date | null, createdAt: Date) {
-  const verifiedAgeInDays = (Date.now() - (verifiedAt ?? createdAt).getTime()) / DAY_IN_MS;
+  const verifiedAgeInDays =
+    (Date.now() - (verifiedAt ?? createdAt).getTime()) / DAY_IN_MS;
 
   return verifiedAgeInDays < FRESH_PROFILE_WINDOW_IN_DAYS;
 }
 
-export const PROFILE_STATUS_META: Record<ProfileStatus, { label: string; badgeClassName: string; icon: typeof ClockIcon; description: string }> = {
+export const PROFILE_STATUS_META: Record<
+  ProfileStatus,
+  {
+    label: string;
+    badgeClassName: string;
+    icon: typeof ClockIcon;
+    description: string;
+  }
+> = {
   CREATED: {
     label: 'Draft',
     badgeClassName: 'bg-slate-600 dark:bg-slate-600 text-white',
     icon: FileIcon,
-    description: 'Saved as a draft. Submit it for review when you\u2019re ready to go live.',
+    description:
+      'Saved as a draft. Submit it for review when you\u2019re ready to go live.',
   },
   PENDING: {
     label: 'Pending Review',
     badgeClassName: 'bg-amber-700 dark:bg-amber-700 text-white',
     icon: ClockIcon,
-    description: 'Waiting on a moderator to verify it before it shows up in discovery.',
+    description:
+      'Waiting on a moderator to verify it before it shows up in discovery.',
   },
   VERIFIED: {
     label: 'Verified',
     badgeClassName: 'bg-emerald-700 dark:bg-emerald-700 text-white',
     icon: BadgeCheckIcon,
-    description: 'Live in discovery. Editing it will send it back for re-verification.',
+    description:
+      'Live in discovery. Editing it will send it back for re-verification.',
   },
   REJECTED: {
     label: 'Rejected',
     badgeClassName: 'bg-red-700 dark:bg-red-700 text-white',
     icon: XCircleIcon,
-    description: 'A moderator rejected this profile. Edit it and resubmit for review.',
+    description:
+      'A moderator rejected this profile. Edit it and resubmit for review.',
   },
 };

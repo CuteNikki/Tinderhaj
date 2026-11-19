@@ -599,8 +599,10 @@
   /* Against what follows it, as "  0%" to "100%", rather than leaving a gap before it */
   inset-inline-end: 0;
   animation:
-    count-up var(--count-duration, 1s) cubic-bezier(0.5, 1, 0.89, 1) var(--count-delay, 0s) both,
-    count-up-done 0s calc(var(--count-delay, 0s) + var(--count-duration, 1s)) forwards;
+    count-up var(--count-duration, 1s) cubic-bezier(0.5, 1, 0.89, 1)
+      var(--count-delay, 0s) both,
+    count-up-done 0s calc(var(--count-delay, 0s) + var(--count-duration, 1s))
+      forwards;
 }
 
 /* Where Safari's has got to, as it doesn't draw the counter again as it climbs (see WebKitCount) */
@@ -609,7 +611,8 @@
 }
 
 .count-up > span {
-  animation: count-up-wait 0s calc(var(--count-delay, 0s) + var(--count-duration, 1s)) backwards;
+  animation: count-up-wait 0s
+    calc(var(--count-delay, 0s) + var(--count-duration, 1s)) backwards;
 }
 
 @keyframes count-up {
@@ -672,7 +675,8 @@
     0 1px 12px var(--ocean-shade);
 }
 
-:is(.on-water, #page-header) :is([data-slot='button'], [data-slot='badge'], [data-slot='card']) {
+:is(.on-water, #page-header)
+  :is([data-slot='button'], [data-slot='badge'], [data-slot='card']) {
   text-shadow: none;
 }
 
@@ -742,7 +746,8 @@ main[data-page-water='band'][data-page-tone='muted'] {
  * The color the band's waves flow into, for a hero followed by a section of
  * another color (Home, the 404 page). Unlike data-tone, the page stays as it is.
  */
-main:not([data-page-water]):has([data-water='band'][data-floor='muted']) > .page-band,
+main:not([data-page-water]):has([data-water='band'][data-floor='muted'])
+  > .page-band,
 main[data-page-water='band'][data-page-floor='muted'] > .page-band {
   --band-floor: var(--muted);
 }

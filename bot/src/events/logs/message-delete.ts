@@ -1,8 +1,6 @@
-import { Events } from 'discord.js';
-
 import { Event } from 'classes/base/event';
-
-import { LOG_COLORS, log, purging, quote, who } from 'moderation/log';
+import { Events } from 'discord.js';
+import { log, LOG_COLORS, purging, quote, who } from 'moderation/log';
 import { KEYS } from 'utility/keys';
 import { escapeMarkdown, listOf } from 'utility/markdown';
 
@@ -13,7 +11,12 @@ import { escapeMarkdown, listOf } from 'utility/markdown';
 export default new Event({
   name: Events.MessageDelete,
   async execute(_client, message) {
-    if (message.guildId !== KEYS.DISCORD_GUILD_ID || message.channelId === KEYS.DISCORD_CHANNEL_LOG || !message.guild) return;
+    if (
+      message.guildId !== KEYS.DISCORD_GUILD_ID ||
+      message.channelId === KEYS.DISCORD_CHANNEL_LOG ||
+      !message.guild
+    )
+      return;
     if (message.author?.bot || message.webhookId) return;
     // A /purge of one message deletes it alone rather than in bulk; the purge's own entry already says so.
     if (purging.has(message.id)) return;
@@ -32,7 +35,9 @@ export default new Event({
       'divider',
       message.content ? quote(message.content) : '',
       files.length ? `**Attachments:** ${listOf(files)}` : '',
-      message.stickers.size ? `**Stickers:** ${listOf(message.stickers.map((sticker) => escapeMarkdown(sticker.name)))}` : '',
+      message.stickers.size
+        ? `**Stickers:** ${listOf(message.stickers.map((sticker) => escapeMarkdown(sticker.name)))}`
+        : '',
     ]);
   },
 });

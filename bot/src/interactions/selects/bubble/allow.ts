@@ -1,7 +1,6 @@
-import { SelectMenu } from 'classes/base/select';
-
 import { changeBubble } from 'bubbles/bubble';
 import { controlledBubble, showChanged } from 'bubbles/controls';
+import { SelectMenu } from 'classes/base/select';
 
 /** Let in: shows who is, and picking sets the whole list, so leaving someone out takes them off it. */
 export default new SelectMenu({
@@ -15,7 +14,13 @@ export default new SelectMenu({
     if (!bubble) return;
 
     await interaction.deferUpdate();
-    const allowed = interaction.users.filter((user) => !user.bot).map((user) => user.id);
-    await showChanged(interaction, bubble, await changeBubble(bubble, interaction.member, { allowed }));
+    const allowed = interaction.users
+      .filter((user) => !user.bot)
+      .map((user) => user.id);
+    await showChanged(
+      interaction,
+      bubble,
+      await changeBubble(bubble, interaction.member, { allowed })
+    );
   },
 });

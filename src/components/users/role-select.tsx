@@ -6,10 +6,24 @@ import { toast } from 'sonner';
 import { setUserRole } from '@/lib/actions';
 import { ROLE_LABELS, ROLES, type AccountRole } from '@/lib/roles';
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 /** An admin's control for someone else's role. The change saves right away. */
-export function RoleSelect({ userId, username, role }: { userId: string; username: string; role: AccountRole }) {
+export function RoleSelect({
+  userId,
+  username,
+  role,
+}: {
+  userId: string;
+  username: string;
+  role: AccountRole;
+}) {
   const [optimisticRole, setOptimisticRole] = useOptimistic(role);
   const [pending, startTransition] = useTransition();
 
@@ -20,13 +34,22 @@ export function RoleSelect({ userId, username, role }: { userId: string; usernam
       onValueChange={(value) =>
         startTransition(async () => {
           setOptimisticRole(value as AccountRole);
-          const error = await setUserRole(userId, value).catch(() => ({ message: 'Unable to change the role!' }));
-          if (error) toast.error(error.message, { duration: 5000, position: 'top-center' });
-          else
-            toast.success(`@${username} is now ${value === 'ADMIN' ? 'an' : 'a'} ${ROLE_LABELS[value as AccountRole].toLowerCase()}.`, {
+          const error = await setUserRole(userId, value).catch(() => ({
+            message: 'Unable to change the role!',
+          }));
+          if (error)
+            toast.error(error.message, {
               duration: 5000,
               position: 'top-center',
             });
+          else
+            toast.success(
+              `@${username} is now ${value === 'ADMIN' ? 'an' : 'a'} ${ROLE_LABELS[value as AccountRole].toLowerCase()}.`,
+              {
+                duration: 5000,
+                position: 'top-center',
+              }
+            );
         })
       }
     >

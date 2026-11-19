@@ -1,8 +1,6 @@
-import { REST, Routes } from 'discord.js';
 import { pathToFileURL } from 'node:url';
-
 import { Command } from 'classes/base/command';
-
+import { REST, Routes } from 'discord.js';
 import { getCommandFiles } from 'utility/files';
 import { KEYS } from 'utility/keys';
 
@@ -16,13 +14,20 @@ import { KEYS } from 'utility/keys';
 const commands = [];
 for (const filePath of await getCommandFiles()) {
   const command = (await import(pathToFileURL(filePath).href)).default;
-  if (command instanceof Command) commands.push(command.options.builder.toJSON());
+  if (command instanceof Command)
+    commands.push(command.options.builder.toJSON());
 }
 
 // The application id is the start of the token, base64.
-const applicationId = Buffer.from(KEYS.DISCORD_BOT_TOKEN.split('.')[0], 'base64').toString();
+const applicationId = Buffer.from(
+  KEYS.DISCORD_BOT_TOKEN.split('.')[0],
+  'base64'
+).toString();
 const rest = new REST().setToken(KEYS.DISCORD_BOT_TOKEN);
-await rest.put(Routes.applicationGuildCommands(applicationId, KEYS.DISCORD_GUILD_ID), { body: commands });
+await rest.put(
+  Routes.applicationGuildCommands(applicationId, KEYS.DISCORD_GUILD_ID),
+  { body: commands }
+);
 console.log(
-  `Registered ${commands.length} command${commands.length === 1 ? '' : 's'} on the server: ${commands.map((command) => `/${command.name}`).join(', ')}`,
+  `Registered ${commands.length} command${commands.length === 1 ? '' : 's'} on the server: ${commands.map((command) => `/${command.name}`).join(', ')}`
 );

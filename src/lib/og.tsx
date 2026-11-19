@@ -2,10 +2,9 @@ import 'server-only';
 
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { isUploadUrl } from '@/constants/uploads';
 import { cacheLife } from 'next/cache';
 import sharp from 'sharp';
-
-import { isUploadUrl } from '@/constants/uploads';
 
 /** Shared images (Open Graph and Twitter): what a link looks like when it's shared. */
 export const OG_SIZE = { width: 1200, height: 630 };
@@ -17,8 +16,18 @@ const [black, semibold, shark] = await Promise.all([
 ]);
 
 export const OG_FONTS = [
-  { name: 'Geist', data: black, weight: 900 as const, style: 'normal' as const },
-  { name: 'Geist', data: semibold, weight: 600 as const, style: 'normal' as const },
+  {
+    name: 'Geist',
+    data: black,
+    weight: 900 as const,
+    style: 'normal' as const,
+  },
+  {
+    name: 'Geist',
+    data: semibold,
+    weight: 600 as const,
+    style: 'normal' as const,
+  },
 ];
 
 /** The Blåhaj, ready to drop into an image. */
@@ -72,7 +81,9 @@ async function shrunkUpload(url: string, size: number) {
  * answers from what it has while drawing it again, rather than drawing it while
  * they wait. An edited shark shows its new one within those minutes.
  */
-export const OG_HEADERS = { 'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=86400' };
+export const OG_HEADERS = {
+  'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=86400',
+};
 
 const BUBBLES = [
   { left: 640, top: 70, size: 22 },
@@ -93,7 +104,13 @@ const FRAME = {
 } as const;
 
 /** The deep blue water every shared image is set in. */
-export function Ocean({ children, footer }: { children: React.ReactNode; footer: string }) {
+export function Ocean({
+  children,
+  footer,
+}: {
+  children: React.ReactNode;
+  footer: string;
+}) {
   return (
     <div
       style={{
@@ -111,11 +128,25 @@ export function Ocean({ children, footer }: { children: React.ReactNode; footer:
     >
       {/* Waves rolling in along the bottom, kept inside the frame */}
       <div style={{ ...FRAME, display: 'flex', overflow: 'hidden' }}>
-        <svg width='1200' height='200' viewBox='0 0 1200 200' style={{ position: 'absolute', left: -FRAME.left, bottom: 0 }}>
-          <path d='M0 80 C 150 45, 300 45, 450 80 S 760 130, 900 120 S 1120 92, 1200 86 V 200 H 0 Z' fill='rgba(140, 200, 255, 0.08)' />
-          <path d='M0 110 C 200 85, 350 85, 550 112 S 860 158, 1000 148 S 1150 122, 1200 116 V 200 H 0 Z' fill='rgba(140, 200, 255, 0.09)' />
+        <svg
+          width='1200'
+          height='200'
+          viewBox='0 0 1200 200'
+          style={{ position: 'absolute', left: -FRAME.left, bottom: 0 }}
+        >
+          <path
+            d='M0 80 C 150 45, 300 45, 450 80 S 760 130, 900 120 S 1120 92, 1200 86 V 200 H 0 Z'
+            fill='rgba(140, 200, 255, 0.08)'
+          />
+          <path
+            d='M0 110 C 200 85, 350 85, 550 112 S 860 158, 1000 148 S 1150 122, 1200 116 V 200 H 0 Z'
+            fill='rgba(140, 200, 255, 0.09)'
+          />
           {/* The deepest one runs high enough on the left to hold the link */}
-          <path d='M0 136 C 200 126, 400 126, 620 142 S 940 182, 1060 170 S 1170 150, 1200 146 V 200 H 0 Z' fill='rgba(4, 24, 50, 0.4)' />
+          <path
+            d='M0 136 C 200 126, 400 126, 620 142 S 940 182, 1060 170 S 1170 150, 1200 146 V 200 H 0 Z'
+            fill='rgba(4, 24, 50, 0.4)'
+          />
         </svg>
       </div>
       {BUBBLES.map((bubble, i) => (
@@ -150,21 +181,44 @@ export function Ocean({ children, footer }: { children: React.ReactNode; footer:
           textShadow: '0 2px 10px rgba(2, 20, 45, 0.8)',
         }}
       >
-        <svg width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='#8cc8ff' strokeWidth='2.5' strokeLinecap='round' strokeLinejoin='round'>
+        <svg
+          width='22'
+          height='22'
+          viewBox='0 0 24 24'
+          fill='none'
+          stroke='#8cc8ff'
+          strokeWidth='2.5'
+          strokeLinecap='round'
+          strokeLinejoin='round'
+        >
           <path d='M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71' />
           <path d='M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71' />
         </svg>
         {footer}
       </div>
       {/* A frame, so it sits like a card wherever it's shown */}
-      <div style={{ ...FRAME, border: '2px solid rgba(220, 238, 255, 0.22)' }} />
+      <div
+        style={{ ...FRAME, border: '2px solid rgba(220, 238, 255, 0.22)' }}
+      />
     </div>
   );
 }
 
 /** The text side of an image: the space left of whatever's pictured, and above the waves. */
 export function OgText({ children }: { children: React.ReactNode }) {
-  return <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '60px 0 155px 84px', width: 640 }}>{children}</div>;
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        padding: '60px 0 155px 84px',
+        width: 640,
+      }}
+    >
+      {children}
+    </div>
+  );
 }
 
 export function OgPill({ children }: { children: React.ReactNode }) {

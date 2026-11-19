@@ -1,7 +1,12 @@
 import { BackLink } from '@/components/common/heading';
 import { PageLoading } from '@/components/common/page-loading';
 import { SettingsSection } from '@/components/common/settings-section';
-import { ButtonSkeleton, FieldSkeleton, GhostText, ProfileGridSkeleton } from '@/components/common/skeletons';
+import {
+  ButtonSkeleton,
+  FieldSkeleton,
+  GhostText,
+  ProfileGridSkeleton,
+} from '@/components/common/skeletons';
 import { Skeleton } from '@/components/ui/skeleton';
 
 /**
@@ -28,10 +33,24 @@ export default function Loading() {
       }
     >
       <div className='grid grid-cols-1 gap-6'>
-        <SettingsSection still title='Profiles' description={<GhostText as='span'>3 profiles, in any state of review.</GhostText>}>
+        <SettingsSection
+          still
+          title='Profiles'
+          description={
+            <GhostText as='span'>3 profiles, in any state of review.</GhostText>
+          }
+        >
           <ProfileGridSkeleton ending='unverify' />
         </SettingsSection>
-        <SettingsSection still title='Role' description={<GhostText as='span'>Creates and manages their own profiles.</GhostText>}>
+        <SettingsSection
+          still
+          title='Role'
+          description={
+            <GhostText as='span'>
+              Creates and manages their own profiles.
+            </GhostText>
+          }
+        >
           <Skeleton className='h-9 w-36 rounded-md' />
         </SettingsSection>
         <SettingsSection
@@ -48,7 +67,11 @@ export default function Loading() {
             </div>
           </div>
         </SettingsSection>
-        <SettingsSection still title='Account' description='Things only admins can do. Each asks first.'>
+        <SettingsSection
+          still
+          title='Account'
+          description='Things only admins can do. Each asks first.'
+        >
           <div className='flex flex-wrap gap-2'>
             <ButtonSkeleton>Sign out everywhere</ButtonSkeleton>
             <ButtonSkeleton>Send password reset</ButtonSkeleton>

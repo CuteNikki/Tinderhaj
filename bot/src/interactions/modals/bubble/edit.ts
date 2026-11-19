@@ -1,7 +1,6 @@
-import { Modal } from 'classes/base/modal';
-
 import { bubbleLabel, bubbleName, changeBubble } from 'bubbles/bubble';
 import { controlledBubble, showChanged } from 'bubbles/controls';
+import { Modal } from 'classes/base/modal';
 import { fail } from 'utility/replies';
 
 export default new Modal({
@@ -14,12 +13,28 @@ export default new Modal({
 
     // Left empty, there's no limit, as with 0.
     const limit = interaction.fields.getTextInputValue('limit').trim() || '0';
-    if (!/^\d{1,2}$/.test(limit)) return fail(interaction, 'The limit needs to be a number up to 99, or empty for no limit.');
+    if (!/^\d{1,2}$/.test(limit))
+      return fail(
+        interaction,
+        'The limit needs to be a number up to 99, or empty for no limit.'
+      );
 
     await interaction.deferUpdate();
     // Left empty, it goes back to the owner's display name (not whoever's changing it, if that's staff).
-    const owner = await interaction.guild.members.fetch(bubble.record.ownerId).catch(() => null);
-    const label = bubbleLabel(interaction.fields.getTextInputValue('name')) || owner?.displayName || bubbleLabel(bubble.channel.name);
-    await showChanged(interaction, bubble, await changeBubble(bubble, interaction.member, { name: bubbleName(label), userLimit: Number(limit) }));
+    const owner = await interaction.guild.members
+      .fetch(bubble.record.ownerId)
+      .catch(() => null);
+    const label =
+      bubbleLabel(interaction.fields.getTextInputValue('name')) ||
+      owner?.displayName ||
+      bubbleLabel(bubble.channel.name);
+    await showChanged(
+      interaction,
+      bubble,
+      await changeBubble(bubble, interaction.member, {
+        name: bubbleName(label),
+        userLimit: Number(limit),
+      })
+    );
   },
 });

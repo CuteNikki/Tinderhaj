@@ -5,14 +5,22 @@ import { useId, useState, useTransition } from 'react';
 import QRCode from 'react-qr-code';
 import { toast } from 'sonner';
 
-import { CheckIcon, CopyIcon, DownloadIcon, Loader2Icon, MailIcon, ShieldCheckIcon, SmartphoneIcon } from 'lucide-react';
+import {
+  CheckIcon,
+  CopyIcon,
+  DownloadIcon,
+  Loader2Icon,
+  MailIcon,
+  ShieldCheckIcon,
+  SmartphoneIcon,
+} from 'lucide-react';
 
 import type { TwoFactorMethod } from '@/lib/account';
 import { forgetTrustedDevices } from '@/lib/actions';
 import { authClient } from '@/lib/auth-client';
 
-import { useConfirm } from '@/components/common/confirm-dialog';
 import { CODE_LENGTH, CodeInput } from '@/components/common/code-input';
+import { useConfirm } from '@/components/common/confirm-dialog';
 import { useFormReady } from '@/components/common/use-form-ready';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -60,9 +68,10 @@ export function TwoFactorSettings({
 
   if (!hasPassword) {
     return (
-      <p className='text-muted-foreground text-sm text-pretty'>
-        Two-step sign-in asks for a code after your password. You sign in with another account, which has its own protection, so there&rsquo;s nothing to
-        protect here yet. Add a password first if you&rsquo;d like to use it.
+      <p className='text-sm text-pretty text-muted-foreground'>
+        Two-step sign-in asks for a code after your password. You sign in with
+        another account, which has its own protection, so there&rsquo;s nothing
+        to protect here yet. Add a password first if you&rsquo;d like to use it.
       </p>
     );
   }
@@ -113,7 +122,8 @@ export function TwoFactorSettings({
               return done('Two-step sign-in is off');
             }
             case 'codes': {
-              const { data, error } = await authClient.twoFactor.generateBackupCodes({ password });
+              const { data, error } =
+                await authClient.twoFactor.generateBackupCodes({ password });
               if (error) return error.message ?? 'Something went wrong';
               setStep({ kind: 'codes', backupCodes: data?.backupCodes ?? [] });
               return;
@@ -137,9 +147,11 @@ export function TwoFactorSettings({
 
   if (step.kind === 'codes') {
     return (
-      <div className='border-foreground/10 flex flex-col gap-4 rounded-xl border p-4'>
+      <div className='flex flex-col gap-4 rounded-xl border border-foreground/10 p-4'>
         <BackupCodes codes={step.backupCodes} />
-        <p className='text-muted-foreground text-sm'>Your old backup codes don&rsquo;t work anymore.</p>
+        <p className='text-sm text-muted-foreground'>
+          Your old backup codes don&rsquo;t work anymore.
+        </p>
         <Button className='w-fit' onClick={() => done('Backup codes saved')}>
           Done
         </Button>
@@ -150,8 +162,9 @@ export function TwoFactorSettings({
   if (!method) {
     return (
       <div className='flex flex-col gap-3'>
-        <p className='text-muted-foreground text-sm text-pretty'>
-          Asks for a code after your password, so your password alone isn&rsquo;t enough to sign in. Choose where the code comes from:
+        <p className='text-sm text-pretty text-muted-foreground'>
+          Asks for a code after your password, so your password alone
+          isn&rsquo;t enough to sign in. Choose where the code comes from:
         </p>
         <div className='grid gap-3 sm:grid-cols-2'>
           <MethodChoice
@@ -173,34 +186,45 @@ export function TwoFactorSettings({
 
   return (
     <div className='flex flex-col gap-3'>
-      <div className='border-foreground/10 flex flex-col gap-3 rounded-xl border p-3 px-4 sm:flex-row sm:items-center'>
+      <div className='flex flex-col gap-3 rounded-xl border border-foreground/10 p-3 px-4 sm:flex-row sm:items-center'>
         <div className='flex flex-1 items-center gap-3'>
-          <span className='bg-primary/10 text-primary flex size-9 shrink-0 items-center justify-center rounded-full'>
+          <span className='flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary'>
             <ShieldCheckIcon className='size-5' aria-hidden />
           </span>
           <div>
             <p className='font-medium'>On, with {methodLabels[method]}</p>
-            <p className='text-muted-foreground text-sm'>
-              {method === 'app' ? 'You can also get a code by email, or use a backup code.' : 'A code comes to your email address each time.'}
+            <p className='text-sm text-muted-foreground'>
+              {method === 'app'
+                ? 'You can also get a code by email, or use a backup code.'
+                : 'A code comes to your email address each time.'}
             </p>
           </div>
         </div>
         <div className='flex flex-wrap gap-2'>
           {method === 'app' && (
-            <Button variant='outline' size='sm' onClick={() => setStep({ kind: 'password', action: 'codes' })}>
+            <Button
+              variant='outline'
+              size='sm'
+              onClick={() => setStep({ kind: 'password', action: 'codes' })}
+            >
               New backup codes
             </Button>
           )}
-          <Button variant='destructive' size='sm' onClick={() => setStep({ kind: 'password', action: 'off' })}>
+          <Button
+            variant='destructive'
+            size='sm'
+            onClick={() => setStep({ kind: 'password', action: 'off' })}
+          >
             Turn off
           </Button>
         </div>
       </div>
       {trustedDevices > 0 && (
         <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
-          <p className='text-muted-foreground text-sm text-pretty'>
-            {trustedDevices === 1 ? '1 device' : `${trustedDevices} devices`} won&rsquo;t ask for a code, because you ticked &ldquo;Don&rsquo;t ask again&rdquo;
-            there.
+          <p className='text-sm text-pretty text-muted-foreground'>
+            {trustedDevices === 1 ? '1 device' : `${trustedDevices} devices`}{' '}
+            won&rsquo;t ask for a code, because you ticked &ldquo;Don&rsquo;t
+            ask again&rdquo; there.
           </p>
           <Button
             variant='destructive'
@@ -210,15 +234,24 @@ export function TwoFactorSettings({
             onClick={async () => {
               const confirmed = await ask({
                 title: 'Forget trusted devices?',
-                description: 'Every device asks for a code again the next time you sign in on it.',
+                description:
+                  'Every device asks for a code again the next time you sign in on it.',
                 action: 'Forget',
                 destructive: true,
               });
               if (!confirmed) return;
               startForgetting(async () => {
                 const error = await forgetTrustedDevices();
-                if (error) toast.error(error.message, { duration: 5000, position: 'top-center' });
-                else toast.success('Every device asks for a code again.', { duration: 5000, position: 'top-center' });
+                if (error)
+                  toast.error(error.message, {
+                    duration: 5000,
+                    position: 'top-center',
+                  });
+                else
+                  toast.success('Every device asks for a code again.', {
+                    duration: 5000,
+                    position: 'top-center',
+                  });
               });
             }}
           >
@@ -232,20 +265,30 @@ export function TwoFactorSettings({
   );
 }
 
-function MethodChoice({ icon: Icon, title, text, onClick }: { icon: typeof MailIcon; title: string; text: string; onClick: () => void }) {
+function MethodChoice({
+  icon: Icon,
+  title,
+  text,
+  onClick,
+}: {
+  icon: typeof MailIcon;
+  title: string;
+  text: string;
+  onClick: () => void;
+}) {
   return (
     <button
       type='button'
       onClick={onClick}
-      className='ring-foreground/10 hover:bg-muted/50 focus-visible:ring-ring flex flex-col gap-2 rounded-xl p-4 text-left ring-1 transition-colors outline-none focus-visible:ring-2'
+      className='flex flex-col gap-2 rounded-xl p-4 text-left ring-1 ring-foreground/10 transition-colors outline-none hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-ring'
     >
       <span className='flex items-center gap-3'>
-        <span className='bg-primary/10 text-primary flex size-9 shrink-0 items-center justify-center rounded-full'>
+        <span className='flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary'>
           <Icon className='size-5' aria-hidden />
         </span>
         <span className='font-medium'>{title}</span>
       </span>
-      <span className='text-muted-foreground text-sm text-pretty'>{text}</span>
+      <span className='text-sm text-pretty text-muted-foreground'>{text}</span>
     </button>
   );
 }
@@ -277,22 +320,36 @@ function PasswordStep({
         event.preventDefault();
         setPending(true);
         setError(undefined);
-        const password = String(new FormData(event.currentTarget).get('password'));
-        const failed = await onSubmit(password).catch(() => 'Something went wrong, try again');
+        const password = String(
+          new FormData(event.currentTarget).get('password')
+        );
+        const failed = await onSubmit(password).catch(
+          () => 'Something went wrong, try again'
+        );
         setPending(false);
         if (failed) setError(failed);
       }}
-      className='border-foreground/10 flex flex-col gap-3 rounded-xl border p-4'
+      className='flex flex-col gap-3 rounded-xl border border-foreground/10 p-4'
     >
       <div className='flex flex-col gap-1'>
         <Label htmlFor={id}>Your password</Label>
         {/* A neutral id: password managers take ones that mention two-factor
             for one-time code fields, and don't offer the password there. */}
-        <Input id={id} name='password' type='password' required autoComplete='current-password' />
+        <Input
+          id={id}
+          name='password'
+          type='password'
+          required
+          autoComplete='current-password'
+        />
       </div>
-      {error && <p className='text-destructive text-sm'>{error}</p>}
+      {error && <p className='text-sm text-destructive'>{error}</p>}
       <div className='flex flex-wrap gap-2'>
-        <Button type='submit' variant={destructive ? 'destructive' : 'default'} disabled={pending || !ready}>
+        <Button
+          type='submit'
+          variant={destructive ? 'destructive' : 'default'}
+          disabled={pending || !ready}
+        >
           {pending && <Loader2Icon className='animate-spin' />}
           {submit}
         </Button>
@@ -308,20 +365,32 @@ function PasswordStep({
  * Setting up an authenticator app: scan the code, then enter the first code
  * the app shows to confirm, then save the backup codes.
  */
-function AppSetup({ totpURI, backupCodes, onCancel, onDone }: { totpURI: string; backupCodes: string[]; onCancel: () => void; onDone: () => void }) {
+function AppSetup({
+  totpURI,
+  backupCodes,
+  onCancel,
+  onDone,
+}: {
+  totpURI: string;
+  backupCodes: string[];
+  onCancel: () => void;
+  onDone: () => void;
+}) {
   const [confirmed, setConfirmed] = useState(false);
   const [error, setError] = useState<string>();
   const [pending, setPending] = useState(false);
   // All of the code, not just some of its digits.
-  const { ready, onInput } = useFormReady((form) => String(new FormData(form).get('code')).length === CODE_LENGTH);
+  const { ready, onInput } = useFormReady(
+    (form) => String(new FormData(form).get('code')).length === CODE_LENGTH
+  );
   // For typing in by hand, when scanning isn't possible.
   const secret = new URL(totpURI).searchParams.get('secret') ?? '';
 
   if (confirmed) {
     return (
-      <div className='border-foreground/10 flex flex-col gap-4 rounded-xl border p-4'>
+      <div className='flex flex-col gap-4 rounded-xl border border-foreground/10 p-4'>
         <p className='flex items-center gap-2 font-medium'>
-          <CheckIcon className='text-primary size-4' aria-hidden />
+          <CheckIcon className='size-4 text-primary' aria-hidden />
           Your authenticator app is set up
         </p>
         <BackupCodes codes={backupCodes} />
@@ -333,7 +402,7 @@ function AppSetup({ totpURI, backupCodes, onCancel, onDone }: { totpURI: string;
   }
 
   return (
-    <div className='border-foreground/10 flex flex-col gap-4 rounded-xl border p-4'>
+    <div className='flex flex-col gap-4 rounded-xl border border-foreground/10 p-4'>
       <ol className='flex list-decimal flex-col gap-1 pl-5 text-sm'>
         <li>Open your authenticator app and add a new account.</li>
         <li>Scan this code, or type in the key under it.</li>
@@ -342,9 +411,15 @@ function AppSetup({ totpURI, backupCodes, onCancel, onDone }: { totpURI: string;
       <div className='flex flex-col items-start gap-2'>
         {/* Dark on light in both themes, so every app can scan it. */}
         <div className='rounded-xl bg-white p-3'>
-          <QRCode value={totpURI} size={160} title='Code for your authenticator app' />
+          <QRCode
+            value={totpURI}
+            size={160}
+            title='Code for your authenticator app'
+          />
         </div>
-        <code className='bg-muted rounded-md px-2 py-1 text-xs break-all select-all'>{secret}</code>
+        <code className='rounded-md bg-muted px-2 py-1 text-xs break-all select-all'>
+          {secret}
+        </code>
       </div>
       <form
         onInput={onInput}
@@ -356,7 +431,9 @@ function AppSetup({ totpURI, backupCodes, onCancel, onDone }: { totpURI: string;
           const { error } = await authClient.twoFactor.verifyTotp({ code });
           setPending(false);
           if (error) {
-            return setError("That code didn't work. Check the time on your phone, then try the newest code.");
+            return setError(
+              "That code didn't work. Check the time on your phone, then try the newest code."
+            );
           }
           setConfirmed(true);
         }}
@@ -366,7 +443,7 @@ function AppSetup({ totpURI, backupCodes, onCancel, onDone }: { totpURI: string;
           <Label htmlFor='totp-code'>Code from the app</Label>
           <CodeInput id='totp-code' invalid={!!error} />
         </div>
-        {error && <p className='text-destructive text-sm'>{error}</p>}
+        {error && <p className='text-sm text-destructive'>{error}</p>}
         <div className='flex flex-wrap gap-2'>
           <Button type='submit' disabled={pending || !ready}>
             {pending && <Loader2Icon className='animate-spin' />}
@@ -388,12 +465,13 @@ function BackupCodes({ codes }: { codes: string[] }) {
     <div className='flex flex-col gap-3'>
       <div>
         <p className='font-medium'>Save your backup codes</p>
-        <p className='text-muted-foreground text-sm text-pretty'>
-          If you lose your phone, each of these works once instead of a code. Keep them somewhere safe, like a password manager. They won&rsquo;t be shown
-          again.
+        <p className='text-sm text-pretty text-muted-foreground'>
+          If you lose your phone, each of these works once instead of a code.
+          Keep them somewhere safe, like a password manager. They won&rsquo;t be
+          shown again.
         </p>
       </div>
-      <ul className='bg-muted/60 grid grid-cols-2 gap-x-6 gap-y-1 rounded-lg p-3 font-mono text-sm sm:grid-cols-3'>
+      <ul className='grid grid-cols-2 gap-x-6 gap-y-1 rounded-lg bg-muted/60 p-3 font-mono text-sm sm:grid-cols-3'>
         {codes.map((code) => (
           <li key={code}>{code}</li>
         ))}
@@ -404,14 +482,20 @@ function BackupCodes({ codes }: { codes: string[] }) {
           size='sm'
           onClick={async () => {
             await navigator.clipboard.writeText(text);
-            toast.success('Backup codes copied.', { duration: 5000, position: 'top-center' });
+            toast.success('Backup codes copied.', {
+              duration: 5000,
+              position: 'top-center',
+            });
           }}
         >
           <CopyIcon />
           Copy
         </Button>
         <Button variant='outline' size='sm' asChild>
-          <a href={`data:text/plain;charset=utf-8,${encodeURIComponent(`Tinderhaj backup codes\n\n${text}\n`)}`} download='tinderhaj-backup-codes.txt'>
+          <a
+            href={`data:text/plain;charset=utf-8,${encodeURIComponent(`Tinderhaj backup codes\n\n${text}\n`)}`}
+            download='tinderhaj-backup-codes.txt'
+          >
             <DownloadIcon />
             Download
           </a>

@@ -41,13 +41,21 @@ export function PasskeySettings({ passkeys }: { passkeys: Passkey[] }) {
     setAdding(false);
     if (result?.error) {
       // Closing the browser's own prompt isn't worth an error.
-      if ('code' in result.error && result.error.code === 'ERROR_CEREMONY_ABORTED') {
+      if (
+        'code' in result.error &&
+        result.error.code === 'ERROR_CEREMONY_ABORTED'
+      ) {
         return;
       }
-      return void toast.error(recentSignInMessage(result.error) ?? result.error.message ?? 'Unable to add a passkey!', {
-        duration: 5000,
-        position: 'top-center',
-      });
+      return void toast.error(
+        recentSignInMessage(result.error) ??
+          result.error.message ??
+          'Unable to add a passkey!',
+        {
+          duration: 5000,
+          position: 'top-center',
+        }
+      );
     }
     toast.success('Passkey added.', { duration: 5000, position: 'top-center' });
     router.refresh();
@@ -56,7 +64,8 @@ export function PasskeySettings({ passkeys }: { passkeys: Passkey[] }) {
   async function remove(passkey: Passkey) {
     const confirmed = await ask({
       title: `Remove ${passkey.name ?? 'this passkey'}?`,
-      description: "You can't sign in with it anymore. It may still show on your device until you delete it there too.",
+      description:
+        "You can't sign in with it anymore. It may still show on your device until you delete it there too.",
       action: 'Remove',
       destructive: true,
     });
@@ -66,21 +75,33 @@ export function PasskeySettings({ passkeys }: { passkeys: Passkey[] }) {
       id: passkey.id,
     });
     setRemoving(null);
-    if (error) return void toast.error(error.message ?? 'Unable to remove the passkey!', { duration: 5000, position: 'top-center' });
-    toast.success('Passkey removed.', { duration: 5000, position: 'top-center' });
+    if (error)
+      return void toast.error(
+        error.message ?? 'Unable to remove the passkey!',
+        { duration: 5000, position: 'top-center' }
+      );
+    toast.success('Passkey removed.', {
+      duration: 5000,
+      position: 'top-center',
+    });
     router.refresh();
   }
 
   return (
     <div className='flex flex-col gap-3'>
       {passkeys.length > 0 && (
-        <ul className='divide-foreground/10 border-foreground/10 flex flex-col divide-y rounded-xl border'>
+        <ul className='flex flex-col divide-y divide-foreground/10 rounded-xl border border-foreground/10'>
           {passkeys.map((passkey) => (
             <li key={passkey.id} className='flex items-center gap-3 p-3 px-4'>
-              <FingerprintIcon className='text-primary size-5 shrink-0' aria-hidden />
+              <FingerprintIcon
+                className='size-5 shrink-0 text-primary'
+                aria-hidden
+              />
               <div className='min-w-0 flex-1'>
-                <p className='truncate font-medium'>{passkey.name ?? 'Passkey'}</p>
-                <p className='text-muted-foreground text-xs'>
+                <p className='truncate font-medium'>
+                  {passkey.name ?? 'Passkey'}
+                </p>
+                <p className='text-xs text-muted-foreground'>
                   {passkey.createdAt && (
                     <>
                       Added <LocalTime iso={passkey.createdAt} />
@@ -96,19 +117,35 @@ export function PasskeySettings({ passkeys }: { passkeys: Passkey[] }) {
                 onClick={() => remove(passkey)}
                 aria-label={`Remove ${passkey.name ?? 'passkey'}`}
               >
-                {removing === passkey.id ? <Loader2Icon className='animate-spin' /> : <Trash2Icon />}
+                {removing === passkey.id ? (
+                  <Loader2Icon className='animate-spin' />
+                ) : (
+                  <Trash2Icon />
+                )}
               </Button>
             </li>
           ))}
         </ul>
       )}
-      <form action={add} className='flex flex-col gap-2 sm:flex-row sm:items-end'>
+      <form
+        action={add}
+        className='flex flex-col gap-2 sm:flex-row sm:items-end'
+      >
         <div className='flex flex-1 flex-col gap-2'>
           <Label htmlFor='passkey-name'>Name</Label>
-          <Input id='passkey-name' name='name' maxLength={50} placeholder='e.g. My phone' />
+          <Input
+            id='passkey-name'
+            name='name'
+            maxLength={50}
+            placeholder='e.g. My phone'
+          />
         </div>
         <Button type='submit' disabled={adding} className='w-fit'>
-          {adding ? <Loader2Icon className='animate-spin' /> : <FingerprintIcon />}
+          {adding ? (
+            <Loader2Icon className='animate-spin' />
+          ) : (
+            <FingerprintIcon />
+          )}
           Add a passkey
         </Button>
       </form>

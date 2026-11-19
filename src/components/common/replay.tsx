@@ -21,7 +21,11 @@ export function Replay({ children }: { children: React.ReactNode }) {
   const hiddenAt = useRef<number | null>(null);
 
   useLayoutEffect(() => {
-    if (hiddenAt.current !== null && performance.now() - hiddenAt.current > AWAY) setVisit((count) => count + 1);
+    if (
+      hiddenAt.current !== null &&
+      performance.now() - hiddenAt.current > AWAY
+    )
+      setVisit((count) => count + 1);
     return () => {
       hiddenAt.current = performance.now();
     };

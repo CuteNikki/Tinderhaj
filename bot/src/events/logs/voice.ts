@@ -1,9 +1,7 @@
-import { Events, type VoiceBasedChannel } from 'discord.js';
-
-import { Event } from 'classes/base/event';
-
 import { hubChannel } from 'bubbles/bubble';
-import { LOG_COLORS, log, who } from 'moderation/log';
+import { Event } from 'classes/base/event';
+import { Events, type VoiceBasedChannel } from 'discord.js';
+import { log, LOG_COLORS, who } from 'moderation/log';
 import { KEYS } from 'utility/keys';
 import { code } from 'utility/markdown';
 
@@ -23,7 +21,11 @@ function details(label: string, channel: VoiceBasedChannel) {
 export default new Event({
   name: Events.VoiceStateUpdate,
   async execute(_client, before, after) {
-    if (after.guild.id !== KEYS.DISCORD_GUILD_ID || before.channelId === after.channelId) return;
+    if (
+      after.guild.id !== KEYS.DISCORD_GUILD_ID ||
+      before.channelId === after.channelId
+    )
+      return;
     const member = after.member ?? before.member;
     if (!member || member.user.bot) return;
 
@@ -36,7 +38,14 @@ export default new Event({
       ? ['Joined voice', [`${who(member)} joined ${to}`, details('', to!)]]
       : !to
         ? ['Left voice', [`${who(member)} left ${from}`, details('', from)]]
-        : ['Moved in voice', [`${who(member)} went from ${from} to ${to}`, details('From: ', from), details('To: ', to)]];
+        : [
+            'Moved in voice',
+            [
+              `${who(member)} went from ${from} to ${to}`,
+              details('From: ', from),
+              details('To: ', to),
+            ],
+          ];
     await log(after.guild, label, LOG_COLORS.voice, [lines.join('\n')]);
   },
 });

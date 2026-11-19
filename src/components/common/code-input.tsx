@@ -3,7 +3,11 @@
 import { REGEXP_ONLY_DIGITS } from 'input-otp';
 import { useRef } from 'react';
 
-import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from '@/components/ui/input-otp';
 
 /** How many digits sign-in codes have, from an app or by email. */
 export const CODE_LENGTH = 6;
@@ -42,7 +46,12 @@ export function CodeInput({
     >
       <InputOTPGroup>
         {Array.from({ length: CODE_LENGTH }, (_, index) => (
-          <InputOTPSlot key={index} index={index} aria-invalid={invalid || undefined} className='size-10 text-base' />
+          <InputOTPSlot
+            key={index}
+            index={index}
+            aria-invalid={invalid || undefined}
+            className='size-10 text-base'
+          />
         ))}
       </InputOTPGroup>
     </InputOTP>

@@ -1,8 +1,6 @@
-import { Events } from 'discord.js';
-
 import { Event } from 'classes/base/event';
-
-import { LOG_COLORS, log, when, who } from 'moderation/log';
+import { Events } from 'discord.js';
+import { log, LOG_COLORS, when, who } from 'moderation/log';
 import { KEYS } from 'utility/keys';
 
 /** An account this new is worth a second look. */
@@ -13,12 +11,17 @@ export default new Event({
   async execute(_client, member) {
     if (member.guild.id !== KEYS.DISCORD_GUILD_ID) return;
     const isNew = Date.now() - member.user.createdTimestamp < NEW_ACCOUNT;
-    await log(member.guild, member.user.bot ? 'Bot added' : 'Joined', LOG_COLORS.join, [
+    await log(
+      member.guild,
+      member.user.bot ? 'Bot added' : 'Joined',
+      LOG_COLORS.join,
       [
-        who(member.user),
-        `**Account made:** ${when(member.user.createdAt)}${isNew ? ' · ⚠️ new account' : ''}`,
-        `-# Member ${member.guild.memberCount} on the server`,
-      ].join('\n'),
-    ]);
+        [
+          who(member.user),
+          `**Account made:** ${when(member.user.createdAt)}${isNew ? ' · ⚠️ new account' : ''}`,
+          `-# Member ${member.guild.memberCount} on the server`,
+        ].join('\n'),
+      ]
+    );
   },
 });

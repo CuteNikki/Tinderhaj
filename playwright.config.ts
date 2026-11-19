@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-import { BASE_URL, PORT, SMTP_PORT, databaseURL } from './e2e/env';
+import { BASE_URL, databaseURL, PORT, SMTP_PORT } from './e2e/env';
 
 /**
  * End-to-end tests against a production build: `bun run build` first, then
@@ -27,7 +27,9 @@ export default defineConfig({
     env: {
       DATABASE_URL: databaseURL(),
       BETTER_AUTH_URL: BASE_URL,
-      BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET ?? 'e2e-only-secret-e2e-only-secret-0123456789',
+      BETTER_AUTH_SECRET:
+        process.env.BETTER_AUTH_SECRET ??
+        'e2e-only-secret-e2e-only-secret-0123456789',
       // Emails go to a stand-in from global-setup.ts, not to our mail server.
       SMTP_URL: `smtp://127.0.0.1:${SMTP_PORT}`,
       // Nothing posted or given on the real Discord server, whatever .env has: empty, it stays set, and the bot is off.

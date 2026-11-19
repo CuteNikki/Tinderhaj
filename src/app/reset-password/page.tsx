@@ -1,9 +1,10 @@
-import { ShieldCheckIcon } from 'lucide-react';
+import { resetPasswordMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import { SearchParams } from 'next/dist/server/request/search-params';
 import Link from 'next/link';
 
-import { resetPasswordMetadata } from '@/constants/metadata';
+import { ShieldCheckIcon } from 'lucide-react';
+
 import { requireSignedOut } from '@/lib/session';
 
 import { AuthShell } from '@/components/auth/auth-shell';
@@ -11,7 +12,11 @@ import { ResetPasswordForm } from '@/components/auth/reset-password-form';
 
 export const metadata: Metadata = resetPasswordMetadata;
 
-export default async function ResetPasswordPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
+export default async function ResetPasswordPage({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
   await requireSignedOut();
 
   // Better Auth sends expired or used links here with ?error=INVALID_TOKEN.
@@ -28,9 +33,12 @@ export default async function ResetPasswordPage({ searchParams }: { searchParams
       {resetToken ? (
         <ResetPasswordForm token={resetToken} />
       ) : (
-        <p className='text-muted-foreground text-sm'>
+        <p className='text-sm text-muted-foreground'>
           This reset link is invalid or has expired. Please{' '}
-          <Link href='/forgot-password' className='text-foreground font-medium underline'>
+          <Link
+            href='/forgot-password'
+            className='font-medium text-foreground underline'
+          >
             request a new one
           </Link>
           .

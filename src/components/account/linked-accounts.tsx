@@ -1,23 +1,33 @@
 'use client';
 
-import { Loader2Icon, LinkIcon, UnlinkIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
+import { LinkIcon, Loader2Icon, UnlinkIcon } from 'lucide-react';
+
 import { authClient, recentSignInMessage } from '@/lib/auth-client';
-import { providerLabel, SOCIAL_PROVIDERS, type SocialProviderId } from '@/lib/providers';
+import {
+  providerLabel,
+  SOCIAL_PROVIDERS,
+  type SocialProviderId,
+} from '@/lib/providers';
 
 import { useConfirm } from '@/components/common/confirm-dialog';
 import { ProviderIcon } from '@/components/common/provider-icon';
 import { Button } from '@/components/ui/button';
 
-const SOCIAL_IDS = new Set<string>(SOCIAL_PROVIDERS.map((provider) => provider.id));
+const SOCIAL_IDS = new Set<string>(
+  SOCIAL_PROVIDERS.map((provider) => provider.id)
+);
 
 const linkErrors: Record<string, string> = {
-  account_already_linked_to_different_user: 'That account is already connected to another Tinderhaj account.',
-  unable_to_link_account: "That account's email isn't verified there, so it can't be connected.",
-  email_not_found: "That account didn't share an email address, which Tinderhaj needs.",
+  account_already_linked_to_different_user:
+    'That account is already connected to another Tinderhaj account.',
+  unable_to_link_account:
+    "That account's email isn't verified there, so it can't be connected.",
+  email_not_found:
+    "That account didn't share an email address, which Tinderhaj needs.",
 };
 
 /**
@@ -42,23 +52,40 @@ export function LinkedAccounts({
 
   useEffect(() => {
     if (!error) return;
-    toast.error(linkErrors[error] ?? 'Unable to connect that account. Please try again.', { duration: 5000, position: 'top-center' });
+    toast.error(
+      linkErrors[error] ?? 'Unable to connect that account. Please try again.',
+      { duration: 5000, position: 'top-center' }
+    );
     router.replace('/dashboard/account');
   }, [error, router]);
 
   // Connected ones stay listed after their provider is turned off, so they
   // can still be disconnected.
-  const connected = accounts.filter((account) => account.providerId !== 'credential');
-  const shown = [...new Set<string>([...providers, ...connected.map((account) => account.providerId)])];
+  const connected = accounts.filter(
+    (account) => account.providerId !== 'credential'
+  );
+  const shown = [
+    ...new Set<string>([
+      ...providers,
+      ...connected.map((account) => account.providerId),
+    ]),
+  ];
   const lastWay = accounts.length <= 1;
 
   async function connect(provider: string) {
     setPending(provider);
-    const { error } = await authClient.linkSocial({ provider, callbackURL: '/dashboard/account', errorCallbackURL: '/dashboard/account' });
+    const { error } = await authClient.linkSocial({
+      provider,
+      callbackURL: '/dashboard/account',
+      errorCallbackURL: '/dashboard/account',
+    });
     // On success the browser is sent off to the provider.
     if (error) {
       setPending(null);
-      toast.error(error.message ?? `Unable to connect ${providerLabel(provider)}!`, { duration: 5000, position: 'top-center' });
+      toast.error(
+        error.message ?? `Unable to connect ${providerLabel(provider)}!`,
+        { duration: 5000, position: 'top-center' }
+      );
     }
   }
 
@@ -77,31 +104,50 @@ export function LinkedAccounts({
     setPending(null);
 
     if (error) {
-      toast.error(recentSignInMessage(error) ?? error.message ?? 'Unable to disconnect!', {
-        duration: 5000,
-        position: 'top-center',
-      });
+      toast.error(
+        recentSignInMessage(error) ?? error.message ?? 'Unable to disconnect!',
+        {
+          duration: 5000,
+          position: 'top-center',
+        }
+      );
       return;
     }
 
-    toast.success(`${providerLabel(account.providerId)} disconnected.`, { duration: 5000, position: 'top-center' });
+    toast.success(`${providerLabel(account.providerId)} disconnected.`, {
+      duration: 5000,
+      position: 'top-center',
+    });
     router.refresh();
   }
 
-  if (!shown.length) return <p className='text-muted-foreground text-sm'>No other ways to sign in are set up on Tinderhaj yet.</p>;
+  if (!shown.length)
+    return (
+      <p className='text-sm text-muted-foreground'>
+        No other ways to sign in are set up on Tinderhaj yet.
+      </p>
+    );
 
   return (
     <>
-      <ul className='divide-foreground/10 border-foreground/10 flex flex-col divide-y rounded-xl border'>
+      <ul className='flex flex-col divide-y divide-foreground/10 rounded-xl border border-foreground/10'>
         {shown.map((provider) => {
-          const account = connected.find((account) => account.providerId === provider);
+          const account = connected.find(
+            (account) => account.providerId === provider
+          );
           const label = providerLabel(provider);
           return (
             <li key={provider} className='flex items-center gap-3 p-3 px-4'>
               {SOCIAL_IDS.has(provider) ? (
-                <ProviderIcon provider={provider as SocialProviderId} className='size-5 shrink-0' />
+                <ProviderIcon
+                  provider={provider as SocialProviderId}
+                  className='size-5 shrink-0'
+                />
               ) : (
-                <LinkIcon className='text-primary size-5 shrink-0' aria-hidden='true' />
+                <LinkIcon
+                  className='size-5 shrink-0 text-primary'
+                  aria-hidden='true'
+                />
               )}
               <span className='flex-1 font-medium'>{label}</span>
               {account ? (
@@ -109,15 +155,32 @@ export function LinkedAccounts({
                   variant='destructive'
                   size='sm'
                   disabled={pending !== null || lastWay}
-                  title={lastWay ? 'Add a password first, so you can still sign in.' : undefined}
+                  title={
+                    lastWay
+                      ? 'Add a password first, so you can still sign in.'
+                      : undefined
+                  }
                   onClick={() => disconnect(account)}
                 >
-                  {pending === provider ? <Loader2Icon className='animate-spin' aria-hidden='true' /> : <UnlinkIcon aria-hidden='true' />}
+                  {pending === provider ? (
+                    <Loader2Icon className='animate-spin' aria-hidden='true' />
+                  ) : (
+                    <UnlinkIcon aria-hidden='true' />
+                  )}
                   Disconnect
                 </Button>
               ) : (
-                <Button size='sm' variant='outline' disabled={pending !== null} onClick={() => connect(provider)}>
-                  {pending === provider ? <Loader2Icon className='animate-spin' aria-hidden='true' /> : <LinkIcon aria-hidden='true' />}
+                <Button
+                  size='sm'
+                  variant='outline'
+                  disabled={pending !== null}
+                  onClick={() => connect(provider)}
+                >
+                  {pending === provider ? (
+                    <Loader2Icon className='animate-spin' aria-hidden='true' />
+                  ) : (
+                    <LinkIcon aria-hidden='true' />
+                  )}
                   Connect
                 </Button>
               )}

@@ -8,7 +8,10 @@ import { Input } from '@/components/ui/input';
  * The real label is still there for screen readers, just not visible. Use it
  * inside a FormItem.
  */
-export function AuthInput({ label, ...props }: React.ComponentProps<typeof Input> & { label: string }) {
+export function AuthInput({
+  label,
+  ...props
+}: React.ComponentProps<typeof Input> & { label: string }) {
   return (
     <>
       <FormLabel className='sr-only'>{label}</FormLabel>

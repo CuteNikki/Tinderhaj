@@ -20,14 +20,19 @@ export function isBanDuration(value: unknown): value is BanDuration {
 
 /** When a ban of `duration` given now ends; null for one until it's lifted. */
 export function banExpiry(duration: BanDuration) {
-  return duration === 'permanent' ? null : new Date(Date.now() + Number(duration) * 24 * 60 * 60 * 1000);
+  return duration === 'permanent'
+    ? null
+    : new Date(Date.now() + Number(duration) * 24 * 60 * 60 * 1000);
 }
 
 /**
  * Whether a ban is in force. An expired ban is only cleared at their next
  * sign-in, so the flag alone can be out of date.
  */
-export function isBanned(user: { banned: boolean; banExpires: Date | null }, now = new Date()) {
+export function isBanned(
+  user: { banned: boolean; banExpires: Date | null },
+  now = new Date()
+) {
   return user.banned && (!user.banExpires || user.banExpires > now);
 }
 

@@ -1,8 +1,8 @@
 import 'server-only';
 
+import { SITE_URL } from '@/constants/metadata';
 import { after } from 'next/server';
 
-import { SITE_URL } from '@/constants/metadata';
 import { discord } from '@/lib/discord';
 import prisma from '@/lib/prisma';
 import { profileFieldLabel } from '@/lib/profile-fields';
@@ -16,7 +16,10 @@ import { profileFieldLabel } from '@/lib/profile-fields';
  * Messages and Embed Links in that channel.
  */
 function reviewQueueEnabled() {
-  return !!process.env.DISCORD_BOT_TOKEN && !!process.env.DISCORD_CHANNEL_REVIEW_QUEUE;
+  return (
+    !!process.env.DISCORD_BOT_TOKEN &&
+    !!process.env.DISCORD_CHANNEL_REVIEW_QUEUE
+  );
 }
 
 /** Messages built from components (containers, text, buttons) instead of content and embeds. */
@@ -49,7 +52,10 @@ const reviewSelect = {
 type ReviewShark = NonNullable<Awaited<ReturnType<typeof findShark>>>;
 
 function findShark(profileId: string) {
-  return prisma.profile.findUnique({ where: { id: profileId }, select: reviewSelect });
+  return prisma.profile.findUnique({
+    where: { id: profileId },
+    select: reviewSelect,
+  });
 }
 
 function linkButton(label: string, path: string) {
@@ -94,21 +100,44 @@ function reviewMessage(shark: ReviewShark, reviewer?: Reviewer) {
     accent = ACCENT.rejected;
     label = 'Rejected';
     button = linkButton('Open review', reviewPath);
-    if (shark.rejectedFields.length) outcome.push(`**Needs fixing:** ${shark.rejectedFields.map(profileFieldLabel).join(', ')}`);
-    if (shark.rejectionNote) outcome.push(`> ${escapeMarkdown(shark.rejectionNote).replace(/\n/g, '\n> ')}`);
+    if (shark.rejectedFields.length)
+      outcome.push(
+        `**Needs fixing:** ${shark.rejectedFields.map(profileFieldLabel).join(', ')}`
+      );
+    if (shark.rejectionNote)
+      outcome.push(
+        `> ${escapeMarkdown(shark.rejectionNote).replace(/\n/g, '\n> ')}`
+      );
   }
-  if (reviewer) outcome.push(`-# ${label} by ${userLink(reviewer.id, reviewer.name)} ${timestamp(new Date())}`);
+  if (reviewer)
+    outcome.push(
+      `-# ${label} by ${userLink(reviewer.id, reviewer.name)} ${timestamp(new Date())}`
+    );
 
-  const details = [shark.pronouns, shark.size != null && `${shark.size}${shark.unit.toLowerCase()}`, shark.location]
+  const details = [
+    shark.pronouns,
+    shark.size != null && `${shark.size}${shark.unit.toLowerCase()}`,
+    shark.location,
+  ]
     .filter(Boolean)
     .map((detail) => escapeMarkdown(String(detail)));
   const from = `From ${userLink(shark.user.id, shark.user.username)}${shark.submittedAt ? `, sent ${timestamp(shark.submittedAt)}` : ''}`;
   const text = {
     type: 10,
-    content: [`-# ${label.toUpperCase()}`, `## ${escapeMarkdown(shark.displayName)}`, details.join(' · '), `-# ${from}`].filter(Boolean).join('\n'),
+    content: [
+      `-# ${label.toUpperCase()}`,
+      `## ${escapeMarkdown(shark.displayName)}`,
+      details.join(' · '),
+      `-# ${from}`,
+    ]
+      .filter(Boolean)
+      .join('\n'),
   };
   // Only web addresses, since Discord refuses the whole message over a thumbnail it can't load.
-  const avatar = shark.avatarUrl && /^https?:\/\//.test(shark.avatarUrl) ? shark.avatarUrl : null;
+  const avatar =
+    shark.avatarUrl && /^https?:\/\//.test(shark.avatarUrl)
+      ? shark.avatarUrl
+      : null;
 
   return {
     flags: COMPONENTS_V2,
@@ -118,7 +147,13 @@ function reviewMessage(shark: ReviewShark, reviewer?: Reviewer) {
         type: 17,
         accent_color: accent,
         components: [
-          avatar ? { type: 9, components: [text], accessory: { type: 11, media: { url: avatar } } } : text,
+          avatar
+            ? {
+                type: 9,
+                components: [text],
+                accessory: { type: 11, media: { url: avatar } },
+              }
+            : text,
           ...(outcome.length
             ? [
                 { type: 14, divider: true, spacing: 1 },
@@ -148,15 +183,28 @@ export function postReviewLater(profileId: string) {
       const shark = await findShark(profileId);
       if (!shark || shark.status !== 'PENDING') return;
 
-      const response = await discord('POST', `/channels/${process.env.DISCORD_CHANNEL_REVIEW_QUEUE}/messages`, {
-        reason: 'Tinderhaj shark to review',
-        body: reviewMessage(shark),
-      });
-      if (!response.ok) throw new Error(`Posting shark ${shark.id}: ${response.status} ${await response.text()}`);
+      const response = await discord(
+        'POST',
+        `/channels/${process.env.DISCORD_CHANNEL_REVIEW_QUEUE}/messages`,
+        {
+          reason: 'Tinderhaj shark to review',
+          body: reviewMessage(shark),
+        }
+      );
+      if (!response.ok)
+        throw new Error(
+          `Posting shark ${shark.id}: ${response.status} ${await response.text()}`
+        );
 
       const { id } = (await response.json()) as { id: string };
-      const { count } = await prisma.profile.updateMany({ where: { id: profileId, status: 'PENDING' }, data: { reviewMessageId: id } });
-      if (!count) await discord('DELETE', messagePath(id), { reason: 'Tinderhaj shark reviewed already' });
+      const { count } = await prisma.profile.updateMany({
+        where: { id: profileId, status: 'PENDING' },
+        data: { reviewMessageId: id },
+      });
+      if (!count)
+        await discord('DELETE', messagePath(id), {
+          reason: 'Tinderhaj shark reviewed already',
+        });
     } catch (error) {
       console.error('Discord review post failed', error);
     }
@@ -169,14 +217,28 @@ export function settleReviewLater(profileId: string, reviewer: Reviewer) {
   after(async () => {
     try {
       const shark = await findShark(profileId);
-      if (!shark?.reviewMessageId || (shark.status !== 'VERIFIED' && shark.status !== 'REJECTED')) return;
+      if (
+        !shark?.reviewMessageId ||
+        (shark.status !== 'VERIFIED' && shark.status !== 'REJECTED')
+      )
+        return;
 
-      await prisma.profile.update({ where: { id: profileId }, data: { reviewMessageId: null } });
-      const response = await discord('PATCH', messagePath(shark.reviewMessageId), {
-        reason: 'Tinderhaj shark reviewed',
-        body: reviewMessage(shark, reviewer),
+      await prisma.profile.update({
+        where: { id: profileId },
+        data: { reviewMessageId: null },
       });
-      if (!response.ok) throw new Error(`Editing review of shark ${shark.id}: ${response.status} ${await response.text()}`);
+      const response = await discord(
+        'PATCH',
+        messagePath(shark.reviewMessageId),
+        {
+          reason: 'Tinderhaj shark reviewed',
+          body: reviewMessage(shark, reviewer),
+        }
+      );
+      if (!response.ok)
+        throw new Error(
+          `Editing review of shark ${shark.id}: ${response.status} ${await response.text()}`
+        );
     } catch (error) {
       console.error('Discord review edit failed', error);
     }
@@ -190,9 +252,14 @@ export function dropReviewsLater(messageIds: (string | null | undefined)[]) {
   after(async () => {
     for (const id of ids) {
       try {
-        const response = await discord('DELETE', messagePath(id), { reason: 'Tinderhaj shark left the review queue' });
+        const response = await discord('DELETE', messagePath(id), {
+          reason: 'Tinderhaj shark left the review queue',
+        });
         // Already gone, e.g. removed by hand, is fine.
-        if (!response.ok && response.status !== 404) throw new Error(`Removing review ${id}: ${response.status} ${await response.text()}`);
+        if (!response.ok && response.status !== 404)
+          throw new Error(
+            `Removing review ${id}: ${response.status} ${await response.text()}`
+          );
       } catch (error) {
         console.error('Discord review removal failed', error);
       }

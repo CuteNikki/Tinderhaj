@@ -1,6 +1,11 @@
+import {
+  AccountRole,
+  Prisma,
+  PrismaClient,
+  ProfileStatus,
+  SizeUnit,
+} from '@/generated/client';
 import { PrismaPg } from '@prisma/adapter-pg';
-
-import { AccountRole, Prisma, PrismaClient, ProfileStatus, SizeUnit } from '@/generated/client';
 
 const prisma = new PrismaClient({
   adapter: new PrismaPg({
@@ -58,7 +63,8 @@ const SHARKS: Omit<Prisma.ProfileUncheckedCreateInput, 'userId'>[] = [
   {
     displayName: 'Blue Blåhaj',
     avatarUrl: 'https://placehold.co/512x512/5733FF/FFFFFF/webp?text=BB',
-    bannerUrl: 'https://placehold.co/1144x572/5733FF/FFFFFF/webp?text=Blue+Blåhaj',
+    bannerUrl:
+      'https://placehold.co/1144x572/5733FF/FFFFFF/webp?text=Blue+Blåhaj',
     birthday: new Date('2022-01-01'),
     size: 100.0,
     unit: SizeUnit.CM,
@@ -84,7 +90,8 @@ const SHARKS: Omit<Prisma.ProfileUncheckedCreateInput, 'userId'>[] = [
   {
     displayName: 'Captain Blue',
     avatarUrl: 'https://placehold.co/512x512/33FFF5/FFFFFF/webp?text=CB',
-    bannerUrl: 'https://placehold.co/1144x572/33FFF5/FFFFFF/webp?text=Captain+Blue',
+    bannerUrl:
+      'https://placehold.co/1144x572/33FFF5/FFFFFF/webp?text=Captain+Blue',
     birthday: new Date('2020-01-01'),
     size: 100.0,
     unit: SizeUnit.CM,
@@ -97,7 +104,8 @@ const SHARKS: Omit<Prisma.ProfileUncheckedCreateInput, 'userId'>[] = [
   {
     displayName: 'Barnacle Buddy',
     avatarUrl: 'https://placehold.co/512x512/FF5733/FFFFFF/webp?text=BB',
-    bannerUrl: 'https://placehold.co/1144x572/FF5733/FFFFFF/webp?text=Barnacle+Buddy',
+    bannerUrl:
+      'https://placehold.co/1144x572/FF5733/FFFFFF/webp?text=Barnacle+Buddy',
     birthday: new Date('2021-01-01'),
     size: 100.0,
     unit: SizeUnit.CM,
@@ -148,9 +156,13 @@ const system = await prisma.user.upsert({
 
 // Matched by name, as sharks have no other fixed handle.
 for (const shark of SHARKS) {
-  const existing = await prisma.profile.findFirst({ where: { userId: system.id, displayName: shark.displayName }, select: { id: true } });
+  const existing = await prisma.profile.findFirst({
+    where: { userId: system.id, displayName: shark.displayName },
+    select: { id: true },
+  });
 
-  if (existing) await prisma.profile.update({ where: { id: existing.id }, data: shark });
+  if (existing)
+    await prisma.profile.update({ where: { id: existing.id }, data: shark });
   else await prisma.profile.create({ data: { ...shark, userId: system.id } });
 }
 

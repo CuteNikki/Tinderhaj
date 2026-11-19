@@ -7,12 +7,15 @@ export function DiscoveryNoResults() {
   return (
     <div id='discovery-no-results' className='py-16'>
       <div className='mx-auto flex max-w-xl flex-col items-center text-center'>
-        <div className='bg-primary/10 text-primary flex size-16 items-center justify-center rounded-full'>
+        <div className='flex size-16 items-center justify-center rounded-full bg-primary/10 text-primary'>
           <SearchXIcon className='h-7 w-7' />
         </div>
-        <h2 className='mt-6 text-3xl font-black tracking-tight sm:text-4xl'>No matches surfaced.</h2>
-        <p className='text-muted-foreground mt-4 text-sm leading-relaxed text-pretty'>
-          We couldn&apos;t find a profile for that search. A wider tide usually brings more Blåhaj back into view.
+        <h2 className='mt-6 text-3xl font-black tracking-tight sm:text-4xl'>
+          No matches surfaced.
+        </h2>
+        <p className='mt-4 text-sm leading-relaxed text-pretty text-muted-foreground'>
+          We couldn&apos;t find a profile for that search. A wider tide usually
+          brings more Blåhaj back into view.
         </p>
         <Button size='xl' className='mt-7' asChild>
           <DiscoveryLink>Reset discovery</DiscoveryLink>

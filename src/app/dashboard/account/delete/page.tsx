@@ -1,8 +1,9 @@
-import { LinkIcon, LogInIcon, Trash2Icon } from 'lucide-react';
+import { deleteAccountMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { deleteAccountMetadata } from '@/constants/metadata';
+import { LinkIcon, LogInIcon, Trash2Icon } from 'lucide-react';
+
 import { getSession } from '@/lib/session';
 
 import { ConfirmDeleteAccount } from '@/components/account/confirm-delete-account';
@@ -12,7 +13,9 @@ import { Button } from '@/components/ui/button';
 export const metadata: Metadata = deleteAccountMetadata;
 
 /** Where the link in the delete account email lands. */
-export default async function DeleteAccountPage({ searchParams }: PageProps<'/dashboard/account/delete'>) {
+export default async function DeleteAccountPage({
+  searchParams,
+}: PageProps<'/dashboard/account/delete'>) {
   const { token } = await searchParams;
   const session = await getSession();
 

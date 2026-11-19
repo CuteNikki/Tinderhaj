@@ -29,7 +29,12 @@ export function readBanNotice(value: string | undefined) {
 
   const expected = Buffer.from(signature(`${userId}.${expires}`));
   const actual = Buffer.from(given);
-  if (actual.length !== expected.length || !timingSafeEqual(actual, expected) || Number(expires) < Date.now()) return null;
+  if (
+    actual.length !== expected.length ||
+    !timingSafeEqual(actual, expected) ||
+    Number(expires) < Date.now()
+  )
+    return null;
 
   return userId;
 }

@@ -1,6 +1,5 @@
-import { Metadata } from 'next';
-
 import { SOCIALS } from '@/constants/contact';
+import { Metadata } from 'next';
 
 export const SITE_URL = 'https://tinderhaj.com';
 export const SITE_NAME = 'Tinderhaj';
@@ -43,22 +42,26 @@ export const homeMetadata: Metadata = {
 
 export const notFoundMetadata: Metadata = {
   title: 'Not Found',
-  description: 'This page swam off. Head back home to continue your Blåhaj adventure.',
+  description:
+    'This page swam off. Head back home to continue your Blåhaj adventure.',
 };
 
 export const discoveryMetadata: Metadata = {
   title: 'Discovery',
-  description: 'Browse Blåhaj profiles and find your perfect match by color, size, and squishiness.',
+  description:
+    'Browse Blåhaj profiles and find your perfect match by color, size, and squishiness.',
 };
 
 export const signInMetadata: Metadata = {
   title: 'Sign In',
-  description: 'Sign in to Tinderhaj and pick up where you left off with your plush matches.',
+  description:
+    'Sign in to Tinderhaj and pick up where you left off with your plush matches.',
 };
 
 export const signUpMetadata: Metadata = {
   title: 'Sign Up',
-  description: 'Create your Tinderhaj account and find your perfect plush match.',
+  description:
+    'Create your Tinderhaj account and find your perfect plush match.',
 };
 
 export const forgotPasswordMetadata: Metadata = {
@@ -162,7 +165,8 @@ export const sharkPageMetadata: Metadata = {
 
 export const privacyMetadata: Metadata = {
   title: 'Privacy',
-  description: 'Learn how Tinderhaj collects, uses, and protects your information.',
+  description:
+    'Learn how Tinderhaj collects, uses, and protects your information.',
 };
 
 export const termsMetadata: Metadata = {
@@ -177,27 +181,32 @@ export const guideMetadata: Metadata = {
 
 export const featuresMetadata: Metadata = {
   title: 'Features',
-  description: 'Everything Tinderhaj does for you and your sharks: discovery, hearts and matches, hand-checked profiles, and more.',
+  description:
+    'Everything Tinderhaj does for you and your sharks: discovery, hearts and matches, hand-checked profiles, and more.',
 };
 
 export const contactMetadata: Metadata = {
   title: 'Contact',
-  description: 'Get in touch with Tinderhaj by email, or find it around the internet.',
+  description:
+    'Get in touch with Tinderhaj by email, or find it around the internet.',
 };
 
 export const aboutMetadata: Metadata = {
   title: 'About',
-  description: 'Why Tinderhaj exists, who makes it, and what it cares about: a free, open-source dating site for Blåhaj.',
+  description:
+    'Why Tinderhaj exists, who makes it, and what it cares about: a free, open-source dating site for Blåhaj.',
 };
 
 export const communityMetadata: Metadata = {
   title: 'Community',
-  description: 'Where Blåhaj and their people hang out around the internet, and the ways to join in with Tinderhaj.',
+  description:
+    'Where Blåhaj and their people hang out around the internet, and the ways to join in with Tinderhaj.',
 };
 
 export const guidelinesMetadata: Metadata = {
   title: 'Guidelines',
-  description: "What moderators look for in a Blåhaj profile, how review works, and what happens when something isn't right.",
+  description:
+    "What moderators look for in a Blåhaj profile, how review works, and what happens when something isn't right.",
 };
 
 export const imprintMetadata: Metadata = {

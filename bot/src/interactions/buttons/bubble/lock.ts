@@ -1,7 +1,6 @@
-import { Button } from 'classes/base/button';
-
 import { changeBubble } from 'bubbles/bubble';
 import { controlledBubble, showChanged } from 'bubbles/controls';
+import { Button } from 'classes/base/button';
 
 export default new Button({
   customId: 'bubble-lock',
@@ -11,6 +10,12 @@ export default new Button({
     const bubble = await controlledBubble(interaction);
     if (!bubble) return;
     await interaction.deferUpdate();
-    await showChanged(interaction, bubble, await changeBubble(bubble, interaction.member, { locked: !bubble.record.locked }));
+    await showChanged(
+      interaction,
+      bubble,
+      await changeBubble(bubble, interaction.member, {
+        locked: !bubble.record.locked,
+      })
+    );
   },
 });

@@ -3,12 +3,24 @@
 import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
-import { ActivityIcon, ChevronDownIcon, HourglassIcon, LogInIcon, MonitorIcon, NetworkIcon, SmartphoneIcon, type LucideIcon } from 'lucide-react';
+import {
+  ActivityIcon,
+  ChevronDownIcon,
+  HourglassIcon,
+  LogInIcon,
+  MonitorIcon,
+  NetworkIcon,
+  SmartphoneIcon,
+  type LucideIcon,
+} from 'lucide-react';
 
 import { revokeOtherSessions, revokeSession } from '@/lib/actions';
 import { cn } from '@/lib/utils';
 
-import { type ConfirmOptions, useConfirm } from '@/components/common/confirm-dialog';
+import {
+  useConfirm,
+  type ConfirmOptions,
+} from '@/components/common/confirm-dialog';
 import { LocalTime } from '@/components/common/local-time';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -36,25 +48,38 @@ export function SessionList({ sessions }: { sessions: SessionInfo[] }) {
   const shown = showAll ? ordered : ordered.slice(0, SHOWN_SESSIONS);
   const hidden = ordered.length - shown.length;
 
-  async function run(question: ConfirmOptions, action: () => Promise<{ message: string } | void>, success: string) {
+  async function run(
+    question: ConfirmOptions,
+    action: () => Promise<{ message: string } | void>,
+    success: string
+  ) {
     if (!(await ask(question))) return;
     startTransition(async () => {
       const error = await action();
-      if (error) toast.error(error.message, { duration: 5000, position: 'top-center' });
+      if (error)
+        toast.error(error.message, { duration: 5000, position: 'top-center' });
       else toast.success(success, { duration: 5000, position: 'top-center' });
     });
   }
 
   return (
     <div className='flex flex-col gap-2'>
-      <ul className='divide-foreground/10 border-foreground/10 flex flex-col divide-y rounded-xl border'>
+      <ul className='flex flex-col divide-y divide-foreground/10 rounded-xl border border-foreground/10'>
         {shown.map((session) => {
-          const Icon = /iPhone|iPad|Android/.test(session.device) ? SmartphoneIcon : MonitorIcon;
+          const Icon = /iPhone|iPad|Android/.test(session.device)
+            ? SmartphoneIcon
+            : MonitorIcon;
           return (
-            <li key={session.id} className='flex items-start gap-3 p-3 px-4 sm:gap-4'>
+            <li
+              key={session.id}
+              className='flex items-start gap-3 p-3 px-4 sm:gap-4'
+            >
               <div className='flex min-w-0 flex-1 flex-col gap-1'>
                 <p className='flex flex-wrap items-center gap-2 font-medium'>
-                  <Icon className='text-primary size-5 shrink-0' aria-hidden='true' />
+                  <Icon
+                    className='size-5 shrink-0 text-primary'
+                    aria-hidden='true'
+                  />
                   {session.device}
                   {session.current && <Badge>This device</Badge>}
                 </p>
@@ -87,9 +112,14 @@ export function SessionList({ sessions }: { sessions: SessionInfo[] }) {
                   disabled={pending}
                   onClick={() =>
                     run(
-                      { title: `Sign out ${session.device}?`, description: 'It has to sign in again to get back in.', action: 'Sign out', destructive: true },
+                      {
+                        title: `Sign out ${session.device}?`,
+                        description: 'It has to sign in again to get back in.',
+                        action: 'Sign out',
+                        destructive: true,
+                      },
                       () => revokeSession(session.id),
-                      'Signed out.',
+                      'Signed out.'
                     )
                   }
                 >
@@ -106,10 +136,16 @@ export function SessionList({ sessions }: { sessions: SessionInfo[] }) {
               type='button'
               aria-expanded={showAll}
               onClick={() => setShowAll(!showAll)}
-              className='text-muted-foreground hover:bg-muted/50 hover:text-foreground focus-visible:ring-ring/50 flex w-full items-center justify-center gap-1.5 rounded-b-xl px-4 py-2.5 text-sm font-medium transition-colors outline-none focus-visible:ring-3'
+              className='flex w-full items-center justify-center gap-1.5 rounded-b-xl px-4 py-2.5 text-sm font-medium text-muted-foreground transition-colors outline-none hover:bg-muted/50 hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50'
             >
               {showAll ? 'Show fewer' : `Show ${hidden} more`}
-              <ChevronDownIcon className={cn('size-4 transition-transform duration-150', showAll && 'rotate-180')} aria-hidden='true' />
+              <ChevronDownIcon
+                className={cn(
+                  'size-4 transition-transform duration-150',
+                  showAll && 'rotate-180'
+                )}
+                aria-hidden='true'
+              />
             </button>
           </li>
         )}
@@ -123,12 +159,13 @@ export function SessionList({ sessions }: { sessions: SessionInfo[] }) {
             run(
               {
                 title: `Sign out ${others.length === 1 ? 'your other device' : `all ${others.length} other devices`}?`,
-                description: 'They have to sign in again to get back in. This device stays signed in.',
+                description:
+                  'They have to sign in again to get back in. This device stays signed in.',
                 action: 'Sign out',
                 destructive: true,
               },
               revokeOtherSessions,
-              'Signed out on all other devices.',
+              'Signed out on all other devices.'
             )
           }
         >
@@ -140,8 +177,23 @@ export function SessionList({ sessions }: { sessions: SessionInfo[] }) {
   );
 }
 
-function Details({ className, children }: { className?: string; children: React.ReactNode }) {
-  return <ul className={cn('text-muted-foreground flex flex-wrap gap-x-3 gap-y-0.5', className)}>{children}</ul>;
+function Details({
+  className,
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <ul
+      className={cn(
+        'flex flex-wrap gap-x-3 gap-y-0.5 text-muted-foreground',
+        className
+      )}
+    >
+      {children}
+    </ul>
+  );
 }
 
 function Detail({
@@ -156,7 +208,7 @@ function Detail({
 }) {
   return (
     <li className='flex min-w-0 items-center gap-1'>
-      <Icon className='text-muted-foreground size-3.5 shrink-0' aria-hidden />
+      <Icon className='size-3.5 shrink-0 text-muted-foreground' aria-hidden />
       {label && <span className='sr-only'>{label}: </span>}
       <span className='min-w-0 wrap-break-word'>{children}</span>
     </li>

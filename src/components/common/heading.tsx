@@ -1,5 +1,6 @@
-import { ArrowLeftIcon } from 'lucide-react';
 import Link from 'next/link';
+
+import { ArrowLeftIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
@@ -21,23 +22,72 @@ export function Eyebrow({
   className?: string;
   children: React.ReactNode;
 }) {
-  return <Tag className={cn('mb-2 text-xs font-bold tracking-widest uppercase', muted ? 'text-muted-foreground' : 'text-primary', className)}>{children}</Tag>;
+  return (
+    <Tag
+      className={cn(
+        'mb-2 text-xs font-bold tracking-widest uppercase',
+        muted ? 'text-muted-foreground' : 'text-primary',
+        className
+      )}
+    >
+      {children}
+    </Tag>
+  );
 }
 
 /** A page's own title, at the top of its header. */
-export function PageTitle({ className, children }: { className?: string; children: React.ReactNode }) {
-  return <h1 className={cn('text-3xl font-black tracking-tight sm:text-4xl', className)}>{children}</h1>;
+export function PageTitle({
+  className,
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <h1
+      className={cn(
+        'text-3xl font-black tracking-tight sm:text-4xl',
+        className
+      )}
+    >
+      {children}
+    </h1>
+  );
 }
 
 /** The line or two under a page's title. */
-export function PageNote({ className, children }: { className?: string; children: React.ReactNode }) {
-  return <p className={cn('text-muted-foreground mt-2 text-sm text-pretty', className)}>{children}</p>;
+export function PageNote({
+  className,
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <p
+      className={cn(
+        'mt-2 text-sm text-pretty text-muted-foreground',
+        className
+      )}
+    >
+      {children}
+    </p>
+  );
 }
 
 /** Back to where a page belongs, above its header's label. */
-export function BackLink({ href, children }: { href: string; children: React.ReactNode }) {
+export function BackLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
   return (
-    <Link href={href} className='text-muted-foreground hover:text-foreground mb-6 inline-flex items-center gap-1 text-sm transition-colors'>
+    <Link
+      href={href}
+      className='mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground'
+    >
       <ArrowLeftIcon className='size-4' aria-hidden='true' />
       {children}
     </Link>
