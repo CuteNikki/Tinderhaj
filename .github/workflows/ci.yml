@@ -78,7 +78,7 @@ jobs:
       - name: Install
         run: bun install --frozen-lockfile
       - name: Database
-        run: bun --bun run prisma migrate deploy
+        run: bun run db:deploy
       - name: Build
         run: bun run build
 

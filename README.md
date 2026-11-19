@@ -97,8 +97,7 @@ The product flow is centered on creating a profile for a shark, submitting it fo
 
 Before running the app locally, make sure you have:
 
-- Node.js 20+
-- npm, pnpm, bun, or yarn
+- Bun 1.4.4 and Node.js 20+
 - PostgreSQL running locally or available remotely
 - A mail server to send emails through (see [Emails](#emails)) if you sign up or reset passwords
 - Access to the picture storage (see [Pictures](#pictures)) if you upload profile pictures
@@ -172,28 +171,23 @@ Notes:
 ## Installation
 
 ```bash
-npm install
-```
-
-If the project uses Bun for the Prisma generation hook, you can also install with Bun:
-
-```bash
 bun install
 ```
 
+This also generates the Prisma client.
+
 ## Database Setup
 
-Generate Prisma client and apply migrations:
+Apply the migrations:
 
 ```bash
-npx prisma generate
-npx prisma migrate dev
+bun run db:migrate
 ```
 
 If you want to seed the database:
 
 ```bash
-npx tsx prisma/seed.ts
+bun run db:seed
 ```
 
 ## Running the App
@@ -201,7 +195,7 @@ npx tsx prisma/seed.ts
 Start the development server:
 
 ```bash
-npm run dev
+bun run dev
 ```
 
 Then open:
@@ -213,15 +207,19 @@ http://localhost:3000
 ## Available Scripts
 
 ```bash
-npm run dev            # start the Next.js dev server
-npm run build          # production build
-npm run start          # start the production server
-npm run lint           # ESLint checks
-npm run lint:classes   # classes Tailwind would write another way, e.g. w-[16px] for w-4
-npm run typecheck      # TypeScript, after generating Next's route types
-npm run format         # Prettier formatting
-npm run format:check   # Prettier, without changing files
-npm run test:e2e       # Playwright end-to-end tests, see below
+bun run dev            # start the Next.js dev server
+bun run build          # production build
+bun run start          # start the production server
+bun run lint           # ESLint checks
+bun run lint:classes   # classes Tailwind would write another way, e.g. w-[16px] for w-4
+bun run typecheck      # TypeScript, after generating Next's route types
+bun run format         # Prettier formatting
+bun run format:check   # Prettier, without changing files
+bun run test:e2e       # Playwright end-to-end tests, see below
+bun run db:migrate     # create and apply migrations in development
+bun run db:deploy      # apply migrations to the database
+bun run db:seed        # seed the database
+bun run db:studio      # browse the database in Prisma Studio
 ```
 
 GitHub Actions runs the four checks, a production build and the end-to-end tests, against a fresh PostgreSQL database, on every push and pull request (`.github/workflows/ci.yml`).
@@ -234,11 +232,11 @@ They make accounts, so they need a database of their own in `E2E_DATABASE_URL`, 
 
 ```bash
 docker run -d --rm --name tinderhaj-e2e -e POSTGRES_PASSWORD=postgres -p 55432:5432 postgres:17-alpine
-DATABASE_URL=postgresql://postgres:postgres@localhost:55432/postgres npx prisma migrate deploy
+DATABASE_URL=postgresql://postgres:postgres@localhost:55432/postgres bun run db:deploy
 
-npx playwright install chromium
-npm run build
-E2E_DATABASE_URL=postgresql://postgres:postgres@localhost:55432/postgres npm run test:e2e
+bunx playwright install chromium
+bun run build
+E2E_DATABASE_URL=postgresql://postgres:postgres@localhost:55432/postgres bun run test:e2e
 ```
 
 The server runs on port 3100 and sends its emails to a stand-in mail server on port 3198, which the tests read them back from on port 3199, so nothing leaves your machine. Accounts the tests make have `@e2e.test` addresses and are removed when the run ends.
