@@ -1,5 +1,5 @@
 # Built with Bun, run on Node: Next's own standalone server, with just what it needs.
-FROM oven/bun:1.4.0-alpine AS build
+FROM oven/bun:1.4.4-alpine AS build
 WORKDIR /app
 # Dependencies first, so a change to the code alone reuses them. Installing
 # generates the Prisma client, which needs the schema and, for its config,

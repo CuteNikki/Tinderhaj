@@ -86,5 +86,6 @@
     "effect": "3.20.0",
     "mysql2": "3.24.5",
     "zod": "^4.6.7"
-  }
+  },
+  "packageManager": "bun@1.4.4"
 }
