@@ -241,6 +241,8 @@ This app is designed for deployment on modern Node.js hosting platforms such as 
 - `BETTER_AUTH_SECRET`, and `BETTER_AUTH_URL` unless Vercel's production domain is the right address
 - `STORAGE_ACCESS_KEY_ID` and `STORAGE_SECRET_ACCESS_KEY`
 
+The `Dockerfile` builds the site to run on its own, with the `.env` as the build secret `env`, as the build prerenders pages from the database. Its `migrate` stage applies new migrations; run it before the site starts.
+
 Better Auth rate limits sign-in, sign-up, and code requests per IP address in production. It reads the address from `x-forwarded-for`, which Vercel sets. Behind a proxy that doesn't, every visitor shares one limit.
 
 ## Pictures
