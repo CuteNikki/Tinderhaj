@@ -1,10 +1,10 @@
-import { Command } from 'classes/base/command';
 import {
   InteractionContextType,
   MessageFlags,
   PermissionFlagsBits,
   SlashCommandBuilder,
 } from 'discord.js';
+import { Command } from 'classes/base/command';
 import { auditReason, recordModeration } from 'moderation/moderation';
 import { answer, COLORS, fail } from 'utility/replies';
 

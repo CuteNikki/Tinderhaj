@@ -1,6 +1,6 @@
-import { showOwnPanel } from 'bubbles/controls';
-import { Command } from 'classes/base/command';
 import { InteractionContextType, SlashCommandBuilder } from 'discord.js';
+import { Command } from 'classes/base/command';
+import { showOwnPanel } from 'bubbles/controls';
 
 export default new Command({
   builder: new SlashCommandBuilder()

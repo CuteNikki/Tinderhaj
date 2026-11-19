@@ -1,3 +1,5 @@
+import { ChannelType, Events } from 'discord.js';
+import { Event } from 'classes/base/event';
 import {
   blowBubble,
   forgetBubble,
@@ -5,9 +7,7 @@ import {
   settleBubble,
 } from 'bubbles/bubble';
 import { ensureControlsMessage } from 'bubbles/panel';
-import { Event } from 'classes/base/event';
 import { prisma } from 'database/index';
-import { ChannelType, Events } from 'discord.js';
 import { KEYS } from 'utility/keys';
 import { logger } from 'utility/logger';
 

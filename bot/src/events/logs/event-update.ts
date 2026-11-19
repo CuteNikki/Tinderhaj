@@ -1,5 +1,5 @@
-import { Event } from 'classes/base/event';
 import { AuditLogEvent, Events, GuildScheduledEventStatus } from 'discord.js';
+import { Event } from 'classes/base/event';
 import { logChange, oldNew } from 'moderation/changes';
 import { when } from 'moderation/log';
 import { KEYS } from 'utility/keys';

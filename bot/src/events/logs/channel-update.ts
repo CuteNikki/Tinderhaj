@@ -1,4 +1,3 @@
-import { Event } from 'classes/base/event';
 import {
   AuditLogEvent,
   ChannelType,
@@ -6,6 +5,7 @@ import {
   OverwriteType,
   type NonThreadGuildBasedChannel,
 } from 'discord.js';
+import { Event } from 'classes/base/event';
 import {
   logChange,
   mentionWithDetails,

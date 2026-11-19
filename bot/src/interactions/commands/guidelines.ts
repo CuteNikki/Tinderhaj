@@ -1,4 +1,3 @@
-import { Command } from 'classes/base/command';
 import {
   ActionRowBuilder,
   ButtonBuilder,
@@ -13,6 +12,7 @@ import {
   TextDisplayBuilder,
   ThumbnailBuilder,
 } from 'discord.js';
+import { Command } from 'classes/base/command';
 import { KEYS } from 'utility/keys';
 import { COLORS } from 'utility/replies';
 

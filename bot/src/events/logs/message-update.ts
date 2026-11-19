@@ -1,5 +1,5 @@
-import { Event } from 'classes/base/event';
 import { Events } from 'discord.js';
+import { Event } from 'classes/base/event';
 import { log, LOG_COLORS, quote, who } from 'moderation/log';
 import { KEYS } from 'utility/keys';
 

@@ -1,4 +1,3 @@
-import { Event } from 'classes/base/event';
 import {
   AuditLogEvent,
   Events,
@@ -6,6 +5,7 @@ import {
   type GuildAuditLogsEntry,
   type User,
 } from 'discord.js';
+import { Event } from 'classes/base/event';
 import { CHANNELS_MOVED, rememberAuditEntry } from 'moderation/audit';
 import { log, LOG_COLORS, quote, when, who } from 'moderation/log';
 import { recordModeration } from 'moderation/moderation';

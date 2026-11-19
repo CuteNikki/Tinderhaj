@@ -1,4 +1,11 @@
 import {
+  MessageFlags,
+  type AnySelectMenuInteraction,
+  type ButtonInteraction,
+  type ChatInputCommandInteraction,
+  type ModalSubmitInteraction,
+} from 'discord.js';
+import {
   canChange,
   findBubble,
   hubChannel,
@@ -6,13 +13,6 @@ import {
   type Bubble,
 } from 'bubbles/bubble';
 import { panel } from 'bubbles/panel';
-import {
-  MessageFlags,
-  type AnySelectMenuInteraction,
-  type ButtonInteraction,
-  type ChatInputCommandInteraction,
-  type ModalSubmitInteraction,
-} from 'discord.js';
 import { fail } from 'utility/replies';
 
 type Control =

@@ -1,5 +1,5 @@
-import { Event } from 'classes/base/event';
 import { Events, type Message } from 'discord.js';
+import { Event } from 'classes/base/event';
 import {
   log,
   LOG_COLORS,

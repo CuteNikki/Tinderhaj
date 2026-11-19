@@ -1,4 +1,3 @@
-import type { ExtendedClient } from 'classes/base/client';
 import {
   Collection,
   time,
@@ -8,6 +7,7 @@ import {
   type ChatInputCommandInteraction,
   type ModalSubmitInteraction,
 } from 'discord.js';
+import type { ExtendedClient } from 'classes/base/client';
 import { logger } from 'utility/logger';
 import { fail } from 'utility/replies';
 

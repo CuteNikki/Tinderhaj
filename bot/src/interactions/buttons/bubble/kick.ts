@@ -1,6 +1,6 @@
+import { Button } from 'classes/base/button';
 import { controlledBubble } from 'bubbles/controls';
 import { announce } from 'bubbles/panel';
-import { Button } from 'classes/base/button';
 import { COLORS, notice } from 'utility/replies';
 
 /** Kick, after picking someone here: out for now, but they can come back. */

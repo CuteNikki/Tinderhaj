@@ -1,5 +1,5 @@
-import { Event } from 'classes/base/event';
 import { Events } from 'discord.js';
+import { Event } from 'classes/base/event';
 import { logger } from 'utility/logger';
 
 /** Errors from the connection to Discord. Without a listener for them, the first one would end the process. */

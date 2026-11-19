@@ -1,10 +1,10 @@
-import { Event } from 'classes/base/event';
 import {
   AuditLogEvent,
   Events,
   GuildExplicitContentFilter,
   GuildVerificationLevel,
 } from 'discord.js';
+import { Event } from 'classes/base/event';
 import { logChange, oldNew } from 'moderation/changes';
 import { KEYS } from 'utility/keys';
 
