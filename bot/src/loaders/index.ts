@@ -1,20 +1,21 @@
 import { performance } from 'node:perf_hooks';
 import { pathToFileURL } from 'node:url';
 import type { ClientEvents } from 'discord.js';
-import { Button } from 'classes/base/button';
-import type { ExtendedClient } from 'classes/base/client';
-import { Command } from 'classes/base/command';
-import { Event } from 'classes/base/event';
-import { Modal } from 'classes/base/modal';
-import { SelectMenu } from 'classes/base/select';
+
+import { Button } from '@/classes/base/button';
+import type { ExtendedClient } from '@/classes/base/client';
+import { Command } from '@/classes/base/command';
+import { Event } from '@/classes/base/event';
+import { Modal } from '@/classes/base/modal';
+import { SelectMenu } from '@/classes/base/select';
 import {
   getButtonFiles,
   getCommandFiles,
   getEventFiles,
   getModalFiles,
   getSelectFiles,
-} from 'utility/files';
-import { logger, table } from 'utility/logger';
+} from '@/utility/files';
+import { logger, table } from '@/utility/logger';
 
 /**
  * Imports each file's default export from a folder, logs a table of what was

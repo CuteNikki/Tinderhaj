@@ -4,9 +4,10 @@ import {
   GuildExplicitContentFilter,
   GuildVerificationLevel,
 } from 'discord.js';
-import { Event } from 'classes/base/event';
-import { logChange, oldNew } from 'moderation/changes';
-import { KEYS } from 'utility/keys';
+
+import { Event } from '@/classes/base/event';
+import { logChange, oldNew } from '@/moderation/changes';
+import { KEYS } from '@/utility/keys';
 
 /** The server's own settings changed: its name, pictures, safety settings and special channels. */
 export default new Event({

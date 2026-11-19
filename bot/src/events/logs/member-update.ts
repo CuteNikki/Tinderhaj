@@ -1,9 +1,10 @@
 import { AuditLogEvent, Events } from 'discord.js';
-import { Event } from 'classes/base/event';
-import { logChange, oldNew } from 'moderation/changes';
-import { who } from 'moderation/log';
-import { KEYS } from 'utility/keys';
-import { listOf } from 'utility/markdown';
+
+import { Event } from '@/classes/base/event';
+import { logChange, oldNew } from '@/moderation/changes';
+import { who } from '@/moderation/log';
+import { KEYS } from '@/utility/keys';
+import { listOf } from '@/utility/markdown';
 
 /**
  * Someone's nickname or roles changed. Roles the site gives (the bot does

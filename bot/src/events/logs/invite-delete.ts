@@ -1,8 +1,9 @@
 import { AuditLogEvent, Events } from 'discord.js';
-import { Event } from 'classes/base/event';
-import { logChange } from 'moderation/changes';
-import { KEYS } from 'utility/keys';
-import { code } from 'utility/markdown';
+
+import { Event } from '@/classes/base/event';
+import { logChange } from '@/moderation/changes';
+import { KEYS } from '@/utility/keys';
+import { code } from '@/utility/markdown';
 
 /** An invite deleted, or run out: one that expired or was used up has no one who deleted it. */
 export default new Event({

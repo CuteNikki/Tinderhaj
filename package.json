@@ -59,11 +59,12 @@
           "importOrder": [
             "<BUILTIN_MODULES>",
             "<THIRD_PARTY_MODULES>",
-            "^generated/(.*)$",
-            "^classes/(.*)$",
-            "^(bubbles|loaders|moderation)/(.*)$",
-            "^database/(.*)$",
-            "^utility/(.*)$",
+            "",
+            "^@/generated/(.*)$",
+            "^@/classes/(.*)$",
+            "^@/(bubbles|loaders|moderation)/(.*)$",
+            "^@/database/(.*)$",
+            "^@/utility/(.*)$",
             "",
             "^[.]"
           ]

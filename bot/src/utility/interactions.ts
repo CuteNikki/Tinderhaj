@@ -7,9 +7,10 @@ import {
   type ChatInputCommandInteraction,
   type ModalSubmitInteraction,
 } from 'discord.js';
-import type { ExtendedClient } from 'classes/base/client';
-import { logger } from 'utility/logger';
-import { fail } from 'utility/replies';
+
+import type { ExtendedClient } from '@/classes/base/client';
+import { logger } from '@/utility/logger';
+import { fail } from '@/utility/replies';
 
 /** A button, modal or select menu by its custom id: exactly, or by what comes before a `:` for one with `includeCustomId`. */
 export function findByCustomId<

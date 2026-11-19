@@ -1,7 +1,7 @@
-import { Button } from 'classes/base/button';
-import { changeBubble, isStaff } from 'bubbles/bubble';
-import { controlledBubble } from 'bubbles/controls';
-import { COLORS, notice } from 'utility/replies';
+import { Button } from '@/classes/base/button';
+import { changeBubble, isStaff } from '@/bubbles/bubble';
+import { controlledBubble } from '@/bubbles/controls';
+import { COLORS, notice } from '@/utility/replies';
 
 /** Keep out, after picking someone here: taken out, and they can't see or join it again. */
 export default new Button({

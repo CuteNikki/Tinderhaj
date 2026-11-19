@@ -4,9 +4,10 @@ import {
   PermissionFlagsBits,
   SlashCommandBuilder,
 } from 'discord.js';
-import { Command } from 'classes/base/command';
-import { log, LOG_COLORS, purging, transcript, who } from 'moderation/log';
-import { answer, COLORS, fail } from 'utility/replies';
+
+import { Command } from '@/classes/base/command';
+import { log, LOG_COLORS, purging, transcript, who } from '@/moderation/log';
+import { answer, COLORS, fail } from '@/utility/replies';
 
 /** Discord deletes messages in bulk up to this old, and no older. */
 const BULK_LIMIT = 14 * 24 * 60 * 60 * 1000;

@@ -1,12 +1,13 @@
 import { AuditLogEvent, Events } from 'discord.js';
-import { Event } from 'classes/base/event';
+
+import { Event } from '@/classes/base/event';
 import {
   logChange,
   mentionWithDetails,
   oldNew,
   permissionChanges,
-} from 'moderation/changes';
-import { KEYS } from 'utility/keys';
+} from '@/moderation/changes';
+import { KEYS } from '@/utility/keys';
 
 /**
  * A role's settings changed. Its place in the list is left out: moving one

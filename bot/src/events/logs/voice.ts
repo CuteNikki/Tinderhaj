@@ -1,9 +1,10 @@
 import { Events, type VoiceBasedChannel } from 'discord.js';
-import { Event } from 'classes/base/event';
-import { hubChannel } from 'bubbles/bubble';
-import { log, LOG_COLORS, who } from 'moderation/log';
-import { KEYS } from 'utility/keys';
-import { code } from 'utility/markdown';
+
+import { Event } from '@/classes/base/event';
+import { hubChannel } from '@/bubbles/bubble';
+import { log, LOG_COLORS, who } from '@/moderation/log';
+import { KEYS } from '@/utility/keys';
+import { code } from '@/utility/markdown';
 
 /**
  * A channel's name and id in small print, under its mention: bubbles are gone

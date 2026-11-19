@@ -3,9 +3,10 @@ import {
   type AuditLogEvent,
   type Guild,
 } from 'discord.js';
-import { whoDid } from 'moderation/audit';
-import { log, LOG_COLORS, quote, who } from 'moderation/log';
-import { code, escapeMarkdown } from 'utility/markdown';
+
+import { whoDid } from '@/moderation/audit';
+import { log, LOG_COLORS, quote, who } from '@/moderation/log';
+import { code, escapeMarkdown } from '@/utility/markdown';
 
 /**
  * Changes to the server, as log entries: what changed, from the event Discord

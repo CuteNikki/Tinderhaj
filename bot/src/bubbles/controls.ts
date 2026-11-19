@@ -5,15 +5,16 @@ import {
   type ChatInputCommandInteraction,
   type ModalSubmitInteraction,
 } from 'discord.js';
+
 import {
   canChange,
   findBubble,
   hubChannel,
   tryAgain,
   type Bubble,
-} from 'bubbles/bubble';
-import { panel } from 'bubbles/panel';
-import { fail } from 'utility/replies';
+} from '@/bubbles/bubble';
+import { panel } from '@/bubbles/panel';
+import { fail } from '@/utility/replies';
 
 type Control =
   | ButtonInteraction<'cached'>

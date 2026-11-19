@@ -1,4 +1,4 @@
-import { logger } from 'utility/logger';
+import { logger } from '@/utility/logger';
 
 /**
  * Asks for a page's shared image the way Discord will, so it's drawn and in

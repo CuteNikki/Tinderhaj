@@ -6,10 +6,11 @@ import {
   type GuildMember,
   type User,
 } from 'discord.js';
-import type { ModerationAction } from 'generated/client';
-import { log, LOG_COLORS, quote, when, who } from 'moderation/log';
-import { prisma } from 'database/index';
-import { escapeMarkdown } from 'utility/markdown';
+
+import type { ModerationAction } from '@/generated/client';
+import { log, LOG_COLORS, quote, when, who } from '@/moderation/log';
+import { prisma } from '@/database/index';
+import { escapeMarkdown } from '@/utility/markdown';
 
 /**
  * Moderations: warns, timeouts, kicks and bans, by the bot's commands or by

@@ -1,8 +1,8 @@
-import { Button } from 'classes/base/button';
-import { handOver } from 'bubbles/bubble';
-import { controlledBubble } from 'bubbles/controls';
-import { announce } from 'bubbles/panel';
-import { COLORS, notice } from 'utility/replies';
+import { Button } from '@/classes/base/button';
+import { handOver } from '@/bubbles/bubble';
+import { controlledBubble } from '@/bubbles/controls';
+import { announce } from '@/bubbles/panel';
+import { COLORS, notice } from '@/utility/replies';
 
 /** Hand over, after picking someone here. */
 export default new Button({

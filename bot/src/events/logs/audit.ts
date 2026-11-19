@@ -5,13 +5,14 @@ import {
   type GuildAuditLogsEntry,
   type User,
 } from 'discord.js';
-import { Event } from 'classes/base/event';
-import { CHANNELS_MOVED, rememberAuditEntry } from 'moderation/audit';
-import { log, LOG_COLORS, quote, when, who } from 'moderation/log';
-import { recordModeration } from 'moderation/moderation';
-import { KEYS } from 'utility/keys';
-import { logger } from 'utility/logger';
-import { code, escapeMarkdown, listOf } from 'utility/markdown';
+
+import { Event } from '@/classes/base/event';
+import { CHANNELS_MOVED, rememberAuditEntry } from '@/moderation/audit';
+import { log, LOG_COLORS, quote, when, who } from '@/moderation/log';
+import { recordModeration } from '@/moderation/moderation';
+import { KEYS } from '@/utility/keys';
+import { logger } from '@/utility/logger';
+import { code, escapeMarkdown, listOf } from '@/utility/markdown';
 
 /**
  * Discord's audit log, which says who did what. Every entry is kept for a

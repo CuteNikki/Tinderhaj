@@ -6,8 +6,9 @@ import {
   type Guild,
   type Message,
 } from 'discord.js';
-import { KEYS } from 'utility/keys';
-import { logger } from 'utility/logger';
+
+import { KEYS } from '@/utility/keys';
+import { logger } from '@/utility/logger';
 
 /**
  * The moderators' log, one channel (DISCORD_CHANNEL_LOG) for everything:

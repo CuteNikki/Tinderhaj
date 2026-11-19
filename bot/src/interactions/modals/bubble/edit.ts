@@ -1,7 +1,7 @@
-import { Modal } from 'classes/base/modal';
-import { bubbleLabel, bubbleName, changeBubble } from 'bubbles/bubble';
-import { controlledBubble, showChanged } from 'bubbles/controls';
-import { fail } from 'utility/replies';
+import { Modal } from '@/classes/base/modal';
+import { bubbleLabel, bubbleName, changeBubble } from '@/bubbles/bubble';
+import { controlledBubble, showChanged } from '@/bubbles/controls';
+import { fail } from '@/utility/replies';
 
 export default new Modal({
   customId: 'bubble-edit',

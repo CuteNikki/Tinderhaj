@@ -1,15 +1,16 @@
 import { ChannelType, Events } from 'discord.js';
-import { Event } from 'classes/base/event';
+
+import { Event } from '@/classes/base/event';
 import {
   blowBubble,
   forgetBubble,
   hubChannel,
   settleBubble,
-} from 'bubbles/bubble';
-import { ensureControlsMessage } from 'bubbles/panel';
-import { prisma } from 'database/index';
-import { KEYS } from 'utility/keys';
-import { logger } from 'utility/logger';
+} from '@/bubbles/bubble';
+import { ensureControlsMessage } from '@/bubbles/panel';
+import { prisma } from '@/database/index';
+import { KEYS } from '@/utility/keys';
+import { logger } from '@/utility/logger';
 
 /** On start: catches up on whatever happened to bubbles while the bot was away. */
 export default new Event({

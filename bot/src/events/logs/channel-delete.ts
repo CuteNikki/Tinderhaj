@@ -1,8 +1,9 @@
 import { AuditLogEvent, ChannelType, Events } from 'discord.js';
-import { Event } from 'classes/base/event';
-import { logChange, mentionWithDetails } from 'moderation/changes';
-import { KEYS } from 'utility/keys';
-import { code } from 'utility/markdown';
+
+import { Event } from '@/classes/base/event';
+import { logChange, mentionWithDetails } from '@/moderation/changes';
+import { KEYS } from '@/utility/keys';
+import { code } from '@/utility/markdown';
 
 /** A channel deleted. Bubbles popped by the bot are left out, like all its own changes. */
 export default new Event({

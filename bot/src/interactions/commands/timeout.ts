@@ -4,16 +4,17 @@ import {
   PermissionFlagsBits,
   SlashCommandBuilder,
 } from 'discord.js';
-import { Command } from 'classes/base/command';
-import { when } from 'moderation/log';
+
+import { Command } from '@/classes/base/command';
+import { when } from '@/moderation/log';
 import {
   auditReason,
   cannotModerate,
   dmNote,
   recordModeration,
   tellMember,
-} from 'moderation/moderation';
-import { answer, COLORS, fail } from 'utility/replies';
+} from '@/moderation/moderation';
+import { answer, COLORS, fail } from '@/utility/replies';
 
 const MINUTE = 60_000;
 const HOUR = 60 * MINUTE;

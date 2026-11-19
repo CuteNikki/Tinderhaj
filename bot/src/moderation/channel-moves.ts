@@ -3,9 +3,10 @@ import {
   type Guild,
   type NonThreadGuildBasedChannel,
 } from 'discord.js';
-import { CHANNELS_MOVED } from 'moderation/audit';
-import { logChange, mentionWithDetails, oldNew } from 'moderation/changes';
-import { code } from 'utility/markdown';
+
+import { CHANNELS_MOVED } from '@/moderation/audit';
+import { logChange, mentionWithDetails, oldNew } from '@/moderation/changes';
+import { code } from '@/utility/markdown';
 
 /**
  * Channels dragged to another place in the list. Discord renumbers every

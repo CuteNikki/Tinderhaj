@@ -1,7 +1,8 @@
 import { Events } from 'discord.js';
-import { Event } from 'classes/base/event';
-import { log, LOG_COLORS, when, who } from 'moderation/log';
-import { KEYS } from 'utility/keys';
+
+import { Event } from '@/classes/base/event';
+import { log, LOG_COLORS, when, who } from '@/moderation/log';
+import { KEYS } from '@/utility/keys';
 
 /** Someone starting or stopping boosting the server, which the audit log doesn't record. */
 export default new Event({

@@ -1,6 +1,6 @@
-import { Button } from 'classes/base/button';
-import { changeBubble } from 'bubbles/bubble';
-import { controlledBubble, showChanged } from 'bubbles/controls';
+import { Button } from '@/classes/base/button';
+import { changeBubble } from '@/bubbles/bubble';
+import { controlledBubble, showChanged } from '@/bubbles/controls';
 
 export default new Button({
   customId: 'bubble-hide',

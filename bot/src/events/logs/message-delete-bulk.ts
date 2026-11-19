@@ -1,5 +1,6 @@
 import { Events, type Message } from 'discord.js';
-import { Event } from 'classes/base/event';
+
+import { Event } from '@/classes/base/event';
 import {
   log,
   LOG_COLORS,
@@ -7,8 +8,8 @@ import {
   quote,
   transcript,
   who,
-} from 'moderation/log';
-import { KEYS } from 'utility/keys';
+} from '@/moderation/log';
+import { KEYS } from '@/utility/keys';
 
 /** How many of the deleted messages are shown in the entry itself; all of them are in the file. */
 const SHOWN = 5;

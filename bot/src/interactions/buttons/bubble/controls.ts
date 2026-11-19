@@ -1,5 +1,5 @@
-import { Button } from 'classes/base/button';
-import { showOwnPanel } from 'bubbles/controls';
+import { Button } from '@/classes/base/button';
+import { showOwnPanel } from '@/bubbles/controls';
 
 /** My bubble, in the bubble controls channel. */
 export default new Button({

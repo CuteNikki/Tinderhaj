@@ -1,6 +1,7 @@
 import { PrismaPg } from '@prisma/adapter-pg';
-import { PrismaClient } from 'generated/client';
-import { KEYS } from 'utility/keys';
+
+import { PrismaClient } from '@/generated/client';
+import { KEYS } from '@/utility/keys';
 
 /**
  * The site's database, with the client generated from its schema

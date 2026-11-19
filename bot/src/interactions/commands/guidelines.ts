@@ -12,9 +12,10 @@ import {
   TextDisplayBuilder,
   ThumbnailBuilder,
 } from 'discord.js';
-import { Command } from 'classes/base/command';
-import { KEYS } from 'utility/keys';
-import { COLORS } from 'utility/replies';
+
+import { Command } from '@/classes/base/command';
+import { KEYS } from '@/utility/keys';
+import { COLORS } from '@/utility/replies';
 
 /** What a moderator checks a profile against, as on the site's guidelines page (src/app/guidelines/page.tsx). Keep the two in step. */
 const RULES = [

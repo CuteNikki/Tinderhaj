@@ -13,12 +13,13 @@ import {
   ThumbnailBuilder,
   type User,
 } from 'discord.js';
-import { Command } from 'classes/base/command';
-import { prisma } from 'database/index';
-import { KEYS } from 'utility/keys';
-import { escapeMarkdown } from 'utility/markdown';
-import { COLORS, fail } from 'utility/replies';
-import { warmSharedImage } from 'utility/warm';
+
+import { Command } from '@/classes/base/command';
+import { prisma } from '@/database/index';
+import { KEYS } from '@/utility/keys';
+import { escapeMarkdown } from '@/utility/markdown';
+import { COLORS, fail } from '@/utility/replies';
+import { warmSharedImage } from '@/utility/warm';
 
 /** Accounts that aren't banned right now, as notBannedWhere() on the site. */
 const notBanned = () => ({

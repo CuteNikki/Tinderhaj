@@ -1,8 +1,9 @@
 import { Events } from 'discord.js';
-import { Event } from 'classes/base/event';
-import { log, LOG_COLORS, purging, quote, who } from 'moderation/log';
-import { KEYS } from 'utility/keys';
-import { escapeMarkdown, listOf } from 'utility/markdown';
+
+import { Event } from '@/classes/base/event';
+import { log, LOG_COLORS, purging, quote, who } from '@/moderation/log';
+import { KEYS } from '@/utility/keys';
+import { escapeMarkdown, listOf } from '@/utility/markdown';
 
 /**
  * A message deleted. Who deleted it isn't said here: if it was someone else,

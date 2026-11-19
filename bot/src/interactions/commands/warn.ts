@@ -4,14 +4,15 @@ import {
   PermissionFlagsBits,
   SlashCommandBuilder,
 } from 'discord.js';
-import { Command } from 'classes/base/command';
+
+import { Command } from '@/classes/base/command';
 import {
   cannotModerate,
   dmNote,
   recordModeration,
   tellMember,
-} from 'moderation/moderation';
-import { answer, COLORS, fail } from 'utility/replies';
+} from '@/moderation/moderation';
+import { answer, COLORS, fail } from '@/utility/replies';
 
 export default new Command({
   builder: new SlashCommandBuilder()

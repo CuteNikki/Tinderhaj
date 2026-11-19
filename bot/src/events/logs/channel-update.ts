@@ -5,16 +5,17 @@ import {
   OverwriteType,
   type NonThreadGuildBasedChannel,
 } from 'discord.js';
-import { Event } from 'classes/base/event';
+
+import { Event } from '@/classes/base/event';
 import {
   logChange,
   mentionWithDetails,
   oldNew,
   permissionChanges,
   type Change,
-} from 'moderation/changes';
-import { noteChannelMove } from 'moderation/channel-moves';
-import { KEYS } from 'utility/keys';
+} from '@/moderation/changes';
+import { noteChannelMove } from '@/moderation/channel-moves';
+import { KEYS } from '@/utility/keys';
 
 /**
  * A channel's settings or permissions changed, with each change as it was and

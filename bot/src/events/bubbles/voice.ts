@@ -1,8 +1,9 @@
 import { ChannelType, Events } from 'discord.js';
-import { Event } from 'classes/base/event';
-import { blowBubble, hubChannel, settleBubble } from 'bubbles/bubble';
-import { prisma } from 'database/index';
-import { logger } from 'utility/logger';
+
+import { Event } from '@/classes/base/event';
+import { blowBubble, hubChannel, settleBubble } from '@/bubbles/bubble';
+import { prisma } from '@/database/index';
+import { logger } from '@/utility/logger';
 
 /** Someone joining, leaving or moving between voice channels: blows, settles or updates bubbles. */
 export default new Event({

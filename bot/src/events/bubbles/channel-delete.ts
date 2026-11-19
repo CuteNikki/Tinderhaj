@@ -1,6 +1,7 @@
 import { Events } from 'discord.js';
-import { Event } from 'classes/base/event';
-import { forgetBubble } from 'bubbles/bubble';
+
+import { Event } from '@/classes/base/event';
+import { forgetBubble } from '@/bubbles/bubble';
 
 /** A bubble deleted by hand, or by the bot: nothing left to remember. */
 export default new Event({

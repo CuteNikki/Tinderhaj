@@ -1,6 +1,6 @@
-import { SelectMenu } from 'classes/base/select';
-import { changeBubble } from 'bubbles/bubble';
-import { controlledBubble, showChanged } from 'bubbles/controls';
+import { SelectMenu } from '@/classes/base/select';
+import { changeBubble } from '@/bubbles/bubble';
+import { controlledBubble, showChanged } from '@/bubbles/controls';
 
 /** Let in: shows who is, and picking sets the whole list, so leaving someone out takes them off it. */
 export default new SelectMenu({

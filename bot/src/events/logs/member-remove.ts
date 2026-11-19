@@ -1,8 +1,9 @@
 import { Events } from 'discord.js';
-import { Event } from 'classes/base/event';
-import { log, LOG_COLORS, when, who } from 'moderation/log';
-import { KEYS } from 'utility/keys';
-import { listOf } from 'utility/markdown';
+
+import { Event } from '@/classes/base/event';
+import { log, LOG_COLORS, when, who } from '@/moderation/log';
+import { KEYS } from '@/utility/keys';
+import { listOf } from '@/utility/markdown';
 
 /** Someone leaving, for whatever reason: a kick or ban has its own entry too, with who did it. */
 export default new Event({

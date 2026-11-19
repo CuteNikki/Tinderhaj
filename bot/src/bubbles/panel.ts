@@ -11,11 +11,12 @@ import {
   UserSelectMenuBuilder,
   type Guild,
 } from 'discord.js';
-import type { Bubble } from 'bubbles/bubble';
-import { prisma } from 'database/index';
-import { KEYS } from 'utility/keys';
-import { logger } from 'utility/logger';
-import { COLORS, notice } from 'utility/replies';
+
+import type { Bubble } from '@/bubbles/bubble';
+import { prisma } from '@/database/index';
+import { KEYS } from '@/utility/keys';
+import { logger } from '@/utility/logger';
+import { COLORS, notice } from '@/utility/replies';
 
 /**
  * A bubble's control panel: what it's like right now and everything that
