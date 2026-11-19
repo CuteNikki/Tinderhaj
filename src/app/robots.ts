@@ -1,5 +1,6 @@
-import { SITE_URL } from '@/constants/metadata';
 import type { MetadataRoute } from 'next';
+
+import { SITE_URL } from '@/constants/metadata';
 
 /**
  * Keeps crawlers out of the pages that are unlisted in their metadata (only

@@ -1,7 +1,8 @@
 // The checks a report gets on the server. What the dialog shows is in constants/reports, which needs no zod.
+import { z } from 'zod';
+
 import { REPORT_DETAILS_MAX } from '@/constants/reports';
 import { ReportReason } from '@/generated/enums';
-import { z } from 'zod';
 
 export const reportSchema = z
   .object({

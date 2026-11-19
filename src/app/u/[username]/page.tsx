@@ -1,9 +1,10 @@
-import { userPageMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { ShieldIcon, UserRoundIcon } from 'lucide-react';
+
+import { userPageMetadata } from '@/constants/metadata';
 
 import { getHeartStates, getUserPage } from '@/lib/hearts';
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';

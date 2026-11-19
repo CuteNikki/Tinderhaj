@@ -1,5 +1,6 @@
-import { SITE_URL } from '@/constants/metadata';
 import type { MetadataRoute } from 'next';
+
+import { SITE_URL } from '@/constants/metadata';
 
 /**
  * The pages anyone can read. User pages are left out: they're public, but

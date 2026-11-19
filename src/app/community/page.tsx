@@ -1,4 +1,3 @@
-import { communityMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 
 import {
@@ -8,6 +7,8 @@ import {
   Share2Icon,
   type LucideIcon,
 } from 'lucide-react';
+
+import { communityMetadata } from '@/constants/metadata';
 
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 import { socialLink } from '@/lib/social-link';

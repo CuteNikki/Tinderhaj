@@ -1,5 +1,6 @@
-import { accountMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
+
+import { accountMetadata } from '@/constants/metadata';
 
 import { getAccountSettings } from '@/lib/account';
 import { enabledProviders } from '@/lib/auth';

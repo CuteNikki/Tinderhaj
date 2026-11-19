@@ -1,8 +1,9 @@
-import { verifyMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import { BadgeCheckIcon, ClockIcon, ShieldCheckIcon } from 'lucide-react';
+
+import { verifyMetadata } from '@/constants/metadata';
 
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 import { QUERIES } from '@/lib/queries';

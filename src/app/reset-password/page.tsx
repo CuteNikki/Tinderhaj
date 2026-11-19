@@ -1,9 +1,10 @@
-import { resetPasswordMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import { SearchParams } from 'next/dist/server/request/search-params';
 import Link from 'next/link';
 
 import { ShieldCheckIcon } from 'lucide-react';
+
+import { resetPasswordMetadata } from '@/constants/metadata';
 
 import { requireSignedOut } from '@/lib/session';
 

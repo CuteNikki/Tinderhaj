@@ -1,8 +1,9 @@
-import { deleteAccountMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import { LinkIcon, LogInIcon, Trash2Icon } from 'lucide-react';
+
+import { deleteAccountMetadata } from '@/constants/metadata';
 
 import { getSession } from '@/lib/session';
 

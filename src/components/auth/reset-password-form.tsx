@@ -1,6 +1,5 @@
 'use client';
 
-import { MAX_PASSWORD_LENGTH } from '@/constants/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -9,6 +8,8 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { Loader2Icon, RotateCwIcon } from 'lucide-react';
+
+import { MAX_PASSWORD_LENGTH } from '@/constants/auth';
 
 import { authClient } from '@/lib/auth-client';
 import { resetPasswordSchema } from '@/lib/schemas';

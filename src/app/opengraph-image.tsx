@@ -1,5 +1,6 @@
-import { SITE_NAME, SITE_TAGLINE } from '@/constants/metadata';
 import { ImageResponse } from 'next/og';
+
+import { SITE_NAME, SITE_TAGLINE } from '@/constants/metadata';
 
 import {
   Ocean,

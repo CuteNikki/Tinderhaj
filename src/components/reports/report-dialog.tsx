@@ -1,12 +1,13 @@
 'use client';
 
-import { REPORT_DETAILS_MAX, REPORT_REASONS } from '@/constants/reports';
-import type { ReportReason } from '@/generated/enums';
 import Link from 'next/link';
 import { useId, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
 import { FlagIcon, Loader2Icon } from 'lucide-react';
+
+import { REPORT_DETAILS_MAX, REPORT_REASONS } from '@/constants/reports';
+import type { ReportReason } from '@/generated/enums';
 
 import { reportProfile } from '@/lib/actions';
 

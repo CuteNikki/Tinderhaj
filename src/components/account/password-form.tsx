@@ -1,11 +1,12 @@
 'use client';
 
-import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH } from '@/constants/auth';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 import { KeyRoundIcon, Loader2Icon } from 'lucide-react';
+
+import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH } from '@/constants/auth';
 
 import { setPassword } from '@/lib/actions';
 import { authClient } from '@/lib/auth-client';

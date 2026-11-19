@@ -1,6 +1,5 @@
 'use client';
 
-import { MAX_USERNAME_LENGTH } from '@/constants/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
@@ -8,6 +7,8 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { Loader2Icon, PencilLineIcon } from 'lucide-react';
+
+import { MAX_USERNAME_LENGTH } from '@/constants/auth';
 
 import { updateUsername } from '@/lib/actions';
 import { updateUsernameSchema } from '@/lib/schemas';

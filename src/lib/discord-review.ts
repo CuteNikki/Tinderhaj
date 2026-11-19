@@ -1,7 +1,8 @@
 import 'server-only';
 
-import { SITE_URL } from '@/constants/metadata';
 import { after } from 'next/server';
+
+import { SITE_URL } from '@/constants/metadata';
 
 import { discord } from '@/lib/discord';
 import prisma from '@/lib/prisma';

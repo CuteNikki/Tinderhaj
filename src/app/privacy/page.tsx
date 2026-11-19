@@ -1,7 +1,8 @@
-import { CONTACT_EMAIL } from '@/constants/contact';
-import { privacyMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import Link from 'next/link';
+
+import { CONTACT_EMAIL } from '@/constants/contact';
+import { privacyMetadata } from '@/constants/metadata';
 
 import { LegalPage } from '@/components/legal/legal-page';
 import { LegalSection } from '@/components/legal/legal-section';

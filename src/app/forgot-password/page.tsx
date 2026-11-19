@@ -1,8 +1,9 @@
-import { forgotPasswordMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import { KeyRoundIcon } from 'lucide-react';
+
+import { forgotPasswordMetadata } from '@/constants/metadata';
 
 import { requireSignedOut } from '@/lib/session';
 

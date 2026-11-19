@@ -1,4 +1,3 @@
-import { heartsMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
@@ -9,6 +8,8 @@ import {
   MessageCircleIcon,
   SendIcon,
 } from 'lucide-react';
+
+import { heartsMetadata } from '@/constants/metadata';
 
 import { getHearts, type HeartRow } from '@/lib/hearts';
 import { CONTENT_DELAY } from '@/lib/motion';

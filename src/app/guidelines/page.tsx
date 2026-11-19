@@ -1,5 +1,3 @@
-import { CONTACT_EMAIL } from '@/constants/contact';
-import { guidelinesMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
@@ -17,6 +15,9 @@ import {
   UndoIcon,
   type LucideIcon,
 } from 'lucide-react';
+
+import { CONTACT_EMAIL } from '@/constants/contact';
+import { guidelinesMetadata } from '@/constants/metadata';
 
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 

@@ -1,7 +1,8 @@
 import 'server-only';
 
-import { AccountRole, Prisma, ProfileStatus } from '@/generated/client';
 import { cacheLife, cacheTag } from 'next/cache';
+
+import { AccountRole, Prisma, ProfileStatus } from '@/generated/client';
 
 import { notBannedWhere } from '@/lib/bans';
 import prisma from '@/lib/prisma';

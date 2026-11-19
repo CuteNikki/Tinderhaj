@@ -1,4 +1,3 @@
-import { guideMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
@@ -11,6 +10,8 @@ import {
   WandSparklesIcon,
   type LucideIcon,
 } from 'lucide-react';
+
+import { guideMetadata } from '@/constants/metadata';
 
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 

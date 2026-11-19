@@ -2,9 +2,10 @@ import 'server-only';
 
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { isUploadUrl } from '@/constants/uploads';
 import { cacheLife } from 'next/cache';
 import sharp from 'sharp';
+
+import { isUploadUrl } from '@/constants/uploads';
 
 /** Shared images (Open Graph and Twitter): what a link looks like when it's shared. */
 export const OG_SIZE = { width: 1200, height: 630 };

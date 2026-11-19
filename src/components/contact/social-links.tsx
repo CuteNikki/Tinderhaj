@@ -1,6 +1,6 @@
-import { SOCIALS } from '@/constants/contact';
-
 import { ArrowUpRightIcon } from 'lucide-react';
+
+import { SOCIALS } from '@/constants/contact';
 
 import { LIFT, STAGGER } from '@/lib/motion';
 import { socialLink } from '@/lib/social-link';

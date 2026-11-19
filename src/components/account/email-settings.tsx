@@ -1,11 +1,12 @@
 'use client';
 
-import { MAX_EMAIL_LENGTH } from '@/constants/auth';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 import { BadgeCheckIcon, Loader2Icon, MailIcon, SendIcon } from 'lucide-react';
+
+import { MAX_EMAIL_LENGTH } from '@/constants/auth';
 
 import { authClient } from '@/lib/auth-client';
 import { emailSchema } from '@/lib/schemas';

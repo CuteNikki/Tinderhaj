@@ -1,14 +1,15 @@
+import Image from 'next/image';
+import { useState } from 'react';
+import { toast } from 'sonner';
+
+import { ImageUpIcon, Loader2Icon, XIcon } from 'lucide-react';
+
 import {
   MAX_AVATAR_SIZE_MB,
   MAX_BANNER_SIZE_MB,
   UPLOAD_TYPES,
   type UploadKind,
 } from '@/constants/uploads';
-import Image from 'next/image';
-import { useState } from 'react';
-import { toast } from 'sonner';
-
-import { ImageUpIcon, Loader2Icon, XIcon } from 'lucide-react';
 
 import { requestUpload } from '@/lib/actions';
 import { IMAGE_BOXES, shrinkImage } from '@/lib/shrink-image';

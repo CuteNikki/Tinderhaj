@@ -1,6 +1,5 @@
 'use client';
 
-import { MAX_MATCH_CONTACT_LENGTH } from '@/constants/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -8,6 +7,8 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { Loader2Icon, SaveIcon } from 'lucide-react';
+
+import { MAX_MATCH_CONTACT_LENGTH } from '@/constants/auth';
 
 import { updateMatchContact } from '@/lib/actions';
 import { updateMatchContactSchema } from '@/lib/schemas';

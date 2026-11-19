@@ -1,4 +1,3 @@
-import { featuresMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 
 import {
@@ -12,6 +11,8 @@ import {
   UsersRoundIcon,
   type LucideIcon,
 } from 'lucide-react';
+
+import { featuresMetadata } from '@/constants/metadata';
 
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 

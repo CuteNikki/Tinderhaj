@@ -1,8 +1,9 @@
 import 'server-only';
 
-import { UPLOAD_ORIGIN } from '@/constants/uploads';
 import { AwsClient } from 'aws4fetch';
 import { after } from 'next/server';
+
+import { UPLOAD_ORIGIN } from '@/constants/uploads';
 
 import prisma from '@/lib/prisma';
 

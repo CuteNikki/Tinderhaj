@@ -1,8 +1,9 @@
-import { signUpMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import { SparklesIcon } from 'lucide-react';
+
+import { signUpMetadata } from '@/constants/metadata';
 
 import { enabledProviders } from '@/lib/auth';
 import { requireSignedOut } from '@/lib/session';

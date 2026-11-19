@@ -1,9 +1,10 @@
-import { MAX_PROFILES } from '@/constants/auth';
-import { profilesMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import { PlusIcon, UserRoundIcon } from 'lucide-react';
+
+import { MAX_PROFILES } from '@/constants/auth';
+import { profilesMetadata } from '@/constants/metadata';
 
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 import { QUERIES } from '@/lib/queries';

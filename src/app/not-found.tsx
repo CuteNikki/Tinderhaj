@@ -1,5 +1,6 @@
-import { notFoundMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
+
+import { notFoundMetadata } from '@/constants/metadata';
 
 import { NotFoundPage } from '@/components/common/not-found';
 import { FreshSharks } from '@/components/sections/fresh-sharks';

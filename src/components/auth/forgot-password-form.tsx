@@ -1,6 +1,5 @@
 'use client';
 
-import { MAX_EMAIL_LENGTH } from '@/constants/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
@@ -8,6 +7,8 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { Loader2Icon, MailCheckIcon, RotateCwIcon } from 'lucide-react';
+
+import { MAX_EMAIL_LENGTH } from '@/constants/auth';
 
 import { authClient } from '@/lib/auth-client';
 import { forgotPasswordSchema } from '@/lib/schemas';

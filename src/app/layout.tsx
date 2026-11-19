@@ -1,7 +1,8 @@
-import { layoutMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { Suspense } from 'react';
+
+import { layoutMetadata } from '@/constants/metadata';
 
 import { KeepScroll } from '@/components/common/keep-scroll';
 import { PageWater } from '@/components/common/page-water';

@@ -1,9 +1,10 @@
-import { discoveryMetadata } from '@/constants/metadata';
 import { Metadata } from 'next';
 import { SearchParams } from 'next/dist/server/request/search-params';
 import { redirect } from 'next/navigation';
 import { connection } from 'next/server';
 import { z } from 'zod';
+
+import { discoveryMetadata } from '@/constants/metadata';
 
 import { getHeartStates } from '@/lib/hearts';
 import { STAGGER } from '@/lib/motion';

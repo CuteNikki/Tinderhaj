@@ -1,6 +1,7 @@
 import { randomBytes, randomUUID } from 'node:crypto';
-import { PrismaClient } from '@/generated/client';
 import { PrismaPg } from '@prisma/adapter-pg';
+
+import { PrismaClient } from '@/generated/client';
 
 import { hashPassword } from '@/lib/password-hasher';
 

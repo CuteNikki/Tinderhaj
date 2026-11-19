@@ -1,6 +1,7 @@
-import { editProfileMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+
+import { editProfileMetadata } from '@/constants/metadata';
 
 import { QUERIES } from '@/lib/queries';
 import { requireUser } from '@/lib/session';

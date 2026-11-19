@@ -1,10 +1,11 @@
-import { CONTACT_EMAIL } from '@/constants/contact';
-import { bannedMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 
 import { BanIcon, HomeIcon, LogInIcon, ShieldCheckIcon } from 'lucide-react';
+
+import { CONTACT_EMAIL } from '@/constants/contact';
+import { bannedMetadata } from '@/constants/metadata';
 
 import { BAN_NOTICE_COOKIE, readBanNotice } from '@/lib/ban-notice';
 import { isBanned } from '@/lib/bans';

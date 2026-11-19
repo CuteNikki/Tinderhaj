@@ -1,5 +1,6 @@
-import { SOCIALS } from '@/constants/contact';
 import { Metadata } from 'next';
+
+import { SOCIALS } from '@/constants/contact';
 
 export const SITE_URL = 'https://tinderhaj.com';
 export const SITE_NAME = 'Tinderhaj';

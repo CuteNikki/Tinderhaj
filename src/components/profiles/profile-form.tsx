@@ -1,5 +1,15 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useForm, useWatch } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
+
+import { Loader2Icon, PlusIcon, TriangleAlertIcon, XIcon } from 'lucide-react';
+
 import {
   BLAHAJ_SIZE_CM,
   BLAHAJ_SIZE_INCH,
@@ -12,15 +22,6 @@ import {
   MIN_DISPLAY_NAME_LENGTH,
 } from '@/constants/auth';
 import { MAX_AVATAR_SIZE_MB, MAX_BANNER_SIZE_MB } from '@/constants/uploads';
-import { zodResolver } from '@hookform/resolvers/zod';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
-import { toast } from 'sonner';
-import { z } from 'zod';
-
-import { Loader2Icon, PlusIcon, TriangleAlertIcon, XIcon } from 'lucide-react';
 
 import { createProfile, updateProfile } from '@/lib/actions';
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';

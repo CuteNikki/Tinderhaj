@@ -1,7 +1,8 @@
-import { MAX_PROFILES } from '@/constants/auth';
-import { newProfileMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
+
+import { MAX_PROFILES } from '@/constants/auth';
+import { newProfileMetadata } from '@/constants/metadata';
 
 import { QUERIES } from '@/lib/queries';
 import { requireUser } from '@/lib/session';

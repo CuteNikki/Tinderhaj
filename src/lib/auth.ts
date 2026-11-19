@@ -1,14 +1,6 @@
 import 'server-only';
 
 import { randomInt } from 'crypto';
-import {
-  MAX_PASSWORD_LENGTH,
-  MAX_USERNAME_LENGTH,
-  MIN_PASSWORD_LENGTH,
-  MIN_USERNAME_LENGTH,
-  PASSWORD_RESET_TOKEN_EXPIRATION,
-  SESSION_EXPIRATION,
-} from '@/constants/auth';
 import { passkey } from '@better-auth/passkey';
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
@@ -28,6 +20,15 @@ import type {
   TwitterProfile,
 } from 'better-auth/social-providers';
 import { after } from 'next/server';
+
+import {
+  MAX_PASSWORD_LENGTH,
+  MAX_USERNAME_LENGTH,
+  MIN_PASSWORD_LENGTH,
+  MIN_USERNAME_LENGTH,
+  PASSWORD_RESET_TOKEN_EXPIRATION,
+  SESSION_EXPIRATION,
+} from '@/constants/auth';
 
 import {
   BAN_NOTICE_COOKIE,

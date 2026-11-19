@@ -1,8 +1,9 @@
-import { signInMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import { LockKeyholeIcon } from 'lucide-react';
+
+import { signInMetadata } from '@/constants/metadata';
 
 import { enabledProviders } from '@/lib/auth';
 import { socialErrorMessage } from '@/lib/providers';

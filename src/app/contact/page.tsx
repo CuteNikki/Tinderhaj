@@ -1,5 +1,3 @@
-import { CONTACT_EMAIL } from '@/constants/contact';
-import { contactMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Fragment } from 'react';
@@ -12,6 +10,9 @@ import {
   UserRoundCheckIcon,
   type LucideIcon,
 } from 'lucide-react';
+
+import { CONTACT_EMAIL } from '@/constants/contact';
+import { contactMetadata } from '@/constants/metadata';
 
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 import { isExternalLink, socialLink } from '@/lib/social-link';

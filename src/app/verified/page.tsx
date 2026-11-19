@@ -1,8 +1,9 @@
-import { verifiedMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import { MailCheckIcon, MailXIcon, SendIcon } from 'lucide-react';
+
+import { verifiedMetadata } from '@/constants/metadata';
 
 import { AuthShell } from '@/components/auth/auth-shell';
 import { Button } from '@/components/ui/button';

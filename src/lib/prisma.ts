@@ -1,7 +1,8 @@
-import { PrismaClient } from '@/generated/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { attachDatabasePool } from '@vercel/functions';
 import { Pool } from 'pg';
+
+import { PrismaClient } from '@/generated/client';
 
 const globalForPrisma = global as unknown as {
   prisma: PrismaClient;

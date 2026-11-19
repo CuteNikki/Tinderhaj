@@ -1,10 +1,5 @@
 'use client';
 
-import {
-  MAX_EMAIL_LENGTH,
-  MAX_PASSWORD_LENGTH,
-  MAX_USERNAME_LENGTH,
-} from '@/constants/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -13,6 +8,12 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { ArrowRightIcon, Loader2Icon } from 'lucide-react';
+
+import {
+  MAX_EMAIL_LENGTH,
+  MAX_PASSWORD_LENGTH,
+  MAX_USERNAME_LENGTH,
+} from '@/constants/auth';
 
 import { authClient } from '@/lib/auth-client';
 import { signUpSchema } from '@/lib/schemas';

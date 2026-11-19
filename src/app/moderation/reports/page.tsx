@@ -1,5 +1,3 @@
-import { reportsMetadata } from '@/constants/metadata';
-import { REPORT_REASONS } from '@/constants/reports';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
@@ -9,6 +7,9 @@ import {
   InboxIcon,
   ShieldCheckIcon,
 } from 'lucide-react';
+
+import { reportsMetadata } from '@/constants/metadata';
+import { REPORT_REASONS } from '@/constants/reports';
 
 import { CONTENT_DELAY } from '@/lib/motion';
 import { QUERIES, type ReportRow } from '@/lib/queries';

@@ -1,5 +1,6 @@
-import { SITE_NAME } from '@/constants/metadata';
 import { ImageResponse } from 'next/og';
+
+import { SITE_NAME } from '@/constants/metadata';
 
 import { getSharkPage } from '@/lib/hearts';
 import {

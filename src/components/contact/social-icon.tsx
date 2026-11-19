@@ -1,5 +1,6 @@
-import type { SocialId } from '@/constants/contact';
 import { siDiscord, siGithub, siInstagram, siX } from 'simple-icons';
+
+import type { SocialId } from '@/constants/contact';
 
 const paths: Record<SocialId, string> = {
   discord: siDiscord.path,

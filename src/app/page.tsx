@@ -1,8 +1,9 @@
-import { homeMetadata } from '@/constants/metadata';
 import { Metadata } from 'next';
 import Link from 'next/link';
 
 import { ArrowRight } from 'lucide-react';
+
+import { homeMetadata } from '@/constants/metadata';
 
 import { STAGGER } from '@/lib/motion';
 

@@ -1,4 +1,3 @@
-import { usersMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -9,6 +8,8 @@ import {
   SearchIcon,
   UsersRoundIcon,
 } from 'lucide-react';
+
+import { usersMetadata } from '@/constants/metadata';
 
 import { isBanned } from '@/lib/bans';
 import { CONTENT_DELAY } from '@/lib/motion';

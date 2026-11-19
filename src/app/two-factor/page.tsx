@@ -1,7 +1,8 @@
-import { twoFactorMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 
 import { ShieldCheckIcon } from 'lucide-react';
+
+import { twoFactorMetadata } from '@/constants/metadata';
 
 import { requireSignedOut } from '@/lib/session';
 

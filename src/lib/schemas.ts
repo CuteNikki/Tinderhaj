@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 import {
   MAX_BIO_LENGTH,
   MAX_DISPLAY_NAME_LENGTH,
@@ -20,7 +22,6 @@ import {
   MIN_USERNAME_LENGTH,
 } from '@/constants/auth';
 import { UPLOAD_HOSTNAME } from '@/constants/uploads';
-import { z } from 'zod';
 
 import { PROFILE_FIELDS } from '@/lib/profile-fields';
 

@@ -1,10 +1,11 @@
-import { sharkPageMetadata } from '@/constants/metadata';
 import type { Metadata, Viewport } from 'next';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { connection } from 'next/server';
 
 import { ShieldIcon, UserRoundIcon, UsersRoundIcon } from 'lucide-react';
+
+import { sharkPageMetadata } from '@/constants/metadata';
 
 import { getHeartStates, getSharkPage } from '@/lib/hearts';
 import { CONTENT_DELAY } from '@/lib/motion';

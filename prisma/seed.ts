@@ -1,3 +1,5 @@
+import { PrismaPg } from '@prisma/adapter-pg';
+
 import {
   AccountRole,
   Prisma,
@@ -5,7 +7,6 @@ import {
   ProfileStatus,
   SizeUnit,
 } from '@/generated/client';
-import { PrismaPg } from '@prisma/adapter-pg';
 
 const prisma = new PrismaClient({
   adapter: new PrismaPg({

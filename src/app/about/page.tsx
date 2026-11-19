@@ -1,4 +1,3 @@
-import { aboutMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
@@ -9,6 +8,8 @@ import {
   SmileIcon,
   type LucideIcon,
 } from 'lucide-react';
+
+import { aboutMetadata } from '@/constants/metadata';
 
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 import { socialLink } from '@/lib/social-link';

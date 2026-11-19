@@ -1,6 +1,6 @@
-import { ProfileStatus } from '@/generated/enums';
-
 import { BadgeCheckIcon, ClockIcon, FileIcon, XCircleIcon } from 'lucide-react';
+
+import { ProfileStatus } from '@/generated/enums';
 
 const DAY_IN_MS = 24 * 60 * 60 * 1000;
 

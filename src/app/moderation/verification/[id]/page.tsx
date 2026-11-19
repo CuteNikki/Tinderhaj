@@ -1,7 +1,8 @@
-import { verifyMetadata } from '@/constants/metadata';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+
+import { verifyMetadata } from '@/constants/metadata';
 
 import { CONTENT_DELAY } from '@/lib/motion';
 import { profileFieldLabel } from '@/lib/profile-fields';
