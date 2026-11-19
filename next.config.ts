@@ -6,7 +6,8 @@ import { SOCIALS, type SocialId } from './src/constants/contact';
 const SOCIAL_ALIASES: Partial<Record<SocialId, string[]>> = { x: ['x', 'twitter'] };
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // A server of its own, with only the files it needs, for the Docker image
+  output: 'standalone',
   cacheComponents: true,
   // Links prefetch each route's shared shell, and what depends on the URL streams in behind its loading.tsx. The next
   // major turns this on for everyone and removes the option.

@@ -1,0 +1,14 @@
+# What the site's image is built without: installed and built inside it,
+# secret, or not the site. The bot's image has its own list, bot/Dockerfile.dockerignore
+node_modules
+.next
+generated
+.env*
+.git
+.github
+bot
+e2e
+playwright.config.ts
+test-results
+playwright-report
+blob-report
