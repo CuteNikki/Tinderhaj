@@ -1,5 +1,4 @@
 import { PrismaPg } from '@prisma/adapter-pg';
-import { attachDatabasePool } from '@vercel/functions';
 import { Pool } from 'pg';
 
 import { PrismaClient } from '@/generated/client';
@@ -17,8 +16,6 @@ const pool = new Pool({
   query_timeout: 10_000,
   statement_timeout: 10_000,
 });
-// Lets Vercel close idle connections before it suspends the function, instead of leaving them open on the server.
-attachDatabasePool(pool);
 
 const adapter = new PrismaPg(pool);
 

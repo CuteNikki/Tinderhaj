@@ -81,7 +81,6 @@
     "@hookform/resolvers": "^6.0.2",
     "@prisma/adapter-pg": "^7.10.1",
     "@prisma/client": "^7.10.1",
-    "@vercel/functions": "^3.11.3",
     "aws4fetch": "^1.0.20",
     "better-auth": "1.7.26",
     "class-variance-authority": "^0.7.1",
