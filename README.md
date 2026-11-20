@@ -284,6 +284,7 @@ Stalwart signs each email with DKIM and delivers it, retrying for a while when a
 - **Log.** Everything goes to the channel in `DISCORD_CHANNEL_LOG`: joins (flagging new accounts) and leaves, name changes, boosts, edited and deleted messages, voice joins, leaves and moves, moderation, and changes to channels (including their permissions and which one was moved where), roles, members' nicknames and roles, the server's settings, emojis, stickers, invites, threads and events.
   - What changed comes from the events Discord sends, with each setting as it was and is. Who did it comes from the audit log a moment later, so entries are posted a few seconds after the change, and say so if the audit log didn't record who. What only the audit log knows (a message deleted by someone else, a webhook or an AutoMod rule changed) is logged from it.
   - The bot's own changes are left out, since bubbles change channels all the time, the site gives roles, and its commands log themselves.
+- **Status.** `GET /status` on `STATUS_PORT` (8080 if left out) answers with its servers and members, from what it already knows, for a dashboard such as [dash](https://github.com/CuteNikki/dash). The compose file publishes no port for it, so only the machine's own containers reach it, and labels the container `dash.app: discord-bot` for dash.
 
 Setting it up:
 

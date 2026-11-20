@@ -10,6 +10,9 @@ services:
       - ../.env
     volumes:
       - ./logs:/app/bot/logs
+    labels:
+      # dash shows its servers and members, from GET /status on port 8080
+      dash.app: discord-bot
     networks:
       - default
       - postgres_network

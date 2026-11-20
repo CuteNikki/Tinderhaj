@@ -16,6 +16,7 @@ import {
 
 import { KEYS } from '@/utility/keys';
 import { logger } from '@/utility/logger';
+import { serveStatus } from '@/utility/status';
 
 /** The bot: a client that knows its commands, buttons and modals, loaded from their folders. */
 export class ExtendedClient extends Client {
@@ -73,5 +74,7 @@ export class ExtendedClient extends Client {
     );
 
     await this.login(KEYS.DISCORD_BOT_TOKEN);
+    // Its servers and members, for dash
+    serveStatus(this);
   }
 }
