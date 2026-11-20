@@ -47,3 +47,6 @@ next-env.d.ts
 
 # Prisma
 /generated
+
+# Settings for one server only (networks, names), kept on that server
+compose.override.yaml
