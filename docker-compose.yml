@@ -1,0 +1,36 @@
+# For the repository. The site and its database's migrations, which run first,
+# each time it's started: a migration that fails leaves the site that's
+# running as it is. Put it behind a reverse proxy that serves it over HTTPS.
+services:
+  migrate:
+    build:
+      context: .
+      target: migrate
+    env_file: .env
+    restart: 'no'
+    # A job that runs before each start, not a service: dash leaves it off its
+    # board
+    labels:
+      dash.purpose: the database's migrations, before the site starts
+
+  tinderhaj:
+    build:
+      context: .
+      # The Dockerfile reads the site's settings from this at build time and
+      # keeps none of it in the image
+      secrets: [env]
+    container_name: tinderhaj
+    restart: unless-stopped
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    # Its secrets: the database, sign-in and storage keys. Never in the repository.
+    env_file: .env
+    # For a reverse proxy on the same machine. One in Docker can reach it on
+    # a shared network instead: add that in a compose.override.yaml.
+    ports:
+      - '127.0.0.1:${PORT:-3000}:3000'
+
+secrets:
+  env:
+    file: .env
