@@ -15,7 +15,7 @@ export default function PrivacyPage() {
     <LegalPage
       title='Privacy Policy'
       lead='How Tinderhaj handles the information needed to run the service.'
-      updated='October 14, 2026'
+      updated='November 20, 2026'
     >
       <LegalSection index={0} title='1. Introduction'>
         <TypographyP>
@@ -195,22 +195,21 @@ export default function PrivacyPage() {
       </LegalSection>
       <LegalSection index={7} title='8. Third-party services'>
         <TypographyP>
-          We use these service providers, which process information on our
-          behalf and only as needed to provide their services:
+          Your information is processed in these places. The one provider among
+          them processes it on our behalf and only as needed to provide its
+          service:
         </TypographyP>
         <TypographyList>
           <li>
-            Vercel Inc. (USA) hosts the website. Every visit passes through it,
-            so it processes technical information such as your IP address and
-            the pages you request.
+            The website, our database, and the pictures you upload for your
+            profiles are on a server we run ourselves in Germany. Every visit is
+            handled there, and accounts, profiles, pictures, hearts, and
+            sessions are stored there.
           </li>
           <li>
-            Our database, the pictures you upload for your profiles, and the
-            mail server that sends our emails are on a server we rent from
-            Index-Hosting (Kurz &amp; Lankow GbR, Germany), in a data center in
-            Germany. Accounts, profiles, pictures, hearts, and sessions are
-            stored there, and the emails we send you go out from there to your
-            email provider.
+            The mail server that sends our emails is on a server we rent from
+            Netzdachs (IT-adjutor GmbH, Germany), in a data center in Germany.
+            The emails we send you go out from there to your email provider.
           </li>
         </TypographyList>
         <TypographyP>
@@ -300,10 +299,9 @@ export default function PrivacyPage() {
       </LegalSection>
       <LegalSection index={13} title='14. International processing'>
         <TypographyP>
-          Vercel is based in the United States, so information it processes may
-          be transferred there. These transfers rely on the safeguards the GDPR
-          provides for, such as the EU-U.S. Data Privacy Framework or the
-          European Commission&apos;s standard contractual clauses.
+          We process and store your information in Germany. If you choose to
+          sign in with another service, that service processes what it learns
+          under its own privacy policy, which may be outside the EU.
         </TypographyP>
       </LegalSection>
       <LegalSection index={14} title='15. Changes to this policy'>
