@@ -304,6 +304,10 @@
  * sections and headings, `pop` for cards, badges and sharks, sampled from
  * Motion's own springs so they overshoot and settle alike. Only `backwards`,
  * so once in, they leave the element's transform to whatever else moves it.
+ * They fade from 0.01, not 0: just as unseen, but the browser counts what's
+ * fully transparent as not painted yet, so the hero's text would only become
+ * the page's largest paint (LCP) once its fade had played, after the
+ * JavaScript, scoring a phone's load seconds slower than it is.
  */
 :root {
   --spring-soft: linear(
@@ -468,37 +472,37 @@
 
 @keyframes enter-sink {
   from {
-    opacity: 0;
+    opacity: 0.01;
     transform: translateY(-16px) scale(0.97);
   }
 }
 @keyframes enter-reveal {
   from {
-    opacity: 0;
+    opacity: 0.01;
     transform: translateY(24px) scale(0.97);
   }
 }
 @keyframes enter-ring {
   from {
-    opacity: 0;
+    opacity: 0.01;
     transform: scale(0.92);
   }
 }
 @keyframes enter-pop {
   from {
-    opacity: 0;
+    opacity: 0.01;
     transform: scale(0.5) rotate(-12deg);
   }
 }
 @keyframes enter-swim {
   from {
-    opacity: 0;
+    opacity: 0.01;
     transform: translateY(40px) scale(0.85) rotate(-10deg);
   }
 }
 @keyframes enter-card {
   from {
-    opacity: 0;
+    opacity: 0.01;
     transform: translateY(28px) scale(0.94) rotate(-1.5deg);
   }
 }
