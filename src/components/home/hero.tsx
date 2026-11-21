@@ -187,7 +187,7 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
             {...bob({
               delay: 1,
               rotate: 12,
-              className: 'absolute top-1/4 right-8',
+              className: 'absolute top-1/4 right-8 z-10',
             })}
           >
             <div
