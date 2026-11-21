@@ -51,7 +51,6 @@ export function DiscoveryHero() {
           >
             <div className={BOB_SHARK}>
               <Image
-                unoptimized
                 loading='eager'
                 fetchPriority='high'
                 width={320}

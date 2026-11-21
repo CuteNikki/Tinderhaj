@@ -88,10 +88,9 @@ export function NotFoundPage() {
               )}
             >
               <Image
-                unoptimized
                 src={SHARKS.think}
-                width={320}
-                height={320}
+                width={128}
+                height={128}
                 alt='A Blåhaj looking for the missing page'
                 className='h-32 w-32 drop-shadow-2xl'
               />

@@ -25,7 +25,6 @@ export function PeekingShark() {
     <div ref={ref} aria-hidden className='h-16 overflow-hidden'>
       <div className={`origin-bottom ${className}`} style={style}>
         <Image
-          unoptimized
           src={SHARKS.small}
           width={112}
           height={112}

@@ -56,10 +56,9 @@ export function PonderingShark() {
       >
         <div className={BOB_SHARK}>
           <Image
-            unoptimized
             src={SHARKS.think}
-            width={320}
-            height={320}
+            width={160}
+            height={160}
             alt=''
             className='h-auto w-32 drop-shadow-2xl xl:w-40'
           />

@@ -26,10 +26,9 @@ export function AuthLoading() {
       />
       {/* Still, for those who ask for less motion */}
       <Image
-        unoptimized
         src={SHARKS.small}
-        width={192}
-        height={192}
+        width={128}
+        height={128}
         alt=''
         className='hidden h-auto w-32 motion-reduce:block'
       />

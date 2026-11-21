@@ -169,7 +169,6 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
               className={`${glass} flex max-w-64 items-center gap-3 rounded-2xl p-3 shadow-xl`}
             >
               <Image
-                unoptimized
                 width={64}
                 height={64}
                 src={SHARKS.hug}
@@ -200,7 +199,6 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
               )}
             >
               <Image
-                unoptimized
                 width={80}
                 height={80}
                 src={SHARKS.heart}
