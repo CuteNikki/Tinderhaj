@@ -1,50 +1,39 @@
 import type { Metadata } from 'next';
-
-import {
-  HeartHandshakeIcon,
-  HeartIcon,
-  MapPinIcon,
-  RulerIcon,
-  SparklesIcon,
-  UsersRoundIcon,
-  type LucideIcon,
-} from 'lucide-react';
+import { cacheLife, cacheTag } from 'next/cache';
+import { Caveat } from 'next/font/google';
 
 import { birthdayMetadata } from '@/constants/metadata';
 
-import { getBirthdayStats, STARTED } from '@/lib/birthday';
+import { getBirthdayStats } from '@/lib/birthday';
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
+import { PROFILE_COUNT_TAG } from '@/lib/queries';
+import { cn } from '@/lib/utils';
 
-import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
+import { Confetti } from '@/components/birthday/confetti';
+import { PartyShark } from '@/components/birthday/party-shark';
+import { ShareButton } from '@/components/birthday/share-button';
+import { Eyebrow } from '@/components/common/heading';
 import { Stagger } from '@/components/common/stagger';
 import { DiscoveryProfile } from '@/components/discovery/profile';
 import { AnimatedCount } from '@/components/home/animated-count';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
 import { ReadyWhenYouAre } from '@/components/sections/ready-when-you-are';
-import { Section } from '@/components/sections/section';
 import { Badge } from '@/components/ui/badge';
 
 export const metadata: Metadata = birthdayMetadata;
 
-const WORDS = [
-  'Zero',
-  'One',
-  'Two',
-  'Three',
-  'Four',
-  'Five',
-  'Six',
-  'Seven',
-  'Eight',
-  'Nine',
-  'Ten',
-];
+/** Handwriting, for what's written in the birthday card. */
+const handwriting = Caveat({ subsets: ['latin'], weight: ['600', '700'] });
 
-/** "Two years", or "1 year" written out while it's small enough to read well. */
-function yearsText(years: number) {
-  const number = WORDS[years] ?? String(years);
-  return years === 1 ? `${number} year` : `${number} years`;
-}
+const ordinal = (n: number) => {
+  const tens = n % 100;
+  if (tens >= 11 && tens <= 13) return `${n}th`;
+  return `${n}${['th', 'st', 'nd', 'rd'][n % 10] ?? 'th'}`;
+};
+
+/** "1 heart", "6 hearts" */
+const count = (n: number, one: string, many: string) =>
+  `${n.toLocaleString('en-US')} ${n === 1 ? one : many}`;
 
 const monthYear = (date: Date) =>
   date.toLocaleDateString('en-US', {
@@ -53,173 +42,221 @@ const monthYear = (date: Date) =>
     timeZone: 'UTC',
   });
 
-/** Tinderhaj's birthday: what the pod got up to since it began, in real numbers. */
-export default async function BirthdayPage() {
-  const stats = await getBirthdayStats();
+/** "a, b and c" */
+const list = (items: string[]) =>
+  items.length > 1
+    ? `${items.slice(0, -1).join(', ')} and ${items.at(-1)}`
+    : (items[0] ?? '');
 
-  const big: { label: string; value: number; icon: LucideIcon }[] = [
-    { label: 'Sharks in discovery', value: stats.sharks, icon: SparklesIcon },
-    {
-      label: 'People who brought them',
-      value: stats.owners,
-      icon: UsersRoundIcon,
-    },
-    { label: 'Hearts sent', value: stats.hearts, icon: HeartIcon },
-    { label: 'Matches made', value: stats.matches, icon: HeartHandshakeIcon },
-  ];
-  const small: { label: string; value: string; icon: LucideIcon }[] = [
-    ...(stats.averageSize != null
-      ? [
-          {
-            label: 'The average shark',
-            value: `${stats.averageSize} cm long`,
-            icon: RulerIcon,
-          },
-        ]
-      : []),
-    ...(stats.places
-      ? [
-          {
-            label: 'Living in',
-            value:
-              stats.places === 1
-                ? '1 place'
-                : `${stats.places} different places`,
-            icon: MapPinIcon,
-          },
-        ]
-      : []),
-    ...(stats.busiestMonth
-      ? [
-          {
-            label: 'Busiest month',
-            value: `${monthYear(stats.busiestMonth.month)}, ${stats.busiestMonth.count} new sharks`,
-            icon: SparklesIcon,
-          },
-        ]
-      : []),
-  ];
+/**
+ * Tinderhaj's birthday: a birthday card to open, then the story of the year
+ * in real numbers, a line at a time as it's scrolled to.
+ */
+export default async function BirthdayPage() {
+  // Cached as a whole, like its numbers, so the first shark's card can tell
+  // whether it's new (by the time) while the page prerenders
+  'use cache';
+  cacheLife('hours');
+  cacheTag(PROFILE_COUNT_TAG);
+
+  const stats = await getBirthdayStats();
+  const { number, date } = stats.birthday;
+  const title = `Happy ${ordinal(number)} birthday, Tinderhaj!`;
+  const favorites = stats.interests.slice(0, 3).map((item) => item.interest);
+  const more = stats.interests.slice(3).map((item) => item.interest);
 
   return (
     <>
+      {/* The card, in the water, with confetti around it */}
       <div
         data-water='band'
         data-tone='muted'
-        className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'
+        className='flex flex-1 flex-col px-4 pt-28 pb-24 sm:px-5 lg:px-8'
       >
-        <div className='container mx-auto max-w-7xl'>
-          <Stagger id='page-header' variant='sink' className='mb-24'>
-            <Eyebrow>Happy birthday, Tinderhaj</Eyebrow>
-            <PageTitle>{yearsText(stats.years)} of sharks</PageTitle>
-            <PageNote>
-              Since{' '}
-              {STARTED.toLocaleDateString('en-US', {
-                month: 'long',
-                day: 'numeric',
-                year: 'numeric',
-                timeZone: 'UTC',
-              })}
-              , in real numbers. Thank you for every shark.
-            </PageNote>
-          </Stagger>
-
-          <Stagger
-            as='ul'
-            itemAs='li'
+        <div className='container mx-auto flex max-w-7xl justify-center'>
+          <ScrollReveal
+            id='page-header'
             variant='card'
-            gap={STAGGER}
-            delay={CONTENT_DELAY}
-            className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'
-            itemClassName='h-full'
+            className='relative w-full max-w-xl'
           >
-            {big.map(({ label, value, icon: Icon }, index) => (
-              <div
-                key={label}
-                className='flex h-full flex-col gap-3 rounded-2xl border border-foreground/10 bg-card p-6 shadow-sm'
+            <Confetti />
+            <article className='relative flex flex-col items-center gap-5 rounded-3xl border border-foreground/10 bg-card px-6 py-10 text-center shadow-lg sm:px-12'>
+              <PartyShark className='w-40 sm:w-48' />
+              <Eyebrow>
+                {date.toLocaleDateString('en-US', {
+                  month: 'long',
+                  day: 'numeric',
+                  year: 'numeric',
+                  timeZone: 'UTC',
+                })}
+              </Eyebrow>
+              <h1 className='-mt-3 text-4xl font-black tracking-tight text-balance sm:text-5xl'>
+                {title}
+              </h1>
+              <p
+                className={cn(
+                  handwriting.className,
+                  'text-3xl leading-tight font-bold text-primary'
+                )}
               >
-                <span className='flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary'>
-                  <Icon className='size-5' aria-hidden='true' />
-                </span>
-                <span className='text-4xl font-black tracking-tight tabular-nums'>
-                  <AnimatedCount
-                    target={value}
-                    delay={0.4 + index * STAGGER}
-                    localize
-                  />
-                </span>
-                <span className='text-sm text-muted-foreground'>{label}</span>
-              </div>
-            ))}
-          </Stagger>
-
-          {small.length > 0 && (
-            <ScrollReveal delay={CONTENT_DELAY + 4 * STAGGER} className='mt-4'>
-              <dl className='grid gap-4 rounded-2xl border border-foreground/10 bg-card p-6 shadow-sm sm:grid-cols-3'>
-                {small.map(({ label, value, icon: Icon }) => (
-                  <div key={label} className='flex items-start gap-3'>
-                    <Icon
-                      className='mt-0.5 size-4 shrink-0 text-primary'
-                      aria-hidden='true'
-                    />
-                    <div>
-                      <dt className='text-sm text-muted-foreground'>{label}</dt>
-                      <dd className='font-semibold'>{value}</dd>
-                    </div>
-                  </div>
-                ))}
-              </dl>
-            </ScrollReveal>
-          )}
+                {count(stats.sharks, 'shark', 'sharks')} ·{' '}
+                {count(stats.hearts, 'heart', 'hearts')} ·{' '}
+                {count(stats.matches, 'match', 'matches')}
+              </p>
+              <p className='max-w-sm text-pretty text-muted-foreground'>
+                {number === 1 ? 'One year' : `${number} years`} ago, the first
+                shark swam in. Thank you for every shark, every heart and every
+                match since.
+              </p>
+              <p
+                className={cn(
+                  handwriting.className,
+                  'text-2xl font-semibold text-foreground'
+                )}
+              >
+                Love, the pod 💙
+              </p>
+              <ShareButton
+                title={title}
+                text={`${count(stats.sharks, 'shark', 'sharks')}, ${count(stats.hearts, 'heart', 'hearts')} and ${count(stats.matches, 'match', 'matches')} so far.`}
+              />
+            </article>
+          </ScrollReveal>
         </div>
       </div>
 
-      {stats.first && (
-        <Section
-          eyebrow='Where it started'
-          title='The first shark'
-          highlight='is still swimming.'
-          note={`Verified in ${monthYear(stats.first.verifiedAt ?? stats.first.createdAt)}, the oldest shark in discovery today.`}
-          tone='background'
-        >
-          <div className='max-w-md'>
-            <DiscoveryProfile profile={stats.first} heading='h3' />
-          </div>
-        </Section>
+      {/* The story, a big line at a time */}
+      <StoryLine tone='background'>
+        <StoryNumber value={stats.sharks} />{' '}
+        {stats.sharks === 1 ? 'shark' : 'sharks'} found a home here, brought by{' '}
+        <StoryNumber value={stats.owners} />{' '}
+        {stats.owners === 1 ? 'person' : 'people'} who love them.
+      </StoryLine>
+      <StoryLine tone='muted'>
+        Together they sent <StoryNumber value={stats.hearts} />{' '}
+        {stats.hearts === 1 ? 'heart' : 'hearts'} and made{' '}
+        <StoryNumber value={stats.matches} />{' '}
+        {stats.matches === 1 ? 'match' : 'matches'}.
+      </StoryLine>
+      {stats.averageSize != null && (
+        <StoryLine tone='background'>
+          The average shark is <StoryNumber value={stats.averageSize} /> cm of
+          pure softness
+          {stats.places > 1 && (
+            <>
+              , living in <StoryNumber value={stats.places} /> different places
+            </>
+          )}
+          .
+        </StoryLine>
       )}
 
-      {stats.interests.length > 0 && (
-        <Section
-          eyebrow='Most loved'
-          title='What sharks'
-          highlight='are into.'
-          note='The interests that come up most on their profiles.'
-          tone='muted'
+      {stats.first && (
+        <section className='bg-muted px-4 py-24 sm:px-5 sm:py-32 lg:px-8'>
+          <div className='container mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-2'>
+            <ScrollReveal>
+              <Eyebrow>Where it started</Eyebrow>
+              <h2 className='text-4xl leading-tight font-black tracking-tight text-balance sm:text-6xl'>
+                It all started with{' '}
+                <span className='text-primary'>{stats.first.displayName}</span>.
+              </h2>
+              <p className='mt-4 max-w-md text-lg text-pretty text-muted-foreground'>
+                Verified in{' '}
+                {monthYear(stats.first.verifiedAt ?? stats.first.createdAt)},{' '}
+                {stats.first.displayName} is the oldest shark in discovery, and
+                still swimming today.
+              </p>
+            </ScrollReveal>
+            <ScrollReveal
+              variant='card'
+              scrollDelay={STAGGER}
+              className='w-full max-w-md lg:justify-self-end'
+            >
+              <DiscoveryProfile profile={stats.first} heading='h3' />
+            </ScrollReveal>
+          </div>
+        </section>
+      )}
+
+      {favorites.length > 0 && (
+        <StoryLine
+          tone='background'
+          after={more.length > 0 && <More items={more} />}
         >
-          <Stagger
-            as='ul'
-            itemAs='li'
-            variant='pop'
-            gap={0.05}
-            delay={0.1}
-            className='flex flex-wrap gap-2'
-          >
-            {stats.interests.map(({ interest, count }) => (
-              <Badge
-                key={interest}
-                variant='secondary'
-                className='h-auto gap-2 px-3 py-1.5 text-sm'
-              >
-                {interest}
-                <span className='text-muted-foreground tabular-nums'>
-                  {count}
-                </span>
-              </Badge>
-            ))}
-          </Stagger>
-        </Section>
+          What do sharks love most?{' '}
+          <span className='text-primary'>{list(favorites)}</span>.
+        </StoryLine>
+      )}
+      {stats.busiestMonth && (
+        <StoryLine tone='muted'>
+          The busiest month was{' '}
+          <span className='text-primary'>
+            {monthYear(stats.busiestMonth.month)}
+          </span>
+          , with <StoryNumber value={stats.busiestMonth.count} /> new{' '}
+          {stats.busiestMonth.count === 1 ? 'shark' : 'sharks'}.
+        </StoryLine>
       )}
 
       <ReadyWhenYouAre />
     </>
+  );
+}
+
+/** One line of the story, big, on a band of its own, coming in as it's scrolled to. */
+function StoryLine({
+  tone,
+  after,
+  children,
+}: {
+  tone: 'background' | 'muted';
+  after?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <section
+      className={cn(
+        'px-4 py-24 sm:px-5 sm:py-32 lg:px-8',
+        tone === 'muted' ? 'bg-muted' : 'bg-background'
+      )}
+    >
+      <div className='container mx-auto max-w-7xl'>
+        <ScrollReveal delay={CONTENT_DELAY}>
+          <p className='max-w-4xl text-4xl leading-tight font-black tracking-tight text-balance sm:text-6xl'>
+            {children}
+          </p>
+          {after}
+        </ScrollReveal>
+      </div>
+    </section>
+  );
+}
+
+/** A number in the story, in blue, counting up once its line comes in. */
+function StoryNumber({ value }: { value: number }) {
+  return (
+    <span className='text-primary tabular-nums'>
+      <AnimatedCount target={value} delay={0.3} localize />
+    </span>
+  );
+}
+
+/** The interests after the top three, smaller, under their line. */
+function More({ items }: { items: string[] }) {
+  return (
+    <Stagger
+      as='ul'
+      itemAs='li'
+      variant='pop'
+      gap={0.05}
+      delay={0.2}
+      className='mt-8 flex flex-wrap gap-2'
+    >
+      {items.map((item) => (
+        <Badge key={item} variant='secondary' className='px-3 py-1 text-sm'>
+          {item}
+        </Badge>
+      ))}
+    </Stagger>
   );
 }

@@ -12,6 +12,8 @@ import { PROFILE_COUNT_TAG, PUBLIC_PROFILE } from '@/lib/queries';
 export const STARTED = new Date(Date.UTC(2024, 11, 21));
 
 const INCH = 2.54;
+const DAY = 24 * 60 * 60 * 1000;
+const MONTH = 31 * DAY;
 
 /** The sharks discovery shows, for the counts in SQL: verified, of accounts that aren't banned (as notBannedWhere). */
 const LIVE_IDS = Prisma.sql`
@@ -88,7 +90,8 @@ export async function getBirthdayStats() {
 
   return {
     /** How many years old it is today */
-    years: yearsSinceStart(),
+    /** The birthday it celebrates, and when */
+    birthday: celebratedBirthday(),
     sharks,
     owners,
     hearts,
@@ -109,13 +112,20 @@ export async function getBirthdayStats() {
   };
 }
 
-/** How many whole years Tinderhaj has been around on `now`. */
-export function yearsSinceStart(now = new Date()) {
-  let years = now.getUTCFullYear() - STARTED.getUTCFullYear();
-  const before =
-    now.getUTCMonth() < STARTED.getUTCMonth() ||
-    (now.getUTCMonth() === STARTED.getUTCMonth() &&
-      now.getUTCDate() < STARTED.getUTCDate());
-  if (before) years--;
-  return years;
+/**
+ * Which birthday the page celebrates on `now`: the coming one from a month
+ * before it, else the last one. "2" for the one on December 21, 2026.
+ */
+export function celebratedBirthday(now = new Date()) {
+  const next = new Date(
+    Date.UTC(now.getUTCFullYear(), STARTED.getUTCMonth(), STARTED.getUTCDate())
+  );
+  if (next.getTime() < now.getTime() - DAY)
+    next.setUTCFullYear(next.getUTCFullYear() + 1);
+  const coming = next.getTime() - now.getTime() <= MONTH;
+  const year = coming ? next.getUTCFullYear() : next.getUTCFullYear() - 1;
+  return {
+    number: year - STARTED.getUTCFullYear(),
+    date: new Date(Date.UTC(year, STARTED.getUTCMonth(), STARTED.getUTCDate())),
+  };
 }

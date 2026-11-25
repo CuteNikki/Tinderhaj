@@ -530,6 +530,31 @@
   opacity: 0;
 }
 
+/* A count in there starts once it comes in, rather than while nobody sees it (see AnimatedCount). */
+.enter-waiting .count-up::before,
+.enter-waiting .count-up > span {
+  animation: none;
+}
+
+/* Confetti around the birthday card, each bit bobbing and turning a little from its own `--confetti-delay`. */
+.confetti {
+  animation: confetti 4s ease-in-out var(--confetti-delay, 0s) infinite
+    alternate;
+}
+
+@keyframes confetti {
+  to {
+    translate: 0 8px;
+    rotate: 30deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .confetti {
+    animation: none;
+  }
+}
+
 /*
  * Floating in place, forever: every big shark the same way, and the little
  * pills and cards around one more gently, each from its own `--bob-delay` so
