@@ -12,6 +12,8 @@ type Email = {
   heading?: string;
   /** What it's about, each a paragraph */
   paragraphs: string[];
+  /** Someone's own words, set apart after the paragraphs: a moderator's note */
+  quote?: { by: string; text: string };
   /** A code to type in, shown big: the second step of signing in */
   code?: string;
   /** A link to act on, as a button; the plain text writes its address out */
@@ -73,6 +75,12 @@ function brand() {
   );
 }
 
+/** Someone's own words, who wrote them over them, set off by a bar at the left. */
+function quote({ by, text: words }: { by: string; text: string }) {
+  return `<tr><td style="padding:16px 0 0;${font}font-size:13px;line-height:1.5;color:${colors.muted};">${escape(by)}</td></tr>
+<tr><td style="padding:6px 0 0 12px;border-left:3px solid ${colors.border};${font}font-size:14px;line-height:1.6;color:${colors.foreground};">${text(words)}</td></tr>`;
+}
+
 /** A code to type in, big and spaced out, on a tint */
 function code(value: string) {
   return `<tr><td style="padding:20px 0 0;">${table(
@@ -97,6 +105,14 @@ function plain(email: Email) {
   return [
     email.heading ?? email.subject,
     ...email.paragraphs,
+    ...(email.quote
+      ? [
+          `${email.quote.by}\n${email.quote.text
+            .split('\n')
+            .map((line) => `> ${line}`)
+            .join('\n')}`,
+        ]
+      : []),
     ...(email.code ? [email.code] : []),
     ...(email.action ? [`${email.action.label}:\n${email.action.url}`] : []),
     ...(email.note ? [email.note] : []),
@@ -124,6 +140,7 @@ function render(email: Email) {
       'width:100%;',
       `<tr><td style="${font}font-size:20px;line-height:1.3;font-weight:600;color:${colors.foreground};">${escape(email.heading ?? email.subject)}</td></tr>
 ${paragraphs.join('\n')}
+${email.quote ? quote(email.quote) : ''}
 ${email.code ? code(email.code) : ''}
 ${email.action ? button(email.action) : ''}
 ${email.note ? `<tr><td style="padding:20px 0 0;${font}font-size:13px;line-height:1.6;color:${colors.muted};">${text(email.note)}</td></tr>` : ''}`
@@ -379,5 +396,44 @@ export async function sendInviteJoinedEmail({
     ],
     action: { label: `See ${shark}`, url },
     unsubscribe,
+  });
+}
+
+/**
+ * A moderator asked for changes before a shark can go live: which parts, and
+ * their note. Always sent, as it answers what they asked for.
+ */
+export async function sendSharkRejectedEmail({
+  email,
+  username,
+  shark,
+  fields,
+  note,
+  url,
+}: {
+  email: string;
+  username: string;
+  shark: string;
+  /** The parts to change, as the profile form names them */
+  fields: string[];
+  note: string | null;
+  url: string;
+}) {
+  const parts =
+    fields.length > 1
+      ? `${fields.slice(0, -1).join(', ')} and ${fields.at(-1)}`
+      : fields[0];
+  await sendEmail({
+    to: email,
+    subject: `${shark} needs a few changes`,
+    heading: `${shark} needs a few changes`,
+    paragraphs: [
+      parts
+        ? `Hi @${username}, a moderator looked at ${shark} and asked for changes to the ${parts.toLowerCase()} before ${shark} can go live.`
+        : `Hi @${username}, a moderator looked at ${shark} and asked for a few changes before ${shark} can go live.`,
+    ],
+    ...(note && { quote: { by: 'From the moderator', text: note } }),
+    action: { label: `Edit ${shark}`, url },
+    note: 'Once you have made the changes, send the profile for review again.',
   });
 }

@@ -39,6 +39,7 @@ import { emailInviterLater } from '@/lib/invites';
 import prisma from '@/lib/prisma';
 import { PROFILE_COUNT_TAG, QUERIES } from '@/lib/queries';
 import { reportSchema } from '@/lib/reports';
+import { emailRejectedLater, emailVerifiedLater } from '@/lib/review-emails';
 import { canBan, canManageAccount, isAdmin, isRole } from '@/lib/roles';
 import {
   createProfileSchema,
@@ -50,7 +51,6 @@ import {
 import { getSession, isModerator, requireUser } from '@/lib/session';
 import { deleteUploadsLater, signUpload } from '@/lib/storage';
 import { readUnsubscribe, setNotification } from '@/lib/unsubscribe';
-import { emailVerifiedLater } from '@/lib/verified-email';
 
 export async function logOut() {
   await auth.api.signOut({ headers: await headers() });
@@ -585,6 +585,7 @@ export async function rejectProfile(
   });
   syncDiscordRolesLater(userId);
   settleReviewLater(data.profileId, session.user);
+  emailRejectedLater(data.profileId);
 
   revalidatePath('/moderation/verification', 'layout');
   revalidatePath('/dashboard/profiles');
