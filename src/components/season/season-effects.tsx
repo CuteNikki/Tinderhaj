@@ -251,7 +251,8 @@ const LOOKS: Record<SeasonEffect, Look> = {
         move: 'across',
         size: [11, 15],
         speed: [30, 55],
-        colors: { light: ['#3b0764', '#4c1d95'], dark: ['#c4b5fd', '#a78bfa'] },
+        // Silhouettes against the light page; moonlit grey against the dark one
+        colors: { light: ['#1e1b2e', '#27243a'], dark: ['#94a3b8', '#a3b1c6'] },
         draw: bat,
       },
       {
