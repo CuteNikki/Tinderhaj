@@ -152,6 +152,8 @@
   --secondary-foreground: oklch(0.24 0.025 245);
   --muted: oklch(0.962 0.012 240);
   --muted-foreground: oklch(0.42 0.03 245);
+  /* Snowflakes (see Snow): a pale blue, so they show on the light page */
+  --snow: oklch(0.78 0.07 240 / 0.8);
   --accent: oklch(0.953 0.014 240);
   --accent-foreground: oklch(0.24 0.025 245);
   /* Tailwind's red-700, dark enough to read on its own tint (Delete buttons, what needs fixing) */
@@ -209,6 +211,7 @@
   --secondary-foreground: oklch(0.975 0.01 245);
   --muted: oklch(0.2 0.045 255);
   --muted-foreground: oklch(0.84 0.035 245);
+  --snow: oklch(0.97 0.01 245 / 0.75);
   --accent: oklch(0.24 0.05 252);
   --accent-foreground: oklch(0.975 0.01 245);
   --destructive: oklch(0.704 0.191 22.216);
