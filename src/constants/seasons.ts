@@ -47,7 +47,7 @@ export function seasonOn(date: Date): Season {
   const birthdayStart = Date.UTC(year, BIRTHDAY.month - 1, BIRTHDAY.day);
   const time = date.getTime();
   if (time >= birthdayStart && time < birthdayStart + BIRTHDAY_DAYS * DAY)
-    return { effect: 'snow', badge: 'birthday', birthday: year - STARTED };
+    return { effect: 'confetti', badge: 'birthday', birthday: year - STARTED };
 
   if ((month === 12 && day === 31) || (month === 1 && day === 1))
     return season('confetti', 'newYear');
