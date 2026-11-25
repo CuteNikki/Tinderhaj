@@ -1,20 +1,27 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { BadgeCheckIcon, ClockIcon, ShieldCheckIcon } from 'lucide-react';
+import {
+  BadgeCheckIcon,
+  ClockIcon,
+  ShieldCheckIcon,
+  StarIcon,
+} from 'lucide-react';
 
 import { verifyMetadata } from '@/constants/metadata';
 
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 import { QUERIES } from '@/lib/queries';
 import { isModerator, requireUser } from '@/lib/session';
-import { cn } from '@/lib/utils';
+import { currentPick } from '@/lib/shark-of-the-week';
+import { cn, sharkPath } from '@/lib/utils';
 
 import { EmptyState } from '@/components/common/empty-state';
 import { Eyebrow, PageTitle } from '@/components/common/heading';
 import { Stagger } from '@/components/common/stagger';
 import { DiscoveryProfile, FIRST_ROW } from '@/components/discovery/profile';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
+import { SkipSharkButton } from '@/components/shark-of-the-week/skip-button';
 import { UnverifyButton } from '@/components/verify/unverify-button';
 import { VerifyProfileCard } from '@/components/verify/verify-profile-card';
 
@@ -49,9 +56,10 @@ export default async function VerifyPage({
 
   const { tab: tabParam } = await searchParams;
   const tab: Tab = tabParam === 'recent' ? 'recent' : 'review';
-  const [pending, recent] = await Promise.all([
+  const [pending, recent, pick] = await Promise.all([
     QUERIES.getPendingProfiles(),
     QUERIES.getRecentlyVerified(),
+    currentPick(),
   ]);
   const counts: Record<Tab, number> = {
     review: pending.length,
@@ -101,6 +109,37 @@ export default async function VerifyPage({
               );
             })}
           </nav>
+          {/* This week's pick, to skip one that shouldn't be on the home page */}
+          <div className='mb-6 flex min-h-8 flex-wrap items-center gap-x-3 gap-y-2 text-sm'>
+            <StarIcon
+              className='size-4 shrink-0 text-primary'
+              aria-hidden='true'
+            />
+            {pick ? (
+              <>
+                <span>
+                  Shark of the Week:{' '}
+                  <Link
+                    href={sharkPath(pick.profile)}
+                    className='font-semibold hover:underline'
+                  >
+                    {pick.profile.displayName}
+                  </Link>{' '}
+                  <span className='text-muted-foreground'>
+                    @{pick.profile.user.username}
+                  </span>
+                </span>
+                <SkipSharkButton
+                  pickId={pick.id}
+                  name={pick.profile.displayName}
+                />
+              </>
+            ) : (
+              <span className='text-muted-foreground'>
+                No Shark of the Week drawn yet.
+              </span>
+            )}
+          </div>
         </ScrollReveal>
 
         {tab === 'review' ? (

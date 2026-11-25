@@ -57,6 +57,10 @@ import {
   updateUsernameSchema,
 } from '@/lib/schemas';
 import { getSession, isModerator, requireUser } from '@/lib/session';
+import {
+  SHARK_OF_THE_WEEK_TAG,
+  skipSharkOfTheWeek,
+} from '@/lib/shark-of-the-week';
 import { deleteUploadsLater, signUpload } from '@/lib/storage';
 import { readUnsubscribe, setNotification } from '@/lib/unsubscribe';
 
@@ -708,6 +712,17 @@ export async function unsubscribe(userId: string, kind: string, token: string) {
   const link = readUnsubscribe(userId, kind, token);
   if (!link) return { message: 'That link is invalid.' };
   await setNotification(link.userId, link.kind, false);
+}
+
+/** Skips this week's Shark of the Week, which draws another, for moderators. */
+export async function skipSharkOfTheWeekPick(pickId: string) {
+  const session = await requireUser();
+  if (!isModerator(session.user.role))
+    return { message: 'Only moderators can skip the Shark of the Week.' };
+  if (!(await skipSharkOfTheWeek(pickId)))
+    return { message: 'That pick was already skipped.' };
+  updateTag(SHARK_OF_THE_WEEK_TAG);
+  revalidatePath('/moderation/verification');
 }
 
 /** Takes a heart back, which also ends a match. */
