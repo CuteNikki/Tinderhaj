@@ -60,6 +60,10 @@ model User {
   /// "Discord: nikki". Only shown on matches.
   matchContact String?
 
+  /// Whether to email them when one of their sharks is verified. On unless
+  /// they turn it off, in Settings or from the email's unsubscribe link.
+  verifiedEmails Boolean @default(true)
+
   /// Banned accounts can't sign in. Check banExpires too (see lib/bans.ts):
   /// an expired ban is only cleared at their next sign-in.
   banned      Boolean   @default(false)

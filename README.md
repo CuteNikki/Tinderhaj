@@ -49,6 +49,7 @@ The product flow is centered on creating a profile for a shark, submitting it fo
 - Sign-in with Google, Apple, Microsoft, GitHub, Discord, X, Twitch, or Facebook, each turned on by setting its credentials, and connecting or disconnecting them from Account Settings
 - A list of active sessions, with signing out other devices
 - Password change and password reset flow with email delivery
+- An email when a shark is verified, on unless turned off in Account Settings, with an unsubscribe link and the one-click unsubscribe mail apps show (RFC 8058)
 - Account deletion confirmed by an email link
 - Account settings: username, email, password, two-step sign-in, passkeys, sessions
 

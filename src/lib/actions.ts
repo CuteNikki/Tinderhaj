@@ -47,6 +47,8 @@ import {
 } from '@/lib/schemas';
 import { getSession, isModerator, requireUser } from '@/lib/session';
 import { deleteUploadsLater, signUpload } from '@/lib/storage';
+import { readUnsubscribe } from '@/lib/unsubscribe';
+import { emailVerifiedLater } from '@/lib/verified-email';
 
 export async function logOut() {
   await auth.api.signOut({ headers: await headers() });
@@ -514,6 +516,7 @@ export async function verifyProfile({ profileId }: { profileId: string }) {
   syncDiscordRolesLater(before.userId);
   settleReviewLater(profileId, session.user);
   if (!before.verifiedAt) announceNewSharkLater(profileId);
+  emailVerifiedLater(profileId, !!before.verifiedAt);
 
   revalidatePath('/moderation/verification', 'layout');
   revalidatePath('/dashboard/profiles');
@@ -670,6 +673,26 @@ export async function shareMatch({
     select: { id: true },
   });
   return { path: `/match/${shared.id}` };
+}
+
+/** Turns the emails about verified sharks on or off, from Settings. */
+export async function setVerifiedEmails(on: boolean) {
+  const session = await requireUser();
+  await prisma.user.update({
+    where: { id: session.user.id },
+    data: { verifiedEmails: on },
+  });
+  revalidatePath('/dashboard/account');
+}
+
+/** Turns the emails about verified sharks off from an email's link, without signing in. */
+export async function unsubscribeVerifiedEmails(userId: string, token: string) {
+  const id = readUnsubscribe(userId, token);
+  if (!id) return { message: 'That link is invalid.' };
+  await prisma.user.updateMany({
+    where: { id },
+    data: { verifiedEmails: false },
+  });
 }
 
 /** Takes a heart back, which also ends a match. */

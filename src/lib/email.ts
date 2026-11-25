@@ -76,6 +76,8 @@ async function sendEmail(email: {
   heading: string;
   body: string;
   text: string;
+  /** For emails people can turn off: where mail apps' own Unsubscribe button posts. */
+  oneClickUnsubscribe?: string;
 }) {
   // The mail server, e.g. smtps://no-reply%40example.com:password@mail.example.com
   const url = process.env.SMTP_URL;
@@ -87,9 +89,17 @@ async function sendEmail(email: {
     subject: email.subject,
     text: email.text,
     html: layout(email.heading, email.body),
-    // A unique value stops Gmail from grouping emails with the same subject
-    // into one conversation, where it hides the repeated text behind "…".
-    headers: { 'X-Entity-Ref-ID': crypto.randomUUID() },
+    headers: {
+      // A unique value stops Gmail from grouping emails with the same subject
+      // into one conversation, where it hides the repeated text behind "…".
+      'X-Entity-Ref-ID': crypto.randomUUID(),
+      // Mail apps show their own Unsubscribe button for these, which posts to
+      // the one-click address without opening anything (RFC 8058).
+      ...(email.oneClickUnsubscribe && {
+        'List-Unsubscribe': `<${email.oneClickUnsubscribe}>`,
+        'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+      }),
+    },
   });
 }
 
@@ -226,6 +236,51 @@ export async function sendTwoFactorCode({
       <p>It expires in 5 minutes. If you didn't just sign in, someone may know your password: change it in your account settings.</p>
     `,
     text: `Hi @${username},\n\nYour code to finish signing in is:\n\n${code}\n\nIt expires in 5 minutes. If you didn't just sign in, someone may know your password: change it in your account settings.`,
+  });
+}
+
+/**
+ * One of their sharks is verified: live in discovery, for the first time or
+ * again after an edit. Can be turned off, so it has unsubscribe links.
+ */
+export async function sendSharkVerifiedEmail({
+  email,
+  username,
+  shark,
+  url,
+  again,
+  unsubscribe,
+}: {
+  email: string;
+  username: string;
+  shark: string;
+  url: string;
+  again: boolean;
+  unsubscribe: { page: string; oneClick: string };
+}) {
+  const name = escapeHtml(shark);
+  const settings = new URL('/dashboard/account', siteURL).href;
+  await sendEmail({
+    to: email,
+    subject: again
+      ? `Your changes to ${shark} are live`
+      : `${shark} is verified on Tinderhaj`,
+    heading: again ? `${name} is back in discovery` : `${name} is verified!`,
+    body: `
+      <p>Hi @${escapeHtml(username)}, ${
+        again
+          ? `your changes to ${name} passed review and are live now.`
+          : `${name} passed review and is live now. Other sharks can find ${name} in discovery and send hearts.`
+      }</p>
+      ${button(url, `See ${name}`)}
+      <p style="font-size:13px;color:${colors.muted};">Don't want these emails? <a href="${unsubscribe.page}" style="color:${colors.muted};">Unsubscribe</a>, or turn them off in <a href="${settings}" style="color:${colors.muted};">Settings</a>.</p>
+    `,
+    text: `Hi @${username},\n\n${
+      again
+        ? `Your changes to ${shark} passed review and are live now.`
+        : `${shark} passed review and is live now. Other sharks can find ${shark} in discovery and send hearts.`
+    }\n\nSee ${shark}: ${url}\n\nDon't want these emails? Unsubscribe: ${unsubscribe.page}`,
+    oneClickUnsubscribe: unsubscribe.oneClick,
   });
 }
 

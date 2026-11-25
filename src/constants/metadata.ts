@@ -88,6 +88,12 @@ export const verifiedMetadata: Metadata = {
   description: 'Confirm the email address of your Tinderhaj account.',
 };
 
+export const unsubscribeMetadata: Metadata = {
+  ...unlisted,
+  title: 'Unsubscribe',
+  description: 'Stop the emails Tinderhaj sends when a shark is verified.',
+};
+
 export const bannedMetadata: Metadata = {
   ...unlisted,
   title: 'Banned',
