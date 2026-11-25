@@ -4,12 +4,13 @@ import { STAGGER } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 
 import { Confetti } from '@/components/birthday/confetti';
+import { handwriting } from '@/components/birthday/handwriting';
 import { glass } from '@/components/common/ocean';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
 
 /**
  * A shark on a little glass card, tipped one way or the other, with confetti around
- * it and a short note under it: the birthday card's look, beside each
+ * it and a handwritten note under it: the birthday card's look, beside each
  * line of the story. `still` is shown instead of `src` to those who ask for
  * less motion, for a moving one.
  */
@@ -61,7 +62,12 @@ export function Sticker({
               className='hidden h-auto w-40 motion-reduce:block'
             />
           )}
-          <figcaption className='text-lg font-bold text-primary'>
+          <figcaption
+            className={cn(
+              handwriting.className,
+              'text-2xl font-bold text-primary'
+            )}
+          >
             {note}
           </figcaption>
         </figure>
