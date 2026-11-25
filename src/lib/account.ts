@@ -1,5 +1,7 @@
 import 'server-only';
 
+import type { NotificationKind } from '@/constants/notifications';
+
 import { trustedDevicesWhere } from '@/lib/auth';
 import prisma from '@/lib/prisma';
 import { describeUserAgent } from '@/lib/user-agent';
@@ -33,6 +35,7 @@ export async function getAccountSettings(current: {
           twoFactorEnabled: true,
           matchContact: true,
           verifiedEmails: true,
+          matchEmails: true,
           inviteEmails: true,
         },
       }),
@@ -67,8 +70,12 @@ export async function getAccountSettings(current: {
       (account) => account.providerId === 'credential'
     ),
     matchContact: user.matchContact,
-    verifiedEmails: user.verifiedEmails,
-    inviteEmails: user.inviteEmails,
+    /** Which emails they get, by kind (see NOTIFICATIONS) */
+    notifications: {
+      verified: user.verifiedEmails,
+      matches: user.matchEmails,
+      invites: user.inviteEmails,
+    } satisfies Record<NotificationKind, boolean>,
     twoFactor,
     trustedDevices,
     passkeys: passkeys.map((passkey) => ({

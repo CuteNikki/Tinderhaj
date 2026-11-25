@@ -36,6 +36,7 @@ import {
   matchPair,
 } from '@/lib/hearts';
 import { emailInviterLater } from '@/lib/invites';
+import { emailMatchLater } from '@/lib/match-emails';
 import prisma from '@/lib/prisma';
 import { PROFILE_COUNT_TAG, QUERIES } from '@/lib/queries';
 import { reportSchema } from '@/lib/reports';
@@ -640,7 +641,10 @@ export async function sendHeart({
   const back = await prisma.heart.count({
     where: { fromProfileId: toProfileId, toProfileId: fromProfileId },
   });
-  if (back) syncDiscordRolesLater(session.user.id, to.userId);
+  if (back) {
+    syncDiscordRolesLater(session.user.id, to.userId);
+    emailMatchLater(toProfileId, fromProfileId);
+  }
 
   revalidatePath('/discovery');
   revalidatePath('/dashboard/hearts');

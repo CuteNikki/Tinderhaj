@@ -8,6 +8,11 @@ export const NOTIFICATIONS = {
     label: 'Email me when one of my sharks is verified',
     about: 'when one of your sharks is verified',
   },
+  matches: {
+    field: 'matchEmails',
+    label: 'Email me when one of my sharks gets a match',
+    about: 'when one of your sharks gets a match',
+  },
   invites: {
     field: 'inviteEmails',
     label: 'Email me when a friend I invited gets a shark verified',

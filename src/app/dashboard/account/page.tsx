@@ -2,6 +2,10 @@ import type { Metadata } from 'next';
 
 import { invitePath } from '@/constants/invites';
 import { accountMetadata } from '@/constants/metadata';
+import {
+  NOTIFICATIONS,
+  type NotificationKind,
+} from '@/constants/notifications';
 
 import { getAccountSettings } from '@/lib/account';
 import { enabledProviders } from '@/lib/auth';
@@ -38,8 +42,7 @@ export default async function AccountPage({
     accounts,
     hasPassword,
     matchContact,
-    verifiedEmails,
-    inviteEmails,
+    notifications,
     twoFactor,
     trustedDevices,
     passkeys,
@@ -108,8 +111,15 @@ export default async function AccountPage({
               delay={CONTENT_DELAY + 2 * STAGGER}
             >
               <div className='flex flex-col gap-3'>
-                <NotificationToggle kind='verified' on={verifiedEmails} />
-                <NotificationToggle kind='invites' on={inviteEmails} />
+                {(Object.keys(NOTIFICATIONS) as NotificationKind[]).map(
+                  (kind) => (
+                    <NotificationToggle
+                      key={kind}
+                      kind={kind}
+                      on={notifications[kind]}
+                    />
+                  )
+                )}
               </div>
             </SettingsSection>
             <SettingsSection

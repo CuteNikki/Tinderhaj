@@ -437,3 +437,38 @@ export async function sendSharkRejectedEmail({
     note: 'Once you have made the changes, send the profile for review again.',
   });
 }
+
+/**
+ * One of their sharks has a match: the shark it hearted hearted it back. To
+ * their matches, where they can share it. Can be turned off, so it has
+ * unsubscribe links.
+ */
+export async function sendMatchEmail({
+  email,
+  username,
+  mine,
+  theirs,
+  theirOwner,
+  url,
+  unsubscribe,
+}: {
+  email: string;
+  username: string;
+  mine: string;
+  theirs: string;
+  theirOwner: string;
+  url: string;
+  unsubscribe: { page: string; oneClick: string };
+}) {
+  await sendEmail({
+    to: email,
+    subject: `It's a match! ${mine} and ${theirs}`,
+    heading: `${mine} and ${theirs} matched!`,
+    paragraphs: [
+      `Hi @${username}, ${theirs} (a shark of @${theirOwner}) hearted ${mine} back, so they're a match.`,
+      'Share it from your matches: its link shows both sharks with a heart between them.',
+    ],
+    action: { label: 'See your matches', url },
+    unsubscribe,
+  });
+}
