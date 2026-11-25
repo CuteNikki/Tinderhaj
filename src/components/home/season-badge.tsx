@@ -48,13 +48,14 @@ function news(
   }
 }
 
-/**
- * The badge over the home page's title: the day's news in its season (see
- * seasonOn), sometimes a link, else what the site is. The same size either
- * way, so nothing moves.
- */
-export async function SeasonBadge() {
-  const { badge, birthday } = await currentSeason();
+/** The badge for a day's news, or what the site is when there's none. */
+export function SeasonBadgeContent({
+  badge,
+  birthday,
+}: {
+  badge: SeasonBadgeKind | null;
+  birthday: number | null;
+}) {
   if (!badge)
     return <HeroBadge icon={<Pulse />}>The plush dating club</HeroBadge>;
 
@@ -68,4 +69,14 @@ export async function SeasonBadge() {
       </Link>
     </HeroBadge>
   );
+}
+
+/**
+ * The badge over the home page's title: the day's news in its season (see
+ * seasonOn), sometimes a link, else what the site is. The same size either
+ * way, so nothing moves.
+ */
+export async function SeasonBadge() {
+  const { badge, birthday } = await currentSeason();
+  return <SeasonBadgeContent badge={badge} birthday={birthday} />;
 }
