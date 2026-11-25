@@ -14,6 +14,7 @@ import { ScrollReveal } from '@/components/home/scroll-reveal';
 import { FreshSharks } from '@/components/sections/fresh-sharks';
 import { ReadyWhenYouAre } from '@/components/sections/ready-when-you-are';
 import { Section } from '@/components/sections/section';
+import { SharkOfTheWeek } from '@/components/sections/shark-of-the-week';
 
 export const metadata: Metadata = homeMetadata;
 
@@ -72,6 +73,7 @@ export default function Home() {
         </ScrollReveal>
       </Section>
       <FreshSharks tone='background' />
+      <SharkOfTheWeek tone='muted' />
       <ReadyWhenYouAre />
     </>
   );
