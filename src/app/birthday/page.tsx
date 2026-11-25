@@ -1,17 +1,21 @@
 import type { Metadata } from 'next';
 import { cacheLife, cacheTag } from 'next/cache';
-import { Caveat } from 'next/font/google';
+
+import { HeartIcon } from 'lucide-react';
 
 import { birthdayMetadata } from '@/constants/metadata';
 
 import { getBirthdayStats } from '@/lib/birthday';
+import { SHARKS } from '@/lib/images';
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 import { PROFILE_COUNT_TAG } from '@/lib/queries';
 import { cn } from '@/lib/utils';
 
 import { Confetti } from '@/components/birthday/confetti';
+import { handwriting } from '@/components/birthday/handwriting';
 import { PartyShark } from '@/components/birthday/party-shark';
 import { ShareButton } from '@/components/birthday/share-button';
+import { Sticker } from '@/components/birthday/sticker';
 import { Eyebrow } from '@/components/common/heading';
 import { Stagger } from '@/components/common/stagger';
 import { DiscoveryProfile } from '@/components/discovery/profile';
@@ -21,9 +25,6 @@ import { ReadyWhenYouAre } from '@/components/sections/ready-when-you-are';
 import { Badge } from '@/components/ui/badge';
 
 export const metadata: Metadata = birthdayMetadata;
-
-/** Handwriting, for what's written in the birthday card. */
-const handwriting = Caveat({ subsets: ['latin'], weight: ['600', '700'] });
 
 const ordinal = (n: number) => {
   const tens = n % 100;
@@ -93,16 +94,23 @@ export default async function BirthdayPage() {
               <h1 className='-mt-3 text-4xl font-black tracking-tight text-balance sm:text-5xl'>
                 {title}
               </h1>
-              <p
-                className={cn(
-                  handwriting.className,
-                  'text-3xl leading-tight font-bold text-primary'
-                )}
-              >
-                {count(stats.sharks, 'shark', 'sharks')} ·{' '}
-                {count(stats.hearts, 'heart', 'hearts')} ·{' '}
-                {count(stats.matches, 'match', 'matches')}
-              </p>
+              {/* Each number with its word, never split across lines */}
+              <ul className='flex flex-wrap justify-center gap-x-6 gap-y-1 text-lg'>
+                {[
+                  [stats.sharks, 'shark', 'sharks'] as const,
+                  [stats.hearts, 'heart', 'hearts'] as const,
+                  [stats.matches, 'match', 'matches'] as const,
+                ].map(([value, one, many]) => (
+                  <li key={many} className='whitespace-nowrap'>
+                    <span className='font-black text-primary tabular-nums'>
+                      {value.toLocaleString('en-US')}
+                    </span>{' '}
+                    <span className='text-muted-foreground'>
+                      {value === 1 ? one : many}
+                    </span>
+                  </li>
+                ))}
+              </ul>
               <p className='max-w-sm text-pretty text-muted-foreground'>
                 {number === 1 ? 'One year' : `${number} years`} ago, the first
                 shark swam in. Thank you for every shark, every heart and every
@@ -111,10 +119,14 @@ export default async function BirthdayPage() {
               <p
                 className={cn(
                   handwriting.className,
-                  'text-2xl font-semibold text-foreground'
+                  'flex items-center gap-1.5 text-2xl font-semibold text-foreground'
                 )}
               >
-                Love, the pod 💙
+                Love, the pod
+                <HeartIcon
+                  className='size-5 fill-current text-primary'
+                  aria-hidden='true'
+                />
               </p>
               <ShareButton
                 title={title}
@@ -126,20 +138,41 @@ export default async function BirthdayPage() {
       </div>
 
       {/* The story, a big line at a time */}
-      <StoryLine tone='background'>
+      <StoryLine
+        tone='background'
+        sticker={
+          <Sticker src={SHARKS.face} note='welcome home!' tilt='right' />
+        }
+      >
         <StoryNumber value={stats.sharks} />{' '}
         {stats.sharks === 1 ? 'shark' : 'sharks'} found a home here, brought by{' '}
         <StoryNumber value={stats.owners} />{' '}
         {stats.owners === 1 ? 'person' : 'people'} who love them.
       </StoryLine>
-      <StoryLine tone='muted'>
+      <StoryLine
+        tone='muted'
+        flip
+        sticker={
+          <Sticker src={SHARKS.heart} note='so much love!' tilt='left' />
+        }
+      >
         Together they sent <StoryNumber value={stats.hearts} />{' '}
         {stats.hearts === 1 ? 'heart' : 'hearts'} and made{' '}
         <StoryNumber value={stats.matches} />{' '}
         {stats.matches === 1 ? 'match' : 'matches'}.
       </StoryLine>
       {stats.averageSize != null && (
-        <StoryLine tone='background'>
+        <StoryLine
+          tone='background'
+          sticker={
+            <Sticker
+              src={SHARKS.spinSmall}
+              still={SHARKS.face}
+              note='pure softness'
+              tilt='right'
+            />
+          }
+        >
           The average shark is <StoryNumber value={stats.averageSize} /> cm of
           pure softness
           {stats.places > 1 && (
@@ -152,7 +185,7 @@ export default async function BirthdayPage() {
       )}
 
       {stats.first && (
-        <section className='bg-muted px-4 py-24 sm:px-5 sm:py-32 lg:px-8'>
+        <section className='overflow-hidden bg-muted px-4 py-24 sm:px-5 sm:py-32 lg:px-8'>
           <div className='container mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-2'>
             <ScrollReveal>
               <Eyebrow>Where it started</Eyebrow>
@@ -170,9 +203,20 @@ export default async function BirthdayPage() {
             <ScrollReveal
               variant='card'
               scrollDelay={STAGGER}
-              className='w-full max-w-md lg:justify-self-end'
+              className='relative w-full max-w-md lg:justify-self-end'
             >
-              <DiscoveryProfile profile={stats.first} heading='h3' />
+              <Confetti />
+              <p
+                className={cn(
+                  handwriting.className,
+                  'relative mb-3 -rotate-3 text-3xl font-bold text-primary'
+                )}
+              >
+                the very first!
+              </p>
+              <div className='relative'>
+                <DiscoveryProfile profile={stats.first} heading='h3' />
+              </div>
             </ScrollReveal>
           </div>
         </section>
@@ -182,13 +226,22 @@ export default async function BirthdayPage() {
         <StoryLine
           tone='background'
           after={more.length > 0 && <More items={more} />}
+          sticker={
+            <Sticker src={SHARKS.think} note='good taste!' tilt='right' />
+          }
         >
           What do sharks love most?{' '}
           <span className='text-primary'>{list(favorites)}</span>.
         </StoryLine>
       )}
       {stats.busiestMonth && (
-        <StoryLine tone='muted'>
+        <StoryLine
+          tone='muted'
+          flip
+          sticker={
+            <Sticker src={SHARKS.hug} note='what a month!' tilt='left' />
+          }
+        >
           The busiest month was{' '}
           <span className='text-primary'>
             {monthYear(stats.busiestMonth.month)}
@@ -203,29 +256,51 @@ export default async function BirthdayPage() {
   );
 }
 
-/** One line of the story, big, on a band of its own, coming in as it's scrolled to. */
+/**
+ * One line of the story, big, on a band of its own, coming in as it's scrolled
+ * to, with a sticker beside it: on the right, or the left when `flip`, so they
+ * take turns down the page. Under the line on phones.
+ */
 function StoryLine({
   tone,
+  flip = false,
+  sticker,
   after,
   children,
 }: {
   tone: 'background' | 'muted';
+  flip?: boolean;
+  sticker: React.ReactNode;
   after?: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
     <section
       className={cn(
-        'px-4 py-24 sm:px-5 sm:py-32 lg:px-8',
+        'overflow-hidden px-4 py-24 sm:px-5 sm:py-32 lg:px-8',
         tone === 'muted' ? 'bg-muted' : 'bg-background'
       )}
     >
-      <div className='container mx-auto max-w-7xl'>
+      <div
+        className={cn(
+          'container mx-auto grid max-w-7xl items-center gap-16',
+          flip
+            ? 'lg:grid-cols-[auto_minmax(0,1fr)]'
+            : 'lg:grid-cols-[minmax(0,1fr)_auto]'
+        )}
+      >
         <ScrollReveal delay={CONTENT_DELAY}>
           <p className='max-w-4xl text-4xl leading-tight font-black tracking-tight text-balance sm:text-6xl'>
             {children}
           </p>
           {after}
+        </ScrollReveal>
+        <ScrollReveal
+          variant='card'
+          scrollDelay={STAGGER}
+          className={cn('lg:w-60', flip && 'lg:order-first')}
+        >
+          {sticker}
         </ScrollReveal>
       </div>
     </section>

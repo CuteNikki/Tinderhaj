@@ -6,6 +6,7 @@
  * pictures, see lib/og.tsx) or links to them from elsewhere.
  */
 import blahajFloat from '../../public/blahaj-float.webp';
+import blahajFace from '../../public/blahaj.webp';
 import blahajHeart from '../../public/blahajHeart.webp';
 import blahajHug from '../../public/blahajHug.webp';
 import blahajSmall from '../../public/blahajSmall.webp';
@@ -13,6 +14,7 @@ import blahajSpinSmall from '../../public/blahajSpinSmall.gif';
 import blahajThink from '../../public/blahajThink.webp';
 
 export const SHARKS = {
+  face: blahajFace,
   float: blahajFloat,
   heart: blahajHeart,
   hug: blahajHug,
