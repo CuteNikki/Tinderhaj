@@ -13,7 +13,6 @@ import { aboutMetadata } from '@/constants/metadata';
 
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 import { socialLink } from '@/lib/social-link';
-import { cn } from '@/lib/utils';
 
 import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
 import { IconCard } from '@/components/common/icon-card';
@@ -106,12 +105,12 @@ export default function AboutPage() {
             <PageNote>Why Tinderhaj exists, and who&apos;s behind it.</PageNote>
           </Stagger>
 
-          {/* The story, and beside it on wide screens, the short version, each on glass */}
-          <div className='grid grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-16'>
+          {/* The story, and beside it on wide screens, the short version, each on glass: side by side as one block, as tall as each other, the story's lines kept a readable length */}
+          <div className='grid max-w-2xl grid-cols-1 gap-4 lg:max-w-5xl lg:grid-cols-[minmax(0,1fr)_20rem]'>
             <ScrollReveal
               delay={CONTENT_DELAY}
               variant='card'
-              className={cn(glassCard, 'max-w-2xl')}
+              className={glassCard}
             >
               <Stagger
                 gap={STAGGER}
@@ -145,21 +144,16 @@ export default function AboutPage() {
                     <ArrowRightIcon className='size-4' aria-hidden='true' />
                   </Link>
                 </p>
-                {/* The small print, right under the story, before the card on small screens too */}
-                <p className='mt-2 border-t border-glass-border pt-4 text-xs leading-relaxed text-muted-foreground'>
-                  Blåhaj is a trademark of IKEA. Tinderhaj is an independent
-                  project, not affiliated with IKEA or Tinder.
-                </p>
               </Stagger>
             </ScrollReveal>
             <ScrollReveal
               delay={CONTENT_DELAY + STAGGER}
               variant='card'
-              className={cn(glassCard, 'max-w-2xl')}
+              className={glassCard}
             >
               <aside aria-labelledby='at-a-glance' className='p-6'>
-                {/* Headed across the top, over a line: the words centered, and the logo beside them, not counted in */}
-                <div className='-mx-6 -mt-6 mb-6 flex justify-center border-b border-glass-border px-6 py-5'>
+                {/* Headed across the top, over a line inside its padding like the card's other lines: the words centered, and the logo beside them, not counted in */}
+                <div className='-mt-1 mb-6 flex justify-center border-b border-glass-border pb-5'>
                   <div className='relative text-center'>
                     <Logo className='absolute top-1/2 right-full mr-3 size-10 -translate-y-1/2' />
                     <h2
