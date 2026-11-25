@@ -453,7 +453,8 @@ export function SeasonEffects({ effect }: { effect: SeasonEffect }) {
         <canvas
           ref={canvasRef}
           aria-hidden='true'
-          className='pointer-events-none absolute inset-x-0 top-0 z-40 h-svh w-full'
+          // Fading out toward its bottom edge, so nothing is cut off at a line there
+          className='pointer-events-none absolute inset-x-0 top-0 z-40 h-svh w-full mask-b-from-50% mask-b-to-100%'
         />
       )}
       <Tooltip>
