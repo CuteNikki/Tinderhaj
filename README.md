@@ -29,6 +29,7 @@ The product flow is centered on creating a profile for a shark, submitting it fo
 - Sharing a match: either owner can give it a page of its own at `/match/<id>`, whose link shows both sharks with a heart between them. Matches nobody shared have no page, and the page goes once the sharks stop hearting each other
 - A way to be reached, set in Account Settings, that only the owners of matching sharks see
 - A public page for every account at `/u/<username>` with all its verified sharks, and a preview picture of them when the link is shared
+- Shark of the Week on the home page, drawn every Monday from verified sharks with a photo: everyone has a chance, more for that week's hearts, a filled-in profile, and being new, and a shark waits half a year before it can be drawn again. Its owner gets an email, and moderators can skip a pick from Verification, which draws another
 - Invite links at `/join/<username>`, remembered for 30 days until sign-up, and badges for bringing friends with a verified shark: Wingfin (1), Pod Builder (3) and Shiver Captain (10), in Account Settings and on `/u/<username>`
 
 ### Moderation

@@ -74,6 +74,8 @@ model User {
   /// Whether to email them on Mondays about hearts their sharks got that
   /// week and they haven't seen yet.
   heartsEmails   Boolean @default(true)
+  /// Whether to email them when one of their sharks is Shark of the Week.
+  featuredEmails Boolean @default(true)
 
   /// Banned accounts can't sign in. Check banExpires too (see lib/bans.ts):
   /// an expired ban is only cleared at their next sign-in.
@@ -237,11 +239,12 @@ model Profile {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  heartsSent     Heart[]       @relation("HeartsSent")
-  heartsReceived Heart[]       @relation("HeartsReceived")
+  heartsSent     Heart[]          @relation("HeartsSent")
+  heartsReceived Heart[]          @relation("HeartsReceived")
   reports        Report[]
-  sharedMatchesA SharedMatch[] @relation("SharedMatchA")
-  sharedMatchesB SharedMatch[] @relation("SharedMatchB")
+  featured       SharkOfTheWeek[]
+  sharedMatchesA SharedMatch[]    @relation("SharedMatchA")
+  sharedMatchesB SharedMatch[]    @relation("SharedMatchB")
 
   @@index([userId])
 }
@@ -262,6 +265,22 @@ model Heart {
 
   @@unique([fromProfileId, toProfileId])
   @@index([toProfileId])
+}
+
+/// The Shark of the Week for an ISO week ("2026-W49"), on the home page, as
+/// lib/shark-of-the-week.ts draws it. A moderator can skip a pick, which
+/// draws another for the week; the skipped one stays, so it isn't drawn again.
+model SharkOfTheWeek {
+  id        String  @id @default(cuid(2))
+  week      String
+  profileId String
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  skipped   Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@unique([week, profileId])
+  @@index([profileId])
 }
 
 /// A match one of its owners shared, with a page and picture of its own at

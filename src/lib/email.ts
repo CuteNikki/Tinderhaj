@@ -787,3 +787,33 @@ export async function sendReportReviewedEmail({
     note: "For privacy, we can't say what happened to another account.",
   });
 }
+
+/**
+ * One of their sharks is the Shark of the Week, on the home page until the
+ * next Monday. Can be turned off, so it has unsubscribe links.
+ */
+export async function sendSharkOfTheWeekEmail({
+  email,
+  username,
+  shark,
+  url,
+  unsubscribe,
+}: {
+  email: string;
+  username: string;
+  shark: string;
+  url: string;
+  unsubscribe: { page: string; oneClick: string };
+}) {
+  await sendEmail({
+    to: email,
+    subject: `${shark} is Shark of the Week! 🌟`,
+    heading: `${shark} is Shark of the Week! 🌟`,
+    paragraphs: [
+      `Hi @${username}, ${shark} was picked as this week's Shark of the Week, so they're on the Tinderhaj home page until next Monday.`,
+      'A good week to share their page.',
+    ],
+    action: { label: `See ${shark}`, url },
+    unsubscribe,
+  });
+}

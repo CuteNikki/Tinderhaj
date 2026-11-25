@@ -39,6 +39,7 @@ export async function getAccountSettings(current: {
           inviteEmails: true,
           heartsEmails: true,
           birthdayEmails: true,
+          featuredEmails: true,
         },
       }),
       // An authenticator app counts once its first code confirmed it.
@@ -77,6 +78,7 @@ export async function getAccountSettings(current: {
       verified: user.verifiedEmails,
       matches: user.matchEmails,
       hearts: user.heartsEmails,
+      featured: user.featuredEmails,
       birthdays: user.birthdayEmails,
       invites: user.inviteEmails,
     } satisfies Record<NotificationKind, boolean>,

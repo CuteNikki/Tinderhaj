@@ -5,9 +5,11 @@ import { Prisma, ProfileStatus } from '@/generated/client';
 import { isBanned, notBannedWhere } from '@/lib/bans';
 import { sendSharkBirthdayEmail, sendWeeklyHeartsEmail } from '@/lib/email';
 import prisma from '@/lib/prisma';
+import { pickSharkOfTheWeek } from '@/lib/shark-of-the-week';
 import { siteURL } from '@/lib/site-url';
 import { unsubscribeUrls } from '@/lib/unsubscribe';
 import { sharkPath } from '@/lib/utils';
+import { isoWeek } from '@/lib/weeks';
 
 /** Sharks others can see, as in discovery (as liveProfileWhere, which brings the session along). */
 const live = () =>
@@ -100,25 +102,6 @@ async function sendBirthdays(now: Date) {
   }
 }
 
-/** The ISO week a day is in, as "2026-W48": the key for a week's email. */
-export function isoWeek(date: Date) {
-  const day = new Date(
-    Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
-  );
-  // The week's Thursday decides its year
-  day.setUTCDate(day.getUTCDate() + 3 - ((day.getUTCDay() + 6) % 7));
-  const firstThursday = new Date(Date.UTC(day.getUTCFullYear(), 0, 4));
-  const week =
-    1 +
-    Math.round(
-      ((day.getTime() - firstThursday.getTime()) / 86_400_000 -
-        3 +
-        ((firstThursday.getUTCDay() + 6) % 7)) /
-        7
-    );
-  return `${day.getUTCFullYear()}-W${String(week).padStart(2, '0')}`;
-}
-
 /**
  * On Mondays from HEARTS_HOUR: to each owner, the hearts their sharks got in
  * the past week from others' live sharks that they haven't seen yet. Nothing
@@ -206,6 +189,8 @@ export async function runSchedule(now = new Date()) {
   for (const [name, job] of [
     ['birthdays', sendBirthdays],
     ['weekly hearts', sendWeeklyHearts],
+    // As soon as the week has none, so a new week starts with a new one
+    ['shark of the week', pickSharkOfTheWeek],
   ] as const) {
     try {
       await job(now);

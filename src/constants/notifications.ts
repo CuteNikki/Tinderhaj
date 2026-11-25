@@ -18,6 +18,11 @@ export const NOTIFICATIONS = {
     label: 'Email me on Mondays about new hearts my sharks got',
     about: 'about new hearts on Mondays',
   },
+  featured: {
+    field: 'featuredEmails',
+    label: 'Email me when one of my sharks is Shark of the Week',
+    about: 'when one of your sharks is Shark of the Week',
+  },
   birthdays: {
     field: 'birthdayEmails',
     label: "Email me on my sharks' birthdays",
