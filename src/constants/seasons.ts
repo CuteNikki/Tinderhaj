@@ -8,7 +8,7 @@
 
 /** What drifts over the page. */
 export type SeasonEffect =
-  'snow' | 'confetti' | 'hearts' | 'trans' | 'pride' | 'bats';
+  'snow' | 'confetti' | 'valentines' | 'trans' | 'pride' | 'halloween';
 
 /** What the home page's badge says, beyond what the site is. */
 export type SeasonBadgeKind =
@@ -52,11 +52,11 @@ export function seasonOn(date: Date): Season {
   if ((month === 12 && day === 31) || (month === 1 && day === 1))
     return season('confetti', 'newYear');
   if (month === 2 && day >= 13 && day <= 15)
-    return season('hearts', 'valentines');
+    return season('valentines', 'valentines');
   // Trans Day of Visibility
   if (month === 3 && day === 31) return season('trans', 'trans');
   if (month === 6) return season('pride', 'pride');
-  if (month === 10) return season('bats', 'halloween');
+  if (month === 10) return season('halloween', 'halloween');
   if (month === 12) return season('snow', 'holidays');
 
   return season(null, null);
