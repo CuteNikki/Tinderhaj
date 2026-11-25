@@ -249,9 +249,9 @@ Better Auth rate limits sign-in, sign-up, and code requests per IP address in pr
 
 Avatars and banners are kept on our own server, in [Garage](https://garagehq.deuxfleurs.fr), an S3-compatible store, at `images.tinderhaj.com` (`UPLOAD_ORIGIN` in `src/constants/uploads.ts`). The browser shrinks a picture, asks the site for a link to upload it to (`requestUpload`), and sends it there itself, so it never passes through the site. Each link lasts 5 minutes and is signed for that picture's type and size, at a new address of its own. A picture is deleted once no shark has it any more: when a shark gets a new one, or a shark or account is deleted.
 
-Garage is the server's image storage, run from `~/services/storage` on the server (container `garage`, with `meta` and `data` there being what to back up), where every site has a bucket of its own. The pictures are in the `tinderhaj` bucket under `avatars/` and `banners/`, which `images.tinderhaj.com` serves. Uploading and deleting go through Garage's S3 API at `s3.niso.moe` (`STORAGE_ENDPOINT`), which takes the bucket in the path (`BUCKET` in `src/lib/storage.ts`). To set it up, with `garage` standing for `docker exec garage /garage`:
+Any S3-compatible store works. Ours is Garage, with a bucket per site. Uploading and deleting go through its S3 API at `STORAGE_ENDPOINT`, which takes the bucket in the path (`BUCKET` in `src/lib/storage.ts`). To set it up, with `garage` standing for `docker exec garage /garage`:
 
-1. Point `images.tinderhaj.com` at the server (an A record; on Cloudflare, DNS only, so Caddy can get its certificate).
+1. Point the domain in `UPLOAD_ORIGIN` at the server that serves the bucket.
 2. Make the bucket and give the site a key of its own, which can use that bucket and no other:
    ```sh
    garage bucket create tinderhaj
@@ -260,13 +260,11 @@ Garage is the server's image storage, run from `~/services/storage` on the serve
    garage bucket allow --read --write tinderhaj --key tinderhaj-site
    ```
 3. Let the site's pages upload: the bucket's CORS rule allows `PUT` with a `content-type` header from `https://tinderhaj.com` and `http://localhost:3000`.
-4. Caddy serves the bucket at `images.tinderhaj.com` and Garage's S3 API at `s3.niso.moe` (the server's `~/services/caddy/Caddyfile`). Reading a picture tells Garage it's `tinderhaj` being read, since Garage picks the bucket from the address. Uploads have an address of their own because they're signed for their path, which Caddy can't rewrite.
+4. Have a reverse proxy serve the bucket at `UPLOAD_ORIGIN` and the S3 API at `STORAGE_ENDPOINT`. Uploads need an address of their own because they're signed for their path, which a proxy can't rewrite.
 
 ## Emails
 
-Emails go out from our own server, through its mail server ([Stalwart](https://stalw.art), at `mail.niso.moe`), which also handles the mail for the server's other domains and isn't part of this repo. The site logs in as `no-reply@tinderhaj.com`, an account in Stalwart, over TLS on port 465, and sends as that address. `SMTP_URL` holds the login, with the `@` written as `%40`: `smtps://no-reply%40tinderhaj.com:its_password@mail.niso.moe`. `EMAIL_FROM` changes the name shown, e.g. `"Tinderhaj <no-reply@tinderhaj.com>"`, the default.
-
-Stalwart signs each email with DKIM and delivers it, retrying for a while when a server is down. Its DNS records for tinderhaj.com (MX, SPF, DKIM, DMARC) are on Cloudflare, published by Stalwart itself.
+Emails go out through any mail server that takes SMTP over TLS. `SMTP_URL` holds the login, with the `@` in the user name written as `%40`: `smtps://no-reply%40example.com:its_password@mail.example.com`. `EMAIL_FROM` changes the name shown, e.g. `"Tinderhaj <no-reply@tinderhaj.com>"`, the default. The mail server should sign with DKIM, and the sending domain needs SPF, DKIM and DMARC records, or the emails end up in spam.
 
 ## Discord Bot
 

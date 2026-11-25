@@ -50,3 +50,6 @@ next-env.d.ts
 
 # Settings for one server only (networks, names), kept on that server
 compose.override.yaml
+
+# Notes for our own server only
+*.local.md

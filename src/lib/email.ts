@@ -77,7 +77,7 @@ async function sendEmail(email: {
   body: string;
   text: string;
 }) {
-  // Our mail server, e.g. smtps://no-reply%40tinderhaj.com:password@mail.niso.moe
+  // The mail server, e.g. smtps://no-reply%40example.com:password@mail.example.com
   const url = process.env.SMTP_URL;
   if (!url) throw new Error('Set SMTP_URL to send emails.');
 
