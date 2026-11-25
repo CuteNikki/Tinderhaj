@@ -49,6 +49,13 @@ import {
   sendTwoFactorCode,
   sendVerificationEmail,
 } from '@/lib/email';
+import {
+  emailNewDeviceLater,
+  isKnownDevice,
+  KNOWN_DEVICE_COOKIE,
+  KNOWN_DEVICE_MAX_AGE,
+  knownDeviceValue,
+} from '@/lib/known-device';
 import { hashPassword, verifyPassword } from '@/lib/password-hasher';
 import prisma from '@/lib/prisma';
 import { SOCIAL_PROVIDERS, type SocialProviderId } from '@/lib/providers';
@@ -257,6 +264,22 @@ export const auth = betterAuth({
           throw new APIError('FORBIDDEN', {
             code: 'BANNED_USER',
             message: 'This account is banned.',
+          });
+        },
+        // A sign-in from a browser this account never used: tell them, then
+        // remember the browser, so the next sign-in there isn't new.
+        after: async (session, ctx) => {
+          if (!ctx) return;
+          if (
+            !isKnownDevice(session.userId, ctx.getCookie(KNOWN_DEVICE_COOKIE))
+          )
+            emailNewDeviceLater(session);
+          ctx.setCookie(KNOWN_DEVICE_COOKIE, knownDeviceValue(session.userId), {
+            httpOnly: true,
+            sameSite: 'lax',
+            secure: siteURL.protocol === 'https:',
+            path: '/',
+            maxAge: KNOWN_DEVICE_MAX_AGE,
           });
         },
       },

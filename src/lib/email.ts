@@ -472,3 +472,40 @@ export async function sendMatchEmail({
     unsubscribe,
   });
 }
+
+/**
+ * Their account was signed in to from a browser it never was before: which,
+ * from where, and when. Always sent, as it's about their account's safety.
+ */
+export async function sendNewDeviceEmail({
+  email,
+  username,
+  device,
+  ip,
+  at,
+  url,
+}: {
+  email: string;
+  username: string;
+  /** As the sessions list names it: "Firefox on Linux" */
+  device: string;
+  ip: string | null;
+  at: Date;
+  url: string;
+}) {
+  const when = at.toLocaleString('en-US', {
+    dateStyle: 'long',
+    timeStyle: 'short',
+    timeZone: 'UTC',
+  });
+  await sendEmail({
+    to: email,
+    subject: 'New sign-in to your Tinderhaj account',
+    heading: 'New sign-in to your account',
+    paragraphs: [
+      `Hi @${username}, your account was just signed in to from ${device}${ip ? ` (IP ${ip})` : ''}, on ${when} UTC. It's the first time from that browser.`,
+    ],
+    action: { label: 'See where you are signed in', url },
+    note: "If this was you, there's nothing to do. If not, change your password and sign out everywhere else from Settings.",
+  });
+}
