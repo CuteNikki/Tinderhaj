@@ -74,7 +74,6 @@ export default function FeaturesPage() {
     <>
       <div
         data-water='band'
-        data-tone='muted'
         className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'
       >
         {/* The page's header and its cards together, so the water reaches
