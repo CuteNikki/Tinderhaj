@@ -101,7 +101,13 @@ export default function Loading() {
                 </GhostText>
               </div>
             </div>
-            <div className='mt-4 flex items-center justify-between gap-4 border-t border-foreground/10 pt-4 text-sm'>
+          </SettingsSection>
+          <SettingsSection
+            still
+            title='Notifications'
+            description='Emails about your sharks. Sign-in codes and links always come.'
+          >
+            <div className='flex items-center justify-between gap-4 text-sm'>
               <GhostText as='span'>
                 Email me when one of my sharks is verified
               </GhostText>

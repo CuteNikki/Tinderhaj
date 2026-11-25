@@ -100,9 +100,13 @@ export default async function AccountPage({
               delay={CONTENT_DELAY + 2 * STAGGER}
             >
               <EmailSettings email={user.email} verified={user.emailVerified} />
-              <div className='mt-4 border-t border-foreground/10 pt-4'>
-                <VerifiedEmailsToggle on={verifiedEmails} />
-              </div>
+            </SettingsSection>
+            <SettingsSection
+              title='Notifications'
+              description='Emails about your sharks. Sign-in codes and links always come.'
+              delay={CONTENT_DELAY + 2 * STAGGER}
+            >
+              <VerifiedEmailsToggle on={verifiedEmails} />
             </SettingsSection>
             <SettingsSection
               title='Password'
