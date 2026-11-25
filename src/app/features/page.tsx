@@ -15,9 +15,11 @@ import {
 import { featuresMetadata } from '@/constants/metadata';
 
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
+import { cn } from '@/lib/utils';
 
 import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
 import { IconCard } from '@/components/common/icon-card';
+import { glass, glassFields } from '@/components/common/ocean';
 import { Stagger } from '@/components/common/stagger';
 import { FreshSharks } from '@/components/sections/fresh-sharks';
 import { ReadyWhenYouAre } from '@/components/sections/ready-when-you-are';
@@ -75,8 +77,10 @@ export default function FeaturesPage() {
         data-tone='muted'
         className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'
       >
-        <div className='container mx-auto max-w-7xl'>
-          <Stagger id='page-header' variant='sink' className='mb-24'>
+        {/* The page's header and its cards together, so the water reaches
+            past the cards and they float in it, as glass */}
+        <div id='page-header' className='container mx-auto max-w-7xl'>
+          <Stagger variant='sink' className='mb-12'>
             <Eyebrow>Features</Eyebrow>
             <PageTitle>Everything for your sharks</PageTitle>
             <PageNote>
@@ -91,10 +95,15 @@ export default function FeaturesPage() {
             gap={STAGGER / 2}
             delay={CONTENT_DELAY}
             className='grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4'
-            itemClassName='h-full'
+            // The glass on what comes in, so it's frosted from the start (see glass)
+            itemClassName={cn(
+              glass,
+              glassFields,
+              'h-full rounded-2xl shadow-lg'
+            )}
           >
             {FEATURES.map((feature) => (
-              <IconCard key={feature.title} {...feature} />
+              <IconCard key={feature.title} {...feature} onGlass />
             ))}
           </Stagger>
         </div>

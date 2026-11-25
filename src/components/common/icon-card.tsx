@@ -3,12 +3,14 @@ import Link from 'next/link';
 import { ArrowRight, ArrowUpRightIcon, type LucideIcon } from 'lucide-react';
 
 import { isExternalLink } from '@/lib/social-link';
+import { cn } from '@/lib/utils';
 
 /**
  * A card of a page's grid: its icon beside its title, so the icon doesn't cost
  * a row of its own, and a few words under them. `step` numbers it, `link` ends
  * it on somewhere to go (a new tab, if it's off the site), and `heading` is
- * h3 under a section's own heading.
+ * h3 under a section's own heading. `onGlass` leaves its own card off, for
+ * one set on glass by what holds it (see Features).
  */
 export function IconCard({
   title,
@@ -17,6 +19,7 @@ export function IconCard({
   step,
   link,
   heading: Heading = 'h2',
+  onGlass = false,
 }: {
   title: string;
   copy: string;
@@ -24,13 +27,21 @@ export function IconCard({
   step?: number;
   link?: { label: string; href: string };
   heading?: 'h2' | 'h3';
+  onGlass?: boolean;
 }) {
   // Down at the bottom, so the links of cards side by side line up
   const linkClassName =
     'text-primary mt-auto inline-flex items-center gap-1 self-start pt-3 text-sm font-semibold hover:underline';
 
   return (
-    <div className='flex h-full flex-col rounded-2xl border border-foreground/10 bg-card p-6 shadow-sm'>
+    <div
+      // A card of its own on glass too, so the water's halo stays off its text
+      data-slot='card'
+      className={cn(
+        'flex h-full flex-col p-6',
+        !onGlass && 'rounded-2xl border border-foreground/10 bg-card shadow-sm'
+      )}
+    >
       {step !== undefined && (
         <p className='mb-3 font-mono text-xs text-muted-foreground'>
           Step {step}
