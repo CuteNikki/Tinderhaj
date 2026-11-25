@@ -23,7 +23,7 @@ export function SharkDialog({
       <DialogTrigger asChild>{children}</DialogTrigger>
       {/* The card is the dialog: no frame around it, and still, as lifting it would tip it past the dialog's edges and bring up scrollbars. */}
       <DialogContent
-        className='max-w-sm bg-transparent p-0 shadow-none ring-0 sm:max-w-sm'
+        className='max-w-sm bg-transparent p-0 shadow-none ring-0 backdrop-blur-none backdrop-saturate-100 sm:max-w-sm'
         showCloseButton={false}
       >
         <DialogTitle className='sr-only'>{shark.displayName}</DialogTitle>
