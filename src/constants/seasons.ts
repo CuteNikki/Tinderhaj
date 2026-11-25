@@ -1,31 +1,73 @@
 /**
- * What the site wears on a day: snow in December, and Tinderhaj's birthday
- * week from December 21, the day it began in 2024. Days are counted in UTC,
- * so it changes at the same moment everywhere.
+ * What the site wears on a day: an effect drifting over every page (see
+ * SeasonEffects), and the home page's badge for the day's news (see
+ * SeasonBadge). Holidays come first, then the seasons; most days have
+ * neither. Days are counted in UTC, so it changes at the same moment
+ * everywhere.
  */
 
+/** What drifts over the page. */
+export type SeasonEffect =
+  | 'snow'
+  | 'confetti'
+  | 'hearts'
+  | 'trans'
+  | 'pride'
+  | 'petals'
+  | 'sparkles'
+  | 'bats';
+
+/** What the home page's badge says, beyond what the site is. */
+export type SeasonBadgeKind =
+  | 'birthday'
+  | 'newYear'
+  | 'valentines'
+  | 'trans'
+  | 'pride'
+  | 'halloween'
+  | 'holidays';
+
+export type Season = {
+  effect: SeasonEffect | null;
+  badge: SeasonBadgeKind | null;
+  /** Which birthday it is, in its week: 2 in 2026 */
+  birthday: number | null;
+};
+
+/** The day Tinderhaj began, in 2024. */
 const BIRTHDAY = { month: 12, day: 21 };
+const STARTED = 2024;
 /** How many days the birthday is celebrated, from the day itself. */
 const BIRTHDAY_DAYS = 7;
 const DAY = 24 * 60 * 60 * 1000;
 
-/** Whether it snows on the site: all of December. */
-export function isSnowSeason(date: Date) {
-  return date.getUTCMonth() + 1 === 12;
-}
+/** What the site wears on `date`. */
+export function seasonOn(date: Date): Season {
+  const month = date.getUTCMonth() + 1;
+  const day = date.getUTCDate();
+  const year = date.getUTCFullYear();
+  const season = (
+    effect: SeasonEffect | null,
+    badge: SeasonBadgeKind | null
+  ): Season => ({ effect, badge, birthday: null });
 
-/** Whether it's Tinderhaj's birthday week. */
-export function isBirthdayWeek(date: Date) {
-  const start = Date.UTC(
-    date.getUTCFullYear(),
-    BIRTHDAY.month - 1,
-    BIRTHDAY.day
-  );
+  const birthdayStart = Date.UTC(year, BIRTHDAY.month - 1, BIRTHDAY.day);
   const time = date.getTime();
-  return time >= start && time < start + BIRTHDAY_DAYS * DAY;
-}
+  if (time >= birthdayStart && time < birthdayStart + BIRTHDAY_DAYS * DAY)
+    return { effect: 'snow', badge: 'birthday', birthday: year - STARTED };
 
-/** Which birthday it is in a year: 2 in 2026. */
-export function birthdayNumber(date: Date) {
-  return date.getUTCFullYear() - 2024;
+  if ((month === 12 && day === 31) || (month === 1 && day === 1))
+    return season('confetti', 'newYear');
+  if (month === 2 && day >= 13 && day <= 15)
+    return season('hearts', 'valentines');
+  // Trans Day of Visibility
+  if (month === 3 && day === 31) return season('trans', 'trans');
+  if (month === 6) return season('pride', 'pride');
+  if (month === 10) return season('bats', 'halloween');
+  if (month === 12) return season('snow', 'holidays');
+
+  // The quieter seasons between them, with no news of their own
+  if (month === 4 || month === 5) return season('petals', null);
+  if (month === 7 || month === 8) return season('sparkles', null);
+  return season(null, null);
 }

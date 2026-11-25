@@ -1,9 +1,9 @@
 import { currentSeason } from '@/lib/season';
 
-import { Snow } from '@/components/season/snow';
+import { SeasonEffects } from '@/components/season/season-effects';
 
-/** What the whole site wears for the season: snow in December. */
+/** What the whole site wears for the season: snow, hearts, bats and the like (see seasonOn). */
 export async function Season() {
-  const season = await currentSeason();
-  return season.snow ? <Snow /> : null;
+  const { effect } = await currentSeason();
+  return effect ? <SeasonEffects effect={effect} /> : null;
 }
