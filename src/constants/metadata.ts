@@ -193,6 +193,12 @@ export const matchPageMetadata: Metadata = {
   description: 'Two sharks that hearted each other on Tinderhaj.',
 };
 
+export const birthdayMetadata: Metadata = {
+  title: 'Birthday',
+  description:
+    "Tinderhaj's birthday: every shark, heart and match since December 2024, in real numbers.",
+};
+
 export const privacyMetadata: Metadata = {
   title: 'Privacy',
   description:
