@@ -112,7 +112,7 @@ Notes:
 - `DATABASE_URL` is required for Prisma and the app database connection.
 - `BETTER_AUTH_SECRET` signs session cookies and encrypts two-step sign-in secrets. Keep it the same across deploys, or everyone is signed out and authenticator apps stop working.
 - `BETTER_AUTH_URL` is where the site runs, e.g. `https://tinderhaj.com`. Links in emails and sign-in provider callbacks point there, and passkeys only work on its domain. On Vercel it can be left out: production then uses the project's production domain (`VERCEL_PROJECT_PRODUCTION_URL`) and preview deployments their own address. Anywhere else it is required in production, where the server won't start without it; in development it defaults to `http://localhost:3000`.
-- `STORAGE_ACCESS_KEY_ID` and `STORAGE_SECRET_ACCESS_KEY` are the storage key the site signs uploads and deletions with (see [Pictures](#pictures)). Without them, uploading a picture fails. `STORAGE_REGION` is `garage` unless set.
+- `STORAGE_ENDPOINT` is the storage's S3 API, and `STORAGE_ACCESS_KEY_ID` and `STORAGE_SECRET_ACCESS_KEY` are the key the site signs uploads and deletions with (see [Pictures](#pictures)). Without them, uploading a picture fails. `STORAGE_REGION` is `garage` unless set.
 - Social sign-in providers are optional. Register an app with each provider and set its redirect URL to `<BETTER_AUTH_URL>/api/auth/callback/<provider>`, e.g. `http://localhost:3000/api/auth/callback/github`. The provider ids are `google`, `apple`, `microsoft`, `github`, `discord`, `twitter` (X), `twitch`, and `facebook`.
   - Apple's client secret is a signed JWT you generate from your Apple key, and it expires after at most six months. `APPLE_APP_BUNDLE_IDENTIFIER` is only needed for signing in from an iOS app.
   - X only shares the email address if the app asks for it ("Request email from users" in the X developer portal); without it, signing in with X fails.
@@ -239,7 +239,7 @@ This app is designed for deployment on modern Node.js hosting platforms such as 
 - `DATABASE_URL`
 - `SMTP_URL`
 - `BETTER_AUTH_SECRET`, and `BETTER_AUTH_URL` unless Vercel's production domain is the right address
-- `STORAGE_ACCESS_KEY_ID` and `STORAGE_SECRET_ACCESS_KEY`
+- `STORAGE_ENDPOINT`, `STORAGE_ACCESS_KEY_ID` and `STORAGE_SECRET_ACCESS_KEY`
 
 The `Dockerfile` builds the site to run on its own, with the `.env` as the build secret `env`, as the build prerenders pages from the database. Its `migrate` stage applies new migrations; run it before the site starts.
 
@@ -249,7 +249,7 @@ Better Auth rate limits sign-in, sign-up, and code requests per IP address in pr
 
 Avatars and banners are kept on our own server, in [Garage](https://garagehq.deuxfleurs.fr), an S3-compatible store, at `images.tinderhaj.com` (`UPLOAD_ORIGIN` in `src/constants/uploads.ts`). The browser shrinks a picture, asks the site for a link to upload it to (`requestUpload`), and sends it there itself, so it never passes through the site. Each link lasts 5 minutes and is signed for that picture's type and size, at a new address of its own. A picture is deleted once no shark has it any more: when a shark gets a new one, or a shark or account is deleted.
 
-Garage is the server's image storage, run from `~/services/storage` on the server (container `garage`, with `meta` and `data` there being what to back up), where every site has a bucket of its own. The pictures are in the `tinderhaj` bucket under `avatars/` and `banners/`, which `images.tinderhaj.com` serves. Uploading and deleting go through Garage's S3 API at `s3.niso.moe`, which takes the bucket in the path (`BUCKET` and `STORAGE_ENDPOINT` in `src/lib/storage.ts`). To set it up, with `garage` standing for `docker exec garage /garage`:
+Garage is the server's image storage, run from `~/services/storage` on the server (container `garage`, with `meta` and `data` there being what to back up), where every site has a bucket of its own. The pictures are in the `tinderhaj` bucket under `avatars/` and `banners/`, which `images.tinderhaj.com` serves. Uploading and deleting go through Garage's S3 API at `s3.niso.moe` (`STORAGE_ENDPOINT`), which takes the bucket in the path (`BUCKET` in `src/lib/storage.ts`). To set it up, with `garage` standing for `docker exec garage /garage`:
 
 1. Point `images.tinderhaj.com` at the server (an A record; on Cloudflare, DNS only, so Caddy can get its certificate).
 2. Make the bucket and give the site a key of its own, which can use that bucket and no other:

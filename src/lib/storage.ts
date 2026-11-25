@@ -8,16 +8,17 @@ import { UPLOAD_ORIGIN } from '@/constants/uploads';
 import prisma from '@/lib/prisma';
 
 /**
- * The site's own bucket, which images.tinderhaj.com serves, and Garage's S3
- * API for every site, which takes the bucket in the path (see the README's
- * Pictures section).
+ * The site's own bucket, which UPLOAD_ORIGIN serves. Storage's S3 API, at
+ * STORAGE_ENDPOINT, takes the bucket in the path (see the README's Pictures
+ * section).
  */
 const BUCKET = 'tinderhaj';
-const STORAGE_ENDPOINT = 'https://s3.niso.moe';
 
 /** Where storage's S3 API takes the picture at `path`. */
 function apiUrl(path: string) {
-  return new URL(`/${BUCKET}${path}`, STORAGE_ENDPOINT);
+  const endpoint = process.env.STORAGE_ENDPOINT;
+  if (!endpoint) throw new Error('STORAGE_ENDPOINT must be set for uploads');
+  return new URL(`/${BUCKET}${path}`, endpoint);
 }
 
 /** How long a link to upload to lasts: plenty to send one shrunk picture, too short to keep. */
