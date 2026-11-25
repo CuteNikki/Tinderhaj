@@ -118,7 +118,14 @@ export default function GuidelinesPage() {
             <Eyebrow>Guidelines</Eyebrow>
             <PageTitle>Guidelines for sharks</PageTitle>
             <PageNote>
-              What moderators look for, so your shark sails through review.
+              What moderators look for, so your shark sails through review. The{' '}
+              <Link
+                href='/terms'
+                className='font-semibold text-foreground hover:underline'
+              >
+                Terms of Service
+              </Link>{' '}
+              apply too.
             </PageNote>
           </Stagger>
 
@@ -140,18 +147,6 @@ export default function GuidelinesPage() {
               <IconCard key={rule.title} {...rule} heading='h3' onGlass />
             ))}
           </Stagger>
-          <ScrollReveal delay={CONTENT_DELAY + STAGGER * 3}>
-            <p className='mt-6 text-sm text-pretty text-muted-foreground'>
-              These go along with the community rules in the{' '}
-              <Link
-                href='/terms'
-                className='font-medium text-foreground underline'
-              >
-                Terms of Service
-              </Link>
-              , which apply too.
-            </p>
-          </ScrollReveal>
         </div>
       </div>
 
