@@ -13,7 +13,7 @@ import {
   publicImage,
 } from '@/lib/og';
 
-export const alt = `${SITE_NAME}'s birthday: a Blåhaj in a party hat, with how many sharks, hearts and matches there have been so far.`;
+export const alt = `${SITE_NAME}'s birthday: a Blåhaj hugging, with how many sharks, hearts and matches there have been so far.`;
 export const size = OG_SIZE;
 export const contentType = 'image/png';
 
@@ -35,7 +35,7 @@ const CONFETTI = [
   { left: 990, top: 440, color: '#fcd34d' },
 ];
 
-/** The birthday page shared: the party shark, and the numbers. */
+/** The birthday page shared: the hugging shark in confetti, and the numbers. */
 export default async function Image() {
   const stats = await getBirthdayStats();
   const n = (value: number, one: string, many: string) =>
@@ -88,30 +88,11 @@ export default async function Image() {
         />
       ))}
 
-      {/* The shark, and its party hat: a striped cone with a pompom */}
+      {/* The hugging shark, as on the page's card */}
       <div
         style={{ position: 'absolute', left: 730, top: 130, display: 'flex' }}
       >
         <img src={hug} width={360} height={360} alt='' />
-        <svg
-          width='100'
-          height='130'
-          viewBox='0 0 40 52'
-          style={{
-            position: 'absolute',
-            left: 47,
-            top: 22,
-            transform: 'rotate(-24deg)',
-          }}
-        >
-          <path d='M20 4 L37 48 L3 48 Z' fill='#1d78d6' />
-          <path
-            d='M13.2 21.4 L27.6 18.6 L29.9 24.6 L11 28.3 Z'
-            fill='#fcd34d'
-          />
-          <path d='M7.1 37.1 L33.4 32 L35.7 38 L4.8 44 Z' fill='#fcd34d' />
-          <circle cx='20' cy='5' r='4.5' fill='#f472b6' />
-        </svg>
       </div>
     </Ocean>,
     { ...OG_SIZE, fonts: OG_FONTS, headers: OG_HEADERS }
