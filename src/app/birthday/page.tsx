@@ -17,6 +17,7 @@ import { handwriting } from '@/components/birthday/handwriting';
 import { ShareButton } from '@/components/birthday/share-button';
 import { Sticker } from '@/components/birthday/sticker';
 import { Eyebrow } from '@/components/common/heading';
+import { glass } from '@/components/common/ocean';
 import { Stagger } from '@/components/common/stagger';
 import { DiscoveryProfile } from '@/components/discovery/profile';
 import { AnimatedCount } from '@/components/home/animated-count';
@@ -74,70 +75,82 @@ export default async function BirthdayPage() {
         className='flex flex-1 flex-col px-4 pt-28 pb-24 sm:px-5 lg:px-8'
       >
         <div className='container mx-auto flex max-w-7xl justify-center'>
-          <ScrollReveal
-            id='page-header'
-            variant='card'
-            className='relative w-full max-w-xl'
-          >
-            <Confetti />
-            <article className='relative flex flex-col items-center gap-5 rounded-3xl border border-foreground/10 bg-card px-6 py-10 text-center shadow-lg sm:px-12'>
-              <Image
-                src={SHARKS.hug}
-                alt='A Blåhaj hugging, with hearts above it'
-                className='h-auto w-40 sm:w-48'
-                priority
-              />
-              <Eyebrow>
-                {date.toLocaleDateString('en-US', {
-                  month: 'long',
-                  day: 'numeric',
-                  year: 'numeric',
-                  timeZone: 'UTC',
-                })}
-              </Eyebrow>
-              <h1 className='-mt-3 text-4xl font-black tracking-tight text-balance sm:text-5xl'>
-                {title}
-              </h1>
-              {/* Each number with its word, never split across lines */}
-              <ul className='flex flex-wrap justify-center gap-x-6 gap-y-1 text-lg'>
-                {[
-                  [stats.sharks, 'shark', 'sharks'] as const,
-                  [stats.hearts, 'heart', 'hearts'] as const,
-                  [stats.matches, 'match', 'matches'] as const,
-                ].map(([value, one, many]) => (
-                  <li key={many} className='whitespace-nowrap'>
-                    <span className='font-black text-primary tabular-nums'>
-                      {value.toLocaleString('en-US')}
-                    </span>{' '}
-                    <span className='text-muted-foreground'>
-                      {value === 1 ? one : many}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-              <p className='max-w-sm text-pretty text-muted-foreground'>
-                {number === 1 ? 'One year' : `${number} years`} ago, the first
-                shark swam in. Thank you for every shark, every heart and every
-                match since.
-              </p>
-              <p
-                className={cn(
-                  handwriting.className,
-                  'flex items-center gap-1.5 text-2xl font-semibold text-foreground'
-                )}
+          {/* The confetti behind the glass, showing through it blurred; each
+              comes in on its own, so the glass is frosted from the start (see
+              glass) */}
+          <div id='page-header' className='relative w-full max-w-xl'>
+            <ScrollReveal variant='card' className='absolute inset-0'>
+              <Confetti />
+            </ScrollReveal>
+            <ScrollReveal
+              variant='card'
+              className={cn(
+                glass,
+                'relative rounded-3xl px-6 py-10 text-center shadow-lg sm:px-12'
+              )}
+            >
+              <article
+                data-slot='card'
+                className='flex flex-col items-center gap-5'
               >
-                Love, the pod
-                <HeartIcon
-                  className='size-5 fill-current text-primary'
-                  aria-hidden='true'
+                <Image
+                  src={SHARKS.hug}
+                  alt='A Blåhaj hugging, with hearts above it'
+                  className='h-auto w-40 sm:w-48'
+                  priority
                 />
-              </p>
-              <ShareButton
-                title={title}
-                text={`${count(stats.sharks, 'shark', 'sharks')}, ${count(stats.hearts, 'heart', 'hearts')} and ${count(stats.matches, 'match', 'matches')} so far.`}
-              />
-            </article>
-          </ScrollReveal>
+                <Eyebrow>
+                  {date.toLocaleDateString('en-US', {
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric',
+                    timeZone: 'UTC',
+                  })}
+                </Eyebrow>
+                <h1 className='-mt-3 text-4xl font-black tracking-tight text-balance sm:text-5xl'>
+                  {title}
+                </h1>
+                {/* Each number with its word, never split across lines */}
+                <ul className='flex flex-wrap justify-center gap-x-6 gap-y-1 text-lg'>
+                  {[
+                    [stats.sharks, 'shark', 'sharks'] as const,
+                    [stats.hearts, 'heart', 'hearts'] as const,
+                    [stats.matches, 'match', 'matches'] as const,
+                  ].map(([value, one, many]) => (
+                    <li key={many} className='whitespace-nowrap'>
+                      <span className='font-black text-primary tabular-nums'>
+                        {value.toLocaleString('en-US')}
+                      </span>{' '}
+                      <span className='text-muted-foreground'>
+                        {value === 1 ? one : many}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                <p className='max-w-sm text-pretty text-muted-foreground'>
+                  {number === 1 ? 'One year' : `${number} years`} ago, the first
+                  shark swam in. Thank you for every shark, every heart and
+                  every match since.
+                </p>
+                <p
+                  className={cn(
+                    handwriting.className,
+                    'flex items-center gap-1.5 text-2xl font-semibold text-foreground'
+                  )}
+                >
+                  Love, the pod
+                  <HeartIcon
+                    className='size-5 fill-current text-primary'
+                    aria-hidden='true'
+                  />
+                </p>
+                <ShareButton
+                  title={title}
+                  text={`${count(stats.sharks, 'shark', 'sharks')}, ${count(stats.hearts, 'heart', 'hearts')} and ${count(stats.matches, 'match', 'matches')} so far.`}
+                />
+              </article>
+            </ScrollReveal>
+          </div>
         </div>
       </div>
 
@@ -299,13 +312,7 @@ function StoryLine({
           </p>
           {after}
         </ScrollReveal>
-        <ScrollReveal
-          variant='card'
-          scrollDelay={STAGGER}
-          className={cn('lg:w-60', flip && 'lg:order-first')}
-        >
-          {sticker}
-        </ScrollReveal>
+        <div className={cn('lg:w-60', flip && 'lg:order-first')}>{sticker}</div>
       </div>
     </section>
   );
