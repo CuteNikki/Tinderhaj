@@ -269,8 +269,10 @@ export default function PrivacyPage() {
         </TypographyP>
         <TypographyP>
           You can manage your username, email, password, two-step sign-in,
-          passkeys, sessions, profiles, and account deletion in the app, or
-          contact us at {CONTACT_EMAIL} for anything else.
+          passkeys, sessions, profiles, and account deletion in the app, and
+          download a copy of everything we keep about your account under
+          Settings &gt; Account &gt; Your data. For anything else, contact us at{' '}
+          {CONTACT_EMAIL}.
         </TypographyP>
         <TypographyP>
           You also have the right to lodge a complaint with a data protection

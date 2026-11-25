@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 
+import { DownloadIcon } from 'lucide-react';
+
 import { accountMetadata } from '@/constants/metadata';
 
 import { getAccountSettings } from '@/lib/account';
@@ -14,6 +16,7 @@ import { EmailSettings } from '@/components/account/email-settings';
 import { MatchContactForm } from '@/components/account/match-contact-form';
 import { UsernameForm } from '@/components/account/username-form';
 import { SettingsSection } from '@/components/common/settings-section';
+import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = accountMetadata;
 
@@ -67,10 +70,23 @@ export default async function AccountPage() {
         </SettingsSection>
       )}
       <SettingsSection
+        title='Your data'
+        description='A copy of everything Tinderhaj keeps about your account: your sharks, hearts and matches, sign-ins, emails and more, as a file to save.'
+        delay={CONTENT_DELAY + 5 * STAGGER}
+      >
+        <Button variant='outline' asChild>
+          {/* A file download, not a page: a plain link, so the browser saves it */}
+          <a href='/api/account/export' download>
+            <DownloadIcon aria-hidden='true' />
+            Download your data
+          </a>
+        </Button>
+      </SettingsSection>
+      <SettingsSection
         title='Delete account'
         description="This permanently deletes your account, profiles, and sessions. We'll email you a link to confirm first."
         destructive
-        delay={CONTENT_DELAY + 5 * STAGGER}
+        delay={CONTENT_DELAY + 6 * STAGGER}
       >
         <DeleteAccount hasPassword={hasPassword} />
       </SettingsSection>

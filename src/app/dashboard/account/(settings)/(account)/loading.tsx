@@ -99,6 +99,13 @@ export default function Loading() {
       )}
       <SettingsSection
         still
+        title='Your data'
+        description='A copy of everything Tinderhaj keeps about your account: your sharks, hearts and matches, sign-ins, emails and more, as a file to save.'
+      >
+        <ButtonSkeleton>Download your data</ButtonSkeleton>
+      </SettingsSection>
+      <SettingsSection
+        still
         title='Delete account'
         description="This permanently deletes your account, profiles, and sessions. We'll email you a link to confirm first."
         destructive
