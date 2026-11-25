@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { cacheLife, cacheTag } from 'next/cache';
+import Image from 'next/image';
 
 import { HeartIcon } from 'lucide-react';
 
@@ -13,7 +14,6 @@ import { cn } from '@/lib/utils';
 
 import { Confetti } from '@/components/birthday/confetti';
 import { handwriting } from '@/components/birthday/handwriting';
-import { PartyShark } from '@/components/birthday/party-shark';
 import { ShareButton } from '@/components/birthday/share-button';
 import { Sticker } from '@/components/birthday/sticker';
 import { Eyebrow } from '@/components/common/heading';
@@ -82,7 +82,12 @@ export default async function BirthdayPage() {
           >
             <Confetti />
             <article className='relative flex flex-col items-center gap-5 rounded-3xl border border-foreground/10 bg-card px-6 py-10 text-center shadow-lg sm:px-12'>
-              <PartyShark className='w-40 sm:w-48' />
+              <Image
+                src={SHARKS.hug}
+                alt='A Blåhaj hugging, with hearts above it'
+                className='h-auto w-40 sm:w-48'
+                priority
+              />
               <Eyebrow>
                 {date.toLocaleDateString('en-US', {
                   month: 'long',
