@@ -28,7 +28,12 @@ import {
   syncDiscordRolesLater,
   type DiscordSync,
 } from '@/lib/discord-roles';
-import { HEARTS_PER_DAY, liveProfileWhere } from '@/lib/hearts';
+import {
+  HEARTS_PER_DAY,
+  liveProfileWhere,
+  matchedAt,
+  matchPair,
+} from '@/lib/hearts';
 import prisma from '@/lib/prisma';
 import { PROFILE_COUNT_TAG, QUERIES } from '@/lib/queries';
 import { reportSchema } from '@/lib/reports';
@@ -631,6 +636,40 @@ export async function sendHeart({
   revalidatePath('/discovery');
   revalidatePath('/dashboard/hearts');
   return { matched: back > 0 };
+}
+
+/**
+ * Gives a match of one of the user's sharks a page of its own to share, or
+ * finds the one it already has. Either shark's owner can.
+ */
+export async function shareMatch({
+  mineId,
+  theirsId,
+}: {
+  mineId: string;
+  theirsId: string;
+}) {
+  const session = await requireUser();
+
+  const sharks = await prisma.profile.count({
+    where: {
+      ...liveProfileWhere(),
+      OR: [{ id: mineId, userId: session.user.id }, { id: theirsId }],
+    },
+  });
+  if (sharks < 2 || mineId === theirsId)
+    return { message: "That match isn't around anymore." };
+  if (!(await matchedAt(mineId, theirsId)))
+    return { message: "Those sharks aren't a match anymore." };
+
+  const pair = matchPair(mineId, theirsId);
+  const shared = await prisma.sharedMatch.upsert({
+    where: { profileAId_profileBId: pair },
+    create: pair,
+    update: {},
+    select: { id: true },
+  });
+  return { path: `/match/${shared.id}` };
 }
 
 /** Takes a heart back, which also ends a match. */

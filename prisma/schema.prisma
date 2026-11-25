@@ -215,9 +215,11 @@ model Profile {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  heartsSent     Heart[]  @relation("HeartsSent")
-  heartsReceived Heart[]  @relation("HeartsReceived")
+  heartsSent     Heart[]       @relation("HeartsSent")
+  heartsReceived Heart[]       @relation("HeartsReceived")
   reports        Report[]
+  sharedMatchesA SharedMatch[] @relation("SharedMatchA")
+  sharedMatchesB SharedMatch[] @relation("SharedMatchB")
 
   @@index([userId])
 }
@@ -238,6 +240,24 @@ model Heart {
 
   @@unique([fromProfileId, toProfileId])
   @@index([toProfileId])
+}
+
+/// A match one of its owners shared, with a page and picture of its own at
+/// /match/<id>. Matches nobody shared have no page, so knowing two sharks
+/// doesn't tell anyone whether they matched. The pair is kept in id order, so
+/// sharing it again finds the same one.
+model SharedMatch {
+  id         String @id @default(cuid(2))
+  profileAId String
+  profileBId String
+
+  createdAt DateTime @default(now())
+
+  profileA Profile @relation("SharedMatchA", fields: [profileAId], references: [id], onDelete: Cascade)
+  profileB Profile @relation("SharedMatchB", fields: [profileBId], references: [id], onDelete: Cascade)
+
+  @@unique([profileAId, profileBId])
+  @@index([profileBId])
 }
 
 /// A signed-in user telling moderators a shark breaks the rules, or the way

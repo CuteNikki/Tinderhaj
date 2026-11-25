@@ -164,6 +164,11 @@ export const sharkPageMetadata: Metadata = {
   description: 'A shark on Tinderhaj.',
 };
 
+export const matchPageMetadata: Metadata = {
+  title: 'Match',
+  description: 'Two sharks that hearted each other on Tinderhaj.',
+};
+
 export const privacyMetadata: Metadata = {
   title: 'Privacy',
   description:

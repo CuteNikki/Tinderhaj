@@ -263,3 +263,51 @@ export async function getSharkPage(
     moderator,
   };
 }
+
+/** A pair of sharks in the order a SharedMatch keeps them. */
+export function matchPair(one: string, other: string) {
+  return one < other
+    ? { profileAId: one, profileBId: other }
+    : { profileAId: other, profileBId: one };
+}
+
+/**
+ * When two sharks matched: the later of their two hearts. Null unless they
+ * still heart each other.
+ */
+export async function matchedAt(one: string, other: string) {
+  const hearts = await prisma.heart.findMany({
+    where: {
+      OR: [
+        { fromProfileId: one, toProfileId: other },
+        { fromProfileId: other, toProfileId: one },
+      ],
+    },
+    select: { createdAt: true },
+  });
+  if (hearts.length < 2) return null;
+  return hearts[0].createdAt > hearts[1].createdAt
+    ? hearts[0].createdAt
+    : hearts[1].createdAt;
+}
+
+/**
+ * A shared match, for its page and picture: both sharks and when they
+ * matched. Null once it's over: a heart taken back, or either shark no longer
+ * live.
+ */
+export async function getSharedMatch(id: string) {
+  const live = liveProfileWhere();
+  const shared = await prisma.sharedMatch.findFirst({
+    where: { id, profileA: live, profileB: live },
+    select: {
+      profileA: { select: PUBLIC_PROFILE },
+      profileB: { select: PUBLIC_PROFILE },
+    },
+  });
+  if (!shared) return null;
+
+  const at = await matchedAt(shared.profileA.id, shared.profileB.id);
+  if (!at) return null;
+  return { sharks: [shared.profileA, shared.profileB] as const, at };
+}
