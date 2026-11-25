@@ -23,6 +23,7 @@ import { LocalTime } from '@/components/common/local-time';
 import { Stagger } from '@/components/common/stagger';
 import { HeartButton } from '@/components/hearts/heart-button';
 import { MarkHeartsSeen } from '@/components/hearts/mark-hearts-seen';
+import { ShareMatchButton } from '@/components/hearts/share-match-button';
 import { SharkAvatar } from '@/components/hearts/shark-avatar';
 import { SharkDialog } from '@/components/hearts/shark-dialog';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
@@ -239,10 +240,17 @@ function HeartListRow({ row, tab }: { row: HeartRow; tab: Tab }) {
           />
         )}
         {tab === 'matches' && (
-          <Badge className='shrink-0'>
-            <HeartIcon className='fill-current' aria-hidden='true' />
-            Match
-          </Badge>
+          <>
+            {/* On phones the tab already says so, and the name needs the room */}
+            <Badge className='shrink-0 max-sm:hidden'>
+              <HeartIcon className='fill-current' aria-hidden='true' />
+              Match
+            </Badge>
+            <ShareMatchButton
+              mine={{ id: mine.id, displayName: mine.displayName }}
+              theirs={{ id: theirs.id, displayName: theirs.displayName }}
+            />
+          </>
         )}
       </div>
       {tab === 'matches' && (

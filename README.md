@@ -26,6 +26,7 @@ The product flow is centered on creating a profile for a shark, submitting it fo
 - Discovery of every verified shark, searchable by name, location, pronouns, or interests, in a fresh shuffle each visit, with newly verified sharks boosted for their first 3 days
 - Hearts: each verified shark can heart up to 50 others a day, and two sharks that heart each other are a match
 - A Hearts page with matches, hearts received, and hearts sent, and a count of unseen hearts in the navbar
+- Sharing a match: either owner can give it a page of its own at `/match/<id>`, whose link shows both sharks with a heart between them. Matches nobody shared have no page, and the page goes once the sharks stop hearting each other
 - A way to be reached, set in Account Settings, that only the owners of matching sharks see
 - A public page for every account at `/u/<username>` with all its verified sharks, and a preview picture of them when the link is shared
 
