@@ -2,11 +2,13 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import { ShieldIcon, UserRoundIcon } from 'lucide-react';
+import { AwardIcon, ShieldIcon, UserRoundIcon } from 'lucide-react';
 
+import { inviteBadges } from '@/constants/invites';
 import { userPageMetadata } from '@/constants/metadata';
 
 import { getHeartStates, getUserPage } from '@/lib/hearts';
+import { countInvites } from '@/lib/invites';
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 import { getSession } from '@/lib/session';
 
@@ -18,6 +20,7 @@ import { ShareButton } from '@/components/discovery/share-button';
 import { CardHearts } from '@/components/hearts/card-hearts';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
 import { ReportButton } from '@/components/reports/report-dialog';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
 export async function generateMetadata({
@@ -53,6 +56,7 @@ export default async function UserSharksPage({
   if (!page) notFound();
 
   const { user, sharks, banned, own, moderator } = page;
+  const badges = inviteBadges(await countInvites(user.id));
   const hearts =
     session && !own
       ? await getHeartStates(
@@ -86,6 +90,18 @@ export default async function UserSharksPage({
               {banned && ' · Banned: only moderators see this page'}
             </PageNote>
           </div>
+          {badges.length > 0 && (
+            <ul className='flex flex-wrap gap-2' aria-label='Badges'>
+              {badges.map((badge) => (
+                <li key={badge.key}>
+                  <Badge title={badge.about}>
+                    <AwardIcon aria-hidden='true' />
+                    {badge.label}
+                  </Badge>
+                </li>
+              ))}
+            </ul>
+          )}
           {(own || moderator) && (
             <div className='flex flex-wrap gap-2'>
               {own && (
