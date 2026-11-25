@@ -100,7 +100,7 @@ function sharkLinks(unseenHearts: number): NavLink[] {
   ];
 }
 
-/** Sits with Log out, as the other thing about you rather than your sharks. */
+/** With your own pages in the menu, and with Log out at the foot of the sheet on phones. */
 const accountLink: NavLink = {
   name: 'Settings',
   href: '/dashboard/account#top',
@@ -243,6 +243,7 @@ function NavbarContent({
                       {yourLinks.map((link) => (
                         <MenuLink key={link.href} link={link} />
                       ))}
+                      <MenuLink link={accountLink} />
                     </DropdownMenuGroup>
                     {moderationLinks.length > 0 && (
                       <>
@@ -254,8 +255,8 @@ function NavbarContent({
                         </DropdownMenuGroup>
                       </>
                     )}
+                    {/* On its own, away from Settings, so it's never clicked by mistake */}
                     <DropdownMenuSeparator />
-                    <MenuLink link={accountLink} />
                     <LogOutDropdownMenuItem />
                   </DropdownMenuContent>
                 </DropdownMenu>
