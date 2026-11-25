@@ -64,11 +64,13 @@ type Kind = {
 };
 
 /**
- * A season's effect: its kinds, and how many there are, per 10,000 square
- * pixels of window, each kind as likely as the others.
+ * A season's effect: its kinds, each as likely as the others, and how many
+ * there are: per 10,000 square pixels of the page's first screen, and at most
+ * `max`, however big the screen, so it stays calm.
  */
 type Look = {
   density: number;
+  max: number;
   kinds: Kind[];
   icon: LucideIcon;
   /** What it is, for the button that turns it off */
@@ -193,7 +195,8 @@ const confettiIn = (colors: {
 const LOOKS: Record<SeasonEffect, Look> = {
   // Snow's colour is the theme's --snow, read as it falls (see SeasonEffects)
   snow: {
-    density: 0.6,
+    density: 0.25,
+    max: 60,
     kinds: [
       {
         move: 'fall',
@@ -207,7 +210,8 @@ const LOOKS: Record<SeasonEffect, Look> = {
     name: 'snow',
   },
   confetti: {
-    density: 0.5,
+    density: 0.2,
+    max: 50,
     kinds: confettiIn({
       light: ['#f472b6', '#f59e0b', '#3b82f6', '#10b981', '#8b5cf6'],
       dark: ['#f9a8d4', '#fcd34d', '#93c5fd', '#6ee7b7', '#c4b5fd'],
@@ -216,7 +220,8 @@ const LOOKS: Record<SeasonEffect, Look> = {
     name: 'confetti',
   },
   valentines: {
-    density: 0.5,
+    density: 0.2,
+    max: 50,
     kinds: confettiIn({
       light: ['#f472b6', '#ed3867', '#fb7185', '#e11d48'],
       dark: ['#f9a8d4', '#fb7185', '#fda4af', '#f472b6'],
@@ -226,7 +231,8 @@ const LOOKS: Record<SeasonEffect, Look> = {
   },
   // The trans flag's light blue, pink and white; on the light page a pale grey instead of white
   trans: {
-    density: 0.5,
+    density: 0.2,
+    max: 50,
     kinds: confettiIn({
       light: ['#5bcefa', '#f5a9b8', '#cbd5e1'],
       dark: ['#5bcefa', '#f5a9b8', '#ffffff'],
@@ -236,7 +242,8 @@ const LOOKS: Record<SeasonEffect, Look> = {
   },
   // The rainbow flag's six colours, a little lighter on the dark theme
   pride: {
-    density: 0.5,
+    density: 0.2,
+    max: 50,
     kinds: confettiIn({
       light: ['#e40303', '#ff8c00', '#f5c400', '#008026', '#004dff', '#750787'],
       dark: ['#ff5c5c', '#ffa94d', '#ffe066', '#51cf66', '#5c9dff', '#c77dff'],
@@ -245,7 +252,8 @@ const LOOKS: Record<SeasonEffect, Look> = {
     name: 'confetti',
   },
   halloween: {
-    density: 0.08,
+    density: 0.025,
+    max: 10,
     kinds: [
       {
         move: 'across',
@@ -267,9 +275,6 @@ const LOOKS: Record<SeasonEffect, Look> = {
     name: 'bats and ghosts',
   },
 };
-
-/** At most this many on screen, however big the window. */
-const MAX_PARTICLES = 160;
 
 const between = ([low, high]: [number, number]) =>
   low + Math.random() * (high - low);
@@ -311,8 +316,10 @@ function subscribeMotion(listener: () => void) {
 }
 
 /**
- * The season's effect over every page (see seasonOn): snow, confetti, bats
- * and ghosts, drawn on a canvas that lets every click through. None for those
+ * The season's effect at the top of every page (see seasonOn): snow,
+ * confetti, bats and ghosts, drawn on a canvas over the first screen that
+ * lets every click through. It scrolls away with the page rather than
+ * staying over it, which would make scrolling feel dizzy. None for those
  * who ask for less motion. The button in the corner turns them all off, for
  * every season, and back on.
  */
@@ -334,6 +341,9 @@ export function SeasonEffects({ effect }: { effect: SeasonEffect }) {
     if (!context) return;
 
     let particles: Particle[] = [];
+    // The canvas's size: the page's first screen
+    let width = 0;
+    let height = 0;
     let dark = false;
     let frame = 0;
     let last = performance.now();
@@ -354,15 +364,12 @@ export function SeasonEffects({ effect }: { effect: SeasonEffect }) {
       const r = between(kind.size);
       return {
         kind,
-        x:
-          kind.move === 'across' && !anywhere
-            ? -r * 3
-            : Math.random() * innerWidth,
+        x: kind.move === 'across' && !anywhere ? -r * 3 : Math.random() * width,
         y:
           anywhere || kind.move === 'across'
-            ? Math.random() * innerHeight
+            ? Math.random() * height
             : kind.move === 'rise'
-              ? innerHeight + r * 2
+              ? height + r * 2
               : -r * 2,
         r,
         speed: between(kind.speed),
@@ -376,15 +383,14 @@ export function SeasonEffects({ effect }: { effect: SeasonEffect }) {
 
     function size() {
       const ratio = devicePixelRatio || 1;
-      canvas!.width = innerWidth * ratio;
-      canvas!.height = innerHeight * ratio;
+      width = canvas!.clientWidth;
+      height = canvas!.clientHeight;
+      canvas!.width = width * ratio;
+      canvas!.height = height * ratio;
       context!.setTransform(ratio, 0, 0, ratio, 0, 0);
       const count = Math.min(
-        MAX_PARTICLES,
-        Math.max(
-          1,
-          Math.round((innerWidth * innerHeight * look.density) / 10_000)
-        )
+        look.max,
+        Math.max(1, Math.round((width * height * look.density) / 10_000))
       );
       particles = Array.from({ length: count }, () => spawn(true));
     }
@@ -399,7 +405,7 @@ export function SeasonEffects({ effect }: { effect: SeasonEffect }) {
         dark = nowDark;
         for (const p of particles) p.color = pick(palette(p.kind));
       }
-      context!.clearRect(0, 0, innerWidth, innerHeight);
+      context!.clearRect(0, 0, width, height);
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
         const { move } = p.kind;
@@ -411,11 +417,7 @@ export function SeasonEffects({ effect }: { effect: SeasonEffect }) {
         const x = move === 'across' ? p.x : p.x + Math.sin(p.phase) * p.sway;
         const y = move === 'across' ? p.y + Math.sin(p.phase) * p.sway : p.y;
         // Gone past an edge: another in its place
-        if (
-          y - p.r * 3 > innerHeight ||
-          y + p.r * 3 < 0 ||
-          x - p.r * 3 > innerWidth
-        ) {
+        if (y - p.r * 3 > height || y + p.r * 3 < 0 || x - p.r * 3 > width) {
           particles[i] = spawn(false);
           continue;
         }
@@ -451,7 +453,7 @@ export function SeasonEffects({ effect }: { effect: SeasonEffect }) {
         <canvas
           ref={canvasRef}
           aria-hidden='true'
-          className='pointer-events-none fixed inset-0 z-40 size-full'
+          className='pointer-events-none absolute inset-x-0 top-0 z-40 h-svh w-full'
         />
       )}
       <Tooltip>
