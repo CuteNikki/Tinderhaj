@@ -138,7 +138,7 @@ export default function GuidePage() {
                 <div className='mt-5 flex flex-col gap-2'>
                   <Button size='lg' className={sunlit} asChild>
                     <Link href='/sign-up'>
-                      Join
+                      Join now
                       <ArrowRight />
                     </Link>
                   </Button>
