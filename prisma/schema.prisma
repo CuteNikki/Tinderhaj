@@ -76,6 +76,11 @@ model User {
   reportsMade    Report[] @relation("ReportsMade")
   reportsHandled Report[] @relation("ReportsHandled")
 
+  /// Who invited them, from the invite link they came by (see lib/invites.ts).
+  invitedById String?
+  invitedBy   User?   @relation("Invites", fields: [invitedById], references: [id], onDelete: SetNull)
+  invitees    User[]  @relation("Invites")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -84,6 +89,8 @@ model User {
   twoFactors TwoFactor[]
   passkeys   Passkey[]
   profiles   Profile[]
+
+  @@index([invitedById])
 }
 
 /// A way to sign in. Only `credential`, which holds the password as

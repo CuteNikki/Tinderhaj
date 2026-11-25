@@ -29,6 +29,7 @@ import {
   PASSWORD_RESET_TOKEN_EXPIRATION,
   SESSION_EXPIRATION,
 } from '@/constants/auth';
+import { INVITE_COOKIE } from '@/constants/invites';
 
 import {
   BAN_NOTICE_COOKIE,
@@ -271,6 +272,22 @@ export const auth = betterAuth({
             image: null,
           },
         }),
+        // Who invited them, if they came by an invite link (see app/join).
+        after: async (user, ctx) => {
+          const inviterId = ctx?.getCookie(INVITE_COOKIE);
+          if (!inviterId) return;
+          ctx?.setCookie(INVITE_COOKIE, '', { path: '/', maxAge: 0 });
+          // An account deleted since has nobody to thank.
+          const inviter = await prisma.user.findUnique({
+            where: { id: inviterId },
+            select: { id: true },
+          });
+          if (!inviter || inviter.id === user.id) return;
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { invitedById: inviter.id },
+          });
+        },
       },
       delete: {
         // Their Discord connection goes with the account, so the roles it earned go too.
