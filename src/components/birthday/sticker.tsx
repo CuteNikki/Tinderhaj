@@ -65,7 +65,7 @@ export function Sticker({
           <figcaption
             className={cn(
               handwriting.className,
-              'text-2xl font-bold text-primary'
+              'text-2xl font-bold text-glass-foreground'
             )}
           >
             {note}
