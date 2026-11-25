@@ -539,16 +539,20 @@
   animation: none;
 }
 
-/* Confetti around the birthday card, each bit bobbing and turning a little from its own `--confetti-delay`. */
+/* Confetti around the birthday card, each bit drifting in a little loop of its own, from its own `--confetti-delay` and at its own `--confetti-duration`, so they never move together. */
 .confetti {
-  animation: confetti 4s ease-in-out var(--confetti-delay, 0s) infinite
-    alternate;
+  animation: confetti var(--confetti-duration, 6s) ease-in-out
+    var(--confetti-delay, 0s) infinite;
 }
 
 @keyframes confetti {
-  to {
-    translate: 0 8px;
-    rotate: 30deg;
+  33% {
+    translate: 6px -10px;
+    rotate: 35deg;
+  }
+  66% {
+    translate: -5px 6px;
+    rotate: -20deg;
   }
 }
 

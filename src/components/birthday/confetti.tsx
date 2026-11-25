@@ -1,8 +1,8 @@
 import { cn } from '@/lib/utils';
 
 /**
- * Bits of confetti around the birthday card, drifting gently (see .confetti
- * in globals.css), and still for those who ask for less motion. Where each
+ * Bits of confetti around the birthday card, each drifting in a loop of its
+ * own (see .confetti in globals.css), and still for those who ask for less motion. Where each
  * sits is in percent of the card's box, so they keep around it at any width;
  * on phones only above and below it, so none reach past the screen's edge.
  */
@@ -74,6 +74,7 @@ export function Confetti() {
               left: `${piece.left}%`,
               top: `${piece.top}%`,
               '--confetti-delay': `${index * -0.7}s`,
+              '--confetti-duration': `${5 + (index % 4)}s`,
             } as React.CSSProperties
           }
         />
