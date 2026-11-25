@@ -114,7 +114,7 @@ export default function AboutPage() {
               <Stagger
                 gap={STAGGER}
                 delay={CONTENT_DELAY}
-                className='flex flex-col gap-4 p-6 text-base leading-relaxed text-pretty text-foreground/85 sm:p-8'
+                className='flex h-full flex-col justify-center gap-4 p-6 text-base leading-relaxed text-pretty text-foreground/85'
               >
                 <p>
                   Blåhaj (often written Blahaj) is IKEA&apos;s big blue plush
