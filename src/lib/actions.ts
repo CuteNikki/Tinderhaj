@@ -37,6 +37,13 @@ import {
 } from '@/lib/hearts';
 import { emailInviterLater } from '@/lib/invites';
 import { emailMatchLater } from '@/lib/match-emails';
+import {
+  emailBanLiftedLater,
+  emailBannedLater,
+  emailReportReceivedLater,
+  emailReportReviewedLater,
+  emailUnverifiedLater,
+} from '@/lib/moderation-emails';
 import prisma from '@/lib/prisma';
 import { PROFILE_COUNT_TAG, QUERIES } from '@/lib/queries';
 import { reportSchema } from '@/lib/reports';
@@ -255,6 +262,7 @@ export async function banUser(
   revalidatePath('/discovery');
   updateTag(PROFILE_COUNT_TAG);
   syncDiscordRolesLater(userId);
+  emailBannedLater(userId);
 }
 
 export async function unbanUser(userId: string) {
@@ -279,6 +287,7 @@ export async function unbanUser(userId: string) {
   revalidatePath('/discovery');
   updateTag(PROFILE_COUNT_TAG);
   syncDiscordRolesLater(userId);
+  emailBanLiftedLater(userId);
 }
 
 export async function signOutUserEverywhere(userId: string) {
@@ -550,6 +559,7 @@ export async function unverifyProfile({ profileId }: { profileId: string }) {
     select: { userId: true },
   });
   syncDiscordRolesLater(userId);
+  emailUnverifiedLater(profileId);
 
   revalidatePath('/moderation/verification', 'layout');
   revalidatePath('/moderation/users', 'layout');
@@ -803,7 +813,7 @@ export async function reportProfile(unsafeData: z.input<typeof reportSchema>) {
       message: `That's ${REPORTS_PER_DAY} reports today. Try again tomorrow, or write to us.`,
     };
 
-  await prisma.report.create({
+  const { id } = await prisma.report.create({
     data: {
       profileId: data.profileId,
       reporterId: session.user.id,
@@ -811,7 +821,9 @@ export async function reportProfile(unsafeData: z.input<typeof reportSchema>) {
       details: data.details || null,
       contactNote,
     },
+    select: { id: true },
   });
+  emailReportReceivedLater(id);
 
   revalidatePath('/moderation/reports');
 }
@@ -840,6 +852,7 @@ export async function handleReport({
     },
   });
   if (!count) return { message: 'Someone already handled this report.' };
+  emailReportReviewedLater(reportId);
 
   revalidatePath('/moderation/reports');
 }

@@ -2,7 +2,12 @@ import 'server-only';
 
 import nodemailer from 'nodemailer';
 
+import { CONTACT_EMAIL } from '@/constants/contact';
+
 import { siteURL } from '@/lib/site-url';
+
+/** A fact of what an email's about, as a row of its details: "Banned until", "December 2". */
+type Detail = { label: string; value: string };
 
 /** An email as the site writes them: what it's about, and maybe a button to a link. */
 type Email = {
@@ -14,6 +19,8 @@ type Email = {
   paragraphs: string[];
   /** Someone's own words, set apart after the paragraphs: a moderator's note */
   quote?: { by: string; text: string };
+  /** The facts of a moderator's decision, row by row: why, until when, what came of it */
+  details?: Detail[];
   /** A code to type in, shown big: the second step of signing in */
   code?: string;
   /** A link to act on, as a button; the plain text writes its address out */
@@ -81,6 +88,20 @@ function quote({ by, text: words }: { by: string; text: string }) {
 <tr><td style="padding:6px 0 0 12px;border-left:3px solid ${colors.border};${font}font-size:14px;line-height:1.6;color:${colors.foreground};">${text(words)}</td></tr>`;
 }
 
+/** Labels on the left, their values on the right, a line between each */
+function details(rows: Detail[]) {
+  const cells = rows.map(
+    (row, i) => `<tr>
+<td class="detail-label" valign="top" width="1%" style="width:1%;padding:10px 20px 10px 0;${i ? `border-top:1px solid ${colors.border};` : ''}${font}font-size:13px;line-height:1.5;color:${colors.muted};white-space:nowrap;">${escape(row.label)}</td>
+<td class="detail-value" valign="top" style="padding:10px 0;${i ? `border-top:1px solid ${colors.border};` : ''}${font}font-size:13px;line-height:1.5;color:${colors.foreground};word-break:break-word;">${text(row.value)}</td>
+</tr>`
+  );
+  return `<tr><td style="padding:20px 0 0;">${table(
+    `width:100%;background:${colors.tint};border:1px solid ${colors.border};border-radius:12px;`,
+    `<tr><td style="padding:2px 16px;">${table('width:100%;', cells.join(''))}</td></tr>`
+  )}</td></tr>`;
+}
+
 /** A code to type in, big and spaced out, on a tint */
 function code(value: string) {
   return `<tr><td style="padding:20px 0 0;">${table(
@@ -114,6 +135,9 @@ function plain(email: Email) {
         ]
       : []),
     ...(email.code ? [email.code] : []),
+    ...(email.details?.length
+      ? [email.details.map((d) => `${d.label}: ${d.value}`).join('\n')]
+      : []),
     ...(email.action ? [`${email.action.label}:\n${email.action.url}`] : []),
     ...(email.note ? [email.note] : []),
     [
@@ -142,6 +166,7 @@ function render(email: Email) {
 ${paragraphs.join('\n')}
 ${email.quote ? quote(email.quote) : ''}
 ${email.code ? code(email.code) : ''}
+${email.details?.length ? details(email.details) : ''}
 ${email.action ? button(email.action) : ''}
 ${email.note ? `<tr><td style="padding:20px 0 0;${font}font-size:13px;line-height:1.6;color:${colors.muted};">${text(email.note)}</td></tr>` : ''}`
     )}</td></tr>`
@@ -159,10 +184,13 @@ ${email.note ? `<tr><td style="padding:20px 0 0;${font}font-size:13px;line-heigh
 <meta name="supported-color-schemes" content="light only" />
 <title>${escape(email.subject)}</title>
 <style>
-/* On a phone: less padding. Clients that drop this get the wide layout,
-   which still works, only tighter. */
+/* On a phone: less padding, and each detail's label over its value. Clients
+   that drop this get the wide layout, which still works, only tighter. */
 @media (max-width: 480px) {
   .card { padding: 22px 20px 24px !important; }
+  .detail-label, .detail-value { display: block !important; width: auto !important; }
+  .detail-label { padding: 10px 0 0 !important; white-space: normal !important; }
+  .detail-value { padding: 2px 0 10px !important; border-top: 0 !important; }
 }
 </style>
 </head>
@@ -581,5 +609,176 @@ export async function sendWeeklyHeartsEmail({
     ],
     action: { label: 'See your hearts', url },
     unsubscribe,
+  });
+}
+
+/** Where to write about a moderator's decision, written out: email links don't work everywhere. */
+const appeal = `If you think this is a mistake, write to us at ${CONTACT_EMAIL}.`;
+
+const longDate = (date: Date) =>
+  date.toLocaleString('en-US', {
+    dateStyle: 'long',
+    timeStyle: 'short',
+    timeZone: 'UTC',
+  }) + ' UTC';
+
+/** Their account was banned: why, and until when. Always sent. */
+export async function sendBannedEmail({
+  email,
+  username,
+  reason,
+  until,
+}: {
+  email: string;
+  username: string;
+  reason: string | null;
+  /** When it ends by itself; null until a moderator lifts it */
+  until: Date | null;
+}) {
+  await sendEmail({
+    to: email,
+    subject: 'Your Tinderhaj account was banned',
+    heading: 'Your account was banned',
+    paragraphs: [
+      `Hi @${username}, a moderator banned your Tinderhaj account. While the ban lasts you can't sign in, and your sharks are hidden from everyone.`,
+    ],
+    details: [
+      { label: 'Account', value: `@${username}` },
+      {
+        label: 'Banned until',
+        value: until ? longDate(until) : 'A moderator lifts it',
+      },
+      { label: 'Reason', value: reason ?? 'None given' },
+    ],
+    note: appeal,
+  });
+}
+
+/** A moderator lifted their ban before it ended. Always sent. */
+export async function sendBanLiftedEmail({
+  email,
+  username,
+  at,
+  url,
+}: {
+  email: string;
+  username: string;
+  at: Date;
+  url: string;
+}) {
+  await sendEmail({
+    to: email,
+    subject: 'You can sign in to Tinderhaj again',
+    heading: 'Your ban was lifted',
+    paragraphs: [
+      `Hi @${username}, a moderator lifted the ban on your Tinderhaj account. You can sign in again, and your verified sharks are back in discovery.`,
+    ],
+    details: [
+      { label: 'Account', value: `@${username}` },
+      { label: 'Lifted', value: longDate(at) },
+    ],
+    action: { label: 'Sign in', url },
+  });
+}
+
+/**
+ * A moderator took one of their sharks out of discovery to look at it again:
+ * it's waiting for review. Always sent.
+ */
+export async function sendSharkUnverifiedEmail({
+  email,
+  username,
+  shark,
+  url,
+}: {
+  email: string;
+  username: string;
+  shark: string;
+  url: string;
+}) {
+  await sendEmail({
+    to: email,
+    subject: `${shark} is back in review`,
+    heading: `${shark} is back in review`,
+    paragraphs: [
+      `Hi @${username}, a moderator took ${shark} out of discovery to look at the profile again. It's waiting for review now, and we'll email you once it's checked. Its hearts and matches stay.`,
+    ],
+    details: [
+      { label: 'Shark', value: shark },
+      { label: 'Status', value: 'Waiting for review, hidden from discovery' },
+    ],
+    action: { label: `See ${shark}`, url },
+    note: appeal,
+  });
+}
+
+/** Their report reached the moderators. Always sent, as the answer to it. */
+export async function sendReportReceivedEmail({
+  email,
+  username,
+  shark,
+  reason,
+  details: note,
+  at,
+}: {
+  email: string;
+  username: string;
+  shark: string;
+  /** What they chose, as the report dialog words it, or that it was about how to reach the owner */
+  reason: string;
+  /** What they wrote with it */
+  details: string | null;
+  at: Date;
+}) {
+  await sendEmail({
+    to: email,
+    subject: `We got your report about ${shark}`,
+    heading: 'Thanks for your report',
+    paragraphs: [
+      `Hi @${username}, we got your report about ${shark}. A moderator will look at it soon, and we'll email you once they have.`,
+    ],
+    details: [
+      { label: 'Shark', value: shark },
+      { label: 'Reason', value: reason },
+      ...(note ? [{ label: 'Your note', value: note }] : []),
+      { label: 'Sent', value: longDate(at) },
+    ],
+    note: 'Reports are private: the owner never sees who reported their shark.',
+  });
+}
+
+/** A moderator handled their report: whether something was done, never what. Always sent. */
+export async function sendReportReviewedEmail({
+  email,
+  username,
+  shark,
+  reason,
+  actedOn,
+  at,
+}: {
+  email: string;
+  username: string;
+  shark: string;
+  reason: string;
+  /** Resolved, rather than dismissed */
+  actedOn: boolean;
+  at: Date;
+}) {
+  await sendEmail({
+    to: email,
+    subject: `Your report about ${shark} was reviewed`,
+    heading: 'Your report was reviewed',
+    paragraphs: [
+      actedOn
+        ? `Hi @${username}, a moderator looked at your report about ${shark} and dealt with it. Thanks for helping keep Tinderhaj kind.`
+        : `Hi @${username}, a moderator looked at your report about ${shark} and found it doesn't break the guidelines, so nothing changes. Thanks for telling us all the same.`,
+    ],
+    details: [
+      { label: 'Shark', value: shark },
+      { label: 'Reason', value: reason },
+      { label: 'Outcome', value: actedOn ? 'Dealt with' : 'No action needed' },
+      { label: 'Reviewed', value: longDate(at) },
+    ],
+    note: "For privacy, we can't say what happened to another account.",
   });
 }
