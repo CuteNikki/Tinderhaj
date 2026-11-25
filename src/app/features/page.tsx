@@ -78,7 +78,7 @@ export default function FeaturesPage() {
       >
         {/* The page's header and its cards together, so the water reaches
             past the cards and they float in it, as glass */}
-        <div id='page-header' className='container mx-auto max-w-7xl'>
+        <div id='page-header' className='container mx-auto max-w-7xl pb-12'>
           <Stagger variant='sink' className='mb-12'>
             <Eyebrow>Features</Eyebrow>
             <PageTitle>Everything for your sharks</PageTitle>

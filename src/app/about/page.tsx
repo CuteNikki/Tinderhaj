@@ -95,9 +95,9 @@ export default function AboutPage() {
         data-water='band'
         className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'
       >
-        {/* The page's header and what's under it together, so the water
+        {/* The page's header and what's under it together, as far below as above it, so the water
             reaches past it all and its cards float in it, as glass */}
-        <div id='page-header' className='container mx-auto max-w-7xl'>
+        <div id='page-header' className='container mx-auto max-w-7xl pb-12'>
           <Stagger variant='sink' className='mb-12'>
             <Eyebrow>About</Eyebrow>
             <PageTitle>Made for the sharks</PageTitle>
