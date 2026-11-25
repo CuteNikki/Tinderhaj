@@ -23,7 +23,7 @@ type Email = {
   action?: { label: string; url: string; destructive?: boolean };
   /** After the button, quieter: what to do if it wasn't them */
   note?: string;
-  /** Small print under it all: why they got it */
+  /** Small print under it all: who it's from and for */
   footer: string;
   /** For emails people can turn off: the page that does it, and where mail apps' own button posts (RFC 8058) */
   unsubscribe?: { page: string; oneClick: string };
@@ -152,7 +152,7 @@ ${email.note ? `<tr><td style="padding:20px 0 0;${font}font-size:13px;line-heigh
     )}</td></tr>`
   );
   const unsubscribe = email.unsubscribe
-    ? ` <a href="${escape(email.unsubscribe.page)}" style="color:${colors.muted};">Unsubscribe</a>.`
+    ? ` <a href="${escape(email.unsubscribe.page)}" style="color:${colors.muted};">unsubscribe</a>.`
     : '';
   const html = `<!doctype html>
 <html lang="en">
@@ -188,6 +188,9 @@ ${table(
 </html>`;
   return { text: plain(email), html };
 }
+
+/** The small print under an email, as dash's says who sent it */
+const sentTo = (username: string) => `Sent by Tinderhaj to @${username}.`;
 
 async function sendEmail(email: Email) {
   // The mail server, e.g. smtps://no-reply%40example.com:password@mail.example.com
@@ -235,8 +238,7 @@ export async function sendPasswordResetEmail({
     ],
     action: { label: 'Reset password', url },
     note: "If you didn't ask for this, you can safely ignore this email. Your password stays as it is.",
-    footer:
-      'You got this because someone asked to reset the password of this Tinderhaj account.',
+    footer: sentTo(username),
   });
 }
 
@@ -270,9 +272,7 @@ export async function sendVerificationEmail({
     note: changing
       ? "If you didn't ask to change your email, you can safely ignore this email."
       : "If you didn't create an account, you can safely ignore this email.",
-    footer: changing
-      ? 'You got this because someone asked to move a Tinderhaj account to this address.'
-      : 'You got this because someone signed up for Tinderhaj with this address.',
+    footer: sentTo(username),
   });
 }
 
@@ -302,8 +302,7 @@ export async function sendEmailChangeConfirmation({
     ],
     action: { label: 'Confirm change', url },
     note: "If you didn't ask for this, ignore this email and consider changing your password.",
-    footer:
-      'You got this because someone asked to change the email address of this Tinderhaj account.',
+    footer: sentTo(username),
   });
 }
 
@@ -333,8 +332,7 @@ export async function sendDeleteAccountEmail({
     ],
     action: { label: 'Delete account', url, destructive: true },
     note: "If you didn't ask for this, ignore this email and consider changing your password.",
-    footer:
-      'You got this because someone asked to delete this Tinderhaj account.',
+    footer: sentTo(username),
   });
 }
 
@@ -357,8 +355,7 @@ export async function sendTwoFactorCode({
     ],
     code,
     note: "If you didn't just sign in, someone may know your password: change it in your account settings.",
-    footer:
-      'You got this because this Tinderhaj account signs in with a code by email.',
+    footer: sentTo(username),
   });
 }
 
@@ -398,8 +395,7 @@ export async function sendSharkVerifiedEmail({
       { label: 'Status', value: 'Verified, in discovery' },
     ],
     action: { label: `See ${shark}`, url },
-    footer:
-      'You got this because one of your sharks was verified. Turn these emails off in Settings, or',
+    footer: `${sentTo(username)} Turn these off in Settings, or`,
     unsubscribe,
   });
 }
