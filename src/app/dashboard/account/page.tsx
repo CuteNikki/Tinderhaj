@@ -22,6 +22,7 @@ import { PasswordForm } from '@/components/account/password-form';
 import { SessionList } from '@/components/account/session-list';
 import { TwoFactorSettings } from '@/components/account/two-factor-settings';
 import { UsernameForm } from '@/components/account/username-form';
+import { VerifiedEmailsToggle } from '@/components/account/verified-emails-toggle';
 import { Eyebrow, PageTitle } from '@/components/common/heading';
 import { SettingsSection } from '@/components/common/settings-section';
 import { Stagger } from '@/components/common/stagger';
@@ -37,6 +38,7 @@ export default async function AccountPage({
     accounts,
     hasPassword,
     matchContact,
+    verifiedEmails,
     twoFactor,
     trustedDevices,
     passkeys,
@@ -98,6 +100,9 @@ export default async function AccountPage({
               delay={CONTENT_DELAY + 2 * STAGGER}
             >
               <EmailSettings email={user.email} verified={user.emailVerified} />
+              <div className='mt-4 border-t border-foreground/10 pt-4'>
+                <VerifiedEmailsToggle on={verifiedEmails} />
+              </div>
             </SettingsSection>
             <SettingsSection
               title='Password'

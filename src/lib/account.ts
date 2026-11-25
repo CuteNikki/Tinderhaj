@@ -29,7 +29,11 @@ export async function getAccountSettings(current: {
       }),
       prisma.user.findUniqueOrThrow({
         where: { id: current.userId },
-        select: { twoFactorEnabled: true, matchContact: true },
+        select: {
+          twoFactorEnabled: true,
+          matchContact: true,
+          verifiedEmails: true,
+        },
       }),
       // An authenticator app counts once its first code confirmed it.
       prisma.twoFactor.findFirst({
@@ -62,6 +66,7 @@ export async function getAccountSettings(current: {
       (account) => account.providerId === 'credential'
     ),
     matchContact: user.matchContact,
+    verifiedEmails: user.verifiedEmails,
     twoFactor,
     trustedDevices,
     passkeys: passkeys.map((passkey) => ({

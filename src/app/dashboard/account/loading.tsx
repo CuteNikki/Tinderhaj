@@ -101,6 +101,12 @@ export default function Loading() {
                 </GhostText>
               </div>
             </div>
+            <div className='mt-4 flex items-start gap-2 border-t border-foreground/10 pt-4 text-sm'>
+              <Skeleton className='mt-0.5 size-4 shrink-0 rounded-lg' />
+              <GhostText as='span'>
+                Email me when one of my sharks is verified
+              </GhostText>
+            </div>
           </SettingsSection>
           <SettingsSection still title='Password'>
             <div className='flex flex-col gap-3'>
