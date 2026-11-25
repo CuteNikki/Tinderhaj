@@ -1,9 +1,12 @@
 import Link from 'next/link';
 
+import { cn } from '@/lib/utils';
+
 import { AUTH_HEIGHT } from '@/components/auth/height';
-import { Enter } from '@/components/common/enter';
+import { Enter, enter } from '@/components/common/enter';
 import { HeroBadge } from '@/components/common/hero-badge';
 import { Logo } from '@/components/common/logo';
+import { glass, glassFields } from '@/components/common/ocean';
 import { Card, CardContent } from '@/components/ui/card';
 
 export function AuthShell({
@@ -21,6 +24,8 @@ export function AuthShell({
   children: React.ReactNode;
   footer?: React.ReactNode;
 }) {
+  const card = enter('reveal', 0.4);
+
   return (
     // Set in the water from the layout (see PageWater): the band every page's header is in, stretched to fit it all, so going to or from it the water carries on and moves to fit
     <div
@@ -54,12 +59,18 @@ export function AuthShell({
           </p>
         </Enter>
 
-        <Enter variant='reveal' delay={0.4} className='mt-8 w-full'>
-          {/* Frosted, but enough to keep the form clear of what drifts behind it */}
-          <Card className='bg-background/75 shadow-xl shadow-glass-shadow ring-glass-border backdrop-blur-xl'>
-            <CardContent className='pt-2'>{children}</CardContent>
-          </Card>
-        </Enter>
+        {/* Glass, coming in on itself so it's frosted from the start (see glass) */}
+        <Card
+          className={cn(
+            card.className,
+            glass,
+            glassFields,
+            'mt-8 w-full border-0 shadow-xl ring-glass-border'
+          )}
+          style={card.style}
+        >
+          <CardContent className='pt-2'>{children}</CardContent>
+        </Card>
 
         {footer && (
           <Enter variant='reveal' delay={0.5} className='mt-6'>

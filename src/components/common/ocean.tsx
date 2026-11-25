@@ -6,6 +6,10 @@
 export const glass =
   'border-glass-border bg-glass text-glass-foreground shadow-glass-shadow border backdrop-blur-md backdrop-saturate-120';
 
+/** For a form on glass: its fields and outline buttons see-through too, so the glass shows all the way across, and its quieter text in the glass's own muted color, to stay clear on it. */
+export const glassFields =
+  '[--muted-foreground:var(--glass-muted)] [&_input]:border-glass-border [&_input]:bg-glass dark:[&_input]:bg-glass **:data-[variant=outline]:border-glass-border **:data-[variant=outline]:bg-glass **:data-[variant=outline]:hover:bg-glass-border dark:**:data-[variant=outline]:bg-glass dark:**:data-[variant=outline]:hover:bg-glass-border';
+
 /** For the main button in the water: sunlit from above, with a glint along the top like a bubble's. */
 export const sunlit =
   'bg-[linear-gradient(to_bottom,color-mix(in_oklch,var(--primary),white_15%),var(--primary))] inset-shadow-[0_1px_0_oklch(1_0_0/0.3)] hover:opacity-90';
