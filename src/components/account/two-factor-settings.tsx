@@ -48,10 +48,13 @@ const methodLabels = {
 export function TwoFactorSettings({
   method,
   hasPassword,
+  emailVerified,
   trustedDevices,
 }: {
   method: TwoFactorMethod;
   hasPassword: boolean;
+  /** Codes by email only go to a confirmed address (see auth's hooks). */
+  emailVerified: boolean;
   /** Devices where "Don't ask again" was ticked, and still counts. */
   trustedDevices: number;
 }) {
@@ -176,7 +179,12 @@ export function TwoFactorSettings({
           <MethodChoice
             icon={MailIcon}
             title={methodLabels.email}
-            text='We email you a code each time you sign in with your password.'
+            text={
+              emailVerified
+                ? 'We email you a code each time you sign in with your password.'
+                : 'Verify your email address under Email first, so the codes reach you.'
+            }
+            disabled={!emailVerified}
             onClick={() => setStep({ kind: 'password', action: 'email' })}
           />
         </div>
@@ -269,18 +277,21 @@ function MethodChoice({
   icon: Icon,
   title,
   text,
+  disabled,
   onClick,
 }: {
   icon: typeof MailIcon;
   title: string;
   text: string;
+  disabled?: boolean;
   onClick: () => void;
 }) {
   return (
     <button
       type='button'
       onClick={onClick}
-      className='flex flex-col gap-2 rounded-xl p-4 text-left ring-1 ring-foreground/10 transition-colors outline-none hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-ring'
+      disabled={disabled}
+      className='flex flex-col gap-2 rounded-xl p-4 text-left ring-1 ring-foreground/10 transition-colors outline-none not-disabled:hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60'
     >
       <span className='flex items-center gap-3'>
         <span className='flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary'>

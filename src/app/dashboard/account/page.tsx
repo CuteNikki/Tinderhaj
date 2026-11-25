@@ -144,6 +144,7 @@ export default async function AccountPage({
               <TwoFactorSettings
                 method={twoFactor}
                 hasPassword={hasPassword}
+                emailVerified={user.emailVerified}
                 trustedDevices={trustedDevices}
               />
             </SettingsSection>

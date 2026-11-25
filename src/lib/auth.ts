@@ -454,6 +454,16 @@ export const auth = betterAuth({
         const session = await getSessionFromCtx(ctx);
         await assertUsernameAvailable(ctx.body.name, session?.user.id);
       }
+      // Codes by email only go to a confirmed address: one with a typo would
+      // lock them out at their next sign-in.
+      if (ctx.path === '/two-factor/enable' && ctx.body?.method === 'otp') {
+        const session = await getSessionFromCtx(ctx);
+        if (session && !session.user.emailVerified)
+          throw new APIError('BAD_REQUEST', {
+            code: 'EMAIL_NOT_VERIFIED',
+            message: 'Verify your email address first, so the codes reach you.',
+          });
+      }
     }),
     // Turning two-step sign-in off forgets every trusted device, not just
     // this one as Better Auth does, so turning it back on asks everywhere.
