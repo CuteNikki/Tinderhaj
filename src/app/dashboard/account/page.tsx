@@ -1,16 +1,20 @@
 import type { Metadata } from 'next';
 
+import { invitePath } from '@/constants/invites';
 import { accountMetadata } from '@/constants/metadata';
 
 import { getAccountSettings } from '@/lib/account';
 import { enabledProviders } from '@/lib/auth';
 import { discordRoleList, discordRolesEnabled } from '@/lib/discord-roles';
+import { countInvites } from '@/lib/invites';
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 import { requireUser } from '@/lib/session';
+import { siteURL } from '@/lib/site-url';
 
 import { DeleteAccount } from '@/components/account/delete-account';
 import { DiscordRoles } from '@/components/account/discord-roles';
 import { EmailSettings } from '@/components/account/email-settings';
+import { InviteSettings } from '@/components/account/invite-settings';
 import { LinkedAccounts } from '@/components/account/linked-accounts';
 import { MatchContactForm } from '@/components/account/match-contact-form';
 import { PasskeySettings } from '@/components/account/passkey-settings';
@@ -41,6 +45,7 @@ export default async function AccountPage({
     userId: user.id,
     sessionId: session.id,
   });
+  const invites = await countInvites(user.id);
   const discordLinked = accounts.some(
     (account) => account.providerId === 'discord'
   );
@@ -76,6 +81,16 @@ export default async function AccountPage({
               delay={CONTENT_DELAY + STAGGER}
             >
               <MatchContactForm contact={matchContact} />
+            </SettingsSection>
+            <SettingsSection
+              title='Invite friends'
+              description='Send friends your link. Once they sign up and get a shark verified, they count toward your badges, which show on your page.'
+              delay={CONTENT_DELAY + 2 * STAGGER}
+            >
+              <InviteSettings
+                link={new URL(invitePath(user.name), siteURL).href}
+                count={invites}
+              />
             </SettingsSection>
             <SettingsSection
               title='Email'
