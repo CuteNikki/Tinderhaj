@@ -130,6 +130,24 @@ export const accountMetadata: Metadata = {
   description: 'Manage your Tinderhaj account.',
 };
 
+export const securityMetadata: Metadata = {
+  ...unlisted,
+  title: 'Security',
+  description: 'How you sign in to Tinderhaj, and where you are signed in.',
+};
+
+export const notificationsMetadata: Metadata = {
+  ...unlisted,
+  title: 'Notifications',
+  description: 'Which emails Tinderhaj sends you about your sharks.',
+};
+
+export const invitesMetadata: Metadata = {
+  ...unlisted,
+  title: 'Invites',
+  description: 'Your invite link, and the badges bringing friends earns.',
+};
+
 export const deleteAccountMetadata: Metadata = {
   ...unlisted,
   title: 'Delete Account',

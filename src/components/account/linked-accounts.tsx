@@ -56,7 +56,7 @@ export function LinkedAccounts({
       linkErrors[error] ?? 'Unable to connect that account. Please try again.',
       { duration: 5000, position: 'top-center' }
     );
-    router.replace('/dashboard/account');
+    router.replace('/dashboard/account/security');
   }, [error, router]);
 
   // Connected ones stay listed after their provider is turned off, so they
@@ -76,8 +76,8 @@ export function LinkedAccounts({
     setPending(provider);
     const { error } = await authClient.linkSocial({
       provider,
-      callbackURL: '/dashboard/account',
-      errorCallbackURL: '/dashboard/account',
+      callbackURL: '/dashboard/account/security',
+      errorCallbackURL: '/dashboard/account/security',
     });
     // On success the browser is sent off to the provider.
     if (error) {

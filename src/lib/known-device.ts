@@ -75,7 +75,7 @@ export function emailNewDeviceLater(session: {
             ? session.ipAddress
             : null,
         at: session.createdAt,
-        url: new URL('/dashboard/account', siteURL).href,
+        url: new URL('/dashboard/account/security', siteURL).href,
       });
     } catch (error) {
       console.error('Failed to email about a new sign-in', error);

@@ -144,7 +144,7 @@ function plain(email: Email) {
       '--',
       ...(email.unsubscribe
         ? [
-            `Turn these off in Settings, or unsubscribe: ${email.unsubscribe.page}`,
+            `Turn these off in Settings (${new URL('/dashboard/account/notifications', siteURL)}), or unsubscribe: ${email.unsubscribe.page}`,
           ]
         : []),
       siteURL.host,
@@ -173,7 +173,7 @@ ${email.note ? `<tr><td style="padding:20px 0 0;${font}font-size:13px;line-heigh
   );
   // Under it all, the site's address, and for emails people can turn off, how
   const unsubscribe = email.unsubscribe
-    ? `Turn these off in Settings, or <a href="${escape(email.unsubscribe.page)}" style="color:${colors.muted};">unsubscribe</a>.<br>`
+    ? `Turn these off in <a href="${new URL('/dashboard/account/notifications', siteURL)}" style="color:${colors.muted};">Settings</a>, or <a href="${escape(email.unsubscribe.page)}" style="color:${colors.muted};">unsubscribe</a>.<br>`
     : '';
   const html = `<!doctype html>
 <html lang="en">

@@ -41,7 +41,9 @@ export function UnsubscribeButton({
           Done. You can turn them back on in your account settings.
         </p>
         <Button variant='outline' asChild className='w-full'>
-          <Link href='/dashboard/account'>Go to account settings</Link>
+          <Link href='/dashboard/account/notifications'>
+            Go to notification settings
+          </Link>
         </Button>
       </div>
     );

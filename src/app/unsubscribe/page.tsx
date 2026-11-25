@@ -34,7 +34,9 @@ export default async function UnsubscribePage({
         description='It may have been cut off when it was copied. You can also turn these emails off in your account settings.'
       >
         <Button asChild className='w-full'>
-          <Link href='/dashboard/account'>Go to account settings</Link>
+          <Link href='/dashboard/account/notifications'>
+            Go to notification settings
+          </Link>
         </Button>
       </AuthShell>
     );

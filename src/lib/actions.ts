@@ -92,7 +92,7 @@ export async function updateUsername(
     return { message: 'Unable to update username!' };
   }
 
-  revalidatePath('/dashboard/account');
+  revalidatePath('/dashboard/account', 'layout');
   revalidatePath('/dashboard/profiles');
   revalidatePath('/discovery');
   revalidatePath('/moderation/verification', 'layout');
@@ -120,7 +120,7 @@ export async function updateMatchContact(
     data: { matchContact: data.contact || null },
   });
 
-  revalidatePath('/dashboard/account');
+  revalidatePath('/dashboard/account', 'layout');
   revalidatePath('/dashboard/hearts');
 }
 
@@ -137,7 +137,7 @@ export async function setPassword(newPassword: string) {
     return { message: 'Unable to add a password!' };
   }
 
-  revalidatePath('/dashboard/account');
+  revalidatePath('/dashboard/account', 'layout');
 }
 
 export async function revokeSession(sessionId: string) {
@@ -155,13 +155,13 @@ export async function revokeSession(sessionId: string) {
     headers: await headers(),
   });
 
-  revalidatePath('/dashboard/account');
+  revalidatePath('/dashboard/account', 'layout');
 }
 
 export async function revokeOtherSessions() {
   await auth.api.revokeOtherSessions({ headers: await headers() });
 
-  revalidatePath('/dashboard/account');
+  revalidatePath('/dashboard/account', 'layout');
 }
 
 /**
@@ -174,7 +174,7 @@ export async function forgetTrustedDevices() {
 
   await forget(session.user.id);
 
-  revalidatePath('/dashboard/account');
+  revalidatePath('/dashboard/account', 'layout');
 }
 
 /**
@@ -700,7 +700,7 @@ export async function setNotificationEmails(kind: string, on: boolean) {
   const session = await requireUser();
   if (!isNotificationKind(kind)) return { message: 'Unknown notification.' };
   await setNotification(session.user.id, kind, on);
-  revalidatePath('/dashboard/account');
+  revalidatePath('/dashboard/account', 'layout');
 }
 
 /** Turns one kind of email off from an email's link, without signing in. */
