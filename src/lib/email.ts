@@ -23,8 +23,6 @@ type Email = {
   action?: { label: string; url: string; destructive?: boolean };
   /** After the button, quieter: what to do if it wasn't them */
   note?: string;
-  /** Small print under it all: who it's from and for */
-  footer: string;
   /** For emails people can turn off: the page that does it, and where mail apps' own button posts (RFC 8058) */
   unsubscribe?: { page: string; oneClick: string };
 };
@@ -126,8 +124,11 @@ function plain(email: Email) {
     ...(email.note ? [email.note] : []),
     [
       '--',
-      email.footer,
-      ...(email.unsubscribe ? [`Unsubscribe: ${email.unsubscribe.page}`] : []),
+      ...(email.unsubscribe
+        ? [
+            `Turn these off in Settings, or unsubscribe: ${email.unsubscribe.page}`,
+          ]
+        : []),
       siteURL.host,
     ].join('\n'),
   ].join('\n\n');
@@ -151,8 +152,9 @@ ${email.action ? button(email.action) : ''}
 ${email.note ? `<tr><td style="padding:20px 0 0;${font}font-size:13px;line-height:1.6;color:${colors.muted};">${text(email.note)}</td></tr>` : ''}`
     )}</td></tr>`
   );
+  // Under it all, the site's address, and for emails people can turn off, how
   const unsubscribe = email.unsubscribe
-    ? ` <a href="${escape(email.unsubscribe.page)}" style="color:${colors.muted};">unsubscribe</a>.`
+    ? `Turn these off in Settings, or <a href="${escape(email.unsubscribe.page)}" style="color:${colors.muted};">unsubscribe</a>.<br>`
     : '';
   const html = `<!doctype html>
 <html lang="en">
@@ -181,16 +183,13 @@ ${table(
     'width:100%;max-width:520px;',
     `<tr><td style="padding:0 4px 16px;">${brand()}</td></tr>
 <tr><td>${card}</td></tr>
-<tr><td style="padding:16px 4px 0;${font}font-size:12px;line-height:1.6;color:${colors.muted};">${text(email.footer)}${unsubscribe}<br><a href="${escape(siteURL.origin)}" style="color:${colors.muted};">${escape(siteURL.host)}</a></td></tr>`
+<tr><td style="padding:16px 4px 0;${font}font-size:12px;line-height:1.6;color:${colors.muted};">${unsubscribe}<a href="${escape(siteURL.origin)}" style="color:${colors.muted};">${escape(siteURL.host)}</a></td></tr>`
   )}</td></tr>`
 )}
 </body>
 </html>`;
   return { text: plain(email), html };
 }
-
-/** The small print under an email, as dash's says who sent it */
-const sentTo = (username: string) => `Sent by Tinderhaj to @${username}.`;
 
 async function sendEmail(email: Email) {
   // The mail server, e.g. smtps://no-reply%40example.com:password@mail.example.com
@@ -238,7 +237,6 @@ export async function sendPasswordResetEmail({
     ],
     action: { label: 'Reset password', url },
     note: "If you didn't ask for this, you can safely ignore this email. Your password stays as it is.",
-    footer: sentTo(username),
   });
 }
 
@@ -272,7 +270,6 @@ export async function sendVerificationEmail({
     note: changing
       ? "If you didn't ask to change your email, you can safely ignore this email."
       : "If you didn't create an account, you can safely ignore this email.",
-    footer: sentTo(username),
   });
 }
 
@@ -302,7 +299,6 @@ export async function sendEmailChangeConfirmation({
     ],
     action: { label: 'Confirm change', url },
     note: "If you didn't ask for this, ignore this email and consider changing your password.",
-    footer: sentTo(username),
   });
 }
 
@@ -332,7 +328,6 @@ export async function sendDeleteAccountEmail({
     ],
     action: { label: 'Delete account', url, destructive: true },
     note: "If you didn't ask for this, ignore this email and consider changing your password.",
-    footer: sentTo(username),
   });
 }
 
@@ -355,7 +350,6 @@ export async function sendTwoFactorCode({
     ],
     code,
     note: "If you didn't just sign in, someone may know your password: change it in your account settings.",
-    footer: sentTo(username),
   });
 }
 
@@ -395,7 +389,6 @@ export async function sendSharkVerifiedEmail({
       { label: 'Status', value: 'Verified, in discovery' },
     ],
     action: { label: `See ${shark}`, url },
-    footer: `${sentTo(username)} Turn these off in Settings, or`,
     unsubscribe,
   });
 }
