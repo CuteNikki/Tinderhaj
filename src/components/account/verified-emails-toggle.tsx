@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 
 import { setVerifiedEmails } from '@/lib/actions';
 
-import { Checkbox } from '@/components/ui/checkbox';
+import { Switch } from '@/components/ui/switch';
 
 /** Whether we email them when one of their sharks is verified. Saves as it's ticked. */
 export function VerifiedEmailsToggle({ on }: { on: boolean }) {
@@ -35,15 +35,10 @@ export function VerifiedEmailsToggle({ on }: { on: boolean }) {
   return (
     <label
       htmlFor='verifiedEmails'
-      className='flex cursor-pointer items-start gap-2 text-sm'
+      className='flex cursor-pointer items-center justify-between gap-4 text-sm'
     >
-      <Checkbox
-        id='verifiedEmails'
-        className='mt-0.5'
-        checked={checked}
-        onCheckedChange={(value) => change(value === true)}
-      />
       Email me when one of my sharks is verified
+      <Switch id='verifiedEmails' checked={checked} onCheckedChange={change} />
     </label>
   );
 }
