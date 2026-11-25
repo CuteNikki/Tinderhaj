@@ -19,7 +19,7 @@ import { cn } from '@/lib/utils';
 
 import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
 import { IconCard } from '@/components/common/icon-card';
-import { glass, glassFields } from '@/components/common/ocean';
+import { glassCard } from '@/components/common/ocean';
 import { Stagger } from '@/components/common/stagger';
 import { FreshSharks } from '@/components/sections/fresh-sharks';
 import { ReadyWhenYouAre } from '@/components/sections/ready-when-you-are';
@@ -95,11 +95,7 @@ export default function FeaturesPage() {
             delay={CONTENT_DELAY}
             className='grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4'
             // The glass on what comes in, so it's frosted from the start (see glass)
-            itemClassName={cn(
-              glass,
-              glassFields,
-              'h-full rounded-2xl shadow-lg'
-            )}
+            itemClassName={cn(glassCard, 'h-full')}
           >
             {FEATURES.map((feature) => (
               <IconCard key={feature.title} {...feature} onGlass />

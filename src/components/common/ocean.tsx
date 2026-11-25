@@ -10,6 +10,14 @@ export const glass =
 export const glassFields =
   '[--muted-foreground:var(--glass-muted)] [&_input]:border-glass-border [&_input]:bg-glass dark:[&_input]:bg-glass **:data-[variant=outline]:border-glass-border **:data-[variant=outline]:bg-glass **:data-[variant=outline]:hover:bg-glass-border dark:**:data-[variant=outline]:bg-glass dark:**:data-[variant=outline]:hover:bg-glass-border';
 
+/**
+ * A card of glass in the water, its quieter text and fields on glass too (see
+ * glassFields), and without the halo of text set right on the water (see
+ * .on-water). Put it on what comes in, never inside it, so it's frosted from
+ * the start (see glass).
+ */
+export const glassCard = `${glass} ${glassFields} rounded-2xl shadow-lg text-shadow-none`;
+
 /** For the main button in the water: sunlit from above, with a glint along the top like a bubble's. */
 export const sunlit =
   'bg-[linear-gradient(to_bottom,color-mix(in_oklch,var(--primary),white_15%),var(--primary))] inset-shadow-[0_1px_0_oklch(1_0_0/0.3)] hover:opacity-90';

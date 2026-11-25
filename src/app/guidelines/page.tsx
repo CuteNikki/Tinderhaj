@@ -20,9 +20,11 @@ import { CONTACT_EMAIL } from '@/constants/contact';
 import { guidelinesMetadata } from '@/constants/metadata';
 
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
+import { cn } from '@/lib/utils';
 
 import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
 import { IconCard } from '@/components/common/icon-card';
+import { glassCard } from '@/components/common/ocean';
 import { Stagger } from '@/components/common/stagger';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
 import { ReadyWhenYouAre } from '@/components/sections/ready-when-you-are';
@@ -107,11 +109,12 @@ export default function GuidelinesPage() {
     <>
       <div
         data-water='band'
-        data-tone='muted'
         className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'
       >
-        <div className='container mx-auto max-w-7xl'>
-          <Stagger id='page-header' variant='sink' className='mb-24'>
+        {/* The page's header and what's under it together, so the water
+            reaches past it all and its cards float in it, as glass */}
+        <div id='page-header' className='container mx-auto max-w-7xl'>
+          <Stagger variant='sink' className='mb-12'>
             <Eyebrow>Guidelines</Eyebrow>
             <PageTitle>Guidelines for sharks</PageTitle>
             <PageNote>
@@ -131,10 +134,10 @@ export default function GuidelinesPage() {
             gap={STAGGER / 2}
             delay={CONTENT_DELAY}
             className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'
-            itemClassName='h-full'
+            itemClassName={cn(glassCard, 'h-full')}
           >
             {RULES.map((rule) => (
-              <IconCard key={rule.title} {...rule} heading='h3' />
+              <IconCard key={rule.title} {...rule} heading='h3' onGlass />
             ))}
           </Stagger>
           <ScrollReveal delay={CONTENT_DELAY + STAGGER * 3}>

@@ -30,13 +30,14 @@ export function IconCard({
   onGlass?: boolean;
 }) {
   // Down at the bottom, so the links of cards side by side line up
-  const linkClassName =
-    'text-primary mt-auto inline-flex items-center gap-1 self-start pt-3 text-sm font-semibold hover:underline';
+  // Blue on a card; on glass, where blue can't stay clear, the glass's own text color
+  const linkClassName = cn(
+    'mt-auto inline-flex items-center gap-1 self-start pt-3 text-sm font-semibold',
+    onGlass ? 'hover:underline' : 'text-primary hover:underline'
+  );
 
   return (
     <div
-      // A card of its own on glass too, so the water's halo stays off its text
-      data-slot='card'
       className={cn(
         'flex h-full flex-col p-6',
         !onGlass && 'rounded-2xl border border-foreground/10 bg-card shadow-sm'

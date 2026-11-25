@@ -60,11 +60,12 @@ export default function CommunityPage() {
     <>
       <div
         data-water='band'
-        data-tone='muted'
         className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'
       >
-        <div className='container mx-auto max-w-7xl'>
-          <Stagger id='page-header' variant='sink' className='mb-24'>
+        {/* The page's header and what's under it together, so the water
+            reaches past it all and its cards float in it, as glass */}
+        <div id='page-header' className='container mx-auto max-w-7xl'>
+          <Stagger variant='sink' className='mb-12'>
             <Eyebrow>Community</Eyebrow>
             <PageTitle>Find the pod</PageTitle>
             <PageNote>
@@ -78,7 +79,7 @@ export default function CommunityPage() {
               Follow along
             </Eyebrow>
           </ScrollReveal>
-          <SocialLinks delay={CONTENT_DELAY} />
+          <SocialLinks delay={CONTENT_DELAY} onGlass />
         </div>
       </div>
 

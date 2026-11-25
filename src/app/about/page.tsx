@@ -13,10 +13,12 @@ import { aboutMetadata } from '@/constants/metadata';
 
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 import { socialLink } from '@/lib/social-link';
+import { cn } from '@/lib/utils';
 
 import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
 import { IconCard } from '@/components/common/icon-card';
 import { Logo } from '@/components/common/logo';
+import { glassCard } from '@/components/common/ocean';
 import { Stagger } from '@/components/common/stagger';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
 import { ReadyWhenYouAre } from '@/components/sections/ready-when-you-are';
@@ -93,67 +95,71 @@ export default function AboutPage() {
     <>
       <div
         data-water='band'
-        data-tone='muted'
         className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'
       >
-        <div className='container mx-auto max-w-7xl'>
-          <Stagger id='page-header' variant='sink' className='mb-24'>
+        {/* The page's header and what's under it together, so the water
+            reaches past it all and its cards float in it, as glass */}
+        <div id='page-header' className='container mx-auto max-w-7xl'>
+          <Stagger variant='sink' className='mb-12'>
             <Eyebrow>About</Eyebrow>
             <PageTitle>Made for the sharks</PageTitle>
             <PageNote>Why Tinderhaj exists, and who&apos;s behind it.</PageNote>
           </Stagger>
 
-          {/* The story, and beside it on wide screens, the short version */}
+          {/* The story, and beside it on wide screens, the short version, each on glass */}
           <div className='grid grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-16'>
-            <Stagger
-              gap={STAGGER}
+            <ScrollReveal
               delay={CONTENT_DELAY}
-              className='flex max-w-2xl flex-col gap-4 text-base leading-relaxed text-pretty text-foreground/85'
+              variant='card'
+              className={cn(glassCard, 'max-w-2xl')}
             >
-              <p>
-                Blåhaj (often written Blahaj) is IKEA&apos;s big blue plush
-                shark. Plenty of people have one, a lot of people have several,
-                and every one of them has a personality its people could tell
-                you all about.
-              </p>
-              <p>
-                Tinderhaj gives those sharks somewhere to show it: a profile of
-                their own, a place to be found, and other sharks to meet.
-                It&apos;s a dating site, but the daters are plush, and the point
-                is the fun of it.
-              </p>
-              <p>
-                It started in December 2024 as a small side project, and
-                it&apos;s still made by one person, in the open on GitHub.
-                There&apos;s nothing to buy and nothing to unlock.
-              </p>
-              <p>
-                Questions, ideas, or just want to say hi?
-                <Link
-                  href='/contact'
-                  className='flex w-fit items-center gap-1 font-semibold text-primary hover:underline'
-                >
-                  Contact us
-                  <ArrowRightIcon className='size-4' aria-hidden='true' />
-                </Link>
-              </p>
-              {/* The small print, right under the story, before the card on small screens too */}
-              <p className='mt-2 border-t border-border pt-4 text-xs leading-relaxed text-muted-foreground'>
-                Blåhaj is a trademark of IKEA. Tinderhaj is an independent
-                project, not affiliated with IKEA or Tinder.
-              </p>
-            </Stagger>
+              <Stagger
+                gap={STAGGER}
+                delay={CONTENT_DELAY}
+                className='flex flex-col gap-4 p-6 text-base leading-relaxed text-pretty text-foreground/85 sm:p-8'
+              >
+                <p>
+                  Blåhaj (often written Blahaj) is IKEA&apos;s big blue plush
+                  shark. Plenty of people have one, a lot of people have
+                  several, and every one of them has a personality its people
+                  could tell you all about.
+                </p>
+                <p>
+                  Tinderhaj gives those sharks somewhere to show it: a profile
+                  of their own, a place to be found, and other sharks to meet.
+                  It&apos;s a dating site, but the daters are plush, and the
+                  point is the fun of it.
+                </p>
+                <p>
+                  It started in December 2024 as a small side project, and
+                  it&apos;s still made by one person, in the open on GitHub.
+                  There&apos;s nothing to buy and nothing to unlock.
+                </p>
+                <p>
+                  Questions, ideas, or just want to say hi?
+                  <Link
+                    href='/contact'
+                    className='flex w-fit items-center gap-1 font-semibold hover:underline'
+                  >
+                    Contact us
+                    <ArrowRightIcon className='size-4' aria-hidden='true' />
+                  </Link>
+                </p>
+                {/* The small print, right under the story, before the card on small screens too */}
+                <p className='mt-2 border-t border-glass-border pt-4 text-xs leading-relaxed text-muted-foreground'>
+                  Blåhaj is a trademark of IKEA. Tinderhaj is an independent
+                  project, not affiliated with IKEA or Tinder.
+                </p>
+              </Stagger>
+            </ScrollReveal>
             <ScrollReveal
               delay={CONTENT_DELAY + STAGGER}
               variant='card'
-              className='max-w-2xl'
+              className={cn(glassCard, 'max-w-2xl')}
             >
-              <aside
-                aria-labelledby='at-a-glance'
-                className='rounded-2xl border border-foreground/10 bg-card p-6 shadow-sm'
-              >
+              <aside aria-labelledby='at-a-glance' className='p-6'>
                 {/* Headed across the top, over a line: the words centered, and the logo beside them, not counted in */}
-                <div className='-mx-6 -mt-6 mb-6 flex justify-center border-b border-border px-6 py-5'>
+                <div className='-mx-6 -mt-6 mb-6 flex justify-center border-b border-glass-border px-6 py-5'>
                   <div className='relative text-center'>
                     <Logo className='absolute top-1/2 right-full mr-3 size-10 -translate-y-1/2' />
                     <h2

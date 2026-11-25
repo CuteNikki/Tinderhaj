@@ -195,6 +195,7 @@
   --glass-foreground: oklch(0.19 0.04 255);
   --glass-muted: oklch(0.38 0.04 250);
   --glass-shadow: oklch(0.5 0.12 250 / 0.12);
+  --water-primary: oklch(0.46 0.17 245);
 }
 
 .dark {
@@ -244,8 +245,9 @@
   --glass: oklch(0.83 0.085 243 / 0.12);
   --glass-border: oklch(0.94 0.03 245 / 0.28);
   --glass-foreground: oklch(0.985 0.008 245);
-  --glass-muted: oklch(0.985 0.008 245 / 0.88);
+  --glass-muted: oklch(0.985 0.008 245 / 0.95);
   --glass-shadow: oklch(0.15 0.05 255 / 0.3);
+  --water-primary: oklch(0.82 0.11 240);
 }
 
 @layer base {
@@ -714,6 +716,14 @@
 :is(.on-water, #page-header)
   :is([data-slot='button'], [data-slot='badge'], [data-slot='card']) {
   text-shadow: none;
+}
+
+/*
+ * Blue in the water: deeper in the sunlit shallows and lighter in the deep, so
+ * text in it, on the water or on its glass, stays clear of it.
+ */
+#page-header {
+  --primary: var(--water-primary);
 }
 
 /*

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Fragment } from 'react';
 
 import {
+  ArrowRightIcon,
   ArrowUpRightIcon,
   BugIcon,
   MailIcon,
@@ -16,9 +17,10 @@ import { contactMetadata } from '@/constants/metadata';
 
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
 import { isExternalLink, socialLink } from '@/lib/social-link';
+import { cn } from '@/lib/utils';
 
 import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
-import { sunlit } from '@/components/common/ocean';
+import { glassCard, sunlit } from '@/components/common/ocean';
 import { Stagger } from '@/components/common/stagger';
 import { CopyEmail } from '@/components/contact/copy-email';
 import { SocialLinks } from '@/components/contact/social-links';
@@ -64,11 +66,12 @@ export default function ContactPage() {
     <>
       <div
         data-water='band'
-        data-tone='muted'
         className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'
       >
-        <div className='container mx-auto max-w-7xl'>
-          <Stagger id='page-header' variant='sink' className='mb-24'>
+        {/* The page's header and what's under it together, so the water
+            reaches past it all and its cards float in it, as glass */}
+        <div id='page-header' className='container mx-auto max-w-7xl'>
+          <Stagger variant='sink' className='mb-12'>
             <Eyebrow>Contact</Eyebrow>
             <PageTitle>Get in touch</PageTitle>
             <PageNote>
@@ -89,11 +92,11 @@ export default function ContactPage() {
               <ScrollReveal
                 delay={CONTENT_DELAY}
                 variant='card'
-                className='@container'
+                className={cn(glassCard, '@container')}
               >
                 <section
                   aria-labelledby='email'
-                  className='flex flex-col gap-5 rounded-2xl border border-foreground/10 bg-card p-5 shadow-sm sm:p-6 @min-[34.5rem]:flex-row @min-[34.5rem]:items-center dark:bg-accent'
+                  className='flex flex-col gap-5 p-5 sm:p-6 @min-[34.5rem]:flex-row @min-[34.5rem]:items-center'
                 >
                   <span className='flex size-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary'>
                     <MailIcon className='size-6' aria-hidden='true' />
@@ -121,7 +124,11 @@ export default function ContactPage() {
                 </section>
               </ScrollReveal>
 
-              <SocialLinks delay={CONTENT_DELAY + STAGGER} className='mt-3' />
+              <SocialLinks
+                delay={CONTENT_DELAY + STAGGER}
+                className='mt-3'
+                onGlass
+              />
             </div>
 
             <div>
@@ -130,52 +137,63 @@ export default function ContactPage() {
                   Good to know
                 </Eyebrow>
               </ScrollReveal>
-              <Stagger
-                as='ul'
-                itemAs='li'
-                gap={STAGGER}
-                delay={CONTENT_DELAY + STAGGER}
-                className='divide-y divide-border'
-                itemClassName='flex gap-4 py-4 first:pt-0 last:pb-0'
+              {/* On a card of glass of its own, like the ways to reach us beside it */}
+              <ScrollReveal
+                delay={CONTENT_DELAY}
+                variant='card'
+                className={glassCard}
               >
-                {ANSWERS.map(({ title, copy, link, href, icon: Icon }) => (
-                  <Fragment key={title}>
-                    <Icon
-                      className='mt-0.5 size-5 shrink-0 text-muted-foreground'
-                      aria-hidden='true'
-                    />
-                    <div className='flex min-w-0 flex-1 flex-col items-start gap-1'>
-                      <div>
-                        <h3 className='font-bold'>{title}</h3>
-                        <p className='mt-1 text-sm leading-relaxed text-muted-foreground'>
-                          {copy}
-                        </p>
+                <Stagger
+                  as='ul'
+                  itemAs='li'
+                  gap={STAGGER}
+                  delay={CONTENT_DELAY + STAGGER}
+                  className='divide-y divide-glass-border p-5 sm:p-6'
+                  itemClassName='flex gap-4 py-4 first:pt-0 last:pb-0'
+                >
+                  {ANSWERS.map(({ title, copy, link, href, icon: Icon }) => (
+                    <Fragment key={title}>
+                      <Icon
+                        className='mt-0.5 size-5 shrink-0 text-muted-foreground'
+                        aria-hidden='true'
+                      />
+                      <div className='flex min-w-0 flex-1 flex-col items-start gap-1'>
+                        <div>
+                          <h3 className='font-bold'>{title}</h3>
+                          <p className='mt-1 text-sm leading-relaxed text-muted-foreground'>
+                            {copy}
+                          </p>
+                        </div>
+                        {isExternalLink(href) ? (
+                          <a
+                            href={href}
+                            target='_blank'
+                            rel='noreferrer'
+                            className='inline-flex shrink-0 items-center gap-1 text-sm font-semibold hover:underline'
+                          >
+                            {link}
+                            <ArrowUpRightIcon
+                              className='size-3.5'
+                              aria-hidden='true'
+                            />
+                          </a>
+                        ) : (
+                          <Link
+                            href={href}
+                            className='inline-flex shrink-0 items-center gap-1 text-sm font-semibold hover:underline'
+                          >
+                            {link}
+                            <ArrowRightIcon
+                              className='size-3.5'
+                              aria-hidden='true'
+                            />
+                          </Link>
+                        )}
                       </div>
-                      {isExternalLink(href) ? (
-                        <a
-                          href={href}
-                          target='_blank'
-                          rel='noreferrer'
-                          className='inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-primary hover:underline'
-                        >
-                          {link}
-                          <ArrowUpRightIcon
-                            className='size-3.5'
-                            aria-hidden='true'
-                          />
-                        </a>
-                      ) : (
-                        <Link
-                          href={href}
-                          className='shrink-0 text-sm font-semibold text-primary hover:underline'
-                        >
-                          {link}
-                        </Link>
-                      )}
-                    </div>
-                  </Fragment>
-                ))}
-              </Stagger>
+                    </Fragment>
+                  ))}
+                </Stagger>
+              </ScrollReveal>
             </div>
           </div>
         </div>

@@ -14,9 +14,10 @@ import {
 import { guideMetadata } from '@/constants/metadata';
 
 import { CONTENT_DELAY, STAGGER } from '@/lib/motion';
+import { cn } from '@/lib/utils';
 
 import { Eyebrow, PageNote, PageTitle } from '@/components/common/heading';
-import { sunlit } from '@/components/common/ocean';
+import { glassCard, sunlit } from '@/components/common/ocean';
 import { Stagger } from '@/components/common/stagger';
 import { DiscoveryLink } from '@/components/discovery/link';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
@@ -67,11 +68,12 @@ export default function GuidePage() {
     <>
       <div
         data-water='band'
-        data-tone='muted'
         className='flex flex-1 flex-col px-4 pt-28 pb-18 sm:px-5 lg:px-8'
       >
-        <div className='container mx-auto max-w-7xl'>
-          <Stagger id='page-header' variant='sink' className='mb-24'>
+        {/* The page's header and what's under it together, so the water
+            reaches past it all and its cards float in it, as glass */}
+        <div id='page-header' className='container mx-auto max-w-7xl'>
+          <Stagger variant='sink' className='mb-12'>
             <Eyebrow>Guide</Eyebrow>
             <PageTitle>How Tinderhaj works</PageTitle>
             <PageNote>
@@ -87,12 +89,13 @@ export default function GuidePage() {
               gap={STAGGER}
               delay={CONTENT_DELAY}
               className='grid gap-4'
+              itemClassName={glassCard}
             >
               {STEPS.map(({ title, copy, icon: Icon, link }, index) => (
                 // On phones the icon sits beside the title only, so the text below has the card's full width; wider, it has a column of its own
                 <div
                   key={title}
-                  className='grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-4 rounded-2xl border border-foreground/10 bg-card p-5 shadow-sm sm:items-start sm:gap-x-5 sm:p-6'
+                  className='grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-4 p-5 sm:items-start sm:gap-x-5 sm:p-6'
                 >
                   <span className='flex size-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary sm:row-span-2'>
                     <Icon className='size-5' aria-hidden='true' />
@@ -110,7 +113,7 @@ export default function GuidePage() {
                     {link && (
                       <Link
                         href={link.href}
-                        className='mt-2 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline'
+                        className='mt-2 inline-flex items-center gap-1 text-sm font-semibold hover:underline'
                       >
                         {link.label}
                         <ArrowRight className='size-3.5' aria-hidden='true' />
@@ -125,9 +128,9 @@ export default function GuidePage() {
             <ScrollReveal
               delay={CONTENT_DELAY + STAGGER}
               variant='card'
-              className='lg:sticky lg:top-24'
+              className={cn(glassCard, 'lg:sticky lg:top-24')}
             >
-              <div className='rounded-2xl border border-foreground/10 bg-card p-6 shadow-sm'>
+              <div className='p-6'>
                 <h2 className='text-xl font-bold'>Ready to dive in?</h2>
                 <p className='mt-2 text-sm leading-relaxed text-pretty text-muted-foreground'>
                   It&apos;s free. Make an account, or have a look around first.

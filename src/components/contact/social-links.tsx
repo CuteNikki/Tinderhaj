@@ -6,16 +6,19 @@ import { LIFT, STAGGER } from '@/lib/motion';
 import { socialLink } from '@/lib/social-link';
 import { cn } from '@/lib/utils';
 
+import { glassCard } from '@/components/common/ocean';
 import { Stagger } from '@/components/common/stagger';
 import { SocialIcon } from '@/components/contact/social-icon';
 
-/** Where to find Tinderhaj around the internet, as cards coming in after `delay`; nothing at all if none has a link yet. */
+/** Where to find Tinderhaj around the internet, as cards coming in after `delay`; nothing at all if none has a link yet. `onGlass` for the water: glass, on what comes in (see glassCard). */
 export function SocialLinks({
   delay,
   className,
+  onGlass = false,
 }: {
   delay: number;
   className?: string;
+  onGlass?: boolean;
 }) {
   const socials = SOCIALS.filter((social) => social.href);
   if (socials.length === 0) return null;
@@ -31,7 +34,7 @@ export function SocialLinks({
         'grid grid-cols-[repeat(auto-fit,minmax(min(100%,20rem),1fr))] gap-3',
         className
       )}
-      itemClassName='h-full'
+      itemClassName={cn('h-full', onGlass && cn(glassCard, LIFT))}
     >
       {socials.map((social) => (
         <a
@@ -40,7 +43,11 @@ export function SocialLinks({
           target='_blank'
           rel='noreferrer'
           title={social.handle ?? undefined}
-          className={`group/social flex h-full items-start gap-4 rounded-2xl border border-foreground/10 bg-card p-4 shadow-sm dark:bg-accent ${LIFT}`}
+          className={cn(
+            'group/social flex h-full items-start gap-4 p-4',
+            !onGlass &&
+              `rounded-2xl border border-foreground/10 bg-card shadow-sm dark:bg-accent ${LIFT}`
+          )}
         >
           <span className='flex size-10 shrink-0 items-center justify-center rounded-full bg-foreground/5 transition-transform duration-300 ease-bounce group-hover/social:scale-110'>
             <SocialIcon
