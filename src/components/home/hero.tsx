@@ -28,8 +28,11 @@ import { Button } from '@/components/ui/button';
 export function Hero({
   profileCount,
   badge,
+  effects,
 }: {
   profileCount: React.ReactNode;
+  /** The season's effect, swimming in the water behind everything (see Season) */
+  effects?: React.ReactNode;
   /** Over the title: what the site is, or the season's news (see SeasonBadge) */
   badge: React.ReactNode;
 }) {
@@ -45,6 +48,7 @@ export function Hero({
       className='relative isolate overflow-hidden px-4 sm:px-5 lg:px-8'
     >
       <HeroWater floor='muted' />
+      {effects}
       <div className='relative z-10 container mx-auto grid min-h-screen max-w-7xl items-center gap-4 pt-24 pb-16 lg:grid-cols-2 lg:gap-8'>
         <div className='on-water relative z-10 flex max-w-2xl flex-col items-start'>
           {badge}

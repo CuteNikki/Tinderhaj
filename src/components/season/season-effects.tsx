@@ -316,10 +316,10 @@ function subscribeMotion(listener: () => void) {
 }
 
 /**
- * The season's effect at the top of every page (see seasonOn): snow,
- * confetti, bats and ghosts, drawn on a canvas over the first screen that
- * lets every click through. It scrolls away with the page rather than
- * staying over it, which would make scrolling feel dizzy. None for those
+ * The season's effect in the home page's water (see seasonOn): snow,
+ * confetti, bats and ghosts, drawn on a canvas behind the hero's words and
+ * buttons that lets every click through, so it never covers them. Only
+ * there, and it scrolls away with the page. None for those
  * who ask for less motion. The button in the corner turns them all off, for
  * every season, and back on.
  */
@@ -453,8 +453,8 @@ export function SeasonEffects({ effect }: { effect: SeasonEffect }) {
         <canvas
           ref={canvasRef}
           aria-hidden='true'
-          // Fading out toward its bottom edge, so nothing is cut off at a line there
-          className='pointer-events-none absolute inset-x-0 top-0 z-40 h-svh w-full mask-b-from-50% mask-b-to-100%'
+          // Behind the hero's words and buttons, fading out toward the waves, so nothing is cut off at a line
+          className='pointer-events-none absolute inset-0 size-full mask-b-from-70% mask-b-to-100%'
         />
       )}
       <Tooltip>
@@ -465,7 +465,7 @@ export function SeasonEffects({ effect }: { effect: SeasonEffect }) {
             aria-label={label}
             aria-pressed={!off}
             onClick={() => writeOff(!off)}
-            className='fixed right-4 bottom-4 z-50 rounded-full shadow-md'
+            className='absolute right-4 bottom-4 z-20 rounded-full shadow-md'
           >
             <Icon
               className={off ? 'text-muted-foreground' : 'text-primary'}

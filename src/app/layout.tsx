@@ -8,7 +8,6 @@ import { KeepScroll } from '@/components/common/keep-scroll';
 import { PageWater } from '@/components/common/page-water';
 import { Footer } from '@/components/navigation/footer';
 import { Navbar, NavbarFallback } from '@/components/navigation/navbar';
-import { Season } from '@/components/season/season';
 import { ThemeProvider } from '@/components/theme/provider';
 import { Toaster } from '@/components/theme/toaster';
 
@@ -56,7 +55,6 @@ export default function RootLayout({
           </main>
           <Footer />
           <Toaster position='top-center' />
-          <Season />
         </ThemeProvider>
       </body>
     </html>
