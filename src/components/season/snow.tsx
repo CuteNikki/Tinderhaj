@@ -24,7 +24,13 @@ type Flake = {
   speed: number;
   drift: number;
   phase: number;
+  /** How far it's turned, and how fast it turns, in radians (a second) */
+  angle: number;
+  spin: number;
 };
+
+/** The six arms of a flake: three lines through its middle, a third of a turn apart. */
+const ARMS = [0, Math.PI / 3, (2 * Math.PI) / 3];
 
 function readOff() {
   try {
@@ -102,10 +108,12 @@ export function Snow() {
       flakes = Array.from({ length: count }, () => ({
         x: Math.random() * innerWidth,
         y: Math.random() * innerHeight,
-        r: 1 + Math.random() * 2.5,
+        r: 3 + Math.random() * 4,
         speed: 20 + Math.random() * 40,
         drift: 10 + Math.random() * 20,
         phase: Math.random() * Math.PI * 2,
+        angle: Math.random() * Math.PI,
+        spin: (Math.random() - 0.5) * 1.2,
       }));
     }
 
@@ -119,7 +127,9 @@ export function Snow() {
           '--snow'
         );
       context!.clearRect(0, 0, innerWidth, innerHeight);
-      context!.fillStyle = color;
+      context!.strokeStyle = color;
+      context!.lineWidth = 1.5;
+      context!.lineCap = 'round';
       for (const flake of flakes) {
         flake.y += flake.speed * step;
         flake.phase += step;
@@ -128,9 +138,16 @@ export function Snow() {
           flake.y = -flake.r;
           flake.x = Math.random() * innerWidth;
         }
+        // A six-armed flake rather than a dot, so it can't be taken for one of the water's bubbles
+        flake.angle += flake.spin * step;
         context!.beginPath();
-        context!.arc(x, flake.y, flake.r, 0, Math.PI * 2);
-        context!.fill();
+        for (const arm of ARMS) {
+          const dx = Math.cos(flake.angle + arm) * flake.r;
+          const dy = Math.sin(flake.angle + arm) * flake.r;
+          context!.moveTo(x - dx, flake.y - dy);
+          context!.lineTo(x + dx, flake.y + dy);
+        }
+        context!.stroke();
       }
       frame = requestAnimationFrame(draw);
     }
