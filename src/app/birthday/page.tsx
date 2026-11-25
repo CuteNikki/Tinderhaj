@@ -71,7 +71,6 @@ export default async function BirthdayPage() {
       {/* The card, in the water, with confetti around it */}
       <div
         data-water='band'
-        data-tone='muted'
         className='flex flex-1 flex-col px-4 pt-28 pb-24 sm:px-5 lg:px-8'
       >
         <div className='container mx-auto flex max-w-7xl justify-center'>
