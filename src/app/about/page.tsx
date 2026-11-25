@@ -111,9 +111,10 @@ export default function AboutPage() {
               className='flex max-w-2xl flex-col gap-4 text-base leading-relaxed text-pretty text-foreground/85'
             >
               <p>
-                Blåhaj is IKEA&apos;s big blue plush shark. Plenty of people
-                have one, a lot of people have several, and every one of them
-                has a personality its people could tell you all about.
+                Blåhaj (often written Blahaj) is IKEA&apos;s big blue plush
+                shark. Plenty of people have one, a lot of people have several,
+                and every one of them has a personality its people could tell
+                you all about.
               </p>
               <p>
                 Tinderhaj gives those sharks somewhere to show it: a profile of

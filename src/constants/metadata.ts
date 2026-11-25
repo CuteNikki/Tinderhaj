@@ -18,7 +18,7 @@ export const layoutMetadata: Metadata = {
     default: `${SITE_NAME} · Meet sharks`,
   },
   description:
-    "The world's first dating site exclusively for IKEA's Blåhaj plush sharks. Browse profiles and find the perfect match by color, size, and squishiness.",
+    "The world's first dating site exclusively for IKEA's Blåhaj (Blahaj) plush sharks. Browse profiles and find the perfect match by color, size, and squishiness.",
   applicationName: SITE_NAME,
   openGraph: {
     type: 'website',
@@ -38,7 +38,7 @@ const unlisted: Metadata = { robots: { index: false, follow: false } };
 export const homeMetadata: Metadata = {
   title: { absolute: `${SITE_NAME} · Meet sharks` },
   description:
-    "A warm, weird little corner of the internet for Blåhaj looking for their person. The world's first dating site for IKEA's plush sharks, matching by color, size, and squishiness.",
+    "A warm, weird little corner of the internet for Blåhaj (Blahaj) looking for their person. The world's first dating site for IKEA's plush sharks, matching by color, size, and squishiness.",
 };
 
 export const notFoundMetadata: Metadata = {
