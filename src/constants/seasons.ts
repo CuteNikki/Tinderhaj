@@ -8,14 +8,7 @@
 
 /** What drifts over the page. */
 export type SeasonEffect =
-  | 'snow'
-  | 'confetti'
-  | 'hearts'
-  | 'trans'
-  | 'pride'
-  | 'petals'
-  | 'sparkles'
-  | 'bats';
+  'snow' | 'confetti' | 'hearts' | 'trans' | 'pride' | 'bats';
 
 /** What the home page's badge says, beyond what the site is. */
 export type SeasonBadgeKind =
@@ -66,8 +59,5 @@ export function seasonOn(date: Date): Season {
   if (month === 10) return season('bats', 'halloween');
   if (month === 12) return season('snow', 'holidays');
 
-  // The quieter seasons between them, with no news of their own
-  if (month === 4 || month === 5) return season('petals', null);
-  if (month === 7 || month === 8) return season('sparkles', null);
   return season(null, null);
 }

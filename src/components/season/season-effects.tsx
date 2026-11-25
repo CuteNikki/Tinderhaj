@@ -3,13 +3,11 @@
 import { useEffect, useRef, useSyncExternalStore } from 'react';
 
 import {
-  Flower2Icon,
   GhostIcon,
   HeartIcon,
   PartyPopperIcon,
   RainbowIcon,
   SnowflakeIcon,
-  SunIcon,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -35,7 +33,7 @@ type Particle = {
   speed: number;
   /** How far it sways from side to side, in pixels */
   sway: number;
-  /** Where it is in its sway, its flap or its twinkle */
+  /** Where it is in its sway or its flap */
   phase: number;
   /** How it's turned, and how fast it turns, in radians (a second) */
   angle: number;
@@ -56,7 +54,7 @@ type Draw = (
  * the light and the dark theme, and how one is drawn.
  */
 type Look = {
-  move: 'fall' | 'rise' | 'across' | 'twinkle';
+  move: 'fall' | 'rise' | 'across';
   density: number;
   size: [number, number];
   speed: [number, number];
@@ -114,27 +112,6 @@ const confetti: Draw = (context, p, x, y) => {
     p.r * Math.cos(p.phase * 3)
   );
   context.restore();
-};
-
-const petal: Draw = (context, p, x, y) => {
-  context.beginPath();
-  context.ellipse(x, y, p.r, p.r * 0.55, p.angle, 0, Math.PI * 2);
-  context.fill();
-};
-
-/** A four-pointed glint that brightens and fades where it is. */
-const sparkle: Draw = (context, p, x, y) => {
-  const glow = Math.max(0, Math.sin(p.phase));
-  if (!glow) return;
-  const r = p.r * glow;
-  context.globalAlpha = glow;
-  context.beginPath();
-  context.moveTo(x - r, y);
-  context.lineTo(x + r, y);
-  context.moveTo(x, y - r);
-  context.lineTo(x, y + r);
-  context.stroke();
-  context.globalAlpha = 1;
 };
 
 /** A bat from the side: two wings flapping from its body, and a round head. */
@@ -231,29 +208,6 @@ const LOOKS: Record<SeasonEffect, Look> = {
     icon: RainbowIcon,
     name: 'rainbow hearts',
     draw: heart,
-  },
-  petals: {
-    move: 'fall',
-    density: 0.25,
-    size: [3, 6],
-    speed: [15, 35],
-    colors: {
-      light: ['#f9a8d4', '#f472b6', '#fbcfe8'],
-      dark: ['#fbcfe8', '#f9a8d4', '#fce7f3'],
-    },
-    icon: Flower2Icon,
-    name: 'petals',
-    draw: petal,
-  },
-  sparkles: {
-    move: 'twinkle',
-    density: 0.2,
-    size: [3, 6],
-    speed: [0, 0],
-    colors: { light: ['#f59e0b', '#fbbf24'], dark: ['#fde68a', '#fcd34d'] },
-    icon: SunIcon,
-    name: 'sunlight',
-    draw: sparkle,
   },
   bats: {
     move: 'across',
@@ -353,7 +307,7 @@ export function SeasonEffects({ effect }: { effect: SeasonEffect }) {
             ? -20
             : Math.random() * innerWidth,
         y:
-          anywhere || look.move === 'across' || look.move === 'twinkle'
+          anywhere || look.move === 'across'
             ? Math.random() * innerHeight
             : look.move === 'rise'
               ? innerHeight + 20
@@ -406,15 +360,13 @@ export function SeasonEffects({ effect }: { effect: SeasonEffect }) {
           look.move === 'across' ? p.x : p.x + Math.sin(p.phase) * p.sway;
         const y =
           look.move === 'across' ? p.y + Math.sin(p.phase * 2) * p.sway : p.y;
-        // Gone past an edge, or a glint that's had its moment: another in its place
+        // Gone past an edge: another in its place
         const gone =
           y - p.r * 2 > innerHeight ||
           y + p.r * 2 < 0 ||
-          x - p.r * 2 > innerWidth ||
-          (look.move === 'twinkle' && p.phase > Math.PI * 2);
+          x - p.r * 2 > innerWidth;
         if (gone) {
-          particles[i] = spawn(look.move === 'twinkle');
-          if (look.move === 'twinkle') particles[i].phase = 0;
+          particles[i] = spawn(false);
           continue;
         }
         context!.fillStyle = p.color;
