@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import {
-  ArrowRightIcon,
   BadgeCheckIcon,
   Code2Icon,
   SmileIcon,
@@ -135,14 +134,14 @@ export default function AboutPage() {
                   There&apos;s nothing to buy and nothing to unlock.
                 </p>
                 <p>
-                  Questions, ideas, or just want to say hi?
+                  Questions, ideas, or just want to say hi?{' '}
                   <Link
                     href='/contact'
-                    className='flex w-fit items-center gap-1 font-semibold hover:underline'
+                    className='font-semibold text-foreground hover:underline'
                   >
-                    Contact us
-                    <ArrowRightIcon className='size-4' aria-hidden='true' />
+                    Get in touch
                   </Link>
+                  .
                 </p>
               </Stagger>
             </ScrollReveal>
