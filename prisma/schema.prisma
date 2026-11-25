@@ -63,6 +63,9 @@ model User {
   /// Whether to email them when one of their sharks is verified. On unless
   /// they turn it off, in Settings or from the email's unsubscribe link.
   verifiedEmails Boolean @default(true)
+  /// Whether to email them when a friend they invited counts: their first
+  /// shark is verified. On unless they turn it off, like verifiedEmails.
+  inviteEmails   Boolean @default(true)
 
   /// Banned accounts can't sign in. Check banExpires too (see lib/bans.ts):
   /// an expired ban is only cleared at their next sign-in.

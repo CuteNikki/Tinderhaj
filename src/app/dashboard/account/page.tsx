@@ -17,12 +17,12 @@ import { EmailSettings } from '@/components/account/email-settings';
 import { InviteSettings } from '@/components/account/invite-settings';
 import { LinkedAccounts } from '@/components/account/linked-accounts';
 import { MatchContactForm } from '@/components/account/match-contact-form';
+import { NotificationToggle } from '@/components/account/notification-toggle';
 import { PasskeySettings } from '@/components/account/passkey-settings';
 import { PasswordForm } from '@/components/account/password-form';
 import { SessionList } from '@/components/account/session-list';
 import { TwoFactorSettings } from '@/components/account/two-factor-settings';
 import { UsernameForm } from '@/components/account/username-form';
-import { VerifiedEmailsToggle } from '@/components/account/verified-emails-toggle';
 import { Eyebrow, PageTitle } from '@/components/common/heading';
 import { SettingsSection } from '@/components/common/settings-section';
 import { Stagger } from '@/components/common/stagger';
@@ -39,6 +39,7 @@ export default async function AccountPage({
     hasPassword,
     matchContact,
     verifiedEmails,
+    inviteEmails,
     twoFactor,
     trustedDevices,
     passkeys,
@@ -106,7 +107,10 @@ export default async function AccountPage({
               description='Emails about your sharks. Sign-in codes and links always come.'
               delay={CONTENT_DELAY + 2 * STAGGER}
             >
-              <VerifiedEmailsToggle on={verifiedEmails} />
+              <div className='flex flex-col gap-3'>
+                <NotificationToggle kind='verified' on={verifiedEmails} />
+                <NotificationToggle kind='invites' on={inviteEmails} />
+              </div>
             </SettingsSection>
             <SettingsSection
               title='Password'

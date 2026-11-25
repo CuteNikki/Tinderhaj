@@ -1,0 +1,22 @@
+/**
+ * The emails people can turn off, each with its setting on the account: in
+ * Settings > Notifications, and from each email's unsubscribe link.
+ */
+export const NOTIFICATIONS = {
+  verified: {
+    field: 'verifiedEmails',
+    label: 'Email me when one of my sharks is verified',
+    about: 'when one of your sharks is verified',
+  },
+  invites: {
+    field: 'inviteEmails',
+    label: 'Email me when a friend I invited gets a shark verified',
+    about: 'when a friend you invited gets a shark verified',
+  },
+} as const;
+
+export type NotificationKind = keyof typeof NOTIFICATIONS;
+
+export function isNotificationKind(kind: unknown): kind is NotificationKind {
+  return typeof kind === 'string' && Object.hasOwn(NOTIFICATIONS, kind);
+}

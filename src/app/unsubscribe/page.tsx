@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { MailMinusIcon, MailXIcon } from 'lucide-react';
 
 import { unsubscribeMetadata } from '@/constants/metadata';
+import { NOTIFICATIONS } from '@/constants/notifications';
 
 import { readUnsubscribe } from '@/lib/unsubscribe';
 
@@ -21,10 +22,10 @@ export const metadata: Metadata = unsubscribeMetadata;
 export default async function UnsubscribePage({
   searchParams,
 }: PageProps<'/unsubscribe'>) {
-  const { u, t } = await searchParams;
-  const userId = readUnsubscribe(u, t);
+  const { u, k, t } = await searchParams;
+  const link = readUnsubscribe(u, k, t);
 
-  if (!userId)
+  if (!link)
     return (
       <AuthShell
         badge='Link invalid'
@@ -43,9 +44,13 @@ export default async function UnsubscribePage({
       badge='Emails'
       icon={<MailMinusIcon className='size-4 shrink-0' aria-hidden='true' />}
       title='Unsubscribe'
-      description="Stop the emails we send when one of your sharks is verified? You'll still get the ones you need, like sign-in codes."
+      description={`Stop the emails we send ${NOTIFICATIONS[link.kind].about}? You'll still get the ones you need, like sign-in codes.`}
     >
-      <UnsubscribeButton userId={userId} token={String(t)} />
+      <UnsubscribeButton
+        userId={link.userId}
+        kind={link.kind}
+        token={String(t)}
+      />
     </AuthShell>
   );
 }

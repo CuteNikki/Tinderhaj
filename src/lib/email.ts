@@ -339,3 +339,45 @@ export async function sendSharkVerifiedEmail({
     unsubscribe,
   });
 }
+
+/**
+ * A friend they invited counts now: their first shark is verified. Says so
+ * when it earned a badge. Can be turned off, so it has unsubscribe links.
+ */
+export async function sendInviteJoinedEmail({
+  email,
+  username,
+  friend,
+  shark,
+  url,
+  count,
+  badge,
+  unsubscribe,
+}: {
+  email: string;
+  username: string;
+  friend: string;
+  shark: string;
+  url: string;
+  /** How many friends count now, this one included */
+  count: number;
+  /** The badge this friend earned them, if any */
+  badge: string | null;
+  unsubscribe: { page: string; oneClick: string };
+}) {
+  await sendEmail({
+    to: email,
+    subject: badge
+      ? `You earned the ${badge} badge on Tinderhaj`
+      : `@${friend} joined Tinderhaj with ${shark}`,
+    heading: badge ? `You're a ${badge}!` : 'Your invite worked!',
+    paragraphs: [
+      `Hi @${username}, @${friend} signed up with your invite link, and their shark ${shark} was just verified. That's ${count === 1 ? '1 friend' : `${count} friends`} so far.`,
+      ...(badge
+        ? [`That earned you the ${badge} badge, which shows on your page now.`]
+        : []),
+    ],
+    action: { label: `See ${shark}`, url },
+    unsubscribe,
+  });
+}

@@ -1,6 +1,7 @@
 import 'server-only';
 
 import { INVITE_BADGES } from '@/constants/invites';
+import { NOTIFICATIONS } from '@/constants/notifications';
 
 import { enabledProviders } from '@/lib/auth';
 import { configuredRoles, discordRolesEnabled } from '@/lib/discord-roles';
@@ -107,12 +108,17 @@ export default function Loading() {
             title='Notifications'
             description='Emails about your sharks. Sign-in codes and links always come.'
           >
-            <div className='flex items-center justify-between gap-4 text-sm'>
-              <GhostText as='span'>
-                Email me when one of my sharks is verified
-              </GhostText>
-              {/* As big as the switch */}
-              <Skeleton className='h-[18.4px] w-8 shrink-0 rounded-full' />
+            <div className='flex flex-col gap-3'>
+              {Object.values(NOTIFICATIONS).map((notification) => (
+                <div
+                  key={notification.field}
+                  className='flex items-center justify-between gap-4 text-sm'
+                >
+                  <GhostText as='span'>{notification.label}</GhostText>
+                  {/* As big as the switch */}
+                  <Skeleton className='h-[18.4px] w-8 shrink-0 rounded-full' />
+                </div>
+              ))}
             </div>
           </SettingsSection>
           <SettingsSection still title='Password'>

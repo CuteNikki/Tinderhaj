@@ -33,6 +33,7 @@ export async function getAccountSettings(current: {
           twoFactorEnabled: true,
           matchContact: true,
           verifiedEmails: true,
+          inviteEmails: true,
         },
       }),
       // An authenticator app counts once its first code confirmed it.
@@ -67,6 +68,7 @@ export async function getAccountSettings(current: {
     ),
     matchContact: user.matchContact,
     verifiedEmails: user.verifiedEmails,
+    inviteEmails: user.inviteEmails,
     twoFactor,
     trustedDevices,
     passkeys: passkeys.map((passkey) => ({

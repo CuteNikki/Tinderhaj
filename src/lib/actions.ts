@@ -7,6 +7,7 @@ import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
 import { MAX_PROFILES } from '@/constants/auth';
+import { isNotificationKind } from '@/constants/notifications';
 import { REPORTS_PER_DAY } from '@/constants/reports';
 import {
   UPLOAD_KINDS,
@@ -34,6 +35,7 @@ import {
   matchedAt,
   matchPair,
 } from '@/lib/hearts';
+import { emailInviterLater } from '@/lib/invites';
 import prisma from '@/lib/prisma';
 import { PROFILE_COUNT_TAG, QUERIES } from '@/lib/queries';
 import { reportSchema } from '@/lib/reports';
@@ -47,7 +49,7 @@ import {
 } from '@/lib/schemas';
 import { getSession, isModerator, requireUser } from '@/lib/session';
 import { deleteUploadsLater, signUpload } from '@/lib/storage';
-import { readUnsubscribe } from '@/lib/unsubscribe';
+import { readUnsubscribe, setNotification } from '@/lib/unsubscribe';
 import { emailVerifiedLater } from '@/lib/verified-email';
 
 export async function logOut() {
@@ -515,7 +517,10 @@ export async function verifyProfile({ profileId }: { profileId: string }) {
   if (!before || !count) return { message: REVIEWED_ALREADY };
   syncDiscordRolesLater(before.userId);
   settleReviewLater(profileId, session.user);
-  if (!before.verifiedAt) announceNewSharkLater(profileId);
+  if (!before.verifiedAt) {
+    announceNewSharkLater(profileId);
+    emailInviterLater(profileId);
+  }
   emailVerifiedLater(profileId, !!before.verifiedAt);
 
   revalidatePath('/moderation/verification', 'layout');
@@ -675,24 +680,19 @@ export async function shareMatch({
   return { path: `/match/${shared.id}` };
 }
 
-/** Turns the emails about verified sharks on or off, from Settings. */
-export async function setVerifiedEmails(on: boolean) {
+/** Turns one kind of email on or off, from Settings > Notifications. */
+export async function setNotificationEmails(kind: string, on: boolean) {
   const session = await requireUser();
-  await prisma.user.update({
-    where: { id: session.user.id },
-    data: { verifiedEmails: on },
-  });
+  if (!isNotificationKind(kind)) return { message: 'Unknown notification.' };
+  await setNotification(session.user.id, kind, on);
   revalidatePath('/dashboard/account');
 }
 
-/** Turns the emails about verified sharks off from an email's link, without signing in. */
-export async function unsubscribeVerifiedEmails(userId: string, token: string) {
-  const id = readUnsubscribe(userId, token);
-  if (!id) return { message: 'That link is invalid.' };
-  await prisma.user.updateMany({
-    where: { id },
-    data: { verifiedEmails: false },
-  });
+/** Turns one kind of email off from an email's link, without signing in. */
+export async function unsubscribe(userId: string, kind: string, token: string) {
+  const link = readUnsubscribe(userId, kind, token);
+  if (!link) return { message: 'That link is invalid.' };
+  await setNotification(link.userId, link.kind, false);
 }
 
 /** Takes a heart back, which also ends a match. */

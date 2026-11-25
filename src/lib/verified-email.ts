@@ -45,7 +45,7 @@ export function emailVerifiedLater(profileId: string, again: boolean) {
         shark: shark.displayName,
         url: new URL(sharkPath(shark), siteURL).href,
         again,
-        unsubscribe: unsubscribeUrls(user.id),
+        unsubscribe: unsubscribeUrls(user.id, 'verified'),
       });
     } catch (error) {
       console.error(`Failed to email that ${profileId} is verified`, error);

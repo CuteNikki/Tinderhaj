@@ -6,16 +6,18 @@ import { toast } from 'sonner';
 
 import { Loader2Icon } from 'lucide-react';
 
-import { unsubscribeVerifiedEmails } from '@/lib/actions';
+import { unsubscribe as unsubscribeFrom } from '@/lib/actions';
 
 import { Button } from '@/components/ui/button';
 
 /** Unsubscribes, then says so, where the button was. */
 export function UnsubscribeButton({
   userId,
+  kind,
   token,
 }: {
   userId: string;
+  kind: string;
   token: string;
 }) {
   const [pending, startTransition] = useTransition();
@@ -23,7 +25,7 @@ export function UnsubscribeButton({
 
   function unsubscribe() {
     startTransition(async () => {
-      const result = await unsubscribeVerifiedEmails(userId, token);
+      const result = await unsubscribeFrom(userId, kind, token);
       if (result?.message) {
         toast.error(result.message, { duration: 5000, position: 'top-center' });
         return;
