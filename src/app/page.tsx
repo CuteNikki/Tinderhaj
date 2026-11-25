@@ -11,6 +11,7 @@ import { GuideStep } from '@/components/home/guide-step';
 import { Hero } from '@/components/home/hero';
 import { ProfileCount } from '@/components/home/profile-count';
 import { ScrollReveal } from '@/components/home/scroll-reveal';
+import { SeasonBadge } from '@/components/home/season-badge';
 import { FreshSharks } from '@/components/sections/fresh-sharks';
 import { ReadyWhenYouAre } from '@/components/sections/ready-when-you-are';
 import { Section } from '@/components/sections/section';
@@ -42,7 +43,7 @@ const GUIDE = [
 export default function Home() {
   return (
     <>
-      <Hero profileCount={<ProfileCount />} />
+      <Hero profileCount={<ProfileCount />} badge={<SeasonBadge />} />
       <Section
         id='guide'
         eyebrow='A better kind of first date'

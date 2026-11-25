@@ -16,7 +16,6 @@ import { bob, BOB_SHARK, SHARK_HOVER } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 
 import { Enter, enter } from '@/components/common/enter';
-import { HeroBadge } from '@/components/common/hero-badge';
 import { HeroWater } from '@/components/common/hero-water';
 import { glass, sunlit } from '@/components/common/ocean';
 import { DiscoveryLink } from '@/components/discovery/link';
@@ -26,7 +25,14 @@ import { TypographyH1, TypographyMuted } from '@/components/typography';
 import { Button } from '@/components/ui/button';
 
 /** `profileCount` is rendered on the server, where the count comes from. Its line comes in at 0.4s, so counts start then. */
-export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
+export function Hero({
+  profileCount,
+  badge,
+}: {
+  profileCount: React.ReactNode;
+  /** Over the title: what the site is, or the season's news (see SeasonBadge) */
+  badge: React.ReactNode;
+}) {
   const shark = enter('swim', 0.3);
   const heart = enter('pop', 0.9);
   const hint = enter('pop', 1);
@@ -41,16 +47,7 @@ export function Hero({ profileCount }: { profileCount: React.ReactNode }) {
       <HeroWater floor='muted' />
       <div className='relative z-10 container mx-auto grid min-h-screen max-w-7xl items-center gap-4 pt-24 pb-16 lg:grid-cols-2 lg:gap-8'>
         <div className='on-water relative z-10 flex max-w-2xl flex-col items-start'>
-          <HeroBadge
-            icon={
-              <span className='relative flex h-2 w-2'>
-                <span className='absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75' />
-                <span className='relative inline-flex h-2 w-2 rounded-full bg-primary' />
-              </span>
-            }
-          >
-            The plush dating club
-          </HeroBadge>
+          {badge}
           <Enter variant='sink' delay={0.1}>
             <TypographyH1 className='mt-6 max-w-3xl text-4xl leading-none font-black tracking-tight xs:text-5xl md:text-7xl xl:text-8xl'>
               Make a splash.
