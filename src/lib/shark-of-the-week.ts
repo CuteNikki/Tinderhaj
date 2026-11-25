@@ -9,6 +9,7 @@ import { isBanned, notBannedWhere } from '@/lib/bans';
 import { sendSharkOfTheWeekEmail } from '@/lib/email';
 import prisma from '@/lib/prisma';
 import { PUBLIC_PROFILE } from '@/lib/queries';
+import { revalidateFromOutside } from '@/lib/revalidate-self';
 import { siteURL } from '@/lib/site-url';
 import { unsubscribeUrls } from '@/lib/unsubscribe';
 import { sharkPath } from '@/lib/utils';
@@ -138,7 +139,10 @@ export async function pickSharkOfTheWeek(now = new Date()) {
     });
   });
 
-  if (picked) await emailOwner(picked.profileId);
+  if (!picked) return;
+  // The home page shows it straight away, rather than at its hourly refresh
+  await revalidateFromOutside(SHARK_OF_THE_WEEK_TAG);
+  await emailOwner(picked.profileId);
 }
 
 /** Tells the owner, unless they turned these off. A failed send is only logged: the pick stands. */
