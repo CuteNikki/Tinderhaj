@@ -531,7 +531,12 @@ export async function sendNewDeviceEmail({
     subject: 'New sign-in to your Tinderhaj account',
     heading: 'New sign-in to your account',
     paragraphs: [
-      `Hi @${username}, your account was just signed in to from ${device}${ip ? ` (IP ${ip})` : ''}, on ${when} UTC. It's the first time from that browser.`,
+      `Hi @${username}, your account was just signed in to from a browser it hasn't been used on before.`,
+    ],
+    details: [
+      { label: 'Device', value: device },
+      ...(ip ? [{ label: 'IP address', value: ip }] : []),
+      { label: 'When', value: `${when} UTC` },
     ],
     action: { label: 'See where you are signed in', url },
     note: "If this was you, there's nothing to do. If not, change your password and sign out everywhere else from Settings.",
