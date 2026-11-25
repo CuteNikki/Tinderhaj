@@ -13,6 +13,16 @@ export const NOTIFICATIONS = {
     label: 'Email me when one of my sharks gets a match',
     about: 'when one of your sharks gets a match',
   },
+  hearts: {
+    field: 'heartsEmails',
+    label: 'Email me on Mondays about new hearts my sharks got',
+    about: 'about new hearts on Mondays',
+  },
+  birthdays: {
+    field: 'birthdayEmails',
+    label: "Email me on my sharks' birthdays",
+    about: "on your sharks' birthdays",
+  },
   invites: {
     field: 'inviteEmails',
     label: 'Email me when a friend I invited gets a shark verified',

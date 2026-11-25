@@ -509,3 +509,77 @@ export async function sendNewDeviceEmail({
     note: "If this was you, there's nothing to do. If not, change your password and sign out everywhere else from Settings.",
   });
 }
+
+/**
+ * It's one of their sharks' birthday. Can be turned off, so it has
+ * unsubscribe links.
+ */
+export async function sendSharkBirthdayEmail({
+  email,
+  username,
+  shark,
+  age,
+  url,
+  unsubscribe,
+}: {
+  email: string;
+  username: string;
+  shark: string;
+  /** How old it turns today */
+  age: number;
+  url: string;
+  unsubscribe: { page: string; oneClick: string };
+}) {
+  const years = age === 1 ? '1 year' : `${age} years`;
+  await sendEmail({
+    to: email,
+    subject: `Happy birthday, ${shark}! 🎂`,
+    heading: `Happy birthday, ${shark}! 🎂`,
+    paragraphs: [
+      `Hi @${username}, ${shark} turns ${years} old today. Give them an extra squeeze from all of us.`,
+      'A good day to share their page, too.',
+    ],
+    action: { label: `See ${shark}`, url },
+    unsubscribe,
+  });
+}
+
+/**
+ * The hearts their sharks got this week that they haven't seen yet, shark by
+ * shark. Can be turned off, so it has unsubscribe links.
+ */
+export async function sendWeeklyHeartsEmail({
+  email,
+  username,
+  sharks,
+  url,
+  unsubscribe,
+}: {
+  email: string;
+  username: string;
+  /** Each of their sharks with new hearts, and how many, most first */
+  sharks: { name: string; hearts: number }[];
+  url: string;
+  unsubscribe: { page: string; oneClick: string };
+}) {
+  const total = sharks.reduce((sum, shark) => sum + shark.hearts, 0);
+  const hearts = (count: number) =>
+    count === 1 ? '1 heart' : `${count} hearts`;
+  const each = sharks.map((shark) => `${shark.name}: ${hearts(shark.hearts)}`);
+  await sendEmail({
+    to: email,
+    subject:
+      sharks.length === 1
+        ? `${sharks[0].name} got ${hearts(total)} this week`
+        : `Your sharks got ${hearts(total)} this week`,
+    heading: `${hearts(total)} this week 💙`,
+    paragraphs: [
+      sharks.length === 1
+        ? `Hi @${username}, ${sharks[0].name} got ${hearts(total)} this week that you haven't seen yet. Heart them back to make it a match.`
+        : `Hi @${username}, your sharks got hearts this week that you haven't seen yet. Heart them back to make it a match.`,
+      ...(sharks.length > 1 ? [each.join('\n')] : []),
+    ],
+    action: { label: 'See your hearts', url },
+    unsubscribe,
+  });
+}

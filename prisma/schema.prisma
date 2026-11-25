@@ -69,6 +69,11 @@ model User {
   /// Whether to email them when one of their sharks gets a match they didn't
   /// make themselves: the other shark hearted theirs back.
   matchEmails    Boolean @default(true)
+  /// Whether to email them on their sharks' birthdays.
+  birthdayEmails Boolean @default(true)
+  /// Whether to email them on Mondays about hearts their sharks got that
+  /// week and they haven't seen yet.
+  heartsEmails   Boolean @default(true)
 
   /// Banned accounts can't sign in. Check banExpires too (see lib/bans.ts):
   /// an expired ban is only cleared at their next sign-in.
@@ -275,6 +280,21 @@ model SharedMatch {
 
   @@unique([profileAId, profileBId])
   @@index([profileBId])
+}
+
+/// An email sent on a schedule (see lib/schedule.ts), noted before it goes
+/// out, so a restart or a second server can't send it twice: a shark's
+/// birthday in a year, a week's hearts.
+model SentEmail {
+  id   String @id @default(cuid(2))
+  /// Which: "birthday" or "hearts"
+  kind String
+  /// Which one of them: "<profile id>:<year>" or "<user id>:<week>"
+  key  String
+
+  createdAt DateTime @default(now())
+
+  @@unique([kind, key])
 }
 
 /// A signed-in user telling moderators a shark breaks the rules, or the way

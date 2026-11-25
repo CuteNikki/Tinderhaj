@@ -49,7 +49,7 @@ The product flow is centered on creating a profile for a shark, submitting it fo
 - Sign-in with Google, Apple, Microsoft, GitHub, Discord, X, Twitch, or Facebook, each turned on by setting its credentials, and connecting or disconnecting them from Account Settings
 - A list of active sessions, with signing out other devices
 - Password change and password reset flow with email delivery
-- Emails when a shark is verified, and when a friend you invited gets their first shark verified (saying so when it earns a badge). Each kind is on unless turned off in Account Settings > Notifications, with its own unsubscribe link and the one-click unsubscribe mail apps show (RFC 8058)
+- Emails when a shark is verified or needs changes, when one gets a match, on its birthday, on Mondays about hearts not seen yet, when a friend you invited gets their first shark verified (saying so when it earns a badge), and when the account is signed in to from a new browser. The birthday and Monday emails go out from a schedule the server runs (`src/lib/schedule.ts`), each noted in `SentEmail` so it goes once. Each kind is on unless turned off in Account Settings > Notifications, with its own unsubscribe link and the one-click unsubscribe mail apps show (RFC 8058)
 - Account deletion confirmed by an email link
 - Account settings: username, email, password, two-step sign-in, passkeys, sessions
 
