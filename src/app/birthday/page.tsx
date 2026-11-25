@@ -99,7 +99,7 @@ export default async function BirthdayPage() {
                   className='h-auto w-40 sm:w-48'
                   priority
                 />
-                <Eyebrow>
+                <Eyebrow className='text-glass-muted'>
                   {date.toLocaleDateString('en-US', {
                     month: 'long',
                     day: 'numeric',
@@ -118,16 +118,16 @@ export default async function BirthdayPage() {
                     [stats.matches, 'match', 'matches'] as const,
                   ].map(([value, one, many]) => (
                     <li key={many} className='whitespace-nowrap'>
-                      <span className='font-black text-primary tabular-nums'>
+                      <span className='font-black tabular-nums'>
                         {value.toLocaleString('en-US')}
                       </span>{' '}
-                      <span className='text-muted-foreground'>
+                      <span className='text-glass-muted'>
                         {value === 1 ? one : many}
                       </span>
                     </li>
                   ))}
                 </ul>
-                <p className='max-w-sm text-pretty text-muted-foreground'>
+                <p className='max-w-sm text-pretty text-glass-muted'>
                   {number === 1 ? 'One year' : `${number} years`} ago, the first
                   shark swam in. Thank you for every shark, every heart and
                   every match since.
@@ -135,7 +135,7 @@ export default async function BirthdayPage() {
                 <p
                   className={cn(
                     handwriting.className,
-                    'flex items-center gap-1.5 text-2xl font-semibold text-foreground'
+                    'flex items-center gap-1.5 text-2xl font-semibold'
                   )}
                 >
                   Love, the pod
