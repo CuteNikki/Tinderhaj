@@ -10,17 +10,21 @@ import { glassCard } from '@/components/common/ocean';
 import { Stagger } from '@/components/common/stagger';
 import { SocialIcon } from '@/components/contact/social-icon';
 
-/** Where to find Tinderhaj around the internet, as cards coming in after `delay`; nothing at all if none has a link yet. `onGlass` for the water: glass, on what comes in (see glassCard). */
+/** Where to find Tinderhaj around the internet, as cards coming in after `delay`; nothing at all if none has a link yet. `page` picks which (see SOCIALS). `onGlass` for the water: glass, on what comes in (see glassCard). */
 export function SocialLinks({
+  page,
   delay,
   className,
   onGlass = false,
 }: {
+  page: 'contact' | 'community';
   delay: number;
   className?: string;
   onGlass?: boolean;
 }) {
-  const socials = SOCIALS.filter((social) => social.href && social.card);
+  const socials = SOCIALS.filter(
+    (social) => social.href && (page === 'community' || social.contact)
+  );
   if (socials.length === 0) return null;
 
   return (

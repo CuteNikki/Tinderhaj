@@ -79,7 +79,7 @@ export default function CommunityPage() {
               Follow along
             </Eyebrow>
           </ScrollReveal>
-          <SocialLinks delay={CONTENT_DELAY} onGlass />
+          <SocialLinks page='community' delay={CONTENT_DELAY} onGlass />
         </div>
       </div>
 

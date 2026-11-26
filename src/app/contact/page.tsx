@@ -125,6 +125,7 @@ export default function ContactPage() {
               </ScrollReveal>
 
               <SocialLinks
+                page='contact'
                 delay={CONTENT_DELAY + STAGGER}
                 className='mt-3'
                 onGlass
