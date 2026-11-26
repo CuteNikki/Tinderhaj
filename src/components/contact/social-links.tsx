@@ -20,7 +20,7 @@ export function SocialLinks({
   className?: string;
   onGlass?: boolean;
 }) {
-  const socials = SOCIALS.filter((social) => social.href);
+  const socials = SOCIALS.filter((social) => social.href && social.card);
   if (socials.length === 0) return null;
 
   return (

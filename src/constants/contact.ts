@@ -1,11 +1,13 @@
 export const CONTACT_EMAIL = 'contact@tinderhaj.com';
 
-export type SocialId = 'discord' | 'x' | 'instagram' | 'github';
+export type SocialId = 'discord' | 'x' | 'instagram' | 'github' | 'youtube';
 
 /**
  * Where to find Tinderhaj, on the contact page. `href` is where its short link
  * goes (see socialLink), and pages link to that rather than here. One without
  * an `href` yet isn't shown, so it can wait here until there's a link for it.
+ * One with `card: false` has its short link but no card on Contact and
+ * Community, whose grids are laid out for the four there are.
  */
 export const SOCIALS: {
   id: SocialId;
@@ -13,6 +15,7 @@ export const SOCIALS: {
   handle: string | null;
   href: string | null;
   blurb: string;
+  card: boolean;
 }[] = [
   {
     id: 'discord',
@@ -20,6 +23,7 @@ export const SOCIALS: {
     handle: 'tinderhaj.com/discord',
     href: 'https://discord.gg/m6yVUqNqt',
     blurb: 'Hang out with the rest of the pod.',
+    card: true,
   },
   {
     id: 'instagram',
@@ -27,6 +31,7 @@ export const SOCIALS: {
     handle: '@tinderhaj',
     href: 'https://www.instagram.com/tinderhaj',
     blurb: 'Sharks living their best lives.',
+    card: true,
   },
   {
     id: 'x',
@@ -34,6 +39,7 @@ export const SOCIALS: {
     handle: '@tinderhaj',
     href: 'https://x.com/tinderhaj',
     blurb: 'News, updates, and the odd shark pun.',
+    card: true,
   },
   {
     id: 'github',
@@ -41,5 +47,14 @@ export const SOCIALS: {
     handle: 'CuteNikki/tinderhaj',
     href: 'https://github.com/CuteNikki/tinderhaj',
     blurb: 'The code behind it all. Found a bug? Tell us here.',
+    card: true,
+  },
+  {
+    id: 'youtube',
+    name: 'YouTube',
+    handle: '@tinderhaj',
+    href: 'https://www.youtube.com/@tinderhaj',
+    blurb: 'Shorts about the sharks and the site.',
+    card: false,
   },
 ];

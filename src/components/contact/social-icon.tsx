@@ -1,4 +1,4 @@
-import { siDiscord, siGithub, siInstagram, siX } from 'simple-icons';
+import { siDiscord, siGithub, siInstagram, siX, siYoutube } from 'simple-icons';
 
 import type { SocialId } from '@/constants/contact';
 
@@ -7,6 +7,7 @@ const paths: Record<SocialId, string> = {
   x: siX.path,
   instagram: siInstagram.path,
   github: siGithub.path,
+  youtube: siYoutube.path,
 };
 
 /** A social network's logo in the text color, sized like a Lucide icon. */
