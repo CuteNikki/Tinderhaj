@@ -22,7 +22,7 @@ The product flow is centered on creating a profile for a shark, submitting it fo
 
 ### Sharks and discovery
 
-- Up to 5 shark profiles per account, each with its own avatar, banner, and details, created, edited, and deleted from the dashboard
+- Up to 20 shark profiles per account, each with its own avatar, banner, and details, created, edited, and deleted from the dashboard
 - Discovery of every verified shark, searchable by name, location, pronouns, or interests, in a fresh shuffle each visit, with newly verified sharks boosted for their first 3 days
 - Hearts: each verified shark can heart up to 50 others a day, and two sharks that heart each other are a match
 - A Hearts page with matches, hearts received, and hearts sent, and a count of unseen hearts in the navbar
