@@ -73,11 +73,10 @@ export async function SharkOfTheWeek({
         <ScrollReveal variant='card' delay={0.1} className='max-w-md'>
           <DiscoveryProfile profile={shark} />
         </ScrollReveal>
-        <ScrollReveal variant='card' delay={0.2}>
-          <h3 className='mb-4 text-sm font-semibold text-muted-foreground'>
-            How the star is picked
-          </h3>
-          <div className='grid gap-3'>
+        {/* As tall as the card beside it, its three cards sharing the height */}
+        <ScrollReveal variant='card' delay={0.2} className='h-full'>
+          <h3 className='sr-only'>How the star is picked</h3>
+          <div className='grid gap-3 lg:h-full lg:auto-rows-fr'>
             {CHANCES.map(({ title, copy, icon }) => (
               <IconCard
                 key={title}
