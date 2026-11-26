@@ -115,7 +115,7 @@ Notes:
 
 - `DATABASE_URL` is required for Prisma and the app database connection.
 - `BETTER_AUTH_SECRET` signs session cookies and encrypts two-step sign-in secrets. Keep it the same across deploys, or everyone is signed out and authenticator apps stop working.
-- `BETTER_AUTH_URL` is where the site runs, e.g. `https://tinderhaj.com`. Links in emails and sign-in provider callbacks point there, and passkeys only work on its domain. On Vercel it can be left out: production then uses the project's production domain (`VERCEL_PROJECT_PRODUCTION_URL`) and preview deployments their own address. Anywhere else it is required in production, where the server won't start without it; in development it defaults to `http://localhost:3000`.
+- `BETTER_AUTH_URL` is where the site runs, e.g. `https://tinderhaj.com`. Links in emails and sign-in provider callbacks point there, and passkeys only work on its domain. It is required in production, where the server won't start without it; in development it defaults to `http://localhost:3000`.
 - `STORAGE_ENDPOINT` is the storage's S3 API, and `STORAGE_ACCESS_KEY_ID` and `STORAGE_SECRET_ACCESS_KEY` are the key the site signs uploads and deletions with (see [Pictures](#pictures)). Without them, uploading a picture fails. `STORAGE_REGION` is `garage` unless set.
 - Social sign-in providers are optional. Register an app with each provider and set its redirect URL to `<BETTER_AUTH_URL>/api/auth/callback/<provider>`, e.g. `http://localhost:3000/api/auth/callback/github`. The provider ids are `google`, `apple`, `microsoft`, `github`, `discord`, `twitter` (X), `twitch`, and `facebook`.
   - Apple's client secret is a signed JWT you generate from your Apple key, and it expires after at most six months. `APPLE_APP_BUNDLE_IDENTIFIER` is only needed for signing in from an iOS app.
@@ -238,16 +238,16 @@ Only verified profiles from accounts that aren't banned show up in discovery, on
 
 ## Deployment
 
-This app is designed for deployment on modern Node.js hosting platforms such as Vercel. For production, ensure you configure:
+It runs as a Docker container with Docker Compose, behind a reverse proxy that serves it over HTTPS. For production, configure:
 
 - `DATABASE_URL`
 - `SMTP_URL`
-- `BETTER_AUTH_SECRET`, and `BETTER_AUTH_URL` unless Vercel's production domain is the right address
+- `BETTER_AUTH_SECRET` and `BETTER_AUTH_URL`
 - `STORAGE_ENDPOINT`, `STORAGE_ACCESS_KEY_ID` and `STORAGE_SECRET_ACCESS_KEY`
 
 The `Dockerfile` builds the site to run on its own, with the `.env` as the build secret `env`, as the build prerenders pages from the database. Its `migrate` stage applies new migrations; run it before the site starts.
 
-Better Auth rate limits sign-in, sign-up, and code requests per IP address in production. It reads the address from `x-forwarded-for`, which Vercel sets. Behind a proxy that doesn't, every visitor shares one limit.
+Better Auth rate limits sign-in, sign-up, and code requests per IP address in production. It reads the address from `x-forwarded-for`, so the reverse proxy in front has to set it. Behind one that doesn't, every visitor shares one limit.
 
 ## Pictures
 
